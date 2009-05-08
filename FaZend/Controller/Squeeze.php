@@ -1,28 +1,23 @@
 <?php
 /**
  *
- * Copyright (c) 2009, thePMP.com
- * All rights reserved. THIS IS PRIVATE SOFTWARE.
+ * Copyright (c) FaZend.com
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, are PROHIBITED
- * without prior written permission from the author. This product may NOT be used anywhere
- * and on any computer except the server platform of thePMP.com. located at
- * www.thePMP.com. If you received this code occacionally and without intent to use
- * it, please report this incident to the author by email: privacy@thePMP.com
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
  *
- * @author Yegor Bugaenko <egor@technoparkcorp.com>
- * @copyright Copyright (c) thePMP.com, 2009
+ * @copyright Copyright (c) FaZend.com
  * @version $Id$
- *
+ * @category FaZend
  */
 
 /**
- * IndexController is the default controller for this application
- * 
- * Notice that we do not have to require 'Zend/Controller/Action.php', this
- * is because our application is using "autoloading" in the bootstrap.
  *
- * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
+ * 
+ *
  */
 class FaZend_Controller_Squeeze extends FaZend_Controller_Action {
 
