@@ -41,6 +41,9 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		$this->_initPluginCache($options);
 
 		$this->_initAutoloaders($options);
+
+		if (isset($options['Db']))
+			$this->_initDbFactory($options['Db']);
 	}
 
 	/**
@@ -106,6 +109,18 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		    	foreach($options['namespaces'] as $namespace)
 		    		$autoloader->registerNamespace($namespace.'_');
 		}	
+
+	}	
+
+	/**
+	* Initialize database tables
+	*
+	* @return void
+	*/
+	protected function _initDbFactory($options) {
+
+	    	foreach($options as $table)
+	    		FaZend_DbFactory::create($table);
 
 	}	
 

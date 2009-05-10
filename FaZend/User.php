@@ -21,7 +21,7 @@
  *
  * @package Model
  */
-class FaZend_User extends Zend_Db_Table_Row {
+class FaZend_User extends FaZend_Db_Table_Row {
 
         /**
          * User is logged in?
