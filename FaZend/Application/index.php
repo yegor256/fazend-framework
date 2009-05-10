@@ -45,7 +45,7 @@ $application->setOptions($optionsGlobal->toArray());
 
 // load application-specific options
 $optionsLocal = new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV);
-$application->setOptions($options->toArray());
+$application->setOptions($optionsLocal->toArray());
 
 unset($optionsGlobal, $optionsLocal);
 
