@@ -1,19 +1,17 @@
 <?php
 /**
  *
- * Copyright (c) 2009, Caybo.ru
- * All rights reserved. THIS IS PRIVATE SOFTWARE.
+ * Copyright (c) FaZend.com
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, are PROHIBITED
- * without prior written permission from the author. This product may NOT be used anywhere
- * and on any computer except the server platform of Caybo.ru. located at
- * www.caybo.ru. If you received this code occacionally and without intent to use
- * it, please report this incident to the author by email: privacy@caybo.ru
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
  *
- * @author Yegor Bugaenko <egor@technoparkcorp.com>
- * @copyright Copyright (c) Caybo.ru, 2009
+ * @copyright Copyright (c) FaZend.com
  * @version $Id$
- *
+ * @category FaZend
  */
 
 $startTime = microtime(true);
@@ -39,7 +37,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 // Create application, bootstrap, and run
 require_once 'Zend/Application.php';
-$application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/config/app.ini');
+$application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '../library/FaZend/Application/application.ini');
+
+// load application-specific options
+$application->setOptions(new Zend_Config(APPLICATION_PATH . '/config/app.ini'));
+
+// bootstrap the application
 $application->bootstrap()
             ->run();
 
