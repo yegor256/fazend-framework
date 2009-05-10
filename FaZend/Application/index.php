@@ -37,10 +37,13 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 // Create application, bootstrap, and run
 require_once 'Zend/Application.php';
-$application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/../library/FaZend/Application/application.ini');
+$application = new Zend_Application(APPLICATION_ENV);
+
+// load system options
+$application->setOptions(new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global'));
 
 // load application-specific options
-$application->setOptions(new Zend_Config(APPLICATION_PATH . '/config/app.ini', 'global'));
+$application->setOptions(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
 
 // bootstrap the application
 $application->bootstrap()
