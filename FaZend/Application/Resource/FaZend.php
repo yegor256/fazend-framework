@@ -31,11 +31,16 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*/
 	public function init() {
 
-		$this->_initTableCache();
+		$options = $this->getOptions();
 
-		$this->_initPluginCache();
+		if (!isset($options['name']))
+			throw new Exception("FaZend.name should be defined");
 
-		$this->_initAutoloaders();
+		$this->_initTableCache($options);
+
+		$this->_initPluginCache($options);
+
+		$this->_initAutoloaders($options);
 	}
 
 	/**
@@ -43,13 +48,13 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*
 	* @return void
 	*/
-	protected function _initTableCache() {
+	protected function _initTableCache($options) {
 
 		$cache = Zend_Cache::factory('Core', 'File',
 			array(
 				'caching' => true,
 				'lifetime' => 60 * 60 * 24, // 1 day
-				'cache_id_prefix' => $this->getOptions()->name,
+				'cache_id_prefix' => $options['name'],
 				'automatic_serialization' => true
 
 			),
@@ -67,11 +72,11 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*
 	* @return void
 	*/
-	protected function _initPluginCache() {
+	protected function _initPluginCache($options) {
 
 		// plugin cache
 		// see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html#zend.loader.pluginloader.performance.example
-		$classFileIncCache = sys_get_temp_dir() . '/'.$options->name.'-includeCache.php';
+		$classFileIncCache = sys_get_temp_dir() . '/'.$options['name'].'-includeCache.php';
 
 		if (file_exists($classFileIncCache)) {
 			include_once $classFileIncCache;
@@ -86,7 +91,7 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*
 	* @return void
 	*/
-	protected function _initAutoloaders() {
+	protected function _initAutoloaders($options) {
 
 	    	$autoloader = Zend_Loader_Autoloader::getInstance();
 	    	
@@ -94,8 +99,13 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	    	$autoloader->registerNamespace('FaZend_');
 
 	    	// load system classes properly
-	    	foreach($this->getOptions()->namespaces as $namespace)
-	    		$autoloader->registerNamespace($namespace.'_');
+	    	if (isset($options['namespaces'])) {
+	    		if (!is_array($options['namespaces']))
+	    			$options['namespaces'] = array($options['namespaces']);
+
+		    	foreach($options['namespaces'] as $namespace)
+		    		$autoloader->registerNamespace($namespace.'_');
+		}	
 
 	}	
 

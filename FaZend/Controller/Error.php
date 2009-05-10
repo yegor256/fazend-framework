@@ -18,8 +18,8 @@
 /**
  * ErrorController
  */ 
-class ErrorController extends Zend_Controller_Action 
-{ 
+class FaZend_Controller_Error extends Zend_Controller_Action { 
+
     /**
      * errorAction() is the action that will be called by the "ErrorHandler" 
      * plugin.  When an error/exception has been encountered
