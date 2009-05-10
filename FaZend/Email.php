@@ -79,7 +79,7 @@ class FaZend_Email {
 		$view = new Zend_View();
 
 		// in this folder all email templates are located
-		$view->setScriptPath(APPLICATION_PATH . Zend_Registry::getInstance()->configuration->email->folder);
+		$view->setScriptPath(Zend_Registry::getInstance()->configuration->email->folder);
 
 		// set all variables to View for rendering
 		foreach ($this->variables as $key=>$value)
