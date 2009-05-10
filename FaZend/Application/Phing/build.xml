@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<!--
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ *
+ * This Phing build file. For more information see this document:
+ * http://phing.info/docs/guide/current/
+ *
+-->
+
+<project name="FaZend_Buildfile" basedir="." default="main">
+
+        <!--
+	<property file="${project.basedir}/build.properties" />
+	-->
+
+	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+	<tstamp/>
+
+	<includepath classpath="${project.basedir}/src" />
+	<includepath classpath="${project.basedir}/test" />
+
+	<target name="lint" description="Run syntax check for all classes" >
+		<phplint haltonfailure="yes">
+			<fileset dir="${project.basedir}/src/application">
+				<include name="**/*.php"/>
+				<include name="**/*.html"/>
+				<include name="**/*.phtml"/>
+				<exclude name=".svn/**"/>
+			</fileset>
+		</phplint>
+	</target>
+
+	<target name="dbdeploy" description="Deploy db changes" >
+	        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+		<property name="deployScript" value="${project.basedir}/src/application/deploy/scripts/deploy.sql" />
+
+		<dbdeploy
+			url="mysql:host=${db.host};dbname=${db.name}"
+			userid="${db.user}"
+			password="${db.password}"
+			dir="${project.basedir}/database/deltas"
+			outputfile="${deployScript}"
+			undooutputfile="${deployScript}.undo" />
+
+		<exec 
+			command="${progs.mysql} -h${db.host} -u${db.user} -p${db.password} ${db.name} &lt; ${deployScript}"  
+			dir="${project.basedir}/src"  
+			passthru="true"
+			checkreturn="true" />  
+	</target>	
+            
+	<target name="test" description="Run all existing unit-tests" >
+       		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
+			<formatter type="plain" usefile="no" />
+			<formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
+			<batchtest>
+				<fileset dir="${project.basedir}/test">
+					<include name="**/*Test*.php"/>
+					<exclude name="**/Abstract*.php"/>
+					<exclude name="**/_*.php"/>
+					<exclude name=".svn/**"/>
+				</fileset>
+			</batchtest>
+		</phpunit2>
+	</target>	
+
+	<target name="deploy" description="Copy working files to FTP">
+		<svnlastrevision
+			workingcopy="${project.basedir}"
+			propertyname="svn.revision" />
+		<echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />	
+		<echo msg="Uploading revision: ${svn.revision}" />	
+
+		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+		<taskdef name="uploadByFTP" classname="src.library.FaZend.UploadByFTP" />
+		<uploadByFTP server="${ftp.server}"
+			username="${ftp.user}"
+			password="${ftp.password}"
+			srcdir="${project.basedir}/${ftp.srcdir}"
+			destdir="${ftp.destdir}">
+		</uploadByFTP>
+	</target>
+
+</project>

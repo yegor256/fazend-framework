@@ -1,0 +1,29 @@
+<? $this->headTitle("Internal error") ?>
+
+<h1>Temporary internal site error</h1> 
+
+<p>Erorr code: <?= $this->message ?></p> 
+
+<? if ($this->showError): ?> 
+
+        <p>Exception information:</p> 
+
+        <p>Error: <?=$this->exception->getMessage() ?></p> 
+
+        <p>Stack:</p> 
+
+        <pre><?=$this->exception->getTraceAsString() ?></pre> 
+
+        <p>Request:</p> 
+
+        <pre><? var_dump($this->request->getParams()) ?></pre> 
+
+<? else: ?>
+
+	<p style="width: 800px;">
+		There is an internal error in the site. Our administrator already received
+		a notification by email. However, if you want to get in touch with us 
+		immediately you can email us. Thanks for your patience.
+	</p>
+
+<? endif ?>

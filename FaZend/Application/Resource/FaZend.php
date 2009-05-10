@@ -15,7 +15,7 @@
  */
 
 /**
- * Resource for initializing FaZend_Email
+ * Resource for initializing FaZend framework
  *
  * @uses       Zend_Application_Resource_Base
  * @category   FaZend
@@ -45,7 +45,7 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*/
 	protected function _initTableCache() {
 
-		Zend_Registry::getInstance()->cacheCore = Zend_Cache::factory('Core', 'File',
+		$cache = Zend_Cache::factory('Core', 'File',
 			array(
 				'caching' => true,
 				'lifetime' => 60 * 60 * 24, // 1 day
@@ -59,7 +59,7 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		 	
 		// metadata cacher
 		// see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching	
-		Zend_Db_Table_Abstract::setDefaultMetadataCache(Zend_Registry::getInstance()->cacheCore);
+		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 	}	
 
 	/**
@@ -72,9 +72,11 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		// plugin cache
 		// see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html#zend.loader.pluginloader.performance.example
 		$classFileIncCache = sys_get_temp_dir() . '/'.$options->name.'-includeCache.php';
+
 		if (file_exists($classFileIncCache)) {
 			include_once $classFileIncCache;
 		}
+
 		Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
 
 	}
@@ -87,7 +89,8 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	protected function _initAutoloaders() {
 
 	    	$autoloader = Zend_Loader_Autoloader::getInstance();
-
+	    	
+	    	// for all our classes
 	    	$autoloader->registerNamespace('FaZend_');
 
 	    	// load system classes properly
