@@ -83,7 +83,7 @@
 		<echo msg="Uploading revision: ${svn.revision}" />	
 
 		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-		<taskdef name="uploadByFTP" classname="src.library.FaZend.UploadByFTP" />
+		<taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 		<uploadByFTP server="${ftp.server}"
 			username="${ftp.user}"
 			password="${ftp.password}"
