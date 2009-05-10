@@ -41,7 +41,7 @@ class FaZend_Email {
          * @return FaZend_Email
          */
 	public static function config (Zend_Config $config) {
-		$this->_config = $config;
+		self::$_config = $config;
 	}
 
         /**
@@ -61,11 +61,11 @@ class FaZend_Email {
 	public function __construct ($template = false) {
 		$this->set('template', $template);
 
-		$this->set('fromEmail', $this->_config->notifier->email);
-		$this->set('fromName', $this->_config->email->notifier->name);
+		$this->set('fromEmail', self::$_config->notifier->email);
+		$this->set('fromName', self::$_config->email->notifier->name);
 
-		$this->set('toEmail', $this->_config->email->manager->email);
-		$this->set('toName', $this->_config->email->manager->name);
+		$this->set('toEmail', self::$_config->email->manager->email);
+		$this->set('toName', self::$_config->email->manager->name);
 	}
 
         /**
@@ -100,7 +100,7 @@ class FaZend_Email {
 		$view = new Zend_View();
 
 		// in this folder all email templates are located
-		$view->setScriptPath($this->_config->folder);
+		$view->setScriptPath(self::$_config->folder);
 
 		// set all variables to View for rendering
 		foreach ($this->_variables as $key=>$value)
@@ -141,7 +141,7 @@ class FaZend_Email {
 		// set recepient
 		$mail->addTo($this->get('toEmail'), $this->get('toName'));
 
-		if ($this->_config->send)
+		if (self::$_config->send)
 			// send it out
 			$mail->send();
 	}
