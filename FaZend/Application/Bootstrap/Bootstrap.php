@@ -50,8 +50,7 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		if (defined('CLI_ENVIRONMENT')) {
 			Zend_Session::$_unitTestEnabled = true;
 		} else {
-			if (isset(Zend_Registry::getInstance()->configuration->session->name))
-				Zend_Session::start();
+			Zend_Session::start();
 		}	
 
                 // Return it, so that it can be stored by the bootstrap
