@@ -119,9 +119,10 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 	*/
 	protected function _initDbFactory($options) {
 
-	    	foreach($options as $table)
+	    	foreach($options as $table) {
 	    		FaZend_DbFactory::create($table);
-
+	    	}	
+	    		        
 	}	
 
 }

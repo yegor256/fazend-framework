@@ -48,7 +48,7 @@ $application->setOptions($options->toArray());
 
 unset($options);
 
-//bug($application->getOptions());
+bug($application->getOptions());
 // bootstrap the application
 $application->bootstrap()
             ->run();

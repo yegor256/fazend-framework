@@ -14,7 +14,6 @@
  * @category FaZend
  */
 
-
 /**
  * ErrorController
  */ 
