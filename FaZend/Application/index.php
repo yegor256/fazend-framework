@@ -40,10 +40,14 @@ require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV);
 
 // load system options
-$application->setOptions(new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global'));
+$optionsGlobal = new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global');
+$application->setOptions($optionsGlobal->toArray());
 
 // load application-specific options
-$application->setOptions(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
+$optionsLocal = new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV);
+$application->setOptions($options->toArray());
+
+unset($optionsGlobal, $optionsLocal);
 
 // bootstrap the application
 $application->bootstrap()
