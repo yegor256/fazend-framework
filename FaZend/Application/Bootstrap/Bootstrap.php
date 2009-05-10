@@ -53,6 +53,15 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 			Zend_Session::start();
 		}	
 
+		// configure routes
+		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
+			$this->bootstrap('FrontController');
+			$front = $this->getResource('FrontController');
+			$router = new Zend_Controller_Router_Rewrite();
+			$router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
+			$front->setRouter($router);
+		}
+
                 // Return it, so that it can be stored by the bootstrap
                 return $view;
 	}
