@@ -46,9 +46,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		Zend_Paginator::setDefaultScrollingStyle('Sliding');
 		Zend_View_Helper_PaginationControl::setDefaultViewPartial('paginationControl.phtml');
 
-		// local config for further use
-		Zend_Registry::getInstance()->configuration = new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV);
-
 		// session
 		if (defined('CLI_ENVIRONMENT')) {
 			Zend_Session::$_unitTestEnabled = true;

@@ -31,7 +31,7 @@ defined('APPLICATION_ENV')
                                          : 'production'));
 
 set_include_path(implode(PATH_SEPARATOR, array(
-	dirname(dirname(dirname(__FILE__))),
+	realpath(APPLICATION_PATH . '/../library'),
 	get_include_path(),
 )));
 
@@ -39,13 +39,13 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV);
 
-// load system options
-$optionsGlobal = new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global');
-$application->setOptions($optionsGlobal->toArray());
-
 // load application-specific options
 $optionsLocal = new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV);
 $application->setOptions($optionsLocal->toArray());
+
+// load system options
+$optionsGlobal = new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global');
+$application->setOptions($optionsGlobal->toArray());
 
 unset($optionsGlobal, $optionsLocal);
 
