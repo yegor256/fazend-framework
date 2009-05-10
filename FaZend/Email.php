@@ -21,7 +21,28 @@
  */
 class FaZend_Email {
 
-	private $variables;
+	/**
+	 * Configuration of the sender
+	 *
+	 * @var Zend_Config
+	 */
+	private static $_config;
+
+	/**
+	 * Set of local variables defined through set()
+	 *
+	 * @var array
+	 */
+	private $_variables;
+
+        /**
+         * Creates an object of class Model_Email, statically
+         *
+         * @return FaZend_Email
+         */
+	public static function config (Zend_Config $config) {
+		$this->_config = $config;
+	}
 
         /**
          * Creates an object of class Model_Email, statically
@@ -40,11 +61,11 @@ class FaZend_Email {
 	public function __construct ($template = false) {
 		$this->set('template', $template);
 
-		$this->set('fromEmail', Zend_Registry::getInstance()->configuration->email->notifier->email);
-		$this->set('fromName', Zend_Registry::getInstance()->configuration->email->notifier->name);
+		$this->set('fromEmail', $this->_config->notifier->email);
+		$this->set('fromName', $this->_config->email->notifier->name);
 
-		$this->set('toEmail', Zend_Registry::getInstance()->configuration->email->manager->email);
-		$this->set('toName', Zend_Registry::getInstance()->configuration->email->manager->name);
+		$this->set('toEmail', $this->_config->email->manager->email);
+		$this->set('toName', $this->_config->email->manager->name);
 	}
 
         /**
@@ -53,7 +74,7 @@ class FaZend_Email {
          * @return void
          */
 	public function set ($key, $value) {
-		$this->variables[$key] = $value;
+		$this->_variables[$key] = $value;
 		return $this;
 	}
 
@@ -63,7 +84,7 @@ class FaZend_Email {
          * @return var
          */
 	public function get ($key) {
-		return $this->variables[$key];
+		return $this->_variables[$key];
 	}
 
         /**
@@ -73,16 +94,16 @@ class FaZend_Email {
          */
 	public function send () {
 	        // this class will send email
-		$mail = $this->createZendMailer();
+		$mail = $this->_createZendMailer();
 
 		// we render the template by means of View
 		$view = new Zend_View();
 
 		// in this folder all email templates are located
-		$view->setScriptPath(Zend_Registry::getInstance()->configuration->email->folder);
+		$view->setScriptPath($this->_config->folder);
 
 		// set all variables to View for rendering
-		foreach ($this->variables as $key=>$value)
+		foreach ($this->_variables as $key=>$value)
 			$view->assign($key, $value);
 
 		// render the body and kill all \r signs	
@@ -120,7 +141,7 @@ class FaZend_Email {
 		// set recepient
 		$mail->addTo($this->get('toEmail'), $this->get('toName'));
 
-		if (Zend_Registry::getInstance()->configuration->email->send)
+		if ($this->_config->send)
 			// send it out
 			$mail->send();
 	}
@@ -130,7 +151,7 @@ class FaZend_Email {
          *
          * @return Zend_Mail
          */
-	private function createZendMailer () {
+	protected function _createZendMailer () {
 		return new Zend_Mail('windows-1251');
 	}
 
