@@ -33,7 +33,7 @@ defined('APPLICATION_ENV')
                                          : 'production'));
 
 set_include_path(implode(PATH_SEPARATOR, array(
-	dirname(dirname(__FILE__)) . '/library',
+	dirname(dirname(dirname(__FILE__))),
 	get_include_path(),
 )));
 
