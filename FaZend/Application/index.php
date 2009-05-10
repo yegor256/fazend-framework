@@ -40,7 +40,7 @@ require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/../library/FaZend/Application/application.ini');
 
 // load application-specific options
-$application->setOptions(new Zend_Config(APPLICATION_PATH . '/config/app.ini'));
+$application->setOptions(new Zend_Config(APPLICATION_PATH . '/config/app.ini', 'global'));
 
 // bootstrap the application
 $application->bootstrap()
