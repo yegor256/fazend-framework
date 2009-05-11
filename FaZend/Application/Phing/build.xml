@@ -20,10 +20,6 @@
 
 <project name="FaZend_Buildfile" basedir="." default="main">
 
-        <!--
-	<property file="${project.basedir}/build.properties" />
-	-->
-
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
 

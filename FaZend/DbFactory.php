@@ -34,10 +34,10 @@ class FaZend_DbFactory {
          * @return void
          */
 	public static function create($config) {
-		if (isset(self::$_tables[]))
-			throw new Exception("Table $name already defined");
+		if (isset(self::$_tables[$config['name']]))
+			throw new Exception("Table {$config['name']} already defined");
 			
-		self::$_tables[] = new FaZend_Db_Table($config);
+		self::$_tables[$config['name']] = new FaZend_Db_Table($config);
 	}
 
         /**

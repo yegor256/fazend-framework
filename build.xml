@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!--
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ *
+ * This Phing build file. For more information see this document:
+ * http://phing.info/docs/guide/current/
+ *
+-->
+
+<project name="fazend tests" basedir="." default="test">
+
+	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+	<tstamp/>
+
+	<includepath classpath="${project.basedir}" />
+	<includepath classpath="${project.basedir}/test/" />
+	<includepath classpath="${project.basedir}/../zend-trunk/" />
+
+	<target name="lint" description="Run syntax check for all classes" >
+		<phplint haltonfailure="yes">
+			<fileset dir="${project.basedir}">
+				<include name="**/*.php"/>
+				<include name="**/*.html"/>
+				<include name="**/*.phtml"/>
+				<exclude name=".svn/**"/>
+			</fileset>
+		</phplint>
+	</target>
+
+	<target name="test" description="Run all existing unit-tests" depends="lint">
+       		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
+			<formatter type="plain" usefile="no" />
+			<batchtest>
+				<fileset dir="${project.basedir}/test">
+					<include name="**/*Test*.php"/>
+					<exclude name="**/Abstract*.php"/>
+					<exclude name="**/_*.php"/>
+					<exclude name=".svn/**"/>
+				</fileset>
+			</batchtest>
+		</phpunit2>
+	</target>	
+
+
+</project>
