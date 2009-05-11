@@ -19,6 +19,7 @@ require_once 'PHPUnit/Framework/TestCase.php';
 // bootstrap the application
 define('APPLICATION_ENV', 'testing');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
+define('CLI_ENVIRONMENT', true);
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 include 'FaZend/Application/index.php';
 

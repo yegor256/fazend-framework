@@ -42,8 +42,10 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 
 		$this->_initAutoloaders($options);
 
-		if (isset($options['Db']))
+		if (isset($options['Db'])) {
+			$this->getBootstrap()->bootstrap('db');
 			$this->_initDbFactory($options['Db']);
+		}	
 	}
 
 	/**

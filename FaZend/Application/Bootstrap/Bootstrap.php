@@ -45,11 +45,8 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		Zend_View_Helper_PaginationControl::setDefaultViewPartial('paginationControl.phtml');
 
 		// session
-		if (defined('CLI_ENVIRONMENT')) {
+		if (defined('CLI_ENVIRONMENT'))
 			Zend_Session::$_unitTestEnabled = true;
-		} else {
-			Zend_Session::start();
-		}	
 
 		// configure routes
 		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {

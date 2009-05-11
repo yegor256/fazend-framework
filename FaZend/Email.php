@@ -36,7 +36,7 @@ class FaZend_Email {
 	private $_variables;
 
         /**
-         * Creates an object of class Model_Email, statically
+         * Creates an object of class FaZend_Email, statically
          *
          * @return FaZend_Email
          */
@@ -45,7 +45,7 @@ class FaZend_Email {
 	}
 
         /**
-         * Creates an object of class Model_Email, statically
+         * Creates an object of class FaZend_Email, statically
          *
          * @return FaZend_Email
          */
@@ -54,7 +54,7 @@ class FaZend_Email {
 	}
 
         /**
-         * Creates an object of class Model_Email 
+         * Creates an object of class FaZend_Email 
          *
          * @return void
          */

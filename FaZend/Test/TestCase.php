@@ -27,11 +27,11 @@ set_include_path(
 	get_include_path());
 
 define('APPLICATION_ENV', 'testing');
+define('CLI_ENVIRONMENT', true);
 
 require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/config/app.ini');
-$application->bootstrap()
-            ->run();
+$application->bootstrap();
 
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
