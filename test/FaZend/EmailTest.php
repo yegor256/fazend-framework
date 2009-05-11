@@ -29,11 +29,11 @@ class EmailTest extends AbstractTestCase {
 		$mailer = new stubMailer();
 		Zend_Mail::setDefaultTransport($mailer);
 
-		$cls = new FaZend_Email('testTemplate.tmpl');
-		$cls->set('toEmail', 'manager@fazend.com');
-
-		return;
-		$cls->send();
+		FaZend_Email::create('test.tmpl')
+			->set('toEmail', 'manager@fazend.com')
+			->set('subject', 'subject line')
+			->set('bodyText', 'test for body')
+			->send(true);
 
 		$this->assertNotEquals(false, $mailer->body, "Empty email generated, why?");
 

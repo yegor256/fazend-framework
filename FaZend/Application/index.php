@@ -53,8 +53,9 @@ $application->setOptions($options->toArray());
 
 unset($options);
 
-bug($application->getOptions());
 // bootstrap the application
-$application->bootstrap()
-            ->run();
+$application->bootstrap();
+
+if (APPLICATION_ENV != 'testing')
+	$application->run();
 

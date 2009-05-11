@@ -18,7 +18,7 @@
  *
 -->
 
-<project name="fazend tests" basedir="." default="test">
+<project name="fazend tests" basedir="." default="main">
 
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
@@ -26,6 +26,9 @@
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 	<includepath classpath="${project.basedir}/../zend-trunk/" />
+
+	<target name="main" depends="lint, test" >
+	</target>
 
 	<target name="lint" description="Run syntax check for all classes" >
 		<phplint haltonfailure="yes">
@@ -38,7 +41,7 @@
 		</phplint>
 	</target>
 
-	<target name="test" description="Run all existing unit-tests" depends="lint">
+	<target name="test" description="Run all existing unit-tests">
        		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="no" />
 			<batchtest>

@@ -90,9 +90,10 @@ class FaZend_Email {
         /**
          * Sends the email
          *
+         * @param boolean Send it anyway (no matter what)
          * @return void
          */
-	public function send () {
+	public function send ($force = false) {
 	        // this class will send email
 		$mail = $this->_createZendMailer();
 
@@ -141,7 +142,7 @@ class FaZend_Email {
 		// set recepient
 		$mail->addTo($this->get('toEmail'), $this->get('toName'));
 
-		if (self::$_config->send)
+		if (self::$_config->send || $force)
 			// send it out
 			$mail->send();
 	}
