@@ -89,7 +89,7 @@ class FaZend_User extends FaZend_Db_Table_Row {
          * @return boolean
          */
 	public static function register ($email, $password, $data = array()) {
-		$table = new Model_Table_User();
+		$table = new FaZend_Table_User();
 
 		if (count($table->fetchAll($table->select()->where('email = ?', $email))))
 			throw new Model_User_RegisterException('user with such email already exists');
@@ -109,7 +109,7 @@ class FaZend_User extends FaZend_Db_Table_Row {
          */
 	public static function findByEmail ($email) {
 
-		$table = new Model_Table_User();
+		$table = new FaZend_Table_User();
 		return $table->fetchRow($table->select()->where('email = ?', $email));
 
 	}
@@ -121,7 +121,7 @@ class FaZend_User extends FaZend_Db_Table_Row {
          */
 	public static function findById ($id) {
 
-		$table = new Model_Table_User();
+		$table = new FaZend_Table_User();
 		return $table->find($id)->current();
 
 	}
@@ -132,7 +132,7 @@ class FaZend_User extends FaZend_Db_Table_Row {
          * @return select
          */
 	public static function retrieve () {
-		$table = new Model_Table_User();
+		$table = new FaZend_Table_User();
 		return $table->fetchAll($table->select());
 	}
 
