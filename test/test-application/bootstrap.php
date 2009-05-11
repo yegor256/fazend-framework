@@ -14,13 +14,15 @@
  * @category FaZend
  */
 
-require_once 'PHPUnit/Framework/TestCase.php';
+define ('WEBSITE_URL', 'http://fazend.com');
 
-// bootstrap the application
-define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
-define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
-include 'FaZend/Application/index.php';
+require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
 
-class AbstractTestCase extends PHPUnit_Framework_TestCase {
-	
+/**
+* Bootstrap
+*
+*
+*/
+class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap {
+
 }

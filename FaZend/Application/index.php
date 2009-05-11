@@ -24,6 +24,11 @@ defined('APPLICATION_PATH')
     || define('APPLICATION_PATH',
               realpath(dirname(__FILE__) . '/../../../application'));
 
+// Define path to FaZend
+defined('FAZEND_PATH')
+    || define('FAZEND_PATH',
+              realpath(APPLICATION_PATH . '/../library/FaZend'));
+
 // Define application environment
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV',
@@ -40,7 +45,7 @@ require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV);
 
 // load application-specific options
-$options = new Zend_Config_Ini(APPLICATION_PATH . '/../library/FaZend/Application/application.ini', 'global', true);
+$options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
 $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
 
 // load system options
