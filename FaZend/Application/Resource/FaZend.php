@@ -45,7 +45,10 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 			$this->_initDbFactory($options['Db']);
 		}	
 
-		return new Zend_Config($options);
+		$config = new Zend_Config($options);
+		FaZend_Properties::setOptions();
+
+		return $config;
 	}
 
 	/**

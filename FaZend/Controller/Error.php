@@ -50,16 +50,12 @@ class FaZend_Controller_Error extends Zend_Controller_Action {
                                 $this->getResponse()->setHttpResponseCode(404); 
                                 //$this->view->message = 'Page not found'; 
 
-                                $this->_forward('index', 'index');
-                                return;
-
-                                break; 
+                                return $this->_forward('index', 'index');
 
                         default: 
                                 // application error 
                                 $this->getResponse()->setHttpResponseCode(500); 
                                 $this->view->message = 'Internal application error #'.rand (100, 999); 
-                                break; 
                 } 
 
                 // pass the actual exception object to the view
@@ -68,14 +64,15 @@ class FaZend_Controller_Error extends Zend_Controller_Action {
                 // pass the request to the view
                 $this->view->request = $errors->request; 
 
-                $this->view->showError = Zend_Registry::getInstance()->configuration->errors->display;
+                $this->view->showError = FaZend_Properties::get()->errors->display;
 
-                if (Zend_Registry::getInstance()->configuration->errors->email) {
+                if (FaZend_Properties::get()->errors->email) {
                 	$lines = array ();
                 	foreach (debug_backtrace () as $line) 
                 		$lines[] = "{$line['file']} ({$line['line']})";
 
-                	mail (Zend_Registry::getInstance()->configuration->errors->email, WEBSITE_URL.' internal PHP error, rev.'.Model_Revision::get().': '.$_SERVER['REQUEST_URI'], 
+                	mail (FaZend_Properties::get()->errors->email, 
+                		WEBSITE_URL.' internal PHP error, rev.'.FaZend_Revision::get().': '.$_SERVER['REQUEST_URI'], 
         	        	$errors->exception->getMessage()."\n\n".
         	        	implode("\n", $lines)."\n\n".
         	        	print_r($errors->request->getParams(), true)."\n\n".
