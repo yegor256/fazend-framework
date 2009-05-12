@@ -20,6 +20,9 @@
 
 <project name="example" basedir="." default="main">
 
+        <!-- get properties from file -->
+	<property file="./build.properties" />
+
 	<!-- Main Target -->
 	<target name="main" depends="lint, dbdeploy, test, deploy" />
 
