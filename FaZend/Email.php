@@ -61,11 +61,29 @@ class FaZend_Email {
 	public function __construct ($template = false) {
 		$this->set('template', $template);
 
-		$this->set('fromEmail', self::$_config->notifier->email);
-		$this->set('fromName', self::$_config->email->notifier->name);
+		if (!isset($_config->notifier))
+			throw new Exception("you should define resources.Email.notifier in app.ini (author of notify messages)");
 
-		$this->set('toEmail', self::$_config->email->manager->email);
-		$this->set('toName', self::$_config->email->manager->name);
+		if (!isset($_config->notifier->email))
+			throw new Exception("you should define resources.Email.notifier.email in app.ini");
+
+		if (!isset($_config->notifier->name))
+			throw new Exception("you should define resources.Email.notifier.name in app.ini");
+
+		$this->set('fromEmail', self::$_config->notifier->email);
+		$this->set('fromName', self::$_config->notifier->name);
+
+		if (!isset($_config->manager))
+			throw new Exception("you should define resources.Email.manager in app.ini (receiver of system emails)");
+
+		if (!isset($_config->manager->email))
+			throw new Exception("you should define resources.Email.manager.email in app.ini");
+
+		if (!isset($_config->manager->name))
+			throw new Exception("you should define resources.Email.manager.name in app.ini");
+
+		$this->set('toEmail', self::$_config->manager->email);
+		$this->set('toName', self::$_config->manager->name);
 	}
 
         /**
