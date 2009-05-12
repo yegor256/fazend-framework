@@ -8,14 +8,19 @@
 		<span style="color: grey;">prev</span>
 	<?php endif; ?>
 
+	&#32;
+
 	<!-- Numbered page links -->
 	<?php foreach ($this->pagesInRange as $page): ?>
 		<?php if ($page != $this->current): ?>
-			<a href="<?= $this->url(array('page' => $page)); ?>"><?= $page; ?></a> 
+			<a href="<?= $this->url(array('page' => $page)); ?>"><?= $page; ?></a>
 		<?php else: ?>
 			[<?= $page; ?>]
 		<?php endif; ?>
+		&#32;
 	<?php endforeach; ?>
+
+	&#32;
 
 	<!-- Next page link -->
 	<?php if (isset($this->next)): ?>
