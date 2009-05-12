@@ -22,7 +22,7 @@
  * @package    FaZend_Application
  * @subpackage Resource
  */
-class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_ResourceAbstract {
+class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract {
 
 	/**
 	* Defined by Zend_Application_Resource_Resource
