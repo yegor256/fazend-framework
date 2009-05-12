@@ -46,7 +46,7 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		}	
 
 		$config = new Zend_Config($options);
-		FaZend_Properties::setOptions();
+		FaZend_Properties::setOptions($config);
 
 		return $config;
 	}
