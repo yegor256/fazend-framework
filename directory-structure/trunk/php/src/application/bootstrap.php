@@ -20,7 +20,7 @@
 *
 *
 */
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
+class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap {
 
 }
 

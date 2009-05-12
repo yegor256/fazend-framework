@@ -1,4 +1,4 @@
-<?php
+<?php                                                          
 /**
  *
  * Copyright (c) FaZend.com
@@ -21,5 +21,37 @@
  */
 class FaZend_Db_Table_Row extends Zend_Db_Table_Row {
 
+        protected $_table = false;
+        
+        /**
+         * Find and return an object by its Id
+         *
+         * @return FaZend_Db_Table_Row
+         */
+	public static function findById ($id) {
+		return $this->_getTable()->find($id)->current();
+	}
+
+        /**
+         * Get a list of all rows
+         *
+         * @return Zend_Db_Table_RowSet
+         */
+	public static function retrieve () {
+		return $this->_getTable()->fetchAll($this->_getTable()->select());
+	}
+
+        /**
+         * Get table instance
+         *
+         * @return FaZend_Db_Table
+         */
+	protected function _getTable() {
+
+		if ($this->_table === false)
+			throw new Exception("you should define \$_table as protected property");
+
+		return FaZend_DbFactory::get($this->_table);
+	}
 
 }
