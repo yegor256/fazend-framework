@@ -40,12 +40,12 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 
 		$this->_initPluginCache($options);
 
-		$this->_initAutoloaders($options);
-
 		if (isset($options['Db'])) {
 			$this->getBootstrap()->bootstrap('db');
 			$this->_initDbFactory($options['Db']);
 		}	
+
+		return new Zend_Config($options);
 	}
 
 	/**
@@ -90,29 +90,6 @@ class FaZend_Application_Resource_FaZend extends Zend_Application_Resource_Resou
 		Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
 
 	}
-
-	/**
-	* Initialize autoloader for Model
-	*
-	* @return void
-	*/
-	protected function _initAutoloaders($options) {
-
-	    	$autoloader = Zend_Loader_Autoloader::getInstance();
-	    	
-	    	// for all our classes
-	    	$autoloader->registerNamespace('FaZend_');
-
-	    	// load system classes properly
-	    	if (isset($options['namespaces'])) {
-	    		if (!is_array($options['namespaces']))
-	    			$options['namespaces'] = array($options['namespaces']);
-
-		    	foreach($options['namespaces'] as $namespace)
-		    		$autoloader->registerNamespace($namespace.'_');
-		}	
-
-	}	
 
 	/**
 	* Initialize database tables

@@ -51,7 +51,7 @@ $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLIC
 // load system options
 $application->setOptions($options->toArray());
 
-unset($options);
+unset($options);    	
 
 // bootstrap the application
 $application->bootstrap();
