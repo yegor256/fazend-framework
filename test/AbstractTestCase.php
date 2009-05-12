@@ -23,6 +23,9 @@ define('CLI_ENVIRONMENT', true);
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 include 'FaZend/Application/index.php';
 
+$adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+$adapter->query('create table user (id int(10), email varchar(50), password varchar(50), primary key (id))');
+
 class AbstractTestCase extends PHPUnit_Framework_TestCase {
 	
 }

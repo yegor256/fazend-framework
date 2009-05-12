@@ -29,6 +29,13 @@ class FaZend_DbFactory {
         private static $_tables = array();
 
         /**
+         * Collection of row->table mapping
+         *
+         * @var array
+         */
+        private static $_rowToTableMapping = array();
+
+        /**
          * Creates a table in a factory
          *
          * @return void
@@ -38,6 +45,9 @@ class FaZend_DbFactory {
 			throw new Exception("Table {$config['name']} already defined");
 			
 		self::$_tables[$config['name']] = new FaZend_Db_Table($config);
+
+		if (!isset(self::$_rowToTableMapping[$config['rowClass']]))
+			self::$_rowToTableMapping[$config['rowClass']] = $config['name'];
 	}
 
         /**
@@ -47,6 +57,19 @@ class FaZend_DbFactory {
          */
 	public static function get($name) {
 		return self::$_tables[$name];
+	}
+
+        /**
+         * Returns a table
+         *
+         * @return FaZend_Db_Table
+         */
+	public static function getForRow($rowName) {
+
+		if (!isset(self::$_rowToTableMapping[$rowName]))
+			throw new Exception("table for row $rowName is not defined in app.ini");
+
+		return self::$_tables[self::$_rowToTableMapping[$rowName]];
 	}
 
 }

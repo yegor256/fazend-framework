@@ -21,15 +21,14 @@
  */
 class FaZend_Db_Table_Row extends Zend_Db_Table_Row {
 
-        protected $_table = false;
-        
         /**
          * Find and return an object by its Id
          *
          * @return FaZend_Db_Table_Row
          */
-	public static function findById ($id) {
-		return $this->_getTable()->find($id)->current();
+	protected static function _findById ($id) {
+		$calls = debug_backtrace();
+		return FaZend_DbFactory::getForRow($calls[1]['class'])->find($id)->current();
 	}
 
         /**
@@ -37,8 +36,12 @@ class FaZend_Db_Table_Row extends Zend_Db_Table_Row {
          *
          * @return Zend_Db_Table_RowSet
          */
-	public static function retrieve () {
-		return $this->_getTable()->fetchAll($this->_getTable()->select());
+	protected static function _retrieve () {
+		$calls = debug_backtrace();
+		$class = $calls[1]['class'];
+
+		$table = FaZend_DbFactory::getForRow($class);
+		return $table->fetchAll($table->select());
 	}
 
         /**
@@ -47,11 +50,13 @@ class FaZend_Db_Table_Row extends Zend_Db_Table_Row {
          * @return FaZend_Db_Table
          */
 	protected function _getTable() {
-
-		if ($this->_table === false)
-			throw new Exception("you should define \$_table as protected property");
-
-		return FaZend_DbFactory::get($this->_table);
+		if (isset($this)) {
+			$class = get_class($this);
+		} else {
+			$calls = debug_backtrace();
+			$class = $calls[1]['class'];
+		}	
+		return FaZend_DbFactory::getForRow($class);
 	}
 
 }
