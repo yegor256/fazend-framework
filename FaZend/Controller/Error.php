@@ -17,7 +17,7 @@
 /**
  * ErrorController
  */ 
-class FaZend_Controller_Error extends Zend_Controller_Action { 
+class FaZend_Controller_Error extends FaZend_Controller_Action { 
 
         /**
          * errorAction() is the action that will be called by the "ErrorHandler" 
@@ -50,7 +50,7 @@ class FaZend_Controller_Error extends Zend_Controller_Action {
                                 $this->getResponse()->setHttpResponseCode(404); 
                                 //$this->view->message = 'Page not found'; 
 
-                                return $this->_forward('index', 'index');
+                                return $this->_forwardWithMessage('page not found');
 
                         default: 
                                 // application error 
