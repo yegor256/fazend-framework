@@ -1,5 +1,7 @@
 
+
 <?=$this->htmlTable()
+
 	// hide column - don't show it
 	->hideColumn('id')
 
@@ -28,5 +30,4 @@
 	->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
 
 	// data source
-	->setPaginator($this->paginator)
-	?>
+	->setPaginator($this->paginator)?>

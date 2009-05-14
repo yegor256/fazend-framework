@@ -29,6 +29,16 @@ class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
 		$view = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->view;
 		$view->setScriptPath(APPLICATION_PATH . '/views/scripts');
 
+		$route = new Zend_Controller_Router_Route(
+			'abc',
+			array(
+				'controller' => 'index',
+				'action'     => 'index'
+			)
+		);
+
+		Zend_Controller_Front::getInstance()->getRouter()->addRoute('default', $route);
+
 		$array = array(
 			array(
 				'id' => 123,
@@ -44,7 +54,10 @@ class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
 		$paginator = Zend_Paginator::factory($array);
 		$view->paginator = $paginator;
 
-		$view->render('table.phtml');
+		$html = $view->render('table.phtml');
+
+		$this->assertNotEquals(false, $html, "Empty HTML instead of table");
+		$this->assertNotRegExp('/Exception/', $html);
 
 	}
 

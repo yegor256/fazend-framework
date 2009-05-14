@@ -83,7 +83,11 @@ class FaZend_View_Helper_HtmlTable {
 	* @return string HTML
 	*/
 	public function __toString() {
-		return $this->_render();
+	        try {
+			return $this->_render();
+		} catch (Exception $e) {
+			return 'Exception: '.$e->getMessage();
+		}	
 	}
 
 	/**
@@ -91,7 +95,7 @@ class FaZend_View_Helper_HtmlTable {
 	*
 	* @return HtmlTable
 	*/
-	public function setPaginator($paginator) {
+	public function setPaginator(Zend_Paginator $paginator) {
 		$this->_paginator = $paginator;
 		return $this;
 	}
@@ -199,7 +203,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	protected function _render() {
-		if (!count ($this->_paginator))
+		if (!count($this->_paginator))
 			return '<p>no data</p>';
 
 		$resultTRs = array();
