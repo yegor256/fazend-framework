@@ -229,8 +229,10 @@ class FaZend_View_Helper_HtmlTable {
 					$value = htmlspecialchars($value);
 
 				// parse the value of this TD	
-				if ($this->_column($title)->parser)
-					$value = $this->_column($title)->parser ($value, $rowOriginal);
+				if ($this->_column($title)->parser) {
+					$parser = $this->_column($title)->parser;
+					$value = $parser ($value, $rowOriginal);
+				}	
 
 				// attach link to the TD
 				if ($this->_column($title)->link) {
