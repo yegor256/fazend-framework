@@ -28,8 +28,8 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase {
 			
 			// pre formatting should NOT be touched
 			array(
-				"<html><body><pre>line1\nline2</pre></body></html>",
-				"<html><body><pre>line1\nline2</pre></body></html>"
+				"<html><body><pre style='border:0'>line1\nline2</pre></body></html>",
+				"<html><body><pre style='border:0'>line1\nline2</pre></body></html>"
 			),
 
 		        // all spaces between tags should be killed
