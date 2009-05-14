@@ -51,6 +51,13 @@ class FaZend_View_Helper_HtmlTable {
 	private $_options = array();
 
 	/**
+	 * Message to show if no data
+	 *
+	 * @var strint
+	 */
+	private $_noDataMessage = 'no data';
+	
+	/**
 	* Save view locally
 	*
 	* @return void
@@ -184,6 +191,16 @@ class FaZend_View_Helper_HtmlTable {
 	}
 
 	/**
+	* Set message to show if no data
+	*
+	* @return HtmlTable
+	*/
+	public function setNoDataMessage($msg) {
+		$this->_noDataMessage = $msg;
+		return $this;
+	}
+
+	/**
 	* Add column link
 	*
 	* @param string Name of the column to attach to
@@ -208,7 +225,7 @@ class FaZend_View_Helper_HtmlTable {
 	*/
 	protected function _render() {
 		if (!count($this->_paginator))
-			return '<p>no data</p>';
+			return $this->_noDataMessage;
 
 		$resultTRs = array();
 		$resultTDs = array();

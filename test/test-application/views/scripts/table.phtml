@@ -29,5 +29,8 @@
 	// option
 	->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
 
+	// set message if no data
+	->setNoDataMessage('works?')
+
 	// data source
 	->setPaginator($this->paginator)?>
