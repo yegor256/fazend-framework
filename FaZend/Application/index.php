@@ -56,6 +56,6 @@ unset($options);
 // bootstrap the application
 $application->bootstrap();
 
-if (APPLICATION_ENV != 'testing')
+if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV != 'testing'))
 	$application->run();
 
