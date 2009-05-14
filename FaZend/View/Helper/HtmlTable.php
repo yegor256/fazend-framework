@@ -186,14 +186,18 @@ class FaZend_View_Helper_HtmlTable {
 	/**
 	* Add column link
 	*
+	* @param string Name of the column to attach to
+	* @param string HTTP variable to pass to the link
+	* @param string What column value to use for this HTTP var
+	* @param array Other URL params
 	* @return HtmlTable
 	*/
 	public function addColumnLink($title, $httpVar, $column, $urlParams) {
 		$link = new FaZend_StdObject();
-		$link->title = $title;
 		$link->httpVar = $httpVar;
 		$link->urlParams = $urlParams;
-		$this->_column($column)->link = $link;
+		$link->column = $column;
+		$this->_column($title)->link = $link;
 		return $this;
 	}
 
