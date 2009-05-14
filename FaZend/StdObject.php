@@ -18,4 +18,15 @@
  * Simple class
  */
 class FaZend_StdObject {
+
+	/**
+	 * Get the property which is not set yet
+	 *
+	 * @return value|false
+	 */
+	public function __get($property) {
+		if (!isset($this->$property))
+			return false;
+		return $this->$property;	
+	}
 }

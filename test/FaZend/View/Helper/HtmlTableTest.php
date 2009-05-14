@@ -28,9 +28,23 @@ class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
 
 		$view = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->view;
 		$view->setScriptPath(APPLICATION_PATH . '/views/scripts');
-		$view->render('table.phtml');
 
-		$this->assertEquals ($result, $new, "Incorrect HTML compression of [{$html}], got this: [{$new}]");
+		$array = array(
+			array(
+				'id' => 123,
+				'email' => 'test@fazend.com',
+				'password' => 'test'
+			),
+			array(
+				'id' => 124,
+				'email' => 'test@fazend.com',
+				'password' => 'test'
+			),
+		);
+		$paginator = Zend_Paginator::factory($array);
+		$view->paginator = $paginator;
+
+		$view->render('table.phtml');
 
 	}
 
