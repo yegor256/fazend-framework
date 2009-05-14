@@ -16,7 +16,7 @@
 
 require_once 'AbstractTestCase.php';
 
-class HtmlCompressorTest extends AbstractTestCase {
+class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase {
 	
 	/**
 	* Provides HTML samples

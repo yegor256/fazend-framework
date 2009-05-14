@@ -1,0 +1,32 @@
+
+<?=$this->htmlTable()
+	// hide column - don't show it
+	->hideColumn('id')
+
+	// change the title of the column
+	->setColumnTitle('email', 'User Email')
+
+	// parse the value of the column
+	->setParser('password', create_function('$value', 'return "***";'))
+
+	// change style
+	->addColumnStyle('email', "width: 450px;")
+
+	// allow raw html in the column
+	->allowRawHtml('password')
+
+	// option
+	->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
+
+	// conditional skip of the option
+	->skipOption('approve', create_function('$row', 'return true;'))
+	
+	// conditional skip of the option
+	->appendOptionToColumn('approve', 'email')
+	
+	// option
+	->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
+
+	// data source
+	->setPaginator($this->paginator)
+	?>

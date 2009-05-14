@@ -14,14 +14,8 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
-
-class FaZend_DbFactoryTest extends AbstractTestCase {
-	
-	public function testGetWorks () {
-
-		$table = FaZend_DbFactory::get('user');
-
-	}
-
+/**
+ * Simple class
+ */
+class FaZend_StdObject {
 }

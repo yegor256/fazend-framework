@@ -16,7 +16,7 @@
 
 require_once 'AbstractTestCase.php';
 
-class UserTest extends AbstractTestCase {
+class FaZend_UserTest extends AbstractTestCase {
 	
 	public function testSimpleScenarioWorks () {
 

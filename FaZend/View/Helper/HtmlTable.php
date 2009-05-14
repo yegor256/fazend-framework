@@ -22,14 +22,33 @@
  */
 class FaZend_View_Helper_HtmlTable {
 
+	/**
+	 * Instance of the view
+	 *
+	 * @var Zend_View
+	 */
 	private $_view;
+
+	/**
+	 * Paginator to be used
+	 *
+	 * @var Zend_Paginator
+	 */
 	private $_paginator;
-	private $_parsers = array();
-	private $_hidden = array();
+	
+	/**
+	 * List of columns defined by set..()
+	 *
+	 * @var array
+	 */
+	private $_columns = array();
+
+	/**
+	 * List of options defined by set..()
+	 *
+	 * @var array
+	 */
 	private $_options = array();
-	private $_styles = array();
-	private $_titles = array();
-	private $_links = array();
 
 	/**
 	* Save view locally
@@ -83,7 +102,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function setParser($column, $func) {
-		$this->_parsers[$column] = $func;
+		$this->_column($column)->parser = $func;
 		return $this;
 	}
 
@@ -93,7 +112,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function hideColumn($column) {
-		$this->_hidden[$column] = true;
+		$this->_column($column)->hidden = true;
 		return $this;
 	}
 
@@ -103,7 +122,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function appendOptionToColumn($option, $column) {
-		$this->_options[$option]['toColumn'] = $column;
+		$this->_option($option)->toColumn = $column;
 		return $this;
 	}
 
@@ -113,11 +132,10 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function addOption($title, $httpVar, $column, $urlParams) {
-		$this->_options[$title] = array(
-			'title'=>$title, 
-			'httpVar'=>$httpVar, 
-			'column'=>$column, 
-			'urlParams'=>$urlParams);
+		$this->_option($title)->title = $title;
+		$this->_option($title)->httpVar = $httpVar;
+		$this->_option($title)->column = $column;
+		$this->_option($title)->urlParams = $urlParams;
 		return $this;
 	}
 
@@ -127,7 +145,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function skipOption($title, $func) {
-		$this->_options[$title]['skip'] = $func;
+		$this->_option($title)->skip = $func;
 		return $this;
 	}
 
@@ -137,7 +155,7 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function addColumnStyle($column, $style) {
-		$this->_styles[$column] = $style;
+		$this->_column($column)->style = $style;
 		return $this;
 	}
 
@@ -147,7 +165,17 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function setColumnTitle($column, $title) {
-		$this->_titles[$column] = $title;
+		$this->_column($column)->title = $title;
+		return $this;
+	}
+
+	/**
+	* Allow raw HTML output in the column
+	*
+	* @return HtmlTable
+	*/
+	public function allowRawHtml($column) {
+		$this->_column($column)->rawHtml = true;
 		return $this;
 	}
 
@@ -157,11 +185,11 @@ class FaZend_View_Helper_HtmlTable {
 	* @return HtmlTable
 	*/
 	public function addColumnLink($title, $httpVar, $column, $urlParams) {
-		$this->_links[$title] = array(
-			'title'=>$title, 
-			'httpVar'=>$httpVar, 
-			'column'=>$column, 
-			'urlParams'=>$urlParams);
+		$link = new FaZend_StdObject();
+		$link->title = $title;
+		$link->httpVar = $httpVar;
+		$link->urlParams = $urlParams;
+		$this->_column($column)->link = $link;
 		return $this;
 	}
 
@@ -192,36 +220,47 @@ class FaZend_View_Helper_HtmlTable {
 			$tds = array();	
 			foreach ($row as $title=>$value) {
 
-				if (isset($this->_hidden[$title]))
+				// skip this column if required
+				if ($this->_column($title)->hidden)
 					continue;
 
-				$value = htmlspecialchars($value);
+				// strip HTML tags	
+				if (!$this->_column($title)->rawHtml)
+					$value = htmlspecialchars($value);
 
-				if (isset($this->_parsers[$title]))
-					$value = $this->_parsers[$title] ($value, $rowOriginal);
+				// parse the value of this TD	
+				if ($this->_column($title)->parser)
+					$value = $this->_column($title)->parser ($value, $rowOriginal);
 
-				if (isset($this->_links[$title]))	
-					$value = "<a href='".$this->getView()->url($this->_links[$title]['urlParams'] + 
-						array($this->_links[$title]['httpVar']=>$row[$this->_links[$title]['column']]), 'default', true)."'>{$value}</a>";
+				// attach link to the TD
+				if ($this->_column($title)->link) {
+					$link = $this->_column($title)->link;
+					$value = "<a href='".$this->getView()->url($link->urlParams + 
+						array($link->httpVar => $row[$link->column]), 'default', true)."'>{$value}</a>";
+				}	
 
-				$tds[$title] = "<td".(isset($this->_styles[$title]) ? " style='{$this->_styles[$title]}'" : false).">{$value}";
+				// append CSS style
+				$tds[$title] = "<td".($this->_column($title)->style ? " style='{$this->_column($title)->style}'" : false).">{$value}";
 			}	
 
 			if (count($this->_options)) {
 				$optString = '<td>';
-				foreach ($this->_options as $opt) {
+				foreach ($this->_options as $option) {
 
-					if (!empty($opt['skip'])) {
-						if ($opt['skip'] ($rowOriginal))
+					// skip the option
+					if ($option->skip) {
+						if ($option->skip ($rowOriginal))
 							continue;
 					}	
 
+					// build the <A HREF> link for this option
 					$optLink = "&#32;<a href='".$this->getView()->url(
-						$opt['urlParams'] + array($opt['httpVar']=>$row[$opt['column']]), 'default', true).
-						"'>{$opt['title']}</a>";
+						$option->urlParams + array($option->httpVar => $row[$option->column]), 'default', true).
+						"'>{$option->title}</a>";
 
-					if (isset($opt['toColumn']))	
-						$tds[$opt['toColumn']] .= $optLink;
+					// attach this option to the particular column	
+					if ($option->toColumn)	
+						$tds[$option->toColumn] .= $optLink;
 					else
 						$optString .= $optLink;	
 				}
@@ -234,12 +273,13 @@ class FaZend_View_Helper_HtmlTable {
 		// build the header using the last ROW information
 		$header = '';
 		foreach ($row as $title=>$value) {
-			if (isset($this->_hidden[$title]))
+			// skip the column
+			if ($this->_column($title)->hidden)
 				continue;
 
 			// rename the column
-			if (isset($this->_titles[$title]))	
-				$title = $this->_titles[$title];
+			if ($this->_column($title)->title)	
+				$title = $this->_column($title)->title;
 
 			$header .= "<th>".ucwords ($title)."</th>";
 		}	
@@ -253,6 +293,28 @@ class FaZend_View_Helper_HtmlTable {
 		}	
 
 		return $html.'</table>';	
+	}
+
+	/**
+	* Get a column object 
+	*
+	* @return StdObj
+	*/
+	private function _column($column) {
+		if (!isset($this->_columns[$column]))
+			$this->_columns[$column] = new FaZend_StdObject();
+		return $this->_columns[$column];
+	}
+
+	/**
+	* Get a column object 
+	*
+	* @return StdObj
+	*/
+	private function _option($option) {
+		if (!isset($this->_options[$option]))
+			$this->_options[$option] = new FaZend_StdObject();
+		return $this->_options[$option];
 	}
 
 }

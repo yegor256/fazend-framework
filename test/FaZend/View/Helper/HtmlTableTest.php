@@ -16,11 +16,21 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_DbFactoryTest extends AbstractTestCase {
+class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
 	
-	public function testGetWorks () {
+	/**
+	* Test table rendering
+	*
+	*/
+	public function testHtmlTableWorks () {
 
-		$table = FaZend_DbFactory::get('user');
+		//$view = new Zend_View();
+
+		$view = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->view;
+		$view->setScriptPath(APPLICATION_PATH . '/views/scripts');
+		$view->render('table.phtml');
+
+		$this->assertEquals ($result, $new, "Incorrect HTML compression of [{$html}], got this: [{$new}]");
 
 	}
 

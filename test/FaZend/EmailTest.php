@@ -22,7 +22,7 @@ class stubMailer extends Zend_Mail_Transport_Sendmail {
 	}
 }
 
-class EmailTest extends AbstractTestCase {
+class FaZend_EmailTest extends AbstractTestCase {
 	
 	public function testEmailsAreRenderedAndSent () {
 

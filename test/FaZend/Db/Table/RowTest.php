@@ -38,7 +38,7 @@ class Table_User extends FaZend_Db_Table_Row {
 	}
 }
 
-class RowTest extends AbstractTestCase {
+class FaZend_Db_Table_RowTest extends AbstractTestCase {
 	
 	public function testFindByIdWorks () {
 
