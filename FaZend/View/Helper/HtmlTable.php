@@ -231,7 +231,7 @@ class FaZend_View_Helper_HtmlTable {
 				// parse the value of this TD	
 				if ($this->_column($title)->parser) {
 					$parser = $this->_column($title)->parser;
-					$value = $parser ($value, $rowOriginal);
+					$value = $parser($value, $rowOriginal);
 				}	
 
 				// attach link to the TD
@@ -251,7 +251,8 @@ class FaZend_View_Helper_HtmlTable {
 
 					// skip the option
 					if ($option->skip) {
-						if ($option->skip ($rowOriginal))
+						$skip = $option->skip;
+						if ($skip($rowOriginal))
 							continue;
 					}	
 
