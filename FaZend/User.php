@@ -94,6 +94,9 @@ class FaZend_User extends FaZend_Db_Table_Row {
 		if (count($table->fetchAll($table->select()->where('email = ?', $email))))
 			throw new Model_User_RegisterException('user with such email already exists');
 
+		if (!is_array($data))
+			throw new Exception("Third parameter to register() should be an array");
+
 		if (!$table->insert(array(
 			'email' => strtolower($email),
 			'password' => $password) + $data))
