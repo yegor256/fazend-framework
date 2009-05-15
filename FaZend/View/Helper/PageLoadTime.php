@@ -22,7 +22,7 @@ class FaZend_View_Helper_PageLoadTime {
 
 	public function pageLoadTime() {
  		global $startTime; 
- 		return sprintf("%0.2f sec", round(microtime(true)-$startTime, 2));
+ 		return sprintf('%0.2fsec', round(microtime(true)-$startTime, 2));
  	}
 
 }
