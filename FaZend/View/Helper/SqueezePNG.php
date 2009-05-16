@@ -114,9 +114,10 @@ class FaZend_View_Helper_SqueezePNG {
 	*
 	* @return string
 	*/
-	public function squeezePNG($file) {
+	public function squeezePNG($file = false) {
 
-		$this->_file = $file;
+		if ($file)
+			$this->_file = $file;
 		return $this;
 
 	}

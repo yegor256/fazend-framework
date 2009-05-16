@@ -27,7 +27,7 @@ class FaZend_Controller_Squeeze extends FaZend_Controller_Action {
          */
         public function indexAction() {
 
-        	$file = FaZend_View_Helper_SqueezePNG::getImagePath();
+        	$file = $this->view->squeezePNG()->getImagePath();
             	if (!file_exists($file))
         		return $this->_forwardWithMessage('file '.$file.' is not found');
 
