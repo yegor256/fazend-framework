@@ -36,8 +36,9 @@ class FaZend_View_Helper_SqueezePNG {
 	*
 	* @return string
 	*/
-	public static function getImagePath() {
-		return sys_get_temp_dir().'/fazend-'.md5(WEBSITE_URL).'.png';
+	public function getImagePath() {
+		$url = $this->getView()->url(array('id'=>'global'), 'squeeze', true);
+		return sys_get_temp_dir().'/fazend-'.md5($url).'.png';
 	}           
 
 	/**
@@ -45,8 +46,8 @@ class FaZend_View_Helper_SqueezePNG {
 	*
 	* @return string
 	*/
-	public static function getMapPath() {
-		return self::getImagePath().'.data';
+	public function getMapPath() {
+		return $this->getImagePath().'.data';
 	}           
 
 	/**
@@ -55,7 +56,7 @@ class FaZend_View_Helper_SqueezePNG {
 	* @return array
 	*/
 	public function loadMap() {
-		$file = self::getMapPath();
+		$file = $this->getMapPath();
 
 		if (!file_exists($file))
 			return array();
@@ -65,7 +66,7 @@ class FaZend_View_Helper_SqueezePNG {
 			return array();
 
 		// checksum of the image file	
-		if ($map['md5'] != md5_file(self::getImagePath()))	
+		if ($map['md5'] != md5_file($this->getImagePath()))	
 			return array();
 
 //		return array();
@@ -80,8 +81,8 @@ class FaZend_View_Helper_SqueezePNG {
 	* @return void
 	*/
 	public function saveMap($map, $png) {
-		$file = self::getMapPath();
-		$pngFile = self::getImagePath();
+		$file = $this->getMapPath();
+		$pngFile = $this->getImagePath();
 
 		file_put_contents($pngFile, $png);
 
@@ -135,10 +136,10 @@ class FaZend_View_Helper_SqueezePNG {
 	* @return string HTML
 	*/
 	public function startOver() {
-		if (file_exists(self::getMapPath()))
-			unlink(self::getMapPath());
-		if (file_exists(self::getImagePath()))
-			unlink(self::getImagePath());
+		if (file_exists($this->getMapPath()))
+			unlink($this->getMapPath());
+		if (file_exists($this->getImagePath()))
+			unlink($this->getImagePath());
 		return $this;	
 	}
 
