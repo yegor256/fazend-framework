@@ -47,7 +47,8 @@ class FaZend_Db_Wrapper {
 		$this->_table = new $tableClassName();
 
 		$this->_select = $this->_table->select()
-			->setIntegrityCheck(false);
+			->setIntegrityCheck(false)
+			->from($table);
 	}
 
         /**
