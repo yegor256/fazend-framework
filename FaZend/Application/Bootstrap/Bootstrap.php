@@ -52,17 +52,19 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		$this->bootstrap('FrontController');
 		$front = $this->getResource('FrontController');
 		$router = new Zend_Controller_Router_Rewrite();
-		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
 
 		// configure custom routes
 		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
 			$router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
 		}
+
+		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
 		$front->setRouter($router);
 
                 // Return it, so that it can be stored by the bootstrap
                 return $view;
 	}
+
 
 
 }
