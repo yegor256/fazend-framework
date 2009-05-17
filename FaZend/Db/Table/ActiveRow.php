@@ -37,6 +37,10 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_row {
 			$this->_data = $this->_table->find($id)->current()->toArray();
 
 		} elseif ($id !== false) {	
+
+			if (!is_array($id))
+				throw new Exception("new in ".get_class($this)." has incorrect param type (neither Int nor Array)");
+
 			parent::__construct($id);
 		} else {
 			parent::__construct();
