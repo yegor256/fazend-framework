@@ -75,9 +75,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_row {
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
-		$tables = array_map(create_function('$name', 'return strtolower($name);'), $db->listTables());
+		$tables = $db->listTables();
 
-		if (is_numeric($value) && (in_array(strtolower($name), $tables))) {
+		if (is_numeric($value) && (in_array($name, $tables))) {
 			$rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
 			$value = new $rowClass((integer)$value);
 		}	
