@@ -61,6 +61,9 @@ class FaZend_Email {
 	public function __construct ($template = false) {
 		$this->set('template', $template);
 
+		if (!self::$_config->send)
+			return;
+
 		if (!isset(self::$_config->notifier))
 			throw new Exception("you should define resources.Email.notifier in app.ini (author of notify messages)");
 
