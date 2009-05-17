@@ -34,7 +34,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_row {
 		// if the ID provided - find this row and save it
 		if (is_integer($id)) {
 			parent::__construct();
-			$this->_data = $this->_table->find($id)->current()->toArray();
+			$rowset = $this->_table->find($id);
+
+			if (!count($rowset))
+				throw new Exception(get_class($this)." not found (id: $id)");
+
+			$this->_data = $rowset->current()->toArray();
 
 		} elseif ($id !== false) {	
 
