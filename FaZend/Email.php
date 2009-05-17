@@ -115,6 +115,11 @@ class FaZend_Email {
          * @return void
          */
 	public function send ($force = false) {
+
+		// don't send!
+		if (!self::$_config->send && !$force)
+			return;
+
 	        // this class will send email
 		$mail = $this->_createZendMailer();
 
