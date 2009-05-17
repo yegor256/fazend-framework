@@ -19,7 +19,7 @@
  *
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  */
-abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_row {
+abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         /**
          * Create new row or load the existing one
