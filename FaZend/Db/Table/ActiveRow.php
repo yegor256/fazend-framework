@@ -39,7 +39,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_row {
 			if (!count($rowset))
 				throw new Exception(get_class($this)." not found (id: $id)");
 
-			$this->_data = $rowset->current()->toArray();
+			$this->_data = $this->_cleanData = $rowset->current()->toArray();
 
 		} elseif ($id !== false) {	
 
