@@ -40,11 +40,6 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 
 		$this->_initPluginCache($options);
 
-		if (isset($options['Db'])) {
-			$this->getBootstrap()->bootstrap('db');
-			$this->_initDbFactory($options['Db']);
-		}	
-
 		$config = new Zend_Config($options);
 		FaZend_Properties::setOptions($config);
 
@@ -93,18 +88,5 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 		Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
 
 	}
-
-	/**
-	* Initialize database tables
-	*
-	* @return void
-	*/
-	protected function _initDbFactory($options) {
-
-	    	foreach($options as $table) {
-	    		FaZend_DbFactory::create($table);
-	    	}	
-	    		        
-	}	
 
 }

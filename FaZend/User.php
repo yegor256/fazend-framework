@@ -21,7 +21,7 @@
  *
  * @package Model
  */
-class FaZend_User extends FaZend_Db_Table_Row {
+class FaZend_User extends FaZend_Db_Table_ActiveRow_User {
 
         /**
          * User is logged in?
@@ -89,7 +89,7 @@ class FaZend_User extends FaZend_Db_Table_Row {
          * @return boolean
          */
 	public static function register ($email, $password, $data = array()) {
-		$table = FaZend_DbFactory::get('user');
+		$table = new FaZend_Db_ActiveTable_User;
 
 		if (count($table->fetchAll($table->select()->where('email = ?', $email))))
 			throw new Model_User_RegisterException('user with such email already exists');

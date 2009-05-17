@@ -66,6 +66,18 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 	}
 
 
+	/**
+	* Initialize autoloader for Db ActiveRow
+	*
+	* @return void
+	*/
+	protected function _initDbAutoloader() {
+		
+		$autoloader = Zend_Loader_Autoloader::getInstance();
+		$autoloader->pushAutoloader(new FaZend_Db_Table_RowLoader(), 'FaZend_Db_Table_ActiveRow_');
+		$autoloader->pushAutoloader(new FaZend_Db_TableLoader(), 'FaZend_Db_ActiveTable_');
+
+	}
 
 }
 

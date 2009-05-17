@@ -14,14 +14,12 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
+/**
+ * Simple table
+ *
+ * @see http://framework.zend.com/manual/en/zend.db.table.html
+ */
+abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
 
-class FaZend_DbFactoryTest extends AbstractTestCase {
 	
-	public function testGetWorks () {
-
-		$table = FaZend_DbFactory::get('user');
-
-	}
-
 }
