@@ -56,8 +56,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 		$cache = Zend_Cache::factory('Core', 'File',
 			array(
 				'caching' => true,
-				'lifetime' => 60 * 60 * 24, // 1 day
-				'cache_id_prefix' => $options['name'],
+				'lifetime' => null, // forever 
+				'cache_id_prefix' => $options['name'] . '_' . FaZend_Revision::get(),
 				'automatic_serialization' => true
 
 			),
