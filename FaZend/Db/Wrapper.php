@@ -54,15 +54,31 @@ class FaZend_Db_Wrapper {
 	}
 
         /**
+         * Set row class
+         *
+         * @return void
+         */
+	public function setRowClass($rowClass) {
+		$this->_table->setRowClass($rowClass);
+		return $this;
+	}
+
+        /**
+         * Return the table
+         *
+         * @return void
+         */
+	public function table() {
+        	return $this->_table;
+	}
+
+        /**
          * Call wrapping
          *
          * @return void
          */
 	public function __call($name, $args) {
 
-	        if ($name == 'table')
-	        	return $this->_table;
-		
 		if (in_array($name, array('fetchAll', 'fetchRow')))
 			return call_user_func(array($this->_table, $name), $this->_select);
 

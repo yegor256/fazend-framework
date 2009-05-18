@@ -42,7 +42,8 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
 			}	
 
 			public static function retrieve(\$param = true) {
-				return new FaZend_Db_Wrapper('{$name}', \$param);
+				\$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
+				return \$wrapper;
 			}	
 		};");
 

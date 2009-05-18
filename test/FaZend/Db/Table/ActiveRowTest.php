@@ -35,7 +35,11 @@ $adapter->query(
 	'insert into Product values (10, "car", 132)');
 
 // ORM auto-mapping classes
-class Owner extends FaZend_Db_Table_ActiveRow_Owner {}
+class Owner extends FaZend_Db_Table_ActiveRow_Owner {
+	function isMe() {
+		return true;
+	}
+}
 class Product extends FaZend_Db_Table_ActiveRow_Product {}
 
 class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
@@ -63,7 +67,10 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
 		$list = Owner::retrieve()
 			->where('name is not null')
-			->fetchAll();
+			->setRowClass('Owner')
+			->fetchRow();
+
+		$list->isMe();
 
 	}
 
