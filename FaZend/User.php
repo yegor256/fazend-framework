@@ -21,7 +21,7 @@
  *
  * @package Model
  */
-class FaZend_User extends FaZend_Db_Table_ActiveRow_User {
+class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 
         /**
          * User is logged in?
@@ -88,21 +88,14 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_User {
          *
          * @return boolean
          */
-	public static function register ($email, $password, $data = array()) {
-		$table = new FaZend_Db_ActiveTable_User;
+	public static function register ($email, $password) {
 
-		if (count($table->fetchAll($table->select()->where('email = ?', $email))))
-			throw new Model_User_RegisterException('user with such email already exists');
+		$user = new FaZend_User();
+		$user->email = strtolower($email);
+		$user->password = $password;
+		$user->save();
 
-		if (!is_array($data))
-			throw new Exception("Third parameter to register() should be an array");
-
-		if (!$table->insert(array(
-			'email' => strtolower($email),
-			'password' => $password) + $data))
-			throw new Model_User_RegisterException('failed to create new user');
-
-		return self::findByEmail($email);	
+		return $user;	
 	}
 
         /**
@@ -112,31 +105,10 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_User {
          */
 	public static function findByEmail ($email) {
 
-		$table = FaZend_DbFactory::get('user');
-		return $table->fetchRow($table->select()->where('email = ?', $email));
+		return self::retrieve()
+			->where('email = ?', $email)
+			->fetchRow();
 
-	}
-
-        /**
-         * Get user by email
-         *
-         * @return boolean
-         */
-	public static function findById ($id) {
-
-		$table = FaZend_DbFactory::get('user');
-		return $table->find($id)->current();
-
-	}
-
-        /**
-         * Get a list of all users
-         *
-         * @return select
-         */
-	public static function retrieve () {
-		$table = FaZend_DbFactory::get('user');
-		return $table->fetchAll($table->select());
 	}
 
         /**
