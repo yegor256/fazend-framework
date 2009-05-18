@@ -36,10 +36,14 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
          */
         public function filter($html) {
 
-        	$matches = array();
-        	preg_match_all('/\<pre(.*?)\>(.*?)\<\/pre\>/msi', $html, $matches);
-        	foreach ($matches[0] as $id=>$match)
-        		$html = str_replace($match, "<pre{$matches[1][$id]}>".base64_encode($matches[2][$id]).'</pre>', $html);
+        	$masked = array('pre', 'script');
+
+        	foreach($masked as $tag) {
+	        	$matches = array();
+        		preg_match_all('/\<'.$tag.'(.*?)\>(.*?)\<\/'.$tag.'\>/msi', $html, $matches);
+        		foreach ($matches[0] as $id=>$match)
+        			$html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_encode($matches[2][$id])."</{$tag}>", $html);
+        	}	
 
 		$html = trim(preg_replace(array(
 			'/[\n\r\t]/',
@@ -53,9 +57,11 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
 			'/>',
 		), $html));
 
-        	preg_match_all('/\<pre(.*?)\>(.*?)\<\/pre\>/msi', $html, $matches);
-        	foreach ($matches[0] as $id=>$match)
-        		$html = str_replace($match, "<pre{$matches[1][$id]}>".base64_decode($matches[2][$id]).'</pre>', $html);
+        	foreach($masked as $tag) {
+	        	preg_match_all('/\<'.$tag.'(.*?)\>(.*?)\<\/'.$tag.'\>/msi', $html, $matches);
+        		foreach ($matches[0] as $id=>$match)
+        			$html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_decode($matches[2][$id])."</{$tag}>", $html);
+        	}	
 
 		return $html;
         }
