@@ -34,7 +34,9 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         	$view->addHelperPath(APPLICATION_PATH . '/helpers', 'Helper');
         	$view->addHelperPath(FAZEND_PATH . '/View/Helper', 'FaZend_View_Helper');
         	$view->addFilterPath(FAZEND_PATH . '/View/Filter', 'FaZend_View_Filter');
-        	$view->addFilter('HtmlCompressor');
+
+        	if (FaZend_Properties::get()->htmlCompression)
+	        	$view->addFilter('HtmlCompressor');
 
                 // Add it to the ViewRenderer
                 $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
