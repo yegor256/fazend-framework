@@ -73,6 +73,15 @@ class FaZend_Db_Wrapper {
 	}
 
         /**
+         * Return the select
+         *
+         * @return void
+         */
+	public function select() {
+        	return $this->_select;
+	}
+
+        /**
          * Call wrapping
          *
          * @return void
