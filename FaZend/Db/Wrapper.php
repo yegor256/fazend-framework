@@ -40,15 +40,17 @@ class FaZend_Db_Wrapper {
          *
          * @return void
          */
-	public function __construct($table) {
+	public function __construct($table, $setFrom = true) {
 
 		$tableClassName = 'FaZend_Db_ActiveTable_' . $table;
 
 		$this->_table = new $tableClassName();
 
 		$this->_select = $this->_table->select()
-			->setIntegrityCheck(false)
-			->from($table);
+			->setIntegrityCheck(false);
+
+		if ($setFrom)	
+			$this->_select->from($table);
 	}
 
         /**
