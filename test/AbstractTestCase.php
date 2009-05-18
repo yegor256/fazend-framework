@@ -24,7 +24,7 @@ define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 include 'FaZend/Application/index.php';
 
 $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-$adapter->query('create table user (id int(10) not null, email varchar(50) not null, password varchar(50) not null, primary key (id))');
+$adapter->query('create table user (id integer not null primary key autoincrement, email varchar(50) not null, password varchar(50) not null)');
 
 class AbstractTestCase extends PHPUnit_Framework_TestCase {
 	

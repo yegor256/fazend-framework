@@ -20,7 +20,11 @@ class FaZend_UserTest extends AbstractTestCase {
 	
 	public function testSimpleScenarioWorks () {
 
-		FaZend_User::isLoggedIn();
+		if (FaZend_User::isLoggedIn()) {
+			$user = FaZend_User::getCurrentUser();
+		} else {
+			$user = FaZend_User::register('test@fazend.com', 'test');
+		}
 
 	}
 
