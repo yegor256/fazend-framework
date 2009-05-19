@@ -37,14 +37,14 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 			$rowset = $this->_table->find($id);
 
 			if (!count($rowset))
-				throw new Exception(get_class($this)." not found (id: $id)");
+				throw new FaZend_Db_Table_RowNotFoundException(get_class($this)." not found (id: $id)");
 
 			$this->_data = $this->_cleanData = $rowset->current()->toArray();
 
 		} elseif ($id !== false) {	
 
 			if (!is_array($id))
-				throw new Exception("new in ".get_class($this)." has incorrect param type (neither Int nor Array)");
+				throw new Exception(get_class($this)."::new() has incorrect param type (neither Int nor Array)");
 
 			parent::__construct($id);
 		} else {
