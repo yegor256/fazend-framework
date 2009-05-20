@@ -14,20 +14,12 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
-
-class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
-	
-	/**
-	* Test table rendering
-	*
-	*/
-	public function testHtmlTableWorks () {
-
-		$this->dispatch('/index/table');
-
-		$this->assertQuery('table', "Error in HTML: ".$this->getResponse()->getBody());
-
+// ORM auto-mapping classes
+class Owner extends FaZend_Db_Table_ActiveRow_owner {
+	function isMe() {
+		return true;
 	}
-
 }
+
+class Product extends FaZend_Db_Table_ActiveRow_product {}
+

@@ -48,18 +48,18 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 	}
 
         /**
-         * Login user
+         * Login this user
          *
          * @return void
          */
-	public static function logIn ($email, $password) {
+	public function logIn () {
 
 		$authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
 		$authAdapter->setTableName('user')
 			->setIdentityColumn('email')
 			->setCredentialColumn('password')
-			->setIdentity(strtolower($email))
-			->setCredential($password);
+			->setIdentity(strtolower($this->email))
+			->setCredential($this->password);
 
 		$auth = Zend_Auth::getInstance();
 		$result = $auth->authenticate($authAdapter);
@@ -77,7 +77,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
          *
          * @return void
          */
-	public static function logOut () {
+	public function logOut () {
 
 		Zend_Auth::getInstance()->clearIdentity();
 
@@ -88,13 +88,11 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
          *
          * @return boolean
          */
-	public static function register ($email, $password, $data = array()) {
+	public static function register ($email, $password) {
 
 		$user = new FaZend_User();
 		$user->email = strtolower($email);
 		$user->password = $password;
-		foreach ($data as $key=>$value)
-			$user->$key = $value;
 		$user->save();
 
 		return $user;	
@@ -107,9 +105,15 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
          */
 	public static function findByEmail ($email) {
 
-		return self::retrieve()
+		$user = self::retrieve()
 			->where('email = ?', $email)
+			->setRowClass('FaZend_User')
 			->fetchRow();
+
+		if (!$user)
+			throw new FaZend_User_NotFoundException();
+
+		return $user;	
 
 	}
 
@@ -122,7 +126,16 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 		if (!self::isLoggedIn())
 			return false;
 
-		return self::getCurrentUser()->id == $this->id;
+		return self::getCurrentUser() == $this;
 	}
 		
+        /**
+         * This password is ok for the user?
+         *
+         * @return boolean
+         */
+	public function isGoodPassword ($password) {
+		return $this->password == $password;
+	}
+
 }

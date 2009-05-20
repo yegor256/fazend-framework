@@ -24,24 +24,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 	*/
 	public function testSqueezePNGWorks () {
 
-		//$view = new Zend_View();
-
-		$view = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->view;
-		$view->setScriptPath(APPLICATION_PATH . '/views/scripts');
-
-		$route = new Zend_Controller_Router_Route(
-			'abc',
-			array(
-				'controller' => 'index',
-				'action'     => 'index'
-			)
-		);
-
-		Zend_Controller_Front::getInstance()->getRouter()->addRoute('default', $route);
-
-		$html = $view->render('squeeze.phtml');
-
-		$this->assertNotEquals(false, $html, "Empty HTML instead of images");
+		$this->dispatch('/index/squeeze');
 
 	}
 

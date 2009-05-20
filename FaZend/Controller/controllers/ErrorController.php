@@ -15,9 +15,11 @@
  */
 
 /**
- * ErrorController
+ * default ErrorController
+ *
+ *
  */ 
-class FaZend_Controller_Error extends FaZend_Controller_Action { 
+class Fazend_ErrorController extends FaZend_Controller_Action { 
 
         /**
          * errorAction() is the action that will be called by the "ErrorHandler" 

@@ -19,7 +19,7 @@
  * 
  *
  */
-class FaZend_Controller_Squeeze extends FaZend_Controller_Action {
+class Fazend_SqueezeController extends FaZend_Controller_Action {
 
         /**
          *

@@ -17,9 +17,20 @@
 /**
  * User management controller
  *
+ * You need to have these scripts (in /views/scripts/):
+ *   remind.phtml
+ *   reminded.phtml
+ *   register.phtml
+ *
+ * You need to have these email templates (in /emails):
+ *   RemindPassword.tmpl
+ *   
+ * You need these forms (in /config):
+ *   RegisterAccount
+ *   RemindPassword
  *
  */
-class FaZend_Controller_User extends FaZend_Controller_Action {
+class Fazend_UserController extends FaZend_Controller_Action {
 
         /**
          * Register new account
@@ -35,18 +46,18 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
 	        if (!$form->isFilled())
 	        	return;
 
-		$email = $form->email->getValue();	
-		$password = $form->password->getValue();
-
+	        // try to register this new user
 		try {
-			$user = FaZend_User::register($email, $password);
+			$user = FaZend_User::register($form->email->getValue(), $form->password->getValue());
 		} catch (FaZend_User_RegisterException $e) {
 			$form->email->addError($e->getMessage());
 			return;
 		}	
 
-		FaZend_User::logIn($email, $password);
+		// login the found user
+		$user->logIn();
 
+		// go to the site index - should be improved - we should get back to the page where we were
 		$this->_forward('index', 'index');
 
         }
@@ -67,7 +78,7 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
 
 		try {
 			$user = FaZend_User::findByEmail($form->email->getValue());
-		} catch (Exception $e) {
+		} catch (FaZend_User_NotFoundException $e) {
 			$form->email->addError('user not found');
 			return;
 		}
@@ -101,7 +112,7 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
         	if (!FaZend_User::isLoggedIn()) 
         		return $this->_forwardWithMessage('you are not logged in yet');
 
-        	FaZend_User::logOut();
+        	FaZend_User::getCurrentUser()->logOut();
 
         	$this->_forward('index', 'index');
 
@@ -114,21 +125,24 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
          */
         public function loginAction() {
 
-		$loginEmail = $this->getRequest()->getPost('loginEmail');
-		$loginPassword = $this->getRequest()->getPost('loginPassword');
+                $form = FaZend_Form::create('Login', $this->view);
+	        if (!$form->isFilled())
+	        	return;
 
-		if ($loginEmail && $loginPassword) {
-			try {
-				FaZend_User::logIn($loginEmail, $loginPassword);
-			} catch (FaZend_User_LoginException $e) {
-				$this->view->loginError = $e->getMessage();
-			}	
-		}	
+        	try {
+			$user = FaZend_User::findByEmail($form->email->getValue());
 
-		$this->view->loginEmail = $loginEmail;
-		$this->view->loginPassword = $loginPassword;
+			if (!$user->isGoodPassword($form->pwd->getValue())) {
+				$form->pwd->addError('incorrect password');
+			} else {
+				$user->logIn();
+				$this->view->form = false;
+			}
 
-		$this->_forward('index', 'index');
+		} catch (FaZend_User_NotFoundException $e) {
+			$form->email->addError('user not found');
+		}
+
 	}	
 
 }

@@ -14,20 +14,7 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
+$adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+$adapter->query('create table user (id integer not null primary key autoincrement, email varchar(50) not null, password varchar(50) not null)');
 
-class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
-	
-	/**
-	* Test table rendering
-	*
-	*/
-	public function testHtmlTableWorks () {
 
-		$this->dispatch('/index/table');
-
-		$this->assertQuery('table', "Error in HTML: ".$this->getResponse()->getBody());
-
-	}
-
-}

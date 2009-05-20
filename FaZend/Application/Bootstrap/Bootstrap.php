@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+// system testing function
+function bug($var) { echo '<pre>'.htmlspecialchars(print_r($var, true)).'</pre>'; die(); }
+
 /**
 * Bootstrap
 *
@@ -26,10 +29,13 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 	*
 	* @return
 	*/
-	protected function _initView() {
+	protected function _initApp() {
 
-		// Initialize view
-                $view = new Zend_View();
+		$this->bootstrap('frontController');
+		$front = $this->getResource('frontController');
+
+		$this->bootstrap('view');
+		$view = $this->getResource('view');
 
         	$view->addHelperPath(APPLICATION_PATH . '/helpers', 'Helper');
         	$view->addHelperPath(FAZEND_PATH . '/View/Helper', 'FaZend_View_Helper');
@@ -38,10 +44,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
                 $this->bootstrap('Fazend');
         	if (FaZend_Properties::get()->htmlCompression)
 	        	$view->addFilter('HtmlCompressor');
-
-                // Add it to the ViewRenderer
-                $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-                $viewRenderer->setView($view);
 
                 // view paginator
 		Zend_Paginator::setDefaultScrollingStyle('Sliding');
@@ -52,8 +54,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 			Zend_Session::$_unitTestEnabled = true;
 
 		// configure global routes for all
-		$this->bootstrap('FrontController');
-		$front = $this->getResource('FrontController');
 		$router = new Zend_Controller_Router_Rewrite();
 
 		// configure custom routes
@@ -64,6 +64,12 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
 		$front->setRouter($router);
 
+		$front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
+			'module' => 'fazend',
+			'controller' => 'error',
+			'action' => 'error'
+		)));
+                
                 // Return it, so that it can be stored by the bootstrap
                 return $view;
 	}

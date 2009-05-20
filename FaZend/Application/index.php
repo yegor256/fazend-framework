@@ -16,9 +16,6 @@
 
 $startTime = microtime(true);
 
-// system testing function
-function bug($var) { echo '<pre>'.htmlspecialchars(print_r($var, true)).'</pre>'; die(); }
-
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH',

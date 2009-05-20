@@ -1,0 +1,12 @@
+
+<? if (!FaZend_User::isLoggedIn()): ?>
+
+        <a href="<?=$this->url(array('controller'=>'user', 'action'=>'register'), 'default', true)?>">create account</a>
+
+	<?=$this->form?>
+
+<? else: ?>
+
+       	<a href="<?=$this->url(array('controller'=>'user', 'action'=>'logout'), 'default', true)?>">logout</a>
+
+<? endif; ?>

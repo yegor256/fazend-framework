@@ -16,14 +16,15 @@
 
 require_once 'AbstractTestCase.php';
 
-class stubMailer extends Zend_Mail_Transport_Sendmail {
-	public function _sendMail() {
-		return true;
-	}
-}
-
 class FaZend_EmailTest extends AbstractTestCase {
 	
+	public function setUp () {
+
+		parent::setUp();
+
+		require_once 'stubMailer.php';
+	}
+
 	public function testEmailsAreRenderedAndSent () {
 
 		$mailer = new stubMailer();
@@ -40,3 +41,4 @@ class FaZend_EmailTest extends AbstractTestCase {
 	}
 
 }
+                

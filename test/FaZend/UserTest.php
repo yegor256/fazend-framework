@@ -24,8 +24,7 @@ class FaZend_UserTest extends AbstractTestCase {
 			$user = FaZend_User::getCurrentUser();
 		} else {
 			$user = FaZend_User::register('test@fazend.com', 'test');
-			FaZend_User::login('test@fazend.com', 'test');
-			$user = FaZend_User::getCurrentUser();
+			$user->login();
 		}
 
 		$this->assertNotEquals(false, $user->email);

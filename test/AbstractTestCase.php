@@ -14,18 +14,48 @@
  * @category FaZend
  */
 
-require_once 'PHPUnit/Framework/TestCase.php';
+require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
-// bootstrap the application
 define('APPLICATION_ENV', 'testing');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
 define('CLI_ENVIRONMENT', true);
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
-include 'FaZend/Application/index.php';
 
-$adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-$adapter->query('create table user (id integer not null primary key autoincrement, email varchar(50) not null, password varchar(50) not null)');
+class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
-class AbstractTestCase extends PHPUnit_Framework_TestCase {
+        /**
+         * Setup test
+         *
+         *
+         */
+	public function setUp () {
+	
+		$this->bootstrap = array($this, 'myBootstrap');
+
+		parent::setUp();
+
+	}
+	
+        /**
+         * Bootstrap as usual
+         *
+         *
+         */
+	public function myBootstrap () {
+		include 'FaZend/Application/index.php';
+
+		include 'SetupDB.php';
+	}	
+
+        /**
+         * Close-out the test
+         *
+         *
+         */
+	public function tearDown () {
+		$this->resetRequest();
+		$this->resetResponse();
+		parent::tearDown();
+	}
 	
 }

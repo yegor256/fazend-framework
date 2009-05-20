@@ -16,34 +16,17 @@
 
 require_once 'AbstractTestCase.php';
 
-$adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-$adapter->query(
-	'create table Owner (
-		id integer not null primary key autoincrement, 
-		name varchar(50) not null)');
-
-$adapter->query(
-	'create table Product (
-		id integer not null primary key autoincrement, 
-		text varchar(1024) not null, 
-		owner integer not null constraint fk_product_owner references owner(id))');
-
-$adapter->query(
-	'insert into Owner values (132, "john smith")');
-
-$adapter->query(
-	'insert into Product values (10, "car", 132)');
-
-// ORM auto-mapping classes
-class Owner extends FaZend_Db_Table_ActiveRow_Owner {
-	function isMe() {
-		return true;
-	}
-}
-class Product extends FaZend_Db_Table_ActiveRow_Product {}
-
 class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 	
+	public function setUp () {
+
+		parent::setUp();
+
+		include 'SetupSimpleDB.php';
+		include_once 'SimpleClasses.php';
+
+	}
+
 	public function testCreationWorks () {
 
 		$owner = new Owner(132);
@@ -58,8 +41,12 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 	public function testGettingWorks () {
 
 		$product = new Product(10);
+		
+		$this->assertNotEquals(false, $product->owner, "Owner is null, why?");
+
 		$name = $product->owner->name;
-		echo "Owner: {$product->owner}, Name: {$name}";
+		
+		$this->assertNotEquals(false, $name, "Owner name is false, why?");
 
 	}
 
