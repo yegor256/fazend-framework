@@ -40,12 +40,12 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
 
 		try {
 			$user = FaZend_User::register($email, $password);
-		} catch (Model_User_RegisterException $e) {
+		} catch (FaZend_User_RegisterException $e) {
 			$form->email->addError($e->getMessage());
 			return;
 		}	
 
-		Model_User::logIn($email, $password);
+		FaZend_User::logIn($email, $password);
 
 		$this->_forward('index', 'index');
 
@@ -58,7 +58,7 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
          */
         public function remindAction() {
 
-        	if (Model_User::isLoggedIn()) 
+        	if (FaZend_User::isLoggedIn()) 
         		return $this->_forwardWithMessage('you are already logged in');
 
                 $form = FaZend_Form::create('RemindPassword', $this->view);
@@ -98,7 +98,7 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
          */
         public function logoutAction() {
 
-        	if (!Model_User::isLoggedIn()) 
+        	if (!FaZend_User::isLoggedIn()) 
         		return $this->_forwardWithMessage('you are not logged in yet');
 
         	FaZend_User::logOut();
@@ -119,7 +119,7 @@ class FaZend_Controller_User extends FaZend_Controller_Action {
 
 		if ($loginEmail && $loginPassword) {
 			try {
-				Model_User::logIn($loginEmail, $loginPassword);
+				FaZend_User::logIn($loginEmail, $loginPassword);
 			} catch (FaZend_User_LoginException $e) {
 				$this->view->loginError = $e->getMessage();
 			}	
