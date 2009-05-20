@@ -65,7 +65,11 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 	}
 
 	public function testLogoutWorks () {
+		$user = FaZend_User::findByEmail('good@fazend.com');
+		$user->logIn();
+
 		$this->dispatch('/user/logout');
+		$this->assertEquals(false, FaZend_User::isLoggedIn());
 	}
 
 }
