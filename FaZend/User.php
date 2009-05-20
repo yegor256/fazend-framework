@@ -37,7 +37,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
         /**
          * Returns current user
          *
-         * @return Model_User
+         * @return FaZend_User
          */
 	public static function getCurrentUser () {
 		
@@ -65,7 +65,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 		$result = $auth->authenticate($authAdapter);
 
 		if (!$result->isValid())
-			throw new Model_User_LoginException(implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
+			throw new FaZend_User_LoginException(implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
 
 		$data = $authAdapter->getResultRowObject(); 
 		$auth->getStorage()->write($data);
