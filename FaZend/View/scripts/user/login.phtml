@@ -5,7 +5,9 @@
 
         <a href="<?=$this->url(array('action'=>'register'), 'user', true)?>">create account</a>
 
-	<div id="lf"<?=(($this->form->email->hasValue() || $this->form->pwd->hasValue()) ? false : ' style="display: none;"')?>><?=$this->form?></div>
+	<div id="lf" <?=(($this->form->email->getValue() || $this->form->pwd->getValue()) ? false : ' style="display: none;"')?>>
+		<?=$this->form?>
+	</div>
 
 <? else: ?>
 

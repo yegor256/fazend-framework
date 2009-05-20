@@ -27,11 +27,19 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 	}
 	
 	public function testLoginFormIsVisible () {
+		if (FaZend_User::isLoggedIn()) {
+			FaZend_User::getCurrentUser()->logOut();
+		}	
+
 		$this->dispatch('/');
 		$this->assertQuery('input#email', "Error in HTML: ".$this->getResponse()->getBody());
 	}
 
 	public function testWrongLoginIsProcessed () {
+		if (FaZend_User::isLoggedIn()) {
+			FaZend_User::getCurrentUser()->logOut();
+		}	
+
 		$this->request->setPost(array(
 			'email' => 'wrong@fazend.com',
 			'pwd' => 'wrong',
@@ -43,6 +51,10 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 	}
 
 	public function testWrongPasswordIsProcessed () {
+		if (FaZend_User::isLoggedIn()) {
+			FaZend_User::getCurrentUser()->logOut();
+		}	
+
 		$this->request->setPost(array(
 			'email' => 'good@fazend.com',
 			'pwd' => 'wrong',
@@ -54,6 +66,10 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 	}
 
 	public function testCorrectLoginIsProcessed () {
+		if (FaZend_User::isLoggedIn()) {
+			FaZend_User::getCurrentUser()->logOut();
+		}	
+
 		$this->request->setPost(array(
 			'email' => 'good@fazend.com',
 			'pwd' => 'good',
