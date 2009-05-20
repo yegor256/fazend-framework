@@ -17,6 +17,20 @@
 class FaZend_Controller_Action extends Zend_Controller_Action {
 
 	/**
+	* Get param or throw an error
+	*
+	* @return string
+	*/
+	protected function _getParam ($name) {
+
+		if (!$this->_hasParam($name))
+			throw new FaZend_Controller_Action_ParamNotFoundException("$name is not specified");
+
+		return parent::_getParam($name);	
+
+	}
+
+	/**
 	* Skips this page
 	*
 	* @return void
