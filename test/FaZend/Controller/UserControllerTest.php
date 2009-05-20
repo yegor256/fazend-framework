@@ -72,4 +72,13 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 		$this->assertEquals(false, FaZend_User::isLoggedIn());
 	}
 
+	public function testDoubleLogoutWorks () {
+		if (FaZend_User::isLoggedIn()) {
+			FaZend_User::getCurrentUser()->logOut();
+		}	
+
+		$this->dispatch('/user/logout');
+		$this->assertEquals(false, FaZend_User::isLoggedIn());
+	}
+
 }

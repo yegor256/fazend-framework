@@ -53,6 +53,9 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 	*/
 	protected function _initTableCache($options) {
 
+		if (APPLICATION_ENV == 'development')
+			return;
+
 		$cache = Zend_Cache::factory('Core', 'File',
 			array(
 				'caching' => true,

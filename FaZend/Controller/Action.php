@@ -52,7 +52,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	protected function _forwardWithMessage ($msg, $action = 'index', $controller = 'index') {
 
        		$this->view->errorMessage = $msg;
-       		return $this->_forward($action, $controller); 
+       		return $this->_forward($action, $controller, 'default'); 
 
 	}
 
