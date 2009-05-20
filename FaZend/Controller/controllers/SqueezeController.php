@@ -32,14 +32,14 @@ class Fazend_SqueezeController extends FaZend_Controller_Action {
         		return $this->_forwardWithMessage('file '.$file.' is not found');
 
         	// when it was created	
-        	header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT');
+        	$this->getResponse()->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT')
 
         	// in 30 days to reload!
-        	header('Expires: '.gmdate('D, d M Y H:i:s', filemtime($file) + 60 * 60 * 24 * 30) . ' GMT');
+        	->setHeader('Expires', gmdate('D, d M Y H:i:s', filemtime($file) + 60 * 60 * 24 * 30) . ' GMT')
 
         	// tell the browser NOT to reload the image
-        	header('Cache-Control: public;');
-        	header('Pragma:;');
+        	->setHeader('Cache-Control', 'public')
+        	->setHeader('Pragma', '');
 
         	$this->_returnPNG(file_get_contents($file));
 

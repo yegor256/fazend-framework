@@ -19,13 +19,34 @@ require_once 'AbstractTestCase.php';
 class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 	
 	/**
-	* Test table rendering
+	* Test PNG rendering
 	*
 	*/
 	public function testSqueezePNGWorks () {
 
 		$this->dispatch('/index/squeeze');
 
+		$this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
+
 	}
+
+	/**
+	* Test PNG showing
+	*
+	*/
+	public function testSqueezePNGShowsActualPNG () {
+
+		$this->dispatch('/img');
+		$png = $this->getResponse()->getBody();
+
+		$file = tempnam(sys_get_temp_dir(), 'fazend');
+		file_put_contents($file, $png);
+
+		$img = imagecreatefrompng($file);
+
+		$this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG');
+
+	}
+
 
 }

@@ -66,9 +66,9 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	        $this->_helper->layout->disableLayout();
         	$this->_helper->viewRenderer->setNoRender();
 
-        	header('Content-type: image/png');
-        	echo $png;
-        	die();
+        	$this->getResponse()
+        		->setHeader('Content-type', 'image/png')
+	        	->setBody($png);
 
         }	
 }
