@@ -31,6 +31,20 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	}
 
 	/**
+	* Get param or return false
+	*
+	* @return string|false
+	*/
+	protected function _getParamOrFalse ($name) {
+
+		if (!$this->_hasParam($name))
+			return false;
+
+		return parent::_getParam($name);	
+
+	}
+
+	/**
 	* Skips this page
 	*
 	* @return void

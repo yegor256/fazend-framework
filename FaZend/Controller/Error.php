@@ -41,7 +41,8 @@ class FaZend_Controller_Error extends FaZend_Controller_Action {
                 $errors = $this->_getParam('error_handler'); 
 
                 // if this is a broken URL
-                $exception = $this->getResponse()->getException();
+                $exceptions = $this->getResponse()->getException();
+		$exception = $exceptions[0];
                 if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException')
                 	return $this->_forwardWithMessage($exception->getMessage());
 
