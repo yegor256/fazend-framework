@@ -64,4 +64,8 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 		$this->assertQueryContentContains('a', 'logout', "Error in HTML: ".$this->getResponse()->getBody());
 	}
 
+	public function testLogoutWorks () {
+		$this->dispatch('/user/logout');
+	}
+
 }

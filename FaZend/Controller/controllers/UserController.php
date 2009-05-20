@@ -58,7 +58,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		$user->logIn();
 
 		// go to the site index - should be improved - we should get back to the page where we were
-		$this->_forward('index', 'index');
+		$this->_forward('index', 'index', 'default');
 
         }
         	
@@ -109,12 +109,12 @@ class Fazend_UserController extends FaZend_Controller_Action {
          */
         public function logoutAction() {
 
-        	if (!FaZend_User::isLoggedIn()) 
+        	if (!FaZend_User::isLoggedIn())
         		return $this->_forwardWithMessage('you are not logged in yet');
 
         	FaZend_User::getCurrentUser()->logOut();
 
-        	$this->_forward('index', 'index');
+        	$this->_forward('index', 'index', 'default');
 
         }
 

@@ -44,7 +44,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 
 		$img = imagecreatefrompng($file);
 
-		$this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG');
+		$this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG: '.htmlspecialchars($png));
 
 	}
 
