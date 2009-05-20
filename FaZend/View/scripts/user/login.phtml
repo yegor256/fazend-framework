@@ -1,9 +1,11 @@
 
 <? if (!FaZend_User::isLoggedIn()): ?>
 
+	<a href="" onclick="document.getElementById('lf').style.display = 'block'; document.getElementById('lf').loginEmail.focus(); return false;">login</a> |
+
         <a href="<?=$this->url(array('controller'=>'user', 'action'=>'register'), 'default', true)?>">create account</a>
 
-	<?=$this->form?>
+	<div id="lf"><?=$this->form?></div>
 
 <? else: ?>
 
