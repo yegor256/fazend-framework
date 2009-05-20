@@ -58,7 +58,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		$user->logIn();
 
 		// go to the site index - should be improved - we should get back to the page where we were
-		return $this->_forward('index', 'index', 'default');
+		return $this->_redirect('index');
 
         }
         	
@@ -114,7 +114,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         	FaZend_User::getCurrentUser()->logOut();
 
-        	return $this->_redirect('index/index');
+        	return $this->_redirect('index');
 
         }
 
