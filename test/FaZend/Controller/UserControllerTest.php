@@ -43,6 +43,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 		$this->request->setPost(array(
 			'email' => 'wrong@fazend.com',
 			'pwd' => 'wrong',
+			'submit' => 'Login',
 		));
 		$this->request->setMethod('POST');
 
@@ -58,6 +59,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 		$this->request->setPost(array(
 			'email' => 'good@fazend.com',
 			'pwd' => 'wrong',
+			'submit' => 'Login',
 		));
 		$this->request->setMethod('POST');
 
@@ -73,6 +75,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 		$this->request->setPost(array(
 			'email' => 'good@fazend.com',
 			'pwd' => 'good',
+			'submit' => 'Login',
 		));
 		$this->request->setMethod('POST');
 
