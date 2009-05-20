@@ -9,7 +9,7 @@
 
 <? else: ?>
 
-	<?=$this->escape(Model_User::getCurrentUser()->email)?><br/>
+	<?=$this->escape(FaZend_User::getCurrentUser()->email)?><br/>
 
 	<a href="<?=$this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>">settings</a> | 
        	<a href="<?=$this->url(array('action'=>'logout'), 'user', true)?>">logout</a>
