@@ -18,18 +18,18 @@ $startTime = microtime(true);
 
 // Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH',
-              realpath(dirname(__FILE__) . '/../../../application'));
+	|| define('APPLICATION_PATH',
+		realpath(dirname(__FILE__) . '/../../../application'));
 
 // Define path to FaZend
 defined('FAZEND_PATH')
-    || define('FAZEND_PATH',
-              realpath(APPLICATION_PATH . '/../library/FaZend'));
+	|| define('FAZEND_PATH',
+		realpath(APPLICATION_PATH . '/../library/FaZend'));
 
 // Define application environment
 defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV',
-              (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV')
+	|| define('APPLICATION_ENV',
+		(getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV')
                                          : 'production'));
 
 set_include_path(implode(PATH_SEPARATOR, array(
