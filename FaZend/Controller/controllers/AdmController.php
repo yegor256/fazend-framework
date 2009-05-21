@@ -76,7 +76,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         	$sql = '';
         	foreach ($tables as $table) {
 		      	$row = $adapter->fetchRow("show create table {$table}");
-		      	$sql .= $row['Create Table'];
+		      	$sql .= $row['Create Table']."\n\n";
 		}	
 
         	$this->view->schema = $sql;
