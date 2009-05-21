@@ -52,7 +52,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	protected function _forwardWithMessage ($msg, $action = 'index', $controller = 'index') {
 
        		return $this->_helper->getHelper('Redirector')
-       			->gotoSimple($action, $controller, 'default', array('error', $msg)); 
+       			->gotoSimple($action, $controller, 'default', array('error'=>$msg)); 
 
 	}
 
