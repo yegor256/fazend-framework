@@ -29,6 +29,9 @@ class Fazend_AdmController extends FaZend_Controller_Action {
          */
         public function preDispatch() {
 
+        	if (APPLICATION_ENV == 'testing')
+        		return;
+
         	$request = $this->getRequest();
 		$response = $this->getResponse();
 
@@ -71,8 +74,10 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         	$tables = $adapter->listTables();
 
         	$sql = '';
-        	foreach ($tables as $table)
-	        	$sql .= $adapter->query($adapter->quoteInto('SHOW CREATE TABLE ?', $table))."\n\n";
+        	foreach ($tables as $table) {
+		      	$row = $adapter->query($adapter->quoteInto('show create table ?', $table))->fetchRow()->toArray();
+		      	$sql .= $row['1'];
+		}	
 
         	$this->view->schema = $sql;
 

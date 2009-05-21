@@ -23,18 +23,9 @@ class FaZend_Controller_AdmControllerTest extends AbstractTestCase {
 
 	}
 	
-	public function testAreaIsProtected () {
+	public function testSchemaIsVisible () {
 
 		$this->dispatch('/adm/schema');
-		$this->assertRedirect('admin area is open!');
-
-	}
-
-	public function testLoginFormIsVisible () {
-
-		$this->request->
-		$this->dispatch('/adm/schema');
-		$this->assertNotRedirect('admin area is closed, why?');
 		$this->assertQuery('pre', "Error in HTML: ".$this->getResponse()->getBody());
 
 	}
