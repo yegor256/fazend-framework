@@ -70,4 +70,28 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	        	->setBody($png);
 
         }	
+
+	/**
+	* Return JSON reply
+	*
+	* @return void
+	*/
+	protected function _returnJSON ($var) {
+        
+	        $this->_helper->layout->disableLayout();
+        	$this->_helper->viewRenderer->setNoRender();
+
+		try {
+     
+			$responseJsonEncoded = Zend_Json::encode($var);
+			$this->getResponse()
+				->setHeader('Content-Type', 'application/json')
+				->setBody($responseJsonEncoded);
+
+		} catch(Zend_Json_Exception $e) {
+
+		}
+
+	}	
+
 }
