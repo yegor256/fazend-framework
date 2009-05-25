@@ -248,13 +248,13 @@ class FaZend_View_Helper_SqueezePNG {
 			}	
 
 			ob_start();
+			// see: http://www.php.net/manual/en/function.imagesavealpha.php
+			imagesavealpha($holder, true);
+
 			// see: http://www.php.net/manual/en/function.imagepng.php
 			// no compression
 			// output to stream (not file)
 			imagepng($holder, null, 0, PNG_NO_FILTER);
-
-			// see: http://www.php.net/manual/en/function.imagesavealpha.php
-			imagesavealpha($holder, true);
 
 			$pngContent = ob_get_contents();
 			ob_end_clean();
