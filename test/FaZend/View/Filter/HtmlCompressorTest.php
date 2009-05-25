@@ -44,6 +44,12 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase {
 				'<html><body> works?</body></html>'
 			),
 
+		        // kill comments properly
+			array(
+				'<html><script><!-- test --></script><body><style><!-- ff --></style><!-- to kill --></body></html>',
+				'<html><script><!-- test --></script><body><style><!-- ff --></style></body></html>',
+			),
+			
 		);
 	}
 	

@@ -36,7 +36,7 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
          */
         public function filter($html) {
 
-        	$masked = array('pre', 'script');
+        	$masked = array('pre', 'script', 'style');
 
         	foreach($masked as $tag) {
 	        	$matches = array();
