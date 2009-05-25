@@ -216,6 +216,9 @@ class FaZend_View_Helper_SqueezePNG {
 						$img['y'] = $rightY;
 					}	
 
+					// see: http://www.php.net/manual/en/function.imagealphablending.php
+					imagealphablending($newHolder, false);
+
 					// copy everything from the existing holder
 					imagecopy($newHolder, $holder, 0, 0, 0, 0, imagesx($holder), imagesy($holder));
 
@@ -245,7 +248,14 @@ class FaZend_View_Helper_SqueezePNG {
 			}	
 
 			ob_start();
-			imagepng($holder);
+			// see: http://www.php.net/manual/en/function.imagepng.php
+			// no compression
+			// output to stream (not file)
+			imagepng($holder, null, 0, PNG_NO_FILTER);
+
+			// see: http://www.php.net/manual/en/function.imagesavealpha.php
+			imagesavealpha($holder, true);
+
 			$pngContent = ob_get_contents();
 			ob_end_clean();
 
