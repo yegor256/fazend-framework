@@ -50,11 +50,13 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
 			'/\s+/',
 			'/\>\s+\</',
 			'/\s\/\>/',
+			'/\<\!\-\-.*?\-\-\>/',
 		), array(
 			' ',
 			' ',
 			'><',
 			'/>',
+			'',
 		), $html));
 
         	foreach($masked as $tag) {
