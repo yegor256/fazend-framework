@@ -33,6 +33,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
 		parent::setUp();
 
+		$this->view = new Zend_View();
+
 	}
 	
         /**
