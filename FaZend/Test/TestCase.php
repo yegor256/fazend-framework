@@ -20,7 +20,7 @@ define('APPLICATION_ENV', 'testing');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
 define('CLI_ENVIRONMENT', true);
 
-class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
+class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
         /**
          * Setup test
@@ -42,8 +42,6 @@ class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
          */
 	public function myBootstrap () {
 		include 'FaZend/Application/index.php';
-
-		include 'SetupDB.php';
 	}	
 
         /**
