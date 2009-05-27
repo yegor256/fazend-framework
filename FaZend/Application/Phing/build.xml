@@ -23,7 +23,7 @@
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
 
-	<includepath classpath="${project.basedir}/src" />
+	<includepath classpath="${project.basedir}/src/library" />
 	<includepath classpath="${project.basedir}/test" />
 
 	<target name="lint" description="Run syntax check for all classes" >
@@ -57,7 +57,7 @@
 	</target>	
             
 	<target name="test" description="Run all existing unit-tests" >
-       		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
+       		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="no" />
 			<formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
 			<batchtest>
@@ -68,7 +68,7 @@
 					<exclude name=".svn/**"/>
 				</fileset>
 			</batchtest>
-		</phpunit2>
+		</phpunit>
 	</target>	
 
 	<target name="deploy" description="Copy working files to FTP">

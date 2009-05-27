@@ -14,25 +14,47 @@
  * @category FaZend
  */
 
-// we start execution from php/test directory
-define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../src/application/'));
-set_include_path(
-	// main application
-	APPLICATION_PATH . PATH_SEPARATOR .
-
-	// Zend library
-	APPLICATION_PATH . '/../library' . PATH_SEPARATOR . 
-
-	// default path
-	get_include_path());
+require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 define('APPLICATION_ENV', 'testing');
+define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
 define('CLI_ENVIRONMENT', true);
 
-require_once 'Zend/Application.php';
-$application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/config/app.ini');
-$application->bootstrap();
+class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
-class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
+        /**
+         * Setup test
+         *
+         *
+         */
+	public function setUp () {
+	
+		$this->bootstrap = array($this, 'myBootstrap');
 
+		parent::setUp();
+
+	}
+	
+        /**
+         * Bootstrap as usual
+         *
+         *
+         */
+	public function myBootstrap () {
+		include 'FaZend/Application/index.php';
+
+		include 'SetupDB.php';
+	}	
+
+        /**
+         * Close-out the test
+         *
+         *
+         */
+	public function tearDown () {
+		$this->resetRequest();
+		$this->resetResponse();
+		parent::tearDown();
+	}
+	
 }
