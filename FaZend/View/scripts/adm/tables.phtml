@@ -10,20 +10,25 @@
 	<? endforeach; ?>
 </select></p>
 
-<? 
-try {
+<? if ($this->table): ?>
 
-	$customScript = 'adm/' . strtolower($this->table) . '.phtml';
-	$this->render($customScript);
+	<? 
+	try {
+		
+		$customScript = 'adm/' . strtolower($this->table) . '.phtml';
+		$this->render($customScript);
 
-} catch (Zend_View_Exception $e) {
-?>
+	} catch (Zend_View_Exception $e) {
+	?>
 
-	<p style="color: red;">If you want to customize this view, just create a <tt><?=$customScript?></tt> file in your view scripts directory.</p>
+		<p style="color: red;">If you want to customize this view, 
+		just create a <tt><?=$customScript?></tt> file in your view scripts directory.</p>
 
-<? } ?>
+	<? } ?>
 
-<?=$this->htmlTable()
-	->setPaginator($this->paginator)?>
+	<?=$this->htmlTable()
+		->setPaginator($this->paginator)?>
 
-<p><?=$this->paginator?></p>
+	<p><?=$this->paginator?></p>
+
+<? endif; ?>
