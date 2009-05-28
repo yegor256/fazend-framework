@@ -18,6 +18,8 @@ $this->stripCSS('global.css');
 
 <div style='width: auto; padding: 30px;'>
 
+<?=$this->errorMessage()?>
+
 <a href='<?=$this->url(array('controller'=>'index', 'action'=>'index'), 'default', true)?>' 
 	style="border: 0; <?=$this->squeezePNG('logo.png')?>"></a>
 
