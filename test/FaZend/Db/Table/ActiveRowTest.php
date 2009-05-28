@@ -65,6 +65,22 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
 		try {
 			$list = Owner::retrieve()
+				->where('id = 132')
+				->setRowClass('Owner')
+				->fetchRow();
+
+			// everything ok!
+
+		} catch (Owner_NotFoundException $e) {
+			
+			$this->fail('no exception, why?');
+
+		}	
+
+		$this->assertTrue(class_exists('Owner_NotFoundException'));
+
+		try {
+			$list = Owner::retrieve()
 				->where('id = 888')
 				->setRowClass('Owner')
 				->fetchRow();
