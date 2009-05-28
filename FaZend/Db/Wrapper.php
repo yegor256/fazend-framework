@@ -136,13 +136,9 @@ class FaZend_Db_Wrapper {
 
         	$exceptionClassName = $this->getRowClass() . '_NotFoundException';
 
+		// no, it doesn't exist - so we create it!
         	if (!class_exists($exceptionClassName))	{
-			// try to load if, maybe it exists
-			$autoloader = Zend_Loader_Autoloader::getInstance();
-
-			// no, it doesn't exist - so we create it!
-			if (!@$autoloader->autoload($exceptionClassName))
-        			eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
+        		eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
 		}	
 
 		throw new $exceptionClassName('row not found in ' . $this->getRowClass());
