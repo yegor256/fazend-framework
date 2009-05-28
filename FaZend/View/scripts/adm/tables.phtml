@@ -1,0 +1,11 @@
+<?=$this->render('adm/_menu.phtml')?>
+
+<h1>Content of DB tables</h1>
+
+<p>table: <select onchange="">
+	<? foreach ($this->tables as $table): ?>
+
+		<option name="<?=$table?>"><?=$table?></option>
+
+	<? endforeach; ?>
+</select></p>

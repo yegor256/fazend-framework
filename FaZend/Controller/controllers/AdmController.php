@@ -113,5 +113,17 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         }
 
+        /**
+         * Show content of tables
+         *
+         * @return void
+         */
+        public function tablesAction() {
+
+        	$adapter = Zend_Db_Table::getDefaultAdapter();
+        	$this->view->tables = $adapter->listTables();
+
+        }
+
 }
                 	
