@@ -35,6 +35,13 @@ class FaZend_Db_Wrapper {
          */
 	private $_select;
 
+	/**
+	 * Keep silence and return FALSE if fetchRow doesn't find anything
+	 *
+	 * @var boolean
+	 */
+	private $_silenceIfEmpty;
+
         /**
          * Create a select object
          *
@@ -64,6 +71,34 @@ class FaZend_Db_Wrapper {
 	}
 
         /**
+         * Get row class
+         *
+         * @return void
+         */
+	public function getRowClass() {
+		return $this->_table->getRowClass();
+	}
+
+        /**
+         * Keep silence and return FALSE if fetchRow() doesn't find anything
+         *
+         * @return void
+         */
+	public function setSilenceIfEmpty($flag = true) {
+		$this->_silenceIfEmpty = $flag;
+		return $this;
+	}
+
+        /**
+         * Keep silence and return FALSE if fetchRow() doesn't find anything
+         *
+         * @return boolean
+         */
+	public function getSilenceIfEmpty() {
+		return $this->_silenceIfEmpty;
+	}
+
+        /**
          * Return the table
          *
          * @return void
@@ -82,13 +117,46 @@ class FaZend_Db_Wrapper {
 	}
 
         /**
+         * Fetch one row
+         *
+         * @return void
+         */
+	public function fetchRow() {
+
+		// get row with fetchRow from the select we have
+        	$row = call_user_func(array($this->_table, 'fetchRow'), $this->_select);
+
+        	// if the result is OK - just return it
+        	if ($row)
+        		return $row;
+
+        	// if we should keep silence - just return what we got
+        	if ($this->getSilenceIfEmpty())
+        		return $row;
+
+        	$exceptionClassName = $this->getRowClass() . '_NotFoundException';
+
+        	if (!class_exists($exceptionClassName))	{
+			// try to load if, maybe it exists
+			$autoloader = Zend_Loader_Autoloader::getInstance();
+
+			// no, it doesn't exist - so we create it!
+			if (!$autoloader->autoload($exceptionClassName))
+        			eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
+		}	
+
+		throw new $exceptionClassName('row not found in ' . $this->getRowClass());
+
+	}
+
+        /**
          * Call wrapping
          *
          * @return void
          */
 	public function __call($name, $args) {
 
-		if (in_array($name, array('fetchAll', 'fetchRow')))
+		if (in_array($name, array('fetchAll')))
 			return call_user_func(array($this->_table, $name), $this->_select);
 
 		$this->_select = call_user_func_array(array($this->_select, $name), $args);
