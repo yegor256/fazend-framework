@@ -16,7 +16,7 @@
 	try {
 		
 		$customScript = 'adm/' . strtolower($this->table) . '.phtml';
-		$this->render($customScript);
+		echo $this->render($customScript);
 
 	} catch (Zend_View_Exception $e) {
 	?>
