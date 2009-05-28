@@ -121,7 +121,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         public function tablesAction() {
 
         	$adapter = Zend_Db_Table::getDefaultAdapter();
-        	$this->view->tables = $adapter->listTables();
+        	$this->view->tables = array_diff($adapter->listTables(), array('changelog'));
 
         	if (!$this->_hasParam('table'))
         		return;
