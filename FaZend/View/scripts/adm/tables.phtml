@@ -2,7 +2,7 @@
 
 <h1>Content of DB tables<?=$this->table ? ' [' . $this->table . ']' : false?></h1>
 
-<p>table: <select onChange="window.location = '<?=$this->url(array('table'=>''), 'adm', true)?>/' + this.options[this.selectedIndex].text;">
+<p>table: <select onChange="window.location = '<?=$this->url(array('action'=>'tables', 'table'=>''), 'adm', true)?>/' + this.options[this.selectedIndex].text;">
 	<? foreach ($this->tables as $table): ?>
 
 		<option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
