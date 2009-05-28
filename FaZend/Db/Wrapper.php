@@ -126,20 +126,27 @@ class FaZend_Db_Wrapper {
 		// get row with fetchRow from the select we have
         	$row = call_user_func(array($this->_table, 'fetchRow'), $this->_select);
 
+        	// if we should keep silence - just return what we got
+        	if ($this->getSilenceIfEmpty() && !$row)
+        		return $row;
+
+        	// we should create this class in any case - no matter whether
+        	// we throw the exception or not. because the try{}catch block
+        	// will expect this class and will fail to load it	
+        	$exceptionClassName = $this->getRowClass() . '_NotFoundException';
+
+        	if (!class_exists($exceptionClassName))	{
+			// try to load if, maybe it exists
+			$autoloader = Zend_Loader_Autoloader::getInstance();
+
+			// no, it doesn't exist - so we create it!
+			if (!$autoloader->autoload($exceptionClassName))
+        			eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
+		}	
+
         	// if the result is OK - just return it
         	if ($row)
         		return $row;
-
-        	// if we should keep silence - just return what we got
-        	if ($this->getSilenceIfEmpty())
-        		return $row;
-
-        	$exceptionClassName = $this->getRowClass() . '_NotFoundException';
-
-		// no, it doesn't exist - so we create it!
-        	if (!class_exists($exceptionClassName))	{
-        		eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
-		}	
 
 		throw new $exceptionClassName('row not found in ' . $this->getRowClass());
 
