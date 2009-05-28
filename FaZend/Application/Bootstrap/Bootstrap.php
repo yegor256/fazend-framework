@@ -56,12 +56,13 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		// configure global routes for all
 		$router = new Zend_Controller_Router_Rewrite();
 
+		// load standard routes, later customer will change them (two lines below)
+		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
+
 		// configure custom routes
 		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
 			$router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
 		}
-
-		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
 		$front->setRouter($router);
 
 		$front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
