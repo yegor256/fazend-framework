@@ -2,7 +2,7 @@
 
 <h1>Content of DB tables<?=$this->table ? ' [' . $this->table . ']' : false?></h1>
 
-<p>table: <select onChange="window.location = '<?=$this->url(array('table'=>''))?>/' + this.options[this.selectedIndex].text;">
+<p>table: <select onChange="window.location = '<?=$this->url(array('table'=>''), 'adm', true)?>/' + this.options[this.selectedIndex].text;">
 	<? foreach ($this->tables as $table): ?>
 
 		<option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
@@ -22,7 +22,7 @@
 	?>
 
 		<p style="color: red;">If you want to customize this view, 
-		just create a <tt><?=$customScript?></tt> file in your view scripts directory.</p>
+		just create [<tt><?=$customScript?></tt>] file in your view scripts directory.</p>
 
 	<? } ?>
 
