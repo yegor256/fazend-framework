@@ -1,11 +1,29 @@
 <?=$this->render('adm/_menu.phtml')?>
 
-<h1>Content of DB tables</h1>
+<h1>Content of DB tables<?=$this->table ? ' [' . $this->table . ']' : false?></h1>
 
-<p>table: <select onchange="">
+<p>table: <select onChange="window.location = '<?=$this->url(array('table'=>''))?>/' + this.options[this.selectedIndex].text;">
 	<? foreach ($this->tables as $table): ?>
 
-		<option name="<?=$table?>"><?=$table?></option>
+		<option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
 
 	<? endforeach; ?>
 </select></p>
+
+<? 
+try {
+
+	$customScript = 'adm/' . strtolower($this->table) . '.phtml';
+	$this->render($customScript);
+
+} catch (Zend_View_Exception $e) {
+?>
+
+	<p style="color: red;">If you want to customize this view, just create a <tt><?=$customScript?></tt> file in your view scripts directory.</p>
+
+<? } ?>
+
+<?=$this->htmlTable()
+	->setPaginator($this->paginator)?>
+
+<p><?=$this->paginator?></p>

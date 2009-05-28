@@ -123,6 +123,16 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         	$adapter = Zend_Db_Table::getDefaultAdapter();
         	$this->view->tables = $adapter->listTables();
 
+        	if (!$this->_hasParam('table'))
+        		return;
+
+        	$this->view->table = $table = $this->_getParam('table');
+
+		eval ("\$iterator = FaZend_Db_ActiveTable_{$table}::retrieve()->fetchAll();");
+
+        	FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse('page'));
+
+
         }
 
 }
