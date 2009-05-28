@@ -37,9 +37,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
 		$adapter = new Zend_Auth_Adapter_Http(array(
 			'accept_schemes' => 'basic',
-			'realm' => 'adm',
-			//'digest_domains' => '/adm',
-			'nonce_timeout' => 3600));
+			'realm' => 'adm'));
 
 		$resolver = new Zend_Auth_Adapter_Http_Resolver_File();
 		$resolver->setFile(APPLICATION_PATH . '/config/admins.txt');	
@@ -51,8 +49,17 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 		if (!$adapter->authenticate()->isValid())
 			return $this->_forwardWithMessage('try again');
 
+		$this->view->action = $this->getRequest()->getActionName();	
         }
         	
+        /**
+         * 
+         *
+         * @return void
+         */
+        public function postDispatch() {
+        }
+
         /**
          * Front page
          *
@@ -75,11 +82,34 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         	$sql = '';
         	foreach ($tables as $table) {
+
 		      	$row = $adapter->fetchRow("show create table {$table}");
-		      	$sql .= $row['Create Table']."\n\n";
+
+		      	if (isset($row['Create Table']))
+			      	$sql .= $row['Create Table'];
+			elseif (isset($row['Create View']))
+			      	$sql .= $row['Create View'];
+			else
+				$sql .= "error in {$table}";
+
+			$sql .= "\n\n";	
+
 		}	
 
         	$this->view->schema = $sql;
+
+        }
+
+        /**
+         * Show server error log file
+         *
+         * @return void
+         */
+        public function logAction() {
+
+        	$this->view->filePath = ini_get('error_log');
+
+        	$this->view->log = file_get_contents($this->view->filePath);
 
         }
 
