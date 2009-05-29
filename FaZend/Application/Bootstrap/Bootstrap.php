@@ -37,6 +37,9 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		$this->bootstrap('view');
 		$view = $this->getResource('view');
 
+		// set the type of docs
+		$view->doctype(Zend_View_Helper_Doctype::XHTML1_STRICT);
+
         	$view->addHelperPath(APPLICATION_PATH . '/helpers', 'Helper');
         	$view->addHelperPath(FAZEND_PATH . '/View/Helper', 'FaZend_View_Helper');
         	$view->addFilterPath(FAZEND_PATH . '/View/Filter', 'FaZend_View_Filter');

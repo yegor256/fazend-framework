@@ -53,7 +53,7 @@ class FaZend_View_Helper_GoogleAnalytics {
 	public function googleAnalytics() {
 
 		if (APPLICATION_ENV != 'production')
-			return "<!-- google analytics skipped -->";
+			return "<!-- google analytics skipped -->\n";
 
 		$this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
 		return $this->getView()->render('google-analytics.phtml');
