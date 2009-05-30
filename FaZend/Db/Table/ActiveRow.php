@@ -71,6 +71,10 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
          */
 	public function __get($name) {
 
+		// you should not access ID field directly!
+		if (strtolower($name) == 'id')
+			trigger_error("ID should not be directly accesses", E_USER_WARNING);
+
 		$value = parent::__get($name);
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
