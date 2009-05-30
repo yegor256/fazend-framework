@@ -58,12 +58,27 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	/**
 	* Show PNG instead of page
 	*
+	* @param string PNG binary content
+	* @param boolean This image is dynamic (TRUE) or static (FALSE)
 	* @return void
 	*/
-	protected function _returnPNG ($png) {
+	protected function _returnPNG ($png, $dynamic = true) {
         
 	        $this->_helper->layout->disableLayout();
         	$this->_helper->viewRenderer->setNoRender();
+
+        	// if the image is static - tell the browser about it
+        	if (!$dynamic) {
+	        	// when it was created	
+        		$this->getResponse()->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', time()) . ' GMT')
+
+        		// in 30 days to reload!
+	        	->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60 * 60 * 24 * 30) . ' GMT')
+
+	        	// tell the browser NOT to reload the image
+        		->setHeader('Cache-Control', 'public')
+        		->setHeader('Pragma', '');
+        	}
 
         	$this->getResponse()
         		->setHeader('Content-type', 'image/png')
