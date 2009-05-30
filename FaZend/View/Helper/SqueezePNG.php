@@ -38,7 +38,7 @@ class FaZend_View_Helper_SqueezePNG {
 	*/
 	public function getImagePath() {
 		$url = $this->getView()->url(array('id'=>'global'), 'squeeze', true);
-		return sys_get_temp_dir().'/fazend-' . md5($url) . '-' . ((int)FaZend_Revision::get()) . '.png';
+		return sys_get_temp_dir().'/fazend-' . md5($url) . '-' . FaZend_Revision::get() . '.png';
 	}           
 
 	/**
@@ -151,7 +151,7 @@ class FaZend_View_Helper_SqueezePNG {
 	*/
 	private function _render() {
 
-		$url = $this->getView()->url(array('id'=>FaZend_Revision::get().'.png'), 'squeeze', true);
+		$url = $this->getView()->url(array('id'=>(int)FaZend_Revision::get()), 'squeeze', true);
 		$file = APPLICATION_PATH . '/views/squeeze/' . $this->_file;
 
 		$map = $this->loadMap();
