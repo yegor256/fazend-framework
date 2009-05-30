@@ -61,7 +61,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
          * @return string
          */
 	public function __toString() {
-		return $this->id;
+		return $this->__id;
 	}
 
         /**
@@ -74,6 +74,10 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 		// you should not access ID field directly!
 		if (strtolower($name) == 'id')
 			trigger_error("ID should not be directly accesses", E_USER_WARNING);
+
+		// system field
+		if (strtolower($name) == '__id')
+			$name = 'id';
 
 		$value = parent::__get($name);
 
@@ -98,7 +102,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 	public function __set($name, $value) {
 
 		if ($value instanceof Zend_Db_Table_Row) {
-			$value = $value->id;
+			$value = $value->__id;
 		}
 
 		return parent::__set($name, $value);
