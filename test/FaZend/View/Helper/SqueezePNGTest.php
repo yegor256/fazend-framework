@@ -36,7 +36,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 	*/
 	public function testSqueezePNGShowsActualPNG () {
 
-		$this->dispatch('/img');
+		$this->dispatch('/img/256.png');
 		$png = $this->getResponse()->getBody();
 
 		$file = tempnam(sys_get_temp_dir(), 'fazend');
