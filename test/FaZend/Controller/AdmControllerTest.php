@@ -25,7 +25,7 @@ class FaZend_Controller_AdmControllerTest extends AbstractTestCase {
 	
 	public function testSchemaIsVisible () {
 
-		$this->dispatch('/adm/schema');
+		$this->dispatch($this->view->url(array('action'=>'schema'), 'adm', true));
 		$this->assertQuery('pre', "Error in HTML: ".$this->getResponse()->getBody());
 
 	}

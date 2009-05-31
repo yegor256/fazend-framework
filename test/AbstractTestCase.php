@@ -34,6 +34,8 @@ class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
 		parent::setUp();
 
+		$this->view = new Zend_View();
+
 	}
 	
         /**

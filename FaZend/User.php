@@ -126,7 +126,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 		if (!self::isLoggedIn())
 			return false;
 
-		return self::getCurrentUser()->id == $this->id;
+		return self::getCurrentUser()->__id == $this->__id;
 	}
 		
         /**

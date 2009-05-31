@@ -24,6 +24,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 	*/
 	public function testSqueezePNGWorks () {
 
+		// this page contains html with squeze
 		$this->dispatch('/index/squeeze');
 
 		$this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
@@ -36,7 +37,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 	*/
 	public function testSqueezePNGShowsActualPNG () {
 
-		$this->dispatch('/img/256.png');
+		$this->dispatch($this->view->url(array('id'=>256), 'squeeze', true));
 		$png = $this->getResponse()->getBody();
 
 		$file = tempnam(sys_get_temp_dir(), 'fazend');

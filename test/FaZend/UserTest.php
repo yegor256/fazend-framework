@@ -29,6 +29,7 @@ class FaZend_UserTest extends AbstractTestCase {
 
 		$this->assertNotEquals(false, $user->email);
 
+		$this->assertNotEquals(false, $user->isCurrentUser());
 	}
 
 }

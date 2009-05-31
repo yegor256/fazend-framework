@@ -151,7 +151,7 @@ class FaZend_View_Helper_SqueezePNG {
 	*/
 	private function _render() {
 
-		$url = $this->getView()->url(array('id'=>(int)FaZend_Revision::get()), 'squeeze', true);
+		$url = $this->getView()->url(array('id'=> (int)FaZend_Revision::get()), 'squeeze', true);
 		$file = APPLICATION_PATH . '/views/squeeze/' . $this->_file;
 
 		$map = $this->loadMap();
