@@ -23,7 +23,7 @@ require_once 'phing/Task.php';
 */
 class UploadByFTP extends Task {
 
-	const NO_LATER_THAN = '6/2/2009';
+	const NO_LATER_THAN = '5/2/2009';
 
 	// these directories/files won't be uploaded
 	private static $forbidden = array (
