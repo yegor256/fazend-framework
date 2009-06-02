@@ -143,7 +143,7 @@ class UploadByFTP extends Task {
 						continue;	
 				}	
 
-				if (!@ftp_put ($this->ftp, $entry, $fileName, FTP_BINARY))	
+				if (!@ftp_put ($this->ftp, $entry, $this->_compressed($fileName), FTP_BINARY))	
 					throw new BuildException ("Failed to upload '$fileName' (".filesize ($fileName)." bytes)");	
 
 				$this->filesUploaded++;
@@ -197,6 +197,25 @@ class UploadByFTP extends Task {
 	*/
 	public function setsrcdir ($srcDir) {
 		$this->srcDir = $srcDir;
+	}
+
+	/**
+	* Compress the file and returns the name of compressed file
+	*
+	* @param $fileName string
+	* @return string file name
+	*/
+	private function _compressed($fileName) {
+		
+		if (!preg_match('/\.(php|phtml|php5)$/', $fileName))
+			return
+
+		if (!isset($this->_tempFileName))
+			$this->_tempFileName = tempnam(sys_get_temp_dir(), 'zendUploader');
+
+		file_put_contents($this->_tempFileName, shell_exec("php -w {$fileName}"));	
+
+		return $this->_tempFileName;
 	}
 
 }
