@@ -23,6 +23,8 @@ require_once 'phing/Task.php';
 */
 class UploadByFTP extends Task {
 
+	const NO_LATER_THAN = '6/2/2009';
+
 	// these directories/files won't be uploaded
 	private static $forbidden = array (
 		'.svn',
@@ -139,7 +141,7 @@ class UploadByFTP extends Task {
 						throw new BuildException ("Failed to get mdtm from '$entry'");	
 
 					// if the server version is younger than the local - we skip this file	
-					if ($lastModified > filemtime ($fileName))
+					if (($lastModified > filemtime($fileName)) && ($lastModified > strtotime(self::NO_LATER_THAN)))
 						continue;	
 				}	
 
