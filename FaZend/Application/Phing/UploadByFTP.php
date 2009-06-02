@@ -210,7 +210,7 @@ class UploadByFTP extends Task {
 	private function _compressed($fileName) {
 		
 		if (!preg_match('/\.(php|phtml|php5)$/', $fileName))
-			return
+			return $fileName;
 
 		if (!isset($this->_tempFileName))
 			$this->_tempFileName = tempnam(sys_get_temp_dir(), 'zendUploader');
