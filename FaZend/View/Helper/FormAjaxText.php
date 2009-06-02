@@ -65,7 +65,7 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
 	        	"div_{$id}.onblur = function() {ajax_LostFocus('{$listId}');};\n");
 
 	        // disable autocomplete in most browsers
-		//$attribs['autocomplete'] = 'off';
+		$attribs['autocomplete'] = 'off';
 		
 		return parent::formText($name, $value, $attribs) . 
 		
