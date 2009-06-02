@@ -103,7 +103,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }
 
         /**
-         * Log out
+         * Log out current user and forward to the index/index
          *
          * @return void
          */
@@ -113,6 +113,9 @@ class Fazend_UserController extends FaZend_Controller_Action {
         		return $this->_forwardWithMessage('you are not logged in yet');
 
         	FaZend_User::getCurrentUser()->logOut();
+
+        	// forward to the index action in index controller
+        	$this->_forward('index', 'index');
 
         }
 
