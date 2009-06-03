@@ -34,6 +34,7 @@ defined('APPLICATION_ENV')
 
 set_include_path(implode(PATH_SEPARATOR, array(
 	realpath(APPLICATION_PATH . '/../library'),
+	realpath(FAZEND_PATH . '/..'),
 	get_include_path(),
 )));
 
@@ -47,12 +48,17 @@ $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLIC
 
 // load system options
 $application->setOptions($options->toArray());
-
 unset($options);    	
 
 // bootstrap the application
 $application->bootstrap();
 
-if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV != 'testing'))
-	$application->run();
+// we're working from the command line?
+if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV != 'testing')) {
+	$router = new FaZend_Cli_Router();
+	echo $router->dispatch();
+} else {
+	if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV != 'testing'))
+		$application->run();
+}
 

@@ -115,7 +115,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         	FaZend_User::getCurrentUser()->logOut();
 
         	// forward to the index action in index controller
-        	$this->_forward('index', 'index');
+        	$this->_redirect('/');
 
         }
 

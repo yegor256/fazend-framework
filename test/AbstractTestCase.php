@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+// include path for Zend is defined in build.xml!
+
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 define('APPLICATION_ENV', 'testing');
