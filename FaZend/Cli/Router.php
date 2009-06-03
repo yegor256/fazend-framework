@@ -96,6 +96,8 @@ class FaZend_Cli_Router {
          */
 	protected static function _getCliOptions() {
 
+		$argv = $_SERVER['argv'];
+
 		$options = array();
 		foreach (array_slice($argv, 2) as $opt) {
 			$matches = array();
