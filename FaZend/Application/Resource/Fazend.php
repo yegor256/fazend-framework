@@ -85,6 +85,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 		// see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html#zend.loader.pluginloader.performance.example
 		$classFileIncCache = sys_get_temp_dir() . '/'.$options['name'].'-includeCache.php';
 
+		// this may happen if we start from a different process
+		if (file_exists($classFileIncCache) && !is_writable($classFileIncCache))
+			return;
+
 		if (file_exists($classFileIncCache)) {
 			include_once $classFileIncCache;
 		}
