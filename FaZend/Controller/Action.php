@@ -58,8 +58,11 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	/**
 	* Show PNG instead of page
 	*
+	* You have to remember, that under SSL all images are dynamic, no matter
+	* what parameter you set here. And you can't change this.
+	*
 	* @param string PNG binary content
-	* @param boolean This image is dynamic (TRUE) or static (FALSE)
+	* @param boolean This image is dynamic (TRUE) or static (FALSE).
 	* @return void
 	*/
 	protected function _returnPNG ($png, $dynamic = true) {
