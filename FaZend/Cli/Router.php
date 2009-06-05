@@ -81,6 +81,7 @@ class FaZend_Cli_Router {
 		$cli = new $name();
 
 		$cli->setOptions($options);
+		$cli->setRouter($this);
 
 		try {
 			return $cli->execute();
