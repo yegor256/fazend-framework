@@ -86,7 +86,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 		$tables = $db->listTables();
 
 		if (is_numeric($value) && (in_array($name, $tables))) {
-			$rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
+			
+			if (class_exists('Model_'.$name))
+				$rowClass = 'Model_'.$name;
+			else	
+				$rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
+
 			$value = new $rowClass((integer)$value);
 		}	
 
