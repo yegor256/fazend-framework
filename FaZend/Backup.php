@@ -351,6 +351,38 @@ class FaZend_Backup {
 	        $s3->putFile($file, $bucket . '/' . $object);
 	        $this->_log($this->_nice($file) . " was uploaded to Amazon S3");
 
+	        // remove expired data files
+	        $this->_cleanS3();
+
+	}
+
+	/**
+	 * Clear expired files from amazon
+	 *
+	 * @param string File name
+	 * @return void
+	 */
+	protected function _cleanS3() {
+
+		if (empty($this->_getConfig()->S3->age))
+	        	return $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
+
+	        $bucket = $this->_getConfig()->S3->bucket;
+
+	        // this is the minimum time we would accept
+		$minTime = time() - $this->_getConfig()->S3->age * 24 * 60 * 60;
+
+		$files = $this->getS3Files();
+
+		foreach($files as $file) {
+			$info = $this->getS3FileInfo($file);
+
+			if ($info['mtime'] < $minTime) {
+				$this->_getS3()->removeObject($bucket . '/' . $file);
+		        	$this->_log("File $file removed, since it's expired (over {$this->_getConfig()->S3->age} days)");
+		        }	
+		}
+
 	}
 
 	/**
