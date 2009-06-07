@@ -130,7 +130,7 @@ class FaZend_Backup {
 	 */
 	public function getS3Files() {
 
-	        $s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);	
+		$s3 = $this->_getS3();
 
 	        $bucket = $this->_getConfig()->S3->bucket;
 
@@ -138,6 +138,21 @@ class FaZend_Backup {
 	        	return array();
 
 	        return $s3->getObjectsByBucket($bucket);	
+
+	}
+
+	/**
+	 * Get info about amazon file
+	 *
+	 * @return array 
+	 */
+	public function getS3FileInfo($file) {
+
+		$s3 = $this->_getS3();
+
+	        $bucket = $this->_getConfig()->S3->bucket;
+
+	        return $s3->getInfo($file);	
 
 	}
 
@@ -324,7 +339,7 @@ class FaZend_Backup {
 		if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret))
 	        	return $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
 
-	        $s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);	
+	        $s3 = $this->_getS3();	
 
 	        $bucket = $this->_getConfig()->S3->bucket;
 
@@ -451,6 +466,19 @@ class FaZend_Backup {
 	        	return $this->_getConfig()->$name;
 	        }	
 
+	}
+
+	/**
+	 * Get instance of S3 class
+	 *
+	 * @return string
+	 */
+	protected function _getS3() {
+
+		if (isset($this->_s3))
+			return $this->_s3;
+		
+	        return $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);	
 	}
 
 }

@@ -11,7 +11,9 @@
 
 <ul>
 <? foreach ($this->backup->getS3Files() as $object): ?>
-	<li><?=$object?></li>
+	<? $info = $this->backup->getS3FileInfo($object)?>
+
+	<li><?=$object?>: <?=$info['size']?> bytes, <?=$info['mtime']?></li>
 <? endforeach; ?>
 </ul>
 
