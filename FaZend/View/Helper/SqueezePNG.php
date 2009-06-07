@@ -274,7 +274,7 @@ class FaZend_View_Helper_SqueezePNG {
 
        		foreach ($map['images'] as $id=>&$img) {
 
-       			$png = $metadata[$id];
+       			$png = $metadata['images'][$id];
 
        			$img['x'] = $x;
        			$img['y'] = $y;
@@ -302,6 +302,7 @@ class FaZend_View_Helper_SqueezePNG {
 	protected function _loadMetadata(array &$map) {
 
 		$metadata = array();
+		$metadata['images'] = array();
 
 		// if the data provided are corrupted (hm...)
 		if (!isset($map['images']))
@@ -319,7 +320,7 @@ class FaZend_View_Helper_SqueezePNG {
        				}
        			}	
 
-       			$metadata[$id] = $image;
+       			$metadata['images'][$id] = $image;
 
        		}	
 
