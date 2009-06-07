@@ -2,7 +2,8 @@
 
 <h1>Backup</h1>
 
-<p>Latest backup done: <tt><?=date('m/d/y h:i:s', $this->backup->getLatestRunTime())?></tt></p>
+<p>Latest backup done: <tt><?=date('m/d/y h:i:s', $this->backup->getLatestRunTime())?></tt> 
+	(<a href="<?=$this->url(array('clear'=>true))?>">clear semaphore</a>)</p>
 
 <pre><?=$this->backup->getLatestLog()?></pre>
 
