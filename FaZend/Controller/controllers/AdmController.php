@@ -32,31 +32,28 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         	if (APPLICATION_ENV == 'testing')
         		return;
 
-        	$request = $this->getRequest();
-		$response = $this->getResponse();
+		$resolver = new FaZend_Auth_Adapter_Http_Resolver_Admins();
 
-		$adapter = new Zend_Auth_Adapter_Http(array(
-			'accept_schemes' => 'basic',
-			'digest_domains' => '/__adm',
-			'nonce_timeout' => 3600,
-			'realm' => 'adm'));
+		// all this will work ONLY if PHP is installed as Apache Module
+		// @see: http://www.php.net/features.http-auth
+        	if (!FaZend_User::isLoggedIn() || !$resolver->resolve(FaZend_User::getCurrentUser()->email, 'adm')) {
+			$adapter = new Zend_Auth_Adapter_Http(array(
+				'accept_schemes' => 'basic',
+				'digest_domains' => '/__adm',
+				'nonce_timeout' => 3600,
+				'realm' => 'adm'));
 
-		$resolverBasic = new FaZend_Auth_Adapter_Http_Resolver_Admins();
-		$resolverBasic->setScheme('basic');	
-		$adapter->setBasicResolver($resolverBasic);
+			$resolver->setScheme('basic');	
+			$adapter->setBasicResolver($resolver);
 
-		$resolverDigest = new FaZend_Auth_Adapter_Http_Resolver_Admins();
-		$resolverDigest->setScheme('digest');	
-		$adapter->setDigestResolver($resolverDigest);
+			$adapter->setRequest($this->getRequest());
+			$adapter->setResponse($this->getResponse());
 
-		$adapter->setRequest($request);
-		$adapter->setResponse($response);
-
-		$result = $adapter->authenticate();
-		if (!$result->isValid()) {
-			$response->sendResponse();
-			return $this->_forwardWithMessage('authorization failed (code #' . abs($result->getCode()). '): ' . 
-				implode('; ', $result->getMessages()));
+			$result = $adapter->authenticate();
+			if (!$result->isValid()) {
+				return $this->_forwardWithMessage('authorization failed (code #' . abs($result->getCode()). '): ' . 
+					implode('; ', $result->getMessages()));
+			}	
 		}	
 
 		$this->view->action = $this->getRequest()->getActionName();	

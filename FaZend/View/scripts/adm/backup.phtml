@@ -6,6 +6,8 @@
 
 <pre><?=$this->backup->getLatestLog()?></pre>
 
+<p>All objects in you S3 bucket:</p>
+
 <ul>
 <? foreach ($this->backup->getS3Files() as $object): ?>
 	<li><?=$file?></li>
