@@ -47,7 +47,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
 		$resolverDigest = new FaZend_Auth_Adapter_Http_Resolver_Admins();
 		$resolverDigest->setScheme('digest');	
-		$adapter->setBasicResolver($resolverDigest);
+		$adapter->setDigestResolver($resolverDigest);
 
 		$adapter->setRequest($request);
 		$adapter->setResponse($response);
