@@ -19,7 +19,7 @@
  *
  *
  */
-class FaZend_Auth_Adapter_Http_Resolver_File {
+class FaZend_Auth_Adapter_Http_Resolver_File extends Zend_Auth_Adapter_Http_Resolver_File {
 
 	/**
 	 * Resolve with patch
