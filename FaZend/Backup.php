@@ -125,12 +125,12 @@ class FaZend_Backup {
 		// mysqldump
 		$file = tempnam(sys_get_temp_dir(), 'fz');
 		$config = Zend_Db_Table::getDefaultAdapter()->getConfig();
-		$cmd = "\"" . $this->_var('mysqldump').
-			"\" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" --result-file=\"{$file}\" 2>&1";
+		$cmd = $this->_var('mysqldump').
+			" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" --result-file=\"{$file}\" 2>&1";
 		$result = shell_exec($cmd);
 
 		if (file_exists($file) && (filesize($file) > 1024))
-		        $this->_log($this->_nice($file) . " was created");
+		        $this->_log($this->_nice($file) . " was created with SQL database dump");
 		else {
 		        $this->_log("Command: {$cmd}");
 		        $this->_log($this->_nice($file) . " creation error: " . $result, true);
@@ -211,8 +211,10 @@ class FaZend_Backup {
 
 		if (file_exists($fileEnc) && filesize($fileEnc))
 		        $this->_log($this->_nice($fileEnc) . " was created");
-		else
+		else {
+		        $this->_log("Command: {$cmd}");
 		        $this->_log($this->_nice($fileEnc) . " creation error: " . $result, true);
+		}
 
 	        $this->_log($this->_nice($file) . " deleted");
 	        unlink($file);
