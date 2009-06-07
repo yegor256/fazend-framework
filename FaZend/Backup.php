@@ -326,6 +326,67 @@ class FaZend_Backup {
 
 		$this->_log("Disconnected from FTP");	
 
+	        // remove expired data files
+	        $this->_cleanFTP();
+
+	}
+
+	/**
+	 * Clear expired files from amazon
+	 *
+	 * @return void
+	 */
+	protected function _cleanFTP() {
+
+		if (empty($this->_getConfig()->ftp->age))
+	        	return $this->_log("Since [ftp.age] is empty we won't remove old files from FTP");
+
+	        // this is the minimum time we would accept
+		$minTime = time() - $this->_getConfig()->ftp->age * 24 * 60 * 60;
+
+		$ftp = @ftp_connect($this->_getConfig()->ftp->host);
+		if (!$ftp)
+			return $this->_log("Failed to connect to ftp ({$this->_getConfig()->ftp->host})");	
+
+		$this->_log("Logged in successfully to {$this->_getConfig()->ftp->host}");	
+
+		if (!@ftp_login($ftp, $this->_getConfig()->ftp->username, $this->_getConfig()->ftp->password))
+			return $this->_log("Failed to login to ftp ({$this->_getConfig()->ftp->host})");	
+
+		$this->_log("Connected successfully to FTP as {$this->_getConfig()->ftp->username}");	
+
+		if (!@ftp_pasv($ftp, true))
+			return $this->_log("Failed to turn PASV mode ON");	
+
+		if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir))
+			return $this->_log("Failed to go to {$this->_getConfig()->ftp->dir}");	
+
+		$this->_log("Current directory in FTP: ".ftp_pwd ($ftp));	
+
+		$files = @ftp_nlist($ftp, '.');	
+		if (!$files)
+			$this->_log("Failed to get nlist from FTP", true);	
+
+		foreach($files as $file) {
+			$lastModified = @ftp_mdtm($ftp, $file);
+			if ($lastModified == -1) {
+				$this->_log("Failed to get mdtm from '$file'");	
+				continue;
+			}	
+
+			if ($lastModified < $minTime) {
+				if (!@ftp_delete($ftp, $file))
+			        	$this->_log("Failed to delete file $file");
+			        else	
+			        	$this->_log("File $file removed, since it's expired (over {$this->_getConfig()->S3->age} days)");
+		        }	
+		}
+
+		if (!@ftp_close($ftp))
+			$this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");	
+
+		$this->_log("Disconnected from FTP");	
+
 	}
 
 	/**
@@ -359,7 +420,6 @@ class FaZend_Backup {
 	/**
 	 * Clear expired files from amazon
 	 *
-	 * @param string File name
 	 * @return void
 	 */
 	protected function _cleanS3() {
