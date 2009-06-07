@@ -42,10 +42,21 @@ class PingFaZend extends Task {
 
 		$this->Log ("Pinging {$this->url}...");
 
-		$curl = curl_init($this->url);
+		$curl = curl_init();
+
+		if (!$curl)
+			throw new BuildException (curl_error($curl));	
+
+		curl_setopt ($curl, CURLOPT_URL, $this->url);
 		curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt ($curl, CURLOPT_HEADER, 0);
 		$response = curl_exec($curl);
-		curl_close($curl);
+
+		if (!$response)
+			throw new BuildException (curl_error($curl));	
+		
+		if (!curl_close($curl))
+			throw new BuildException (curl_error($curl));	
 
 		$this->Log("Response (" . strlen($response). "bytes): \n{$response}");
 
