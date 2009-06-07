@@ -324,7 +324,7 @@ class FaZend_Backup {
 		        $s3->createBucket($bucket);
 		}
 
-	        $s3->putFile($bucket . '/' . $object, $file);
+	        $s3->putFile($file, $bucket . '/' . $object);
 	        $this->_log($this->_nice($file) . " was uploaded to Amazon S3");
 
 	}
