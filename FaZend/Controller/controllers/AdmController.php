@@ -36,12 +36,18 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 		$response = $this->getResponse();
 
 		$adapter = new Zend_Auth_Adapter_Http(array(
-			'accept_schemes' => 'basic',
+			'accept_schemes' => 'basic digest',
+			'digest_domains' => '/__adm',
+			'nonce_timeout' => 3600,
 			'realm' => 'adm'));
 
-		$resolver = new FaZend_Auth_Adapter_Http_Resolver_File();
-		$resolver->setFile(APPLICATION_PATH . '/config/admins.txt');	
-		$adapter->setBasicResolver($resolver);
+		$resolverBasic = new FaZend_Auth_Adapter_Http_Resolver_File();
+		$resolverBasic->setScheme('basic');	
+		$adapter->setBasicResolver($resolverBasic);
+
+		$resolverDigest = new FaZend_Auth_Adapter_Http_Resolver_File();
+		$resolverDigest->setScheme('digest');	
+		$adapter->setBasicResolver($resolverDigest);
 
 		$adapter->setRequest($request);
 		$adapter->setResponse($response);

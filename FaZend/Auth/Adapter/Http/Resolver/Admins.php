@@ -15,20 +15,39 @@
  */
 
 /**
- * Resolver with patches
+ * Resolver from app.ini
  *
  *
  */
-class FaZend_Auth_Adapter_Http_Resolver_File extends Zend_Auth_Adapter_Http_Resolver_File {
+class FaZend_Auth_Adapter_Http_Resolver_Admins implements Zend_Auth_Adapter_Http_Resolver_Interface {
+
+	protected $_scheme = 'basic';
 
 	/**
-	 * Resolve with patch
+	 * Set scheme
+	 *
+	 * @return void
+	 */
+	public function setScheme($scheme) {
+		$this->_scheme = strtolower($scheme);
+	}
+
+	/**
+	 * Resolve it
 	 *
 	 * @return value|false
 	 */
 	public function resolve($username, $realm) {
 
-		return trim(parent::resolve($username, $realm), "\r\n\t ");
+		$admins = FaZend_Properties::get()->admins->toArray();
+
+		if (!isset($admins[$username]))
+			return false;
+
+		if ($this->_scheme == 'basic')
+			return $admins[$username];
+		else	
+			return md5($admins[$username]);
 
 	}
 }
