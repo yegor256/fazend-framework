@@ -55,8 +55,7 @@ class PingFaZend extends Task {
 		if (!$response)
 			throw new BuildException (curl_error($curl));	
 		
-		if (!curl_close($curl))
-			throw new BuildException (curl_error($curl));	
+		curl_close($curl);
 
 		$this->Log("Response (" . strlen($response). "bytes): \n{$response}");
 
