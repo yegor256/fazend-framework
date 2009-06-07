@@ -3,23 +3,27 @@
 <h1>SqueezePNG files</h1>
 
 <p>
-	Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=filesize($path)?> bytes)<br/>
-	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=filesize($mapfile)?> bytes)
+	Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
+	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)
 </p>	
 
 <img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
 
 <? $map = $this->squeezePNG()->loadMap()?>
 
-<p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
+<? if (isset($map['images'])): ?>
 
-<ul>
-<? foreach ($map['images'] as $id=>$img): ?>
+	<p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
 
-	<li>
-		<?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>
-	</li>	
+	<ul>
+	<? foreach ($map['images'] as $id=>$img): ?>
 
-<? endforeach; ?>
-</ul>
+		<li>
+			<?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>
+		</li>	
+
+	<? endforeach; ?>
+	</ul>
+
+<? endif; ?>	
 
