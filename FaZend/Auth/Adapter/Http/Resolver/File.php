@@ -15,24 +15,20 @@
  */
 
 /**
-* CLI Os version detector
-*
-*
-*/
-class OSVersion extends FaZend_Cli_Abstract {
+ * Resolver with patches
+ *
+ *
+ */
+class FaZend_Auth_Adapter_Http_Resolver_File {
 
-        /**
-         * Executor of a command-line command
-         *
-         * @return string
-         */
-	public function execute() {
+	/**
+	 * Resolve with patch
+	 *
+	 * @return value|false
+	 */
+	public function resolve($username, $realm) {
 
-	        $sub = $this->_callCli('Sub');
-		
-		return $sub . shell_exec('ver');
+		return trim(parent::resolve($username, $realm), "\r\n\t ");
 
 	}
-	
-
 }

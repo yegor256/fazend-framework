@@ -39,7 +39,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 			'accept_schemes' => 'basic',
 			'realm' => 'adm'));
 
-		$resolver = new Zend_Auth_Adapter_Http_Resolver_File();
+		$resolver = new FaZend_Auth_Adapter_Http_Resolver_File();
 		$resolver->setFile(APPLICATION_PATH . '/config/admins.txt');	
 		$adapter->setBasicResolver($resolver);
 
@@ -132,7 +132,14 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         	FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse('page'));
 
+        }
 
+        /**
+         * Show content of tables
+         *
+         * @return void
+         */
+        public function squeezeAction() {
         }
 
 }
