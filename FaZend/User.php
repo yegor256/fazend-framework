@@ -88,11 +88,15 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
          *
          * @return boolean
          */
-	public static function register ($email, $password) {
+	public static function register ($email, $password, array $data = array()) {
 
 		$user = new FaZend_User();
 		$user->email = strtolower($email);
 		$user->password = $password;
+
+		foreach ($data as $key=>$value)
+			$user->$key = $data;
+
 		$user->save();
 
 		return $user;	
