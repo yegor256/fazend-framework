@@ -50,7 +50,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		try {
 			$user = FaZend_User::register($form->email->getValue(), $form->password->getValue());
 		} catch (Zend_Db_Statement_Exception $e) {
-			$form->email->addError("user already registered, try another email");
+			$form->email->addError("user already registered, try another email ({$e->getMessage()})");
 			return;
 		}	
 
@@ -65,7 +65,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 			try {
 				$user->save();
 			} catch (Exception $e) {
-				$element->addError(get_class($e) . $e->getMessage());
+				$element->addError(get_class($e) . ': ' . $e->getMessage());
 			}
 		}	
 
