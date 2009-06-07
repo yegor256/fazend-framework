@@ -61,7 +61,12 @@ class FaZend_Backup {
 	 * @return time
 	 */
 	public function getLatestLog() {
-		return file_get_contents($this->_getSemaphoreFileName());
+		$file = $this->_getSemaphoreFileName();
+
+		if (!file_exists($file))
+			return 'no log...';
+
+		return file_get_contents($file);
 	}
 
 	/**
