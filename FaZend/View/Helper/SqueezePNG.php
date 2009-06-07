@@ -212,7 +212,8 @@ class FaZend_View_Helper_SqueezePNG {
 		$this->_addFile($map, $file);	
 
        		// get PNG content and save it
-       		$this->saveMap($map, $this->_buildPNG($map));
+       		$png = $this->_buildPNG($map);
+       		$this->saveMap($map, $png);
 
        		// return it after all changes done
        		return $map;
