@@ -41,6 +41,8 @@ class FaZend_Auth_Adapter_Http_Resolver_Admins implements Zend_Auth_Adapter_Http
 
 		$admins = FaZend_Properties::get()->admins->toArray();
 
+		$username = str_replace('.', '_', $username);
+
 		if (!isset($admins[$username]))
 			return false;
 
