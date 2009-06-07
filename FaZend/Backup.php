@@ -113,6 +113,24 @@ class FaZend_Backup {
 	}
 
 	/**
+	 * Get full list of amazon S3 files in the bucket
+	 *
+	 * @return array 
+	 */
+	public function getS3Files() {
+
+	        $s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);	
+
+	        $bucket = $this->_getConfig()->S3->bucket;
+
+	        if (!$s3->isBucketAvailable($bucket))
+	        	return array();
+
+	        return $s3->getObjectsByBucket($bucket);	
+
+	}
+
+	/**
 	 * Backup db
 	 *
 	 * @return void

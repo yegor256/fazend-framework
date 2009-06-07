@@ -6,3 +6,9 @@
 
 <pre><?=$this->backup->getLatestLog()?></pre>
 
+<ul>
+<? foreach ($this->backup->getS3Files() as $object): ?>
+	<li><?=$file?></li>
+<? endforeach; ?>
+</ul>
+
