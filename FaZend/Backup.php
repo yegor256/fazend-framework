@@ -123,7 +123,7 @@ class FaZend_Backup {
 	        	return $this->_log("Since [content.db] is empty, we won't backup database");
 
 		// mysqldump
-		$file = tempnam(sys_get_temp_dir(), 'fazend');
+		$file = tempnam(sys_get_temp_dir(), 'fz');
 		$config = Zend_Db_Table::getDefaultAdapter()->getConfig();
 		$cmd = $this->_var('mysqldump').
 			" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" > {$file} 2>&1";
@@ -165,7 +165,7 @@ class FaZend_Backup {
 	        	return $this->_log("Since [content.file] is empty, we won't backup files");
 
 		// all files into .TAR
-		$file = tempnam(sys_get_temp_dir(), 'fazend');
+		$file = tempnam(sys_get_temp_dir(), 'fz');
 		$cmd = $this-_var('tar') . " -c --file=\"{$file}\" ";
 
 		foreach($this->_getConfig()->content->files->toArray() as $dir)
