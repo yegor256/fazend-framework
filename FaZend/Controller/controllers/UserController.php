@@ -50,11 +50,22 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		try {
 			$user = FaZend_User::register($form->email->getValue(), $form->password->getValue());
 		} catch (Exception $e) {
-			$form->email->addError($e->getMessage());
+			$form->email->addError(get_class($e) . $e->getMessage());
 			return;
 		}	
 
+		// try to save other form elements to the user
+		foreach ($form->getElements() as $element) {
+			$name = $element->name;
+			if (isset($user->$name))
+				$user->$name = $element->getValue();
 
+			try {
+				$user->save();
+			} catch (Exception $e) {
+				$element->addError(get_class($e) . $e->getMessage());
+			}
+		}	
 
 		// login the found user
 		$user->logIn();
