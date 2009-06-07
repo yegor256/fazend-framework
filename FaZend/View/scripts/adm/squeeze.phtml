@@ -4,7 +4,8 @@
 
 <p>
 	Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
-	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)
+	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
+	Url: <tt><?=$this->squeezePNG()->url()?></tt>
 </p>	
 
 <img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
@@ -27,3 +28,6 @@
 
 <? endif; ?>	
 
+<span onclick="document.getElementById('pre').style.display = 'block';">show content of the map file</span><br/>
+
+<pre id='pre' style="display: none;"><?=print_r($map, true)?></pre>
