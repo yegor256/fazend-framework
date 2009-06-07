@@ -187,7 +187,7 @@ class FaZend_Backup {
 		$this->_archive($file);
 
 		// unique name of the backup file
-		$object = $this->_getConfig()->archive->files->prefix . date('ymd-his') . '.data';
+		$object = $this->_getConfig()->archive->db->prefix . date('ymd-his') . '.data';
 
 		// send to FTP
 		$this->_sendToFTP($file, $object);
