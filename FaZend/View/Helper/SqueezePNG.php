@@ -214,6 +214,7 @@ class FaZend_View_Helper_SqueezePNG {
        		// get PNG content and save it
        		$this->saveMap($map, $this->_buildPNG($map));
 
+       		// return it after all changes done
        		return $map;
 
        	}
@@ -334,7 +335,7 @@ class FaZend_View_Helper_SqueezePNG {
 	* @param array Map
 	* @return string PNG
 	*/
-	protected function _buildPNG(array $map) {
+	protected function _buildPNG(array &$map) {
 
 		// compress the map to remove white spaces
        		$metadata = $this->_compress($map);
