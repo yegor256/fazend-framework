@@ -154,5 +154,16 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         }
 
+        /**
+         * Show backup status
+         *
+         * @return void
+         */
+        public function backupAction() {
+
+        	$this->view->backup = new FaZend_Backup();
+
+        }
+
 }
                 	
