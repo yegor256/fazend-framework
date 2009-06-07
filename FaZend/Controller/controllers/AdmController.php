@@ -41,11 +41,11 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 			'nonce_timeout' => 3600,
 			'realm' => 'adm'));
 
-		$resolverBasic = new FaZend_Auth_Adapter_Http_Resolver_File();
+		$resolverBasic = new FaZend_Auth_Adapter_Http_Resolver_Admins();
 		$resolverBasic->setScheme('basic');	
 		$adapter->setBasicResolver($resolverBasic);
 
-		$resolverDigest = new FaZend_Auth_Adapter_Http_Resolver_File();
+		$resolverDigest = new FaZend_Auth_Adapter_Http_Resolver_Admins();
 		$resolverDigest->setScheme('digest');	
 		$adapter->setBasicResolver($resolverDigest);
 
