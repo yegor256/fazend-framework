@@ -341,10 +341,13 @@ class FaZend_View_Helper_SqueezePNG {
 		// compress the map to remove white spaces
        		$metadata = $this->_compress($map);
 
-     		$holder = imagecreate($metadata['width'], $metadata['height']);
+     		$holder = imagecreatetruecolor($metadata['width'], $metadata['height']);
 
        		// see: http://www.php.net/manual/en/function.imagealphablending.php
        		imagealphablending($holder, false);
+
+       		$white = imagecolorallocate($holder, 255, 255, 255);
+       		imagefill($holder, 0, 0, $white);
 
        		// copy all images to the holder, in proper places
        		foreach ($map['images'] as $id=>&$img) {
