@@ -77,6 +77,8 @@ class FaZend_Backup {
 	 */
 	public function execute() {
 
+	        $this->_log('Backup started, revision: ' . FaZend_Revision::get());
+
 		try {
 
 			// if backup is not configured
