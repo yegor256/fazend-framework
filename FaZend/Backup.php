@@ -207,13 +207,13 @@ class FaZend_Backup {
 
 	        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
        		$cmd = $this->_var('openssl') . " enc -blowfish -pass \"{$password}\" < {$file} > {$fileEnc} 2>&1";
-		$result = shell_exec($cmd);
+		shell_exec($cmd);
 
-		if (file_exists($fileEnc) && filesize($fileEnc))
+		if (file_exists($fileEnc) && (filesize($fileEnc) > 1024))
 		        $this->_log($this->_nice($fileEnc) . " was created");
 		else {
 		        $this->_log("Command: {$cmd}");
-		        $this->_log($this->_nice($fileEnc) . " creation error: " . $result, true);
+		        $this->_log($this->_nice($fileEnc) . " creation error: " . file_get_contents($fileEnc), true);
 		}
 
 	        $this->_log($this->_nice($file) . " deleted");
