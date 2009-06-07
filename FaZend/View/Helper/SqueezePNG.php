@@ -22,39 +22,47 @@
  */
 class FaZend_View_Helper_SqueezePNG {
 
-	/**
-	* Local link to Zend_View
-	*
-	* @var Zend_View
-	*/
-	private $_view;
-
-	private $_file;
+	const SQUEEZE_FOLDER = '/views/squeeze/';
+	const FAILURE = 'border: 1px solid red;';
+	const ROUTE = 'squeeze';
 
 	/**
-	* Get path of temp PNG holder
-	*
-	* @return string
-	*/
+	 * Local link to Zend_View
+	 *
+	 * @var Zend_View
+	 */
+	protected $_view;
+
+	/**
+	 * Current file to render (relative name)
+	 *
+	 * @var string
+	 */
+	protected $_file;
+
+	/**
+	 * Get path of temp PNG holder
+	 *
+	 * @return string
+	 */
 	public function getImagePath() {
-		$url = $this->getView()->url(array('id'=>'global'), 'squeeze', true);
-		return sys_get_temp_dir().'/fazend-' . md5($url) . '-' . FaZend_Revision::get() . '.png';
+		return sys_get_temp_dir().'/fazend-' . md5($this->url()) . '-' . FaZend_Revision::get() . '.png';
 	}           
 
 	/**
-	* Get map path
-	*
-	* @return string
-	*/
+	 * Get map path
+	 *
+	 * @return string
+	 */
 	public function getMapPath() {
 		return $this->getImagePath().'.data';
 	}           
 
 	/**
-	* Load map
-	*
-	* @return array
-	*/
+	 * Load map
+	 *
+	 * @return array
+	 */
 	public function loadMap() {
 		$file = $this->getMapPath();
 
@@ -69,18 +77,17 @@ class FaZend_View_Helper_SqueezePNG {
 		if ($map['md5'] != md5_file($this->getImagePath()))	
 			return array();
 
-//		return array();
 		return $map;	
 	}           
 
 	/**
-	* Save map
-	*
-	* @param array Map
-	* @param string PNG image (all images together)
-	* @return void
-	*/
-	public function saveMap($map, $png) {
+	 * Save map
+	 *
+	 * @param array Map
+	 * @param string PNG image (all images together)
+	 * @return void
+	 */
+	public function saveMap(array $map, $png) {
 		$file = $this->getMapPath();
 		$pngFile = $this->getImagePath();
 
@@ -145,129 +152,219 @@ class FaZend_View_Helper_SqueezePNG {
 	}
 
 	/**
-	* Show the image
-	*
-	* @return string
-	*/
-	private function _render() {
+	 * Url of the image
+	 *
+	 * @return string
+	 */
+	public function url() {
+		return $this->getView()->url(array('id'=> (int)FaZend_Revision::get()), self::ROUTE, true);
+	}
 
-		$url = $this->getView()->url(array('id'=> (int)FaZend_Revision::get()), 'squeeze', true);
-		$file = APPLICATION_PATH . '/views/squeeze/' . $this->_file;
+	/**
+	 * Show the image
+	 *
+	 * @return string
+	 */
+	protected function _render() {
 
-		$map = $this->loadMap();
+		// build full name of the file
+		$file = APPLICATION_PATH . self::SQUEEZE_FOLDER . $this->_file;
 
+		// maybe it's a mistake?
 		if (!is_file($file))
-			return 'border: 1px solid red;';
+			return self::FAILURE;
 
-		if (!isset($map['images'][$file]) || (filemtime($file) != $map['images'][$file]['mtime'])) {
+		// load full map with this new file inside	
+		$map = $this->_loadUpdatedMap($file);
 
-			// if it's very fresh - prepare it
-			if (!isset($map['images']))
-				$map['images'] = array();
+		// maybe something was wrong?
+		if (!isset($map['images'][$file]))
+			return self::FAILURE;
 
-			// delete obsolete elements from the map (lost images)
-			foreach ($map['images'] as $id=>$img) {
-				if (file_exists($id))
-					continue;
-
-				unset($map['images'][$id]);
-			}
-
-			// add new image
-			$png = imagecreatefrompng($file);
-			$thisImage = array(
-				'md5' => md5_file($file),
-			);
-			$map['images'][$file] = $thisImage;
-
-			// kill non-existing files
-			foreach ($map['images'] as $id=>&$img) {
-				if (file_exists($id))
-					continue;
-				unset($map['images'][$id]);
-			}
-
-			foreach ($map['images'] as $id=>&$img) {
-
-				$newSmall = @imagecreatefrompng($id);
-				if (!$newSmall) {
-					$newSmall = @imagecreatefromgif($id);
-					if (!$newSmall) {
-						unset($map['images'][$id]);
-						continue;
-					}
-				}	
-
-				if (isset($holder)) {
-
-					// put the image to the bottom if:
-					// the width of a new image is LESS OR EQUAL than the space available
-					// and the height of new image is less of equal than the space available
-					if ((imagesx($newSmall) <= imagesx($holder) - $bottomX) &&
-						(imagesy($newSmall) <= imagesy($holder) - $bottomY)) {
-						// set new image to the BOTTOM
-						$newHolder = imagecreate(max(imagesx($newSmall)+$bottomX,imagesx($holder)), max(imagesy($newSmall)+$bottomY, imagesy($holder)));
-						$img['x'] = $bottomX;
-						$img['y'] = $bottomY;
-					} else {
-						// set the new image to the RIGHT
-						$newHolder = imagecreate(imagesx($newSmall)+imagesx($holder), max(imagesy($holder), $rightY + imagesy($newSmall)));
-						$img['x'] = $rightX;
-						$img['y'] = $rightY;
-					}	
-
-					// see: http://www.php.net/manual/en/function.imagealphablending.php
-					imagealphablending($newHolder, false);
-
-					// copy everything from the existing holder
-					imagecopy($newHolder, $holder, 0, 0, 0, 0, imagesx($holder), imagesy($holder));
-
-					// copy new image to the new holder
-					imagecopy($newHolder, $newSmall, $img['x'], $img['y'], 0, 0, imagesx($newSmall), imagesy($newSmall));
-
-					// new image is a new holder!
-					$holder = $newHolder;
-
-				} else {
-					$img['x'] = 0;
-					$img['y'] = 0;
-					$holder = $newSmall;
-				}	
-				
-				// get coordinates of right top corner OF the added image
-				$rightX = $img['x'] + imagesx($newSmall);
-				$rightY = $img['y'];
-
-				// get coordinates of bottom left corner OF the added image
-				$bottomX = $img['x'];
-				$bottomY = $img['y'] + imagesy($newSmall);
-
-				$img['width'] = imagesx($newSmall);
-				$img['height'] = imagesy($newSmall);
-				$img['mtime'] = filemtime($id);
-			}	
-
-			ob_start();
-			// see: http://www.php.net/manual/en/function.imagesavealpha.php
-			imagesavealpha($holder, true);
-
-			// see: http://www.php.net/manual/en/function.imagepng.php
-			// no compression
-			// output to stream (not file)
-			imagepng($holder, null, 0, PNG_NO_FILTER);
-
-			$pngContent = ob_get_contents();
-			ob_end_clean();
-
-			$this->saveMap($map, $pngContent);
-		}
-
-		return sprintf("background:url({$url}) no-repeat;width:%dpx;height:%dpx;background-position:%dpx %dpx;display:inline-block;",
+		return sprintf("background:url(" . $this->url() . 
+			") no-repeat;width:%dpx;height:%dpx;background-position:%dpx %dpx;display:inline-block;",
 			$map['images'][$file]['width'],
 			$map['images'][$file]['height'],
 			-$map['images'][$file]['x'],
 			-$map['images'][$file]['y']);
 
 	}
+
+	/**
+	* Load map and adds this file into it, if it's not there already
+	*
+	* @param string File name of a new image (or existing one)
+	* @return array
+	*/
+	protected function _loadUpdatedMap($file) {
+
+		// load map from the file, as it is
+		$map = $this->loadMap();
+
+		// if the file is there already and it's up to date
+		if (isset($map['images'][$file]) && (filemtime($file) == $map['images'][$file]['mtime']))
+			return $map;
+
+		// clean the map and remove all incorrect elements	
+		$this->_clean($map);	
+
+		// add new file to the map
+		$this->_addFile($map, $file);	
+
+       		// get PNG content and save it
+       		$this->saveMap($map, $this->_buildPNG($map));
+
+       		return $map;
+
+       	}
+
+	/**
+	* Removes old and exprired files from the map
+	*
+	* @param array Map of files
+	* @return void
+	*/
+	protected function _clean(array &$map) {
+
+       		// if it's very fresh - prepare it
+       		if (!isset($map['images']))
+       			$map['images'] = array();
+
+       		// delete obsolete elements from the map (lost images)
+       		foreach ($map['images'] as $id=>$img) {
+       			if (file_exists($id))
+       				continue;
+
+       			unset($map['images'][$id]);
+       		}
+
+       	}	
+
+	/**
+	* Add new file to the map
+	*
+	* @param array Map of files
+	* @param string Full name of the file to add
+	* @return array
+	*/
+	protected function _addFile(array &$map, $file) {
+
+       		// add new image
+       		$png = imagecreatefrompng($file);
+       		$thisImage = array(
+       			'md5' => md5_file($file),
+       			'mtime' => filemtime($file)
+       		);
+       		$map['images'][$file] = $thisImage;
+
+       	}	
+
+	/**
+	* Compress existing map
+	*
+	* @param array Map
+	* @return array Metadata about images
+	*/
+	protected function _compress(array &$map) {
+
+		$metadata = $this->_loadMetadata($map);
+
+		// start with top left
+		$x = $y = $height = 0;
+
+       		foreach ($map['images'] as $id=>&$img) {
+
+       			$png = $metadata[$id];
+
+       			$img['x'] = $x;
+       			$img['y'] = $y;
+       			$img['width'] = imagesx($png);
+       			$img['height'] = imagesy($png);
+
+       			$x += $img['width'];
+       			$height = max($height, $img['height']);
+
+       		}	
+
+       		$metadata['width'] = $x;
+       		$metadata['height'] = $height;
+
+       		return $metadata;
+
+       	}	
+
+	/**
+	* Load images into metadata array
+	*
+	* @param array Map
+	* @return array Metadata and image copies
+	*/
+	protected function _loadMetadata(array &$map) {
+
+		$metadata = array();
+
+		// if the data provided are corrupted (hm...)
+		if (!isset($map['images']))
+			$map['images'] = array();
+
+		// load them all!	
+       		foreach ($map['images'] as $id=>&$img) {
+
+       			$image = @imagecreatefrompng($id);
+       			if (!$image) {
+       				$image = @imagecreatefromgif($id);
+       				if (!$image) {
+       					unset($map['images'][$id]);
+       					continue;
+       				}
+       			}	
+
+       			$metadata[$id] = $image;
+
+       		}	
+
+       		return $metadata;
+
+       	}	
+
+	/**
+	* Build the holder PNG file
+	*
+	* @param array Map
+	* @return string PNG
+	*/
+	protected function _buildPNG(array $map) {
+
+		// compress the map to remove white spaces
+       		$metadata = $this->_compress($map);
+
+     		$holder = imagecreate($metadata['width'], $metadata['height']);
+
+       		// see: http://www.php.net/manual/en/function.imagealphablending.php
+       		imagealphablending($holder, false);
+
+       		// copy all images to the holder, in proper places
+       		foreach ($map['images'] as $id=>&$img) {
+		
+			// copy new image to the holder
+       			imagecopy($holder, $metadata['images'][$id], $img['x'], $img['y'], 0, 0, $img['width'], $img['height']);
+
+		}
+
+       		ob_start();
+       		// see: http://www.php.net/manual/en/function.imagesavealpha.php
+       		imagesavealpha($holder, true);
+
+       		// see: http://www.php.net/manual/en/function.imagepng.php
+       		// no compression
+       		// output to stream (not file)
+       		imagepng($holder, null, 0, PNG_NO_FILTER);
+
+       		$pngContent = ob_get_contents();
+       		ob_end_clean();
+
+       		return $pngContent;
+
+       	}	
 
 }

@@ -30,4 +30,12 @@ class FaZend_Controller_AdmControllerTest extends AbstractTestCase {
 
 	}
 
+	public function testAllUrlsWork () {
+
+		$this->dispatch($this->view->url(array('action'=>'squeeze'), 'adm', true));
+		$this->dispatch($this->view->url(array('action'=>'log'), 'adm', true));
+		$this->dispatch($this->view->url(array('action'=>'tables'), 'adm', true));
+
+	}
+
 }

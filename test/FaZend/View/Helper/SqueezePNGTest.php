@@ -49,5 +49,19 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
 
 	}
 
+	/**
+	* Test image compression
+	*
+	*/
+	public function testSqueezeIsCompressedAtItsMaximum () {
+
+	        eval ('class Foo extends FaZend_View_Helper_SqueezePNG { function testCompress(array $images) { return $this->_compress($images); } };');
+		
+		$foo = new Foo();
+		$images = array();
+		$images = $foo->testCompress($images);
+
+	}
 
 }
+
