@@ -125,8 +125,8 @@ class FaZend_Backup {
 		// mysqldump
 		$file = tempnam(sys_get_temp_dir(), 'fz');
 		$config = Zend_Db_Table::getDefaultAdapter()->getConfig();
-		$cmd = $this->_var('mysqldump').
-			" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" > {$file} 2>&1";
+		$cmd = "\"" . $this->_var('mysqldump').
+			"\" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" --result-file=\"{$file}\" 2>&1";
 		$result = shell_exec($cmd);
 
 		if (file_exists($file) && (filesize($file) > 1024))
