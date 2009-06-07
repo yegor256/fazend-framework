@@ -56,6 +56,15 @@ class FaZend_Backup {
 	}
 
 	/**
+	 * Remove sempathor
+	 *
+	 * @return time
+	 */
+	public function clearSemaphore() {
+		unlink($this->_getSemaphoreFileName());
+	}
+
+	/**
 	 * Get latest run time
 	 *
 	 * @return time

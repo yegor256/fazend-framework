@@ -164,6 +164,9 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         	$this->view->backup = new FaZend_Backup();
 
+        	if ($this->_hasParam('clear'))
+        		$this->view->backup->clearSemaphore();
+
         }
 
 }
