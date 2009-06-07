@@ -152,7 +152,7 @@ class FaZend_Backup {
 
 	        $bucket = $this->_getConfig()->S3->bucket;
 
-	        return $s3->getInfo($file);	
+	        return $s3->getInfo($bucket . '/' . $file);	
 
 	}
 
