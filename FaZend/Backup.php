@@ -224,7 +224,7 @@ class FaZend_Backup {
 		$password = $this->_getConfig()->password;
 
 	        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
-       		$cmd = $this->_var('openssl') . " enc -blowfish -pass \"{$password}\" < {$file} > {$fileEnc} 2>&1";
+       		$cmd = $this->_var('openssl') . " enc -blowfish -pass pass:\"{$password}\" < {$file} > {$fileEnc} 2>&1";
 		shell_exec($cmd);
 
 		if (file_exists($fileEnc) && (filesize($fileEnc) > 1024))
