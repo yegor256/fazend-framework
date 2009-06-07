@@ -49,14 +49,14 @@ class Fazend_UserController extends FaZend_Controller_Action {
 	        // try to register this new user
 		try {
 			$user = FaZend_User::register($form->email->getValue(), $form->password->getValue());
-		} catch (Exception $e) {
-			$form->email->addError(get_class($e) . $e->getMessage());
+		} catch (Zend_Db_Statement_Exception $e) {
+			$form->email->addError("user already registered, try another email");
 			return;
 		}	
 
 		// try to save other form elements to the user
 		foreach ($form->getElements() as $element) {
-			$name = $element->name;
+			$name = $element->getName();
 			if (!isset($user->$name))
 				continue;
 
