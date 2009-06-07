@@ -3,13 +3,13 @@
 <h1>SqueezePNG files</h1>
 
 <p>
-	Holder: <tt><?=$this->view->squeezePNG()->getImagePath()?></tt><br/>
-	Map file: <tt><?=$this->view->squeezePNG()->getMapPath()?></tt>
+	Holder: <tt><?=$this->squeezePNG()->getImagePath()?></tt><br/>
+	Map file: <tt><?=$this->squeezePNG()->getMapPath()?></tt>
 </p>	
 
-<img src="<?=$this->view->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
+<img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
 
-<? $map = $this->view->squeezePNG()->loadMap()?>
+<? $map = $this->squeezePNG()->loadMap()?>
 
 <p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
 
