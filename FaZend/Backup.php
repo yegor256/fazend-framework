@@ -131,8 +131,10 @@ class FaZend_Backup {
 
 		if (file_exists($file) && (filesize($file) > 1024))
 		        $this->_log($this->_nice($file) . " was created");
-		else
+		else {
+		        $this->_log("Command: {$cmd}");
 		        $this->_log($this->_nice($file) . " creation error: " . $result, true);
+		}
 
 		// encrypt the SQL
 		$this->_encrypt($file);
