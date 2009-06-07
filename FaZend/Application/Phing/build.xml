@@ -88,4 +88,11 @@
 		</uploadByFTP>
 	</target>
 
+	<target name="ping" description="Ping the production server and show the result">
+		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+		<taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
+
+		<pingFaZend url="${live.home}/__ping/backup" />
+	</target>
+
 </project>
