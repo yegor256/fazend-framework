@@ -46,7 +46,7 @@ class FaZend_View_Helper_SqueezePNG {
 	 * @return string
 	 */
 	public function getImagePath() {
-		return sys_get_temp_dir() . 'fazend-' . md5($this->url()) . '-' . FaZend_Revision::get() . '.png';
+		return sys_get_temp_dir() . '/fazend-' . md5($this->url()) . '-' . FaZend_Revision::get() . '.png';
 	}           
 
 	/**
