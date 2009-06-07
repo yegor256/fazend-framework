@@ -36,7 +36,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 		$response = $this->getResponse();
 
 		$adapter = new Zend_Auth_Adapter_Http(array(
-			'accept_schemes' => 'basic digest',
+			'accept_schemes' => 'basic',
 			'digest_domains' => '/__adm',
 			'nonce_timeout' => 3600,
 			'realm' => 'adm'));
