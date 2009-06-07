@@ -140,6 +140,10 @@ class Fazend_AdmController extends FaZend_Controller_Action {
          * @return void
          */
         public function squeezeAction() {
+
+        	if ($this->_hasParam('reload'))
+        		$this->view->squeezePNG()->startOver();
+
         }
 
 }

@@ -3,8 +3,8 @@
 <h1>SqueezePNG files</h1>
 
 <p>
-	Holder: <tt><?=$this->squeezePNG()->getImagePath()?></tt><br/>
-	Map file: <tt><?=$this->squeezePNG()->getMapPath()?></tt>
+	Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=filesize($path)?> bytes)<br/>
+	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=filesize($mapfile)?> bytes)
 </p>	
 
 <img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
