@@ -99,15 +99,17 @@ class FaZend_Backup {
 			// archive all files into one ".tar.gz" file
 			$this->_backupFiles();
 
+		       	// turn ON the semaphore
+		        $this->_setSemaphoreTime($this->getLog());
+		
 		} catch (FaZend_Backup_Exception $e) {
 
 			$this->_log("Script terminated by exception");
 
+			unlink($this->_getSemaphoreFileName());
+
 		}
 
-	       	// turn ON the semaphore
-	        $this->_setSemaphoreTime($this->getLog());
-		
 	}
 
 	/**
@@ -198,6 +200,8 @@ class FaZend_Backup {
 	protected function _encrypt(&$file) {
 
 		$fileEnc = $file . '.enc';
+
+		$password = $this->_getConfig()->password;
 
 	        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
        		$cmd = $this->_var('openssl') . " enc -blowfish -pass \"{$pass}\" < {$file} > {$fileEnc} 2>&1";
@@ -343,7 +347,7 @@ class FaZend_Backup {
 	 */
 	protected function _getSemaphoreFileName() {
 
-		return sys_get_temp_dir() . '/fazend-backup-semaphore-' . md5(WEBSITE_URL) . '.txt';
+		return sys_get_temp_dir() . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
 
 	}
 
