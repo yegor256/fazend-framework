@@ -212,7 +212,7 @@ class FaZend_Backup {
 
 		// all files into .TAR
 		$file = tempnam(sys_get_temp_dir(), 'fz');
-		$cmd = $this-_var('tar') . " -c --file=\"{$file}\" ";
+		$cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
 
 		foreach($this->_getConfig()->content->files->toArray() as $dir)
 			$cmd .= "\"{$dir}\"";
