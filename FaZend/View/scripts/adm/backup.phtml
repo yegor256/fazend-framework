@@ -11,7 +11,7 @@
 
 <ul>
 <? foreach ($this->backup->getS3Files() as $object): ?>
-	<li><?=$file?></li>
+	<li><?=$object?></li>
 <? endforeach; ?>
 </ul>
 
