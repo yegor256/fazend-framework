@@ -57,8 +57,10 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		// try to save other form elements to the user
 		foreach ($form->getElements() as $element) {
 			$name = $element->name;
-			if (isset($user->$name))
-				$user->$name = $element->getValue();
+			if (!isset($user->$name))
+				continue;
+
+			$user->$name = $element->getValue();
 
 			try {
 				$user->save();
