@@ -47,7 +47,7 @@ class FaZend_Auth_Adapter_Http_Resolver_Admins implements Zend_Auth_Adapter_Http
 		if ($this->_scheme == 'basic')
 			return $admins[$username];
 		else	
-			return md5($admins[$username]);
+			return hash('md5', $admins[$username]);
 
 	}
 }

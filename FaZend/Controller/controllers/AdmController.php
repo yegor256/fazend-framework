@@ -54,7 +54,7 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
 		$result = $adapter->authenticate();
 		if (!$result->isValid())
-			return $this->_forwardWithMessage('authorization failed (code #' . $result->getCode(). '): ' . 
+			return $this->_forwardWithMessage('authorization failed (code #' . abs($result->getCode()). '): ' . 
 				implode('; ', $result->getMessages()));
 
 		$this->view->action = $this->getRequest()->getActionName();	
