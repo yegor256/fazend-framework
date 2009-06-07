@@ -129,7 +129,7 @@ class FaZend_Backup {
 			" -v -u \"{$config['username']}\" --password=\"{$config['password']}\" \"{$config['dbname']}\" > {$file} 2>&1";
 		$result = shell_exec($cmd);
 
-		if (file_exists($file) && filesize($file))
+		if (file_exists($file) && (filesize($file) > 1024))
 		        $this->_log($this->_nice($file) . " was created");
 		else
 		        $this->_log($this->_nice($file) . " creation error: " . $result, true);
@@ -204,7 +204,7 @@ class FaZend_Backup {
 		$password = $this->_getConfig()->password;
 
 	        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
-       		$cmd = $this->_var('openssl') . " enc -blowfish -pass \"{$pass}\" < {$file} > {$fileEnc} 2>&1";
+       		$cmd = $this->_var('openssl') . " enc -blowfish -pass \"{$password}\" < {$file} > {$fileEnc} 2>&1";
 		$result = shell_exec($cmd);
 
 		if (file_exists($fileEnc) && filesize($fileEnc))
