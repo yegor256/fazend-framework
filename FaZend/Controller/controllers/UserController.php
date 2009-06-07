@@ -49,10 +49,12 @@ class Fazend_UserController extends FaZend_Controller_Action {
 	        // try to register this new user
 		try {
 			$user = FaZend_User::register($form->email->getValue(), $form->password->getValue());
-		} catch (FaZend_User_RegisterException $e) {
+		} catch (Exception $e) {
 			$form->email->addError($e->getMessage());
 			return;
 		}	
+
+
 
 		// login the found user
 		$user->logIn();
