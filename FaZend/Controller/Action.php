@@ -99,7 +99,9 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
         			->setHeader('Content-Length', strlen($responseJsonEncoded))
 				->setBody($responseJsonEncoded);
 
-		} catch(Zend_Json_Exception $e) {
+		} catch (Zend_Json_Exception $e) {
+
+			// what to do here?
 
 		}
 
@@ -122,22 +124,37 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	}
 
 	/**
+	 * Format time for HTTP headers
+	 *
+	 * @param int
+	 * @return string
+	 */
+	protected function _formatHeaderTime($time) {
+		return gmdate('D, d M Y H:i:s', $time) . ' GMT';
+	}
+        
+	/**
 	 * Tell browser to cache content
 	 *
+	 * @param int Time when this content was modified last time
 	 * @return void
 	 */
-	protected function _cacheContent() {
+	protected function _cacheContent($modifiedTime = false) {
+
+		if (!$modifiedTime)
+			$modifiedTime = time();
         
 		$this->getResponse()
-        		->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', time()) . ' GMT')
+        		// when this images was last modified
+        		->setHeader('Last-Modified', $this->_formatHeaderTime($modifiedTime))
         
+        		->setHeader('Date', $this->_formatHeaderTime(time()))
+
         		// in 30 days to reload!
-	        	->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60 * 60 * 24 * 30) . ' GMT')
+	        	->setHeader('Expires', $this->_formatHeaderTime($modifiedTime + 60 * 60 * 24 * 30))
 	        	
 	        	// tell the browser NOT to reload the image
-        		->setHeader('Cache-Control', 'public')
-        		
-        		->setHeader('Pragma', ' ');
+        		->setHeader('Cache-Control', 'public, max-age=31536000');
         
         }	
 
