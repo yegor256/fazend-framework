@@ -10,10 +10,8 @@
 <p>All objects in your S3 bucket:</p>
 
 <ul>
-<? foreach ($this->backup->getS3Files() as $object): ?>
-	<? $info = $this->backup->getS3FileInfo($object)?>
-
-	<li><?=$object?>: <?=$info['size']?> bytes, <?=date('m/d/y h:i', $info['mtime'])?></li>
+<? foreach ($this->files as $file): ?>
+	<li><?=$file['name']?>: <?=$file['size']?> bytes, <?=date('m/d/y h:i', $file['mtime'])?></li>
 <? endforeach; ?>
 </ul>
 

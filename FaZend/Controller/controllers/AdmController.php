@@ -167,6 +167,19 @@ class Fazend_AdmController extends FaZend_Controller_Action {
         	if ($this->_hasParam('clear'))
         		$this->view->backup->clearSemaphore();
 
+        	$files = array();	
+		foreach ($this->view->backup->getS3Files() as $object) {
+
+			$info = $this->view->backup->getS3FileInfo($object);
+			$info['name'] = $object;
+
+			$files[] = $info;
+		}
+
+		usort($files, create_function('$a, $b', 'return $a["mtime"] > $b["mtime"];'));
+
+		$this->view->files = $files;
+
         }
 
 }
