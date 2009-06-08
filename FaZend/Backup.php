@@ -215,7 +215,7 @@ class FaZend_Backup {
 		$cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
 
 		foreach($this->_getConfig()->content->files->toArray() as $dir)
-			$cmd .= "\"{$dir}\"";
+			$cmd .= "\"{$dir}/*\"";
 
 		$cmd .= " 2>&1";
 		$result = shell_exec($cmd);
