@@ -140,12 +140,9 @@ class FaZend_Db_Wrapper {
 			$autoloader = Zend_Loader_Autoloader::getInstance();
 
 			// no, it doesn't exist - so we create it!
-			//
-			// BUG: WE CAN'T DO IT, PHP RAISES A WARNING
-			//
-			//if (!@$autoloader->autoload($exceptionClassName)) {
+			if (!@$autoloader->autoload($exceptionClassName)) {
         			eval("class {$exceptionClassName} extends FaZend_Db_Table_NotFoundException {};");	
-        		//}	
+        		}	
 		}	
 
         	// if the result is OK - just return it
