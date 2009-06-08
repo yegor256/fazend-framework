@@ -95,7 +95,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 		$user->password = $password;
 
 		foreach ($data as $key=>$value)
-			$user->$key = $data;
+			$user->$key = $value;
 
 		$user->save();
 
