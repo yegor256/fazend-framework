@@ -34,7 +34,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 		$options = $this->getOptions();
 
 		if (!isset($options['name']))
-			throw new Exception("FaZend.name should be defined in your app.ini file");
+			throw new Exception("[FaZend.name] should be defined in your app.ini file");
 
 		$this->_initTableCache($options);
 

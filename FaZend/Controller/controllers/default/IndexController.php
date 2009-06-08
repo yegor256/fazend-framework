@@ -18,30 +18,14 @@
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  */
-class Fazend_CssController extends FaZend_Controller_Action {
+class IndexController extends FaZend_Controller_Action {
 
         /**
-         * Show one Java Script
+         * Simple index controller
          * 
          * @return string
          */
         public function indexAction() {
-
-        	// if it's absent
-        	if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
-        		$this->_forwardWithMessage('path not found');
-
-        	$this->getResponse()->setHeader('Content-type', 'text/css');
-
-		$this->_helper->viewRenderer
-			->setViewScriptPathSpec(':controller/'.$this->_getParam('css'));
-	        
-	        $this->_helper->layout->disableLayout();
-
-	        $this->view->setFilter(null);
-
-		$this->_helper->viewRenderer($this->_getParam('css'));
-
 
 	}	
 }

@@ -25,10 +25,10 @@ function bug($var) { echo '<pre>'.htmlspecialchars(print_r($var, true)).'</pre>'
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 	/**
-	* Initialize view
-	*
-	* @return
-	*/
+	 * Initialize view
+	 *
+	 * @return
+	 */
 	protected function _initApp() {
 
 		$this->bootstrap('frontController');
@@ -78,12 +78,11 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
                 return $view;
 	}
 
-
 	/**
-	* Initialize autoloader for Db ActiveRow
-	*
-	* @return void
-	*/
+	 * Initialize autoloader for Db ActiveRow
+	 *
+	 * @return void
+	 */
 	protected function _initDbAutoloader() {
 		
 		$autoloader = Zend_Loader_Autoloader::getInstance();
@@ -91,6 +90,31 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		$autoloader->pushAutoloader(new FaZend_Db_TableLoader(), 'FaZend_Db_ActiveTable_');
 
 	}
+
+	/**
+	 * Configure FaZend if the application is NOT in Zend framework
+	 *
+	 * @return void
+	 */
+	protected function _initBlindFaZend() {
+
+		// make sure it is loaded already
+		$this->bootstrap('layout');
+
+		// layout reconfigure, if necessary
+		$layout = Zend_Layout::getMvcInstance();
+		if (!file_exists($layout->getViewScriptPath()))
+			$layout->setViewScriptPath(FAZEND_PATH . '/View/layout/scripts');
+
+		// controller
+		$this->bootstrap('frontController');
+		$front = $this->getResource('frontController');
+		$dirs = $front->getControllerDirectory();
+
+		if (!file_exists($dirs['default']))
+			$front->setControllerDirectory(FAZEND_PATH . 'Controller/controllers/default', 'default');
+
+	}		
 
 }
 

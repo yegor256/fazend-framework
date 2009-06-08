@@ -1,0 +1,44 @@
+<?
+$this->headMeta()
+	->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
+
+$this->stripCSS('global.css');
+
+?><?= $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>  
+<?=$this->headTitle()?>
+<?=$this->headMeta()?>
+<?=$this->headLink()?>
+<?=$this->headStyle()?>
+</head> 
+<body>
+
+<div style='width: auto; padding: 30px;'>
+
+<?=$this->errorMessage()?>
+
+<div style="position: fixed; top: 0; right: 0; padding: 5px;">
+	
+	<?=$this->action('login', 'user', 'fazend')?>
+
+        <? if (Model_User::isLoggedIn()): ?>
+        	<p><a href="<?=$this->url(array(), 'adm', true)?>">admin</a></p>	
+        <? endif; ?>
+</div>
+
+<div style='min-height: 350px; width: 900px;'>
+<?=$this->layout()->content?>
+</div>
+	
+<div style="margin-top: 40px; line-height: 1.4em; clear: both; font-size: 0.8em; color: gray;">
+	<span style='padding-top: 3px; border-top: 1px gray solid;'>(c) <?=date('Y')?> fazend.com, 
+	rev.<?=FaZend_Revision::get()?>,
+	<?=$this->pageLoadTime()?></span>
+</div>	
+
+</div>
+
+</body>
+<?=$this->headScript() ?>
+</html>
