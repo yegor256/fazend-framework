@@ -80,7 +80,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 
 	        	// tell the browser NOT to reload the image
         		->setHeader('Cache-Control', 'public')
-        		->setHeader('Pragma', '');
+        		->setHeader('Pragma', ' ');
         	}
 
         	$this->getResponse()
