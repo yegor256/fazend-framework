@@ -17,14 +17,18 @@
 	<p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
 
 	<ul>
+	<? $totalSize = 0; ?>
 	<? foreach ($map['images'] as $id=>$img): ?>
+		<? $totalSize += ($size = filesize($id));?>
 
 		<li>
-			<?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>
+			<?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>, <?=$size?>bytes
 		</li>	
 
 	<? endforeach; ?>
 	</ul>
+
+	<p>Total size: <?=$totalSize?>bytes</p>
 
 <? endif; ?>	
 
