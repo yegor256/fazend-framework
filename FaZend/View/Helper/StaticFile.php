@@ -30,7 +30,7 @@ class FaZend_View_Helper_StaticFile {
 	        //base url for this application
 	        $baseUrl = $frontController->getBaseUrl();
 
-	        return WEBSITE_URL.$baseUrl . '/' . $file;
+	        return WEBSITE_URL . $baseUrl . '/' . $file;
 	}
 
 }
