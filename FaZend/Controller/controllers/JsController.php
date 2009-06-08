@@ -31,7 +31,11 @@ class Fazend_JsController extends FaZend_Controller_Action {
         	if (!file_exists(APPLICATION_PATH . '/views/scripts/js/' . $this->_getParam('script')))
         		$this->_forwardWithMessage('path not found');
 
-        	$this->getResponse()->setHeader('Content-type', 'text/javascript');
+        	$this->getResponse()
+        		->setHeader('Content-type', 'text/javascript');
+
+        	// tell browser to cache this content	
+        	$this->_cacheContent();	
 
 		$this->_helper->viewRenderer
 			->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));

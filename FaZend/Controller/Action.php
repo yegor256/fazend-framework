@@ -71,17 +71,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
         	$this->_helper->viewRenderer->setNoRender();
 
         	// if the image is static - tell the browser about it
-        	if (!$dynamic) {
-	        	// when it was created	
-        		$this->getResponse()->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', time()) . ' GMT')
-
-        		// in 30 days to reload!
-	        	->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60 * 60 * 24 * 30) . ' GMT')
-
-	        	// tell the browser NOT to reload the image
-        		->setHeader('Cache-Control', 'public')
-        		->setHeader('Pragma', ' ');
-        	}
+        	if (!$dynamic)
+        		$this->_cacheContent();
 
         	$this->getResponse()
         		->setHeader('Content-type', 'image/png')
@@ -127,5 +118,25 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 			->setBody($xml);
 
 	}
+
+	/**
+	 * Tell browser to cache content
+	 *
+	 * @return void
+	 */
+	protected function _cacheContent() {
+        
+		$this->getResponse()
+        		->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', time()) . ' GMT')
+        
+        		// in 30 days to reload!
+	        	->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60 * 60 * 24 * 30) . ' GMT')
+	        	
+	        	// tell the browser NOT to reload the image
+        		->setHeader('Cache-Control', 'public')
+        		
+        		->setHeader('Pragma', ' ');
+        
+        }	
 
 }
