@@ -2,11 +2,11 @@
 
 <h1>Temporary internal site error</h1> 
 
-<p>Erorr code: <?= $this->message ?></p> 
+<p>Error code: <?= $this->message ?></p> 
 
 <? if ($this->showError): ?> 
 
-        <p>Exception information:</p> 
+        <p>Exception information (<?=get_class($this->exception)?>):</p> 
 
         <p>Error: <?=$this->exception->getMessage() ?></p> 
 
