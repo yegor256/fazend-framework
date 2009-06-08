@@ -364,7 +364,7 @@ class FaZend_View_Helper_SqueezePNG {
        		// see: http://www.php.net/manual/en/function.imagepng.php
        		// no compression
        		// output to stream (not file)
-       		imagepng($holder, null, 0, PNG_NO_FILTER);
+       		imagepng($holder, null, 7, PNG_ALL_FILTERS);
 
        		$pngContent = ob_get_contents();
        		ob_end_clean();

@@ -56,15 +56,15 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	}
 
 	/**
-	* Show PNG instead of page
-	*
-	* You have to remember, that under SSL all images are dynamic, no matter
-	* what parameter you set here. And you can't change this.
-	*
-	* @param string PNG binary content
-	* @param boolean This image is dynamic (TRUE) or static (FALSE).
-	* @return void
-	*/
+	 * Show PNG instead of page
+	 *
+	 * You have to remember, that under SSL all images are dynamic, no matter
+	 * what parameter you set here. And you can't change this.
+	 *
+	 * @param string PNG binary content
+	 * @param boolean This image is dynamic (TRUE) or static (FALSE).
+	 * @return void
+	 */
 	protected function _returnPNG ($png, $dynamic = true) {
         
 	        $this->_helper->layout->disableLayout();
@@ -75,7 +75,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
         		$this->_cacheContent();
 
         	$this->getResponse()
-        		->setHeader('Content-type', 'image/png')
+        		->setHeader('Content-Type', 'image/png')
+        		->setHeader('Content-Length', strlen($png))
 	        	->setBody($png);
 
         }	
@@ -95,6 +96,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 			$responseJsonEncoded = Zend_Json::encode($var);
 			$this->getResponse()
 				->setHeader('Content-Type', 'application/json')
+        			->setHeader('Content-Length', strlen($responseJsonEncoded))
 				->setBody($responseJsonEncoded);
 
 		} catch(Zend_Json_Exception $e) {
