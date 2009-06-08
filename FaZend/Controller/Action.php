@@ -112,4 +112,20 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 
 	}	
 
+	/**
+	 * Return XML reply
+	 *
+	 * @return void
+	 */
+	protected function _returnXML ($xml) {
+        
+	        $this->_helper->layout->disableLayout();
+        	$this->_helper->viewRenderer->setNoRender();
+
+		$this->getResponse()
+			->setHeader('Content-Type', 'text/xml')
+			->setBody($xml);
+
+	}
+
 }
