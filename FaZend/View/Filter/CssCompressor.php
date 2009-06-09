@@ -32,9 +32,7 @@ class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
          */
         public function filter($css) {
 
-        	$helper = new FaZend_View_Helper_StripCSS();
-
-		return $helper->stripCSS(false)->stripStylesheet($css);
+		return FaZend_View_Helper_StripCSS::stripStylesheet($css);
         }
 
 }

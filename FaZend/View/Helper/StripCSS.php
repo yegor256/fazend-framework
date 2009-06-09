@@ -44,14 +44,11 @@ class FaZend_View_Helper_StripCSS {
 	 *
 	 * @return void
 	 */
-	public function stripCSS($script = false) {
-
-		if (!$script)
-			return $this;
+	public function stripCSS($script) {
 
 		$content = $this->getView()->render($script);
 
-		$content = $this->stripStylesheet($content);
+		$content = self::stripStylesheet($content);
 
 		$this->getView()->headStyle($content);
 
@@ -63,7 +60,7 @@ class FaZend_View_Helper_StripCSS {
 	 *
 	 * @return string
 	 */
-	public function stripStylesheet($script) {
+	public static function stripStylesheet($script) {
 
 		return preg_replace(array(
 			'/[\n\r\t]/',
