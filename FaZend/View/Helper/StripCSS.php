@@ -44,7 +44,10 @@ class FaZend_View_Helper_StripCSS {
 	 *
 	 * @return void
 	 */
-	public function stripCSS($script) {
+	public function stripCSS($script = false) {
+
+		if (!$script)
+			return $this;
 
 		$content = $this->getView()->render($script);
 
