@@ -58,7 +58,7 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 		}	
 
 		// if we still have something in the aggregator
-		if ($aggregator) {
+		if ($aggregator) 
 			$new[] = $aggregator;
 
 		$this->setContainer($new);
