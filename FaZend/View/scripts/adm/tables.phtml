@@ -8,7 +8,7 @@
 		<option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
 
 	<? endforeach; ?>
-</select><?=$this->table ? '&nbsp;' . count($retrieve->fetchAll()) . ' total' : false?></p>
+</select><?=$this->table ? '&nbsp;' . count($this->retrieve->fetchAll()) . ' total' : false?></p>
 
 <? if ($this->table): ?>
 
