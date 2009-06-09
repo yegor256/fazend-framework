@@ -34,8 +34,8 @@ class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
 
 		return preg_replace(array(
 			'/[\n\r\t]/',
-			'/\s+([\,\:\{\}\.])/s',
-			'/([\,\;\:\{\}])\s+/s', // compress white spaces
+			'/\s+([\,\:\{\}\.])/',
+			'/([\,\;\:\{\}])\s+/', // compress white spaces
 			'/\/\*.*?\*\//', // kill comments
 		), array(
 			' ',
