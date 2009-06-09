@@ -48,32 +48,12 @@ class FaZend_View_Helper_StripCSS {
 
 		$content = $this->getView()->render($script);
 
-		$content = self::stripStylesheet($content);
+		$filter = FaZend_View_Filter_CssCompressor();
+		$content = $filter->filter($content);
 
 		$this->getView()->headStyle($content);
 
 		return $this;
-	}
-
-	/**
-	 * Strip text and returns compressed
-	 *
-	 * @return string
-	 */
-	public static function stripStylesheet($script) {
-
-		return preg_replace(array(
-			'/[\n\r\t]/',
-			'/\s+([\,\:\{\}\.])/s',
-			'/([\,\;\:\{\}])\s+/s',
-			'/\/\*.*?\*\//'
-		), array(
-			' ',
-			'${1}', 
-			'${1}', 
-			''
-		), $script);
-
 	}
 
 }
