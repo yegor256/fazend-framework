@@ -74,7 +74,6 @@ class FaZend_View_Helper_StripCSS {
 			''
 		), $script);
 
-
 	}
 
 }
