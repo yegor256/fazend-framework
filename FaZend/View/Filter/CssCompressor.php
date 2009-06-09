@@ -14,15 +14,11 @@
  * @category FaZend
  */
 
-
 /**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
-
-/**
- * @category   Zend
- * @package    Zend_Filter
+ *
+ *
+ * @category   FaZend
+ * @package    FaZend_View_Filter
  */
 class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
 
