@@ -137,7 +137,12 @@ class FaZend_Backup {
 	        if (!$s3->isBucketAvailable($bucket))
 	        	return array();
 
-	        return $s3->getObjectsByBucket($bucket);	
+	        $objects = $s3->getObjectsByBucket($bucket);	
+
+	        if (!is_array($objects))
+	        	return array();
+
+	        return $objects;	
 
 	}
 

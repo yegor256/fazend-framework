@@ -28,8 +28,8 @@ class Fazend_CssController extends FaZend_Controller_Action {
         public function indexAction() {
 
         	// if it's absent
-        	if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
-        		$this->_forwardWithMessage('path not found');
+        	//if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
+        	//	$this->_forwardWithMessage('path not found');
 
         	$this->getResponse()
         		->setHeader('Content-type', 'text/css');
@@ -42,6 +42,9 @@ class Fazend_CssController extends FaZend_Controller_Action {
 	        $this->_helper->layout->disableLayout();
 
 	        $this->view->setFilter(null);
+
+	        if (FaZend_Properties::get()->htmlCompression)
+	        	$this->view->addFilter('CssCompressor');
 
 		$this->_helper->viewRenderer($this->_getParam('css'));
 

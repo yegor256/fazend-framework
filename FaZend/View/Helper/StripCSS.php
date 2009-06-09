@@ -40,15 +40,29 @@ class FaZend_View_Helper_StripCSS {
 	}
 
 	/**
-	* Strip CSS and include it into HEAD section of the layout
-	*
-	* @return void
-	*/
+	 * Strip CSS and include it into HEAD section of the layout
+	 *
+	 * @return void
+	 */
 	public function stripCSS($script) {
 
 		$content = $this->getView()->render($script);
 
-		$content = preg_replace(array(
+		$content = $this->stripStylesheet($content);
+
+		$this->getView()->headStyle($content);
+
+		return $this;
+	}
+
+	/**
+	 * Strip text and returns compressed
+	 *
+	 * @return string
+	 */
+	public function stripStylesheet($script) {
+
+		return preg_replace(array(
 			'/[\n\r\t]/',
 			'/\s+([\,\:\{\}\.])/s',
 			'/([\,\;\:\{\}])\s+/s',
@@ -58,9 +72,9 @@ class FaZend_View_Helper_StripCSS {
 			'${1}', 
 			'${1}', 
 			''
-		), $content);
+		), $script);
 
-		$this->getView()->headStyle($content);
+
 	}
 
 }
