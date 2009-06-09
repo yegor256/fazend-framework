@@ -48,7 +48,7 @@ class FaZend_View_Helper_StripCSS {
 
 		$content = $this->getView()->render($script);
 
-		$filter = FaZend_View_Filter_CssCompressor();
+		$filter = new FaZend_View_Filter_CssCompressor();
 		$content = $filter->filter($content);
 
 		$this->getView()->headStyle($content);
