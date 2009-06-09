@@ -51,10 +51,10 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
 	        	'controller'=>$this->_getDefault($opts, 'hand/controller', 'index')), $this->_getDefault($opts, 'hand/route', 'default'), true);
 
 		// ajaz functions
-	        $this->view->inlineScript()->appendFile($this->view->url(array('script'=>'formAjaxText.js'), 'fazendjs', true));
+	        $this->view->inlineScript()->appendFile($this->view->url(array('script'=>'formAjaxText.js'), 'js', true));
 
 	        // prototype is required for this	
-	        $this->view->inlineScript()->appendFile($this->view->url(array('script'=>'prototype.js'), 'fazendjs', true));
+	        $this->view->inlineScript()->appendFile($this->view->url(array('script'=>'prototype.js'), 'js', true));
 
 		// initialize JS handlers
 		$callback = "function() {ajax_UpdateList('{$id}', '{$listId}', '{$url}', '".$this->_getDefault($opts, 'next')."', '{$handId}', '{$handUrl}');}";
