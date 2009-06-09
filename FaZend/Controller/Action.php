@@ -154,7 +154,11 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	        	->setHeader('Expires', $this->_formatHeaderTime($modifiedTime + 60 * 60 * 24 * 30))
 	        	
 	        	// tell the browser NOT to reload the image
-        		->setHeader('Cache-Control', 'public, max-age=31536000');
+        		->setHeader('Cache-Control', 'public, max-age=31536000')
+        		
+        		->setHeader('Content-Encoding', 'gzip, deflate')
+        		->setHeader('X-Compression', 'gzip')
+        		->setHeader('Accept-Encoding', 'gzip');
         
         }	
 
