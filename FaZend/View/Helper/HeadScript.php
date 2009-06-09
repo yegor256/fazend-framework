@@ -42,7 +42,6 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 
 				$aggregator->source .= $script->source;	
 
-				unset($container[$id]);
 				continue;
 
 			// we had some texts before	
