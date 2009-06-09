@@ -137,7 +137,9 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         	$this->view->table = $table = $this->_getParam('table');
 
-		eval ("\$iterator = FaZend_Db_ActiveTable_{$table}::retrieve()->fetchAll();");
+		eval ("\$retrieve = FaZend_Db_ActiveTable_{$table}::retrieve(); \$iterator = \$retrieve->fetchAll();");
+
+		$this->view->retrieve = $retrieve;
 
         	FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse('page'));
 
