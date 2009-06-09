@@ -49,7 +49,7 @@ class FaZend_Form extends Zend_Form {
 		parent::setConfig($config);
 
         	if (file_exists(APPLICATION_PATH . '/validators'))
-	        	$this->addPrefixPath('Validator', APPLICATION_PATH . '/validators/', 'validate');
+	        	$this->addElementPrefixPath('Validator', APPLICATION_PATH . '/validators/', 'validate');
 
         }	
 
