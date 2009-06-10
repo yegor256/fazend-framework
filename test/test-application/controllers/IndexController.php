@@ -62,5 +62,14 @@ class IndexController extends FaZend_Controller_Action {
 
         }
 	
+        /**
+         * HeadScriptTest
+         *
+         * @return void
+         */
+        public function headscriptAction() {
+
+        }
+	
 
 }

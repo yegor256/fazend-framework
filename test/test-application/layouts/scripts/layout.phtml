@@ -6,11 +6,6 @@ $this->headMeta()
 
 $this->stripCSS('global.css');
 
-$this->headScript()
-	->appendScript('a = 1')
-	->appendScript('a = 2')
-	->appendFile('testfile.js');
-
 ?><?= $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  

@@ -24,6 +24,9 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 	/**
 	 * Compress all scripts into one text
 	 *
+	 * Inline scripts written one after one should be compressed into
+	 * one script. For the sake of space saving.
+	 *
 	 * @return string
 	 */
 	public function toString($indent = null) {
@@ -32,25 +35,24 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 
 		$new = new Zend_View_Helper_Placeholder_Container();
 
-		$aggregator = null;
 		foreach($container as $id=>$script) {
 			// so we meet new text script
-			if (($script->type == 'text/javascript') && !isset($script->attributes['src']) && !empty($script->source)) {
+			if (($script->type == 'text/javascript') && empty($script->attributes['src']) && !empty($script->source)) {
 				
-				if (!$aggregator)
+				if (!isset($aggregator))
 					$aggregator = $script;
-
-				$aggregator->source .= $script->source;	
+				else	
+					$aggregator->source .= $container->getSeparator() . $script->source;	
 
 				continue;
 
 			// we had some texts before	
 			}
 			
-			if ($aggregator) {
+			if (isset($aggregator)) {
 				
 				$new[] = $aggregator;
-				$aggregator = null;
+				unset($aggregator);
 
 			}
 
@@ -58,7 +60,7 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 		}	
 
 		// if we still have something in the aggregator
-		if ($aggregator) 
+		if (isset($aggregator)) 
 			$new[] = $aggregator;
 
 		$this->setContainer($new);
