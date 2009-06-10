@@ -59,7 +59,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                                 $this->getResponse()->setHttpResponseCode(404); 
                                 //$this->view->message = 'Page not found'; 
 
-                                return $this->_forwardWithMessage('page not found');
+                                return $this->_forwardWithMessage('Error 404: page not found');
 
                         default: 
                                 // application error 
