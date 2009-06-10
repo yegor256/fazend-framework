@@ -46,11 +46,15 @@ class FaZend_View_Helper_GoogleAnalytics {
 	}
 
 	/**
-	* Show GA script
-	*
-	* @return Zend_View
-	*/
-	public function googleAnalytics() {
+	 * Show GA script
+	 *
+	 * @param boolean Show google analytics if the user is logged in?
+	 * @return Zend_View
+	 */
+	public function googleAnalytics($showForLoggedInUser = true) {
+
+		if (!$showForLoggedInUser && !FaZend_User::isLoggedIn())
+			return false;
 
 		if (APPLICATION_ENV != 'production')
 			return "<!-- google analytics skipped -->\n";
