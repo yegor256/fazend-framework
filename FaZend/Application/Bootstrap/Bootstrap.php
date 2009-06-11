@@ -56,18 +56,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		if (defined('CLI_ENVIRONMENT'))
 			Zend_Session::$_unitTestEnabled = true;
 
-		// configure global routes for all
-		$router = new Zend_Controller_Router_Rewrite();
-
-		// load standard routes, later customer will change them (two lines below)
-		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
-
-		// configure custom routes
-		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
-			$router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
-		}
-		$front->setRouter($router);
-
 		$front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
 			'module' => 'fazend',
 			'controller' => 'error',
@@ -115,6 +103,44 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 			$front->setControllerDirectory(FAZEND_PATH . 'Controller/controllers/default', 'default');
 
 	}		
+
+	/**
+	 * Configure routes
+	 *
+	 * @return void
+	 */
+	protected function _initRoutes() {
+
+		$this->bootstrap('frontController');
+		$front = $this->getResource('frontController');
+
+		// configure global routes for all
+		$router = new Zend_Controller_Router_Rewrite();
+
+		// load standard routes, later customer will change them (two lines below)
+		$router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
+
+		$appRoutes = new Zend_Config_Ini(FAZEND_PATH . '/Application/app-routes.ini', 'global', true);
+
+		// specific customizable controllers
+		foreach ($appRoutes->routes as $name=>$routeConfig) {
+
+			// is it a custom controller?
+			if (file_exists(APPLICATION_PATH . '/controllers/' . ucfirst($routeConfig->defaults->controller) . 'Controller.php')) {
+				$routeConfig->defaults->module = 'default';
+			}
+
+			$router->addRoute($name, Zend_Controller_Router_Route::getInstance($routeConfig));
+		}
+
+		// configure custom routes
+		if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
+			$router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
+		}
+
+		$front->setRouter($router);
+
+	}	
 
 }
 
