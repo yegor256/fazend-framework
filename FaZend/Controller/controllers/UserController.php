@@ -70,6 +70,9 @@ class Fazend_UserController extends FaZend_Controller_Action {
 		// kill the form
 		$this->view->form = false;
 
+		if (method_exists($this, 'registeredAction'))
+			$this->_helper->redirector->gotoSimple('registered');
+
         }
         	
         /**
