@@ -149,7 +149,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 				$user->logIn();
 				$this->view->form = false;
 				if (method_exists($this, 'loggedAction'))
-					$this->_forward('logged');
+					$this->_helper->redirector->gotoSimple('logged');
 			}
 
 		} catch (FaZend_User_NotFoundException $e) {
