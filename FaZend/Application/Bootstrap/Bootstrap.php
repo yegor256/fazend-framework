@@ -37,6 +37,10 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 		$this->bootstrap('view');
 		$view = $this->getResource('view');
 
+		// throw exceptions if failed
+		if (APPLICATION_ENV != 'production')
+			$front->throwExceptions(true);
+
 		// set the type of docs
 		$view->doctype(Zend_View_Helper_Doctype::XHTML1_STRICT);
 
