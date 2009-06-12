@@ -17,10 +17,22 @@
 class FaZend_Controller_Action extends Zend_Controller_Action {
 
 	/**
-	* Get param or throw an error
-	*
-	* @return string
-	*/
+	 * Add new paginator to the view
+	 *
+	 * @param ArrayIterator
+	 * @param string Name of the variable inside $this->view to be set
+	 * @param string name of the param for paging
+	 * @return string
+	 */
+	protected function _addPaginator ($iterator, $name = 'paginator', $param = 'page') {
+        	FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse($param), $name);
+	}
+
+	/**
+	 * Get param or throw an error
+	 *
+	 * @return string
+	 */
 	protected function _getParam ($name) {
 
 		if (!$this->_hasParam($name))
@@ -31,10 +43,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
 	}
 
 	/**
-	* Get param or return false
-	*
-	* @return string|false
-	*/
+	 * Get param or return false
+	 *
+	 * @return string|false
+	 */
 	protected function _getParamOrFalse ($name) {
 
 		if (!$this->_hasParam($name))
