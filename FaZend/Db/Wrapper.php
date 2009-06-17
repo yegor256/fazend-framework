@@ -135,9 +135,10 @@ class FaZend_Db_Wrapper {
         	// will expect this class and will fail to load it	
         	$exceptionClassName = $this->getRowClass() . '_NotFoundException';
 
-        	if (!class_exists($exceptionClassName))	{
+        	if (!class_exists($exceptionClassName, false)) {
 			// try to load if, maybe it exists
 			$autoloader = Zend_Loader_Autoloader::getInstance();
+			$autoloader->suppressNotFoundWarnings(true);
 
 			// no, it doesn't exist - so we create it!
 			if (!@$autoloader->autoload($exceptionClassName)) {

@@ -114,4 +114,14 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
 	}
 
+        /**
+         * Return object by the field
+         *
+         * @return void
+         */
+	public function getObject($name, $class) {
+		$id = $this->$name;
+		return new $class((int)$id);
+	}
+
 }
