@@ -73,7 +73,7 @@ class FaZend_Backup {
 		$file = $this->_getSemaphoreFileName();
 
 		if (!file_exists($file))
-			return 'no log...';
+			return 'no log in ' . $file . ' ...';
 
 		return file_get_contents($file);
 	}
