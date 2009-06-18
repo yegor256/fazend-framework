@@ -448,7 +448,7 @@ class FaZend_Backup {
 
 			if ($info['mtime'] < $minTime) {
 				$this->_getS3()->removeObject($bucket . '/' . $file);
-		        	$this->_log("File $file removed, since it's expired (over {$this->_getConfig()->S3->age} days)");
+		        	$this->_log("File $file removed from S3, since it's expired (over {$this->_getConfig()->S3->age} days)");
 		        }	
 		}
 
