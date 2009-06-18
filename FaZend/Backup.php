@@ -531,7 +531,7 @@ class FaZend_Backup {
 
 		file_put_contents($file, $log);
 
-		$this->_log("Semaphore file $file saved, backup process is started");
+		$this->_log("Semaphore file $file saved (" . strlen($log) . " bytes), backup process is started/finished");
 
 	}
 
