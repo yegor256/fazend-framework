@@ -18,7 +18,7 @@
  *
 -->
 
-<project name="FaZend_Buildfile" basedir="." default="main">
+<project basedir="." default="main">
 
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
