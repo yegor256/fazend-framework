@@ -26,6 +26,8 @@
 	<includepath classpath="${project.basedir}/src/library" />
 	<includepath classpath="${project.basedir}/test" />
 
+	<property name="serverDocs" value="/home/continuum/public_html" />
+
 	<target name="lint" description="Run syntax check for all classes" >
 		<phplint haltonfailure="yes">
 			<fileset dir="${project.basedir}/src/application">
@@ -94,5 +96,20 @@
 
 		<pingFaZend url="${live.home}/__ping/backup" />
 	</target>
+
+	<target name="doc" description="Create phpDoc documentation" >
+
+		<delete dir="${project.basedir}/doc" failonerror="true" verbose="false" includeemptydirs="true" />
+
+		<exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" passthru="no" />	
+		
+		<!-- delete previous documentation and copy a new one -->
+		<delete dir="${serverDocs}/${project.name}" failonerror="true" verbose="false" includeemptydirs="true" />
+		<mkdir dir="${serverDocs}/${project.name}" />
+		<copy todir="${serverDocs}/${project.name}" >
+			<fileset dir="${project.basedir}/doc" />
+		</copy>
+
+	</target>	
 
 </project>
