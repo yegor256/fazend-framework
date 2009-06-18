@@ -20,18 +20,11 @@
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
-class FaZend_View_Helper_SqueezePNG {
+class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 
 	const SQUEEZE_FOLDER = '/views/squeeze/';
 	const FAILURE = 'border: 1px solid red;';
 	const ROUTE = 'squeeze';
-
-	/**
-	 * Local link to Zend_View
-	 *
-	 * @var Zend_View
-	 */
-	protected $_view;
 
 	/**
 	 * Current file to render (relative name)
@@ -98,24 +91,6 @@ class FaZend_View_Helper_SqueezePNG {
 		file_put_contents($file, serialize($map));
 	}
 		
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
-
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
-
 	/**
 	* Show the image
 	*

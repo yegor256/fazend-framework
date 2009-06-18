@@ -18,32 +18,7 @@
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  */
-class FaZend_View_Helper_GoogleAnalytics {
-
-	/**
-	 * Instance of the view
-	 *
-	 * @var Zend_View
-	 */
-	private $_view;
-
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
-
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
+class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
 
 	/**
 	 * Show GA script

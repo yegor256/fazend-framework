@@ -19,25 +19,7 @@
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
-class FaZend_View_Helper_IncludeCSS {
-
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
-
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
+class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper {
 
 	/**
 	* Include a CSS file as a link

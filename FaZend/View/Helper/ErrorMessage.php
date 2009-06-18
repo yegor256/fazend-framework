@@ -19,25 +19,7 @@
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
-class FaZend_View_Helper_ErrorMessage {
-
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
-
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
+class FaZend_View_Helper_ErrorMessage extends FaZend_View_Helper {
 
 	/**
 	* Strip CSS and include it into HEAD section of the layout

@@ -19,23 +19,31 @@
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
-class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
+abstract class FaZend_View_Helper {
 
 	/**
-	 * Strip CSS and include it into HEAD section of the layout
+	 * Instance of the view
 	 *
-	 * @return void
+	 * @var Zend_View
 	 */
-	public function stripCSS($script) {
+	private $_view;
 
-		$content = $this->getView()->render($script);
+	/**
+	* Save view locally
+	*
+	* @return void
+	*/
+	public function setView(Zend_View_Interface $view) {
+		$this->_view = $view;
+	}           
 
-		$filter = new FaZend_View_Filter_CssCompressor();
-		$content = $filter->filter($content);
-
-		$this->getView()->headStyle($content);
-
-		return $this;
+	/**
+	* Get view saved locally
+	*
+	* @return Zend_View
+	*/
+	public function getView() {
+		return $this->_view;
 	}
 
 }

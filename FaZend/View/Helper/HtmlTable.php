@@ -20,14 +20,7 @@
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
-class FaZend_View_Helper_HtmlTable {
-
-	/**
-	 * Instance of the view
-	 *
-	 * @var Zend_View
-	 */
-	private $_view;
+class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
 	/**
 	 * Paginator to be used
@@ -57,24 +50,6 @@ class FaZend_View_Helper_HtmlTable {
 	 */
 	private $_noDataMessage = 'no data';
 	
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
-
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
-
 	/**
 	* Show the table
 	*
