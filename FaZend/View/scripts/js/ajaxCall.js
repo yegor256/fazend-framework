@@ -7,7 +7,7 @@ function ajaxCall(id, url) {
 	}
 
 	new Ajax.Request(url, {
-		method:'post',
+		method:'get',
 		requestHeaders: {Accept: 'application/json'},
 		onSuccess: function(transport){
 			div.innerHTML = transport.responseText.evalJSON(true);
