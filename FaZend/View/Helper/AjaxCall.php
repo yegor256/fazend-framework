@@ -39,7 +39,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 		// call when possible
 	        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
 
-		return "<div id='{$id}'>{$message}</div>";
+		return "<div id='{$id}' style='display: inline;'>{$message}</div>";
 	}
 
 }
