@@ -34,7 +34,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 		// ajas function for loading content
 	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'ajaxCall.js'), 'js', true));
 
-	        $id = 'ajax' . microtime(true);
+	        $id = 'ajax' . (microtime(true) * 10000);
 
 		// call when possible
 	        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
