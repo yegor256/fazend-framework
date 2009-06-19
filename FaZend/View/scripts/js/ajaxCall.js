@@ -12,6 +12,7 @@ function ajaxCall(id, url) {
 		requestHeaders: {Accept: 'application/json'},
 		onSuccess: function(transport){
 			div.innerHTML = transport.responseText.evalJSON(true);
+			div.style.cursor = 'default';
 		}       
 	});
 
