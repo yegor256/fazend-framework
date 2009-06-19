@@ -1,6 +1,6 @@
 function ajaxCall(id, url) {
 
-	var div = document.getElementById(id).value;
+	var div = document.getElementById(id);
 
 	if (!div) {
 		return;
