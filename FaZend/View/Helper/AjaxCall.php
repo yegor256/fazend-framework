@@ -36,6 +36,13 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
         protected $_tag = 'div';
 	
         /**
+         * Title
+         *
+         * @var string
+         */
+        protected $_title = 'click to load';
+	
+        /**
          * Message to show
          *
          * @var string
@@ -83,7 +90,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 		        	"document.getElementById('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
 		}
 
-		return "<{$this->_tag} id='{$id}'" . 
+		return "<{$this->_tag} id='{$id}' title='{$this->_title}'" . 
 			($this->_immediateExecution ? false : " style='cursor:pointer;'"). ">{$this->_message}</{$this->_tag}>";
 
 	}
@@ -96,6 +103,17 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 	public function setTag($tag) {
 
 	        $this->_tag = $tag;
+	        return $this;
+	}
+
+	/**
+	 * Set title
+	 *
+	 * @return $this
+	 */
+	public function setTitle($title) {
+
+	        $this->_title = $title;
 	        return $this;
 	}
 
