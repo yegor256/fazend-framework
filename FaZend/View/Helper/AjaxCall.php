@@ -29,15 +29,15 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 	public function ajaxCall($url, $message = 'loading...') {
 
 	        // prototype is required for this	
-	        $this->view->headScript()->appendFile($this->view->url(array('script'=>'prototype.js'), 'js', true));
+	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
 
 		// ajas function for loading content
-	        $this->view->headScript()->appendFile($this->view->url(array('script'=>'ajaxCall.js'), 'js', true));
+	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'ajaxCall.js'), 'js', true));
 
 	        $id = 'ajax' . microtime(true);
 
 		// call when possible
-	        $this->view->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
+	        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
 
 		return "<div id='{$id}'>{$message}</div>";
 	}
