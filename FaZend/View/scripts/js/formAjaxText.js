@@ -28,7 +28,7 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 				var keyword = document.createElement('li');
 				keyword.innerHTML = line.replace(mask, '<b>'+mask+'</b>');
 				keyword.onclick=function(){
-					document.getElementById(field).value = this.innerHTML.replace(/<\/?b>/g, '');
+					document.getElementById(field).value = this.innerHTML.replace(/<\/?b>/gi, '');
 					if (document.getElementById(next))
 						document.getElementById(next).focus();
 					ajax_CheckField(field, hand, handUrl);
