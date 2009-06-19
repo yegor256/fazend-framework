@@ -21,13 +21,51 @@
  */
 class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 
+        /**
+         * Url to call
+         *
+         * @var string
+         */
+        protected $_url;
+	
+        /**
+         * Tag
+         *
+         * @var string
+         */
+        protected $_tag = 'div';
+	
+        /**
+         * Message to show
+         *
+         * @var string
+         */
+        protected $_message = '...';
+	
+        /**
+         * Execute now?
+         *
+         * @var boolean
+         */
+        protected $_immediateExecution = false;
+	
 	/**
 	 * Show some text and replace it with the result of ajax call
 	 *
 	 * @return void
 	 */
-	public function ajaxCall($url, $message = 'loading...', $tag = 'div') {
+	public function ajaxCall() {
 
+	        return $this;
+	}
+
+	/**
+	 * Show DIV/SPAN
+	 *
+	 * @return void
+	 */
+	public function __toString() {
+	        
 	        // prototype is required for this	
 	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
 
@@ -36,10 +74,62 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 
 	        $id = 'ajax' . (microtime(true) * 10000);
 
-		// call when possible
-	        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
+	        if ($this->_immediateExecution) {
+			// call right now
+		        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$this->_url}');");
+		} else {
+			// call on the click
+		        $this->getView()->headScript()->appendScript(
+		        	"document.getElementById('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
+		}
 
-		return "<{$tag} id='{$id}'>{$message}</{$tag}>";
+		return "<{$this->_tag} id='{$id}'" . 
+			($this->_immediateExecution ? false : " style='cursor:pointer;'"). ">{$this->_message}</{$this->_tag}>";
+
+	}
+
+	/**
+	 * Set tag
+	 *
+	 * @return $this
+	 */
+	public function setTag($tag) {
+
+	        $this->_tag = $tag;
+	        return $this;
+	}
+
+	/**
+	 * Set url
+	 *
+	 * @return $this
+	 */
+	public function setUrl($url) {
+
+	        $this->_url = $url;
+	        return $this;
+	}
+
+	/**
+	 * Set message
+	 *
+	 * @return $this
+	 */
+	public function setMessage($message) {
+
+	        $this->_message = $message;
+	        return $this;
+	}
+
+	/**
+	 * Should execute right now?
+	 *
+	 * @return $this
+	 */
+	public function setImmediateExecution($flag = true) {
+
+	        $this->_immediateExecution = $flag;
+	        return $this;
 	}
 
 }
