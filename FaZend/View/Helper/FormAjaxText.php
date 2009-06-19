@@ -41,24 +41,24 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
 	        unset($attribs['ajax']);
 
 	        // url for ajax call
-	        $url = $this->getView()->url(array(
+	        $url = $this->view->url(array(
 	        	'action'=>$this->_getDefault($opts, 'list/action', 'list'),
 	        	'controller'=>$this->_getDefault($opts, 'list/controller', 'index')), $this->_getDefault($opts, 'list/route', 'default'), true);
 
 	        // url for ajax check call
-	        $handUrl = $this->getView()->url(array(
+	        $handUrl = $this->view->url(array(
 	        	'action'=>$this->_getDefault($opts, 'hand/action', 'list'),
 	        	'controller'=>$this->_getDefault($opts, 'hand/controller', 'index')), $this->_getDefault($opts, 'hand/route', 'default'), true);
 
 		// ajaz functions
-	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'formAjaxText.js'), 'js', true));
+	        $this->view->headScript()->appendFile($this->view->url(array('script'=>'formAjaxText.js'), 'js', true));
 
 	        // prototype is required for this	
-	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
+	        $this->view->headScript()->appendFile($this->view->url(array('script'=>'prototype.js'), 'js', true));
 
 		// initialize JS handlers
 		$callback = "function() {ajax_UpdateList('{$id}', '{$listId}', '{$url}', '".$this->_getDefault($opts, 'next')."', '{$handId}', '{$handUrl}');}";
-	        $this->getView()->headScript()->appendScript(
+	        $this->view->headScript()->appendScript(
 	        	"var div_{$id} = document.getElementById('{$id}');\n" .
 	        	"div_{$id}.onkeyup = {$callback};\n" .
 	        	"div_{$id}.onfocus = {$callback};\n" .
@@ -69,10 +69,10 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
 		
 		return parent::formText($name, $value, $attribs) . 
 		
-		"<div id='" . $this->getView()->escape($handId) . "'" .
+		"<div id='" . $this->view->escape($handId) . "'" .
 			(isset($opts['hand']['class']) ? " class='{$opts['hand']['class']}'" : false). "></div>" . 
 
-		"<div id='" . $this->getView()->escape($listId) . "'" . 
+		"<div id='" . $this->view->escape($listId) . "'" . 
 			(isset($opts['list']['class']) ? " class='{$opts['list']['class']}'" : false). "></div>";
 
 
