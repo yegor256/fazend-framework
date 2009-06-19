@@ -26,7 +26,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 	 *
 	 * @return void
 	 */
-	public function ajaxCall($url, $message = 'loading...') {
+	public function ajaxCall($url, $message = 'loading...', $tag = 'div') {
 
 	        // prototype is required for this	
 	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
@@ -39,7 +39,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 		// call when possible
 	        $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$url}');");
 
-		return "<div id='{$id}'>{$message}</div>";
+		return "<{$tag} id='{$id}'>{$message}</{$tag}>";
 	}
 
 }
