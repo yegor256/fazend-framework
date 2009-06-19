@@ -127,7 +127,7 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 	}
 
 	/**
-	 * Url of the image
+	 * Url of the holder image
 	 *
 	 * @return string
 	 */
@@ -136,7 +136,7 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 	}
 
 	/**
-	 * Show the image
+	 * Show the individual image
 	 *
 	 * @return string
 	 */
@@ -177,7 +177,7 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 		$map = $this->loadMap();
 
 		// if the file is there already and it's up to date
-		if (isset($map['images'][$file]) && (filemtime($file) == $map['images'][$file]['mtime']))
+		if (isset($map['images'][$file]) && file_exists($file) && (filemtime($file) == $map['images'][$file]['mtime']))
 			return $map;
 
 		// clean the map and remove all incorrect elements	
