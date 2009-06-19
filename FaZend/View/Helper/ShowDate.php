@@ -21,9 +21,16 @@
  */
 class FaZend_View_Helper_ShowDate {
 
+	/**
+	 * Show date converting it from string
+	 *
+	 * @return string
+	 */
 	public function showDate($str) {
+
 		$date = new Zend_Date(strtotime($str));
 		return $date->get(Zend_Date::DATE_LONG);
+
 	}
 
 }
