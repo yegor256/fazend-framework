@@ -26,7 +26,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
          *
          * @var string
          */
-        protected $_url;
+        protected $_url = null;
 	
         /**
          * Tag
@@ -70,9 +70,13 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 	 * Show DIV/SPAN
 	 *
 	 * @return void
+	 * @throws FaZend_View_Helper_AjaxCall_URLNotDefined
 	 */
 	public function __toString() {
 	        
+		if (!$this->_url)
+			FaZend_Exception::raise('FaZend_View_Helper_AjaxCall_URLNotDefined');
+
 	        // prototype is required for this	
 	        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
 
@@ -89,6 +93,9 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 		        $this->getView()->headScript()->appendScript(
 		        	"document.getElementById('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
 		}
+
+		// clear the URL to avoid double execution
+		$this->_url = null;
 
 		return "<{$this->_tag} id='{$id}' title='{$this->_title}'" . 
 			($this->_immediateExecution ? false : " style='cursor:pointer;'"). ">{$this->_message}</{$this->_tag}>";
