@@ -16,6 +16,9 @@
 
 $startTime = microtime(true);
 
+// you can redefine it later, if you wish
+define ('WEBSITE_URL', 'http://'.$_SERVER['HTTP_HOST']);
+
 // Define path to application directory
 defined('APPLICATION_PATH')
 	|| define('APPLICATION_PATH',
@@ -45,6 +48,12 @@ $application = new Zend_Application(APPLICATION_ENV);
 // load application-specific options
 $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
 $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
+
+// if the application doesn't have a bootstrap file
+if (!file_exists($options->bootstrap->path)) {
+	$options->bootstrap->path = FAZEND_PATH . '/Application/Bootstrap/Bootstrap.php';
+	$options->bootstrap->class = 'FaZend_Application_Bootstrap_Bootstrap';
+}
 
 // load system options
 $application->setOptions($options->toArray());
