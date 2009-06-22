@@ -16,9 +16,6 @@
 
 $startTime = microtime(true);
 
-// you can redefine it later, if you wish
-define ('WEBSITE_URL', 'http://'.$_SERVER['HTTP_HOST']);
-
 // Define path to application directory
 defined('APPLICATION_PATH')
 	|| define('APPLICATION_PATH',
@@ -61,6 +58,10 @@ unset($options);
 
 // bootstrap the application
 $application->bootstrap();
+
+// you can redefine it later, if you wish
+if (!defined('WEBSITE_URL'))
+	define('WEBSITE_URL', 'http://'.$_SERVER['HTTP_HOST']);
 
 // we're working from the command line?
 if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV != 'testing')) {
