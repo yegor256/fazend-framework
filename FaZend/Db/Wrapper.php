@@ -111,14 +111,26 @@ class FaZend_Db_Wrapper {
 	        // if we just initialized the class with constructor
 		if (is_string($this->_table)) {
 
+			$tableName = $this->_table;
+
 			$tableClassName = 'FaZend_Db_ActiveTable_' . $this->_table;
 
 			$this->_table = new $tableClassName();
 
+			// this page has primary key and Zend automatically detects it?
 			try {
 				$this->_table->info(Zend_Db_Table_Abstract::PRIMARY);
 			} catch (Zend_Db_Table_Exception $e) {
+				// no, we can't detect it automatically
 				$this->_table = new $tableClassName(array('primary' => 'id'));
+
+				try {
+					// maybe we just have a field ID?
+					$this->_table->info(Zend_Db_Table_Abstract::PRIMARY);
+				} catch (Zend_Db_Table_Exception $e2) {
+					FaZend_Exception::raise('FaZend_Db_Wrapper_NoIDFieldException',
+						"Table {$tableName} doesn't have either a primary or ID field");
+				}	
 			}	
 
 		}	

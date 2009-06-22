@@ -43,3 +43,8 @@ $adapter->query(
 		name varchar(50) not null, 
 		mark varchar(50))');
 
+$adapter->query(
+	'create table flower (
+		name varchar(50) not null, 
+		mark varchar(50))');
+

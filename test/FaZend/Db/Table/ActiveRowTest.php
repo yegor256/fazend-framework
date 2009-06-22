@@ -107,4 +107,18 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
 	}
 
+	public function testTableWithoutAnyKeyDoesntWork () {
+
+		try {
+			$list = FaZend_Db_Table_ActiveRow_flower::retrieve()
+				->fetchAll();
+
+			$this->fail('no exception, why?');	
+		} catch (FaZend_Db_Wrapper_NoIDFieldException $e) {
+
+			// it's OK.
+		}	
+
+	}
+
 }
