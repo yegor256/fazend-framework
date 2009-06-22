@@ -44,7 +44,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 		if (!self::isLoggedIn())
 			throw new Exception ('user is not logged in');
 
-		return new FaZend_User((int)Zend_Auth::getInstance()->getIdentity()->id);	
+		return FaZend_User::findByEmail(Zend_Auth::getInstance()->getIdentity()->email);	
 	}
 
         /**
