@@ -24,7 +24,7 @@ class FaZend_Db_Wrapper {
         /**
          * Table
          *
-         * @var Zend_Db_Table
+         * @var Zend_Db_Table|string
          */
 	private $_table;
 
@@ -42,22 +42,25 @@ class FaZend_Db_Wrapper {
 	 */
 	private $_silenceIfEmpty;
 
+	/**
+	 * Set FROM attribute to select?
+	 *
+	 * @var boolean
+	 */
+	private $_setFrom = true;
+
         /**
          * Create a select object
          *
+         * @param string Name of the DB table
+         * @param boolean Set FROM attribute to the select or not
          * @return void
          */
 	public function __construct($table, $setFrom = true) {
 
-		$tableClassName = 'FaZend_Db_ActiveTable_' . $table;
+	        $this->_table = $table;
+		$this->_setFrom = $setFrom;
 
-		$this->_table = new $tableClassName();
-
-		$this->_select = $this->_table->select()
-			->setIntegrityCheck(false);
-
-		if ($setFrom)	
-			$this->_select->from($table);
 	}
 
         /**
@@ -104,15 +107,34 @@ class FaZend_Db_Wrapper {
          * @return void
          */
 	public function table() {
+
+	        // if we just initialized the class with constructor
+		if (is_string($this->_table)) {
+
+			$tableClassName = 'FaZend_Db_ActiveTable_' . $this->_table;
+
+			$this->_table = new $tableClassName();
+
+		}	
+
         	return $this->_table;
 	}
 
         /**
-         * Return the select
+         * Return the select object (on-fly)
          *
          * @return void
          */
 	public function select() {
+
+		if (!isset($this->_select)) {
+			$this->_select = $this->table()->select()
+				->setIntegrityCheck(false);
+
+			if ($this->_setFrom)	
+				$this->_select->from($this->table()->info(Zend_Db_Table_Abstract::NAME));
+		}	
+
         	return $this->_select;
 	}
 
@@ -125,7 +147,7 @@ class FaZend_Db_Wrapper {
 	public function fetchRow() {
 
 		// get row with fetchRow from the select we have
-        	$row = call_user_func(array($this->_table, 'fetchRow'), $this->_select);
+        	$row = call_user_func(array($this->table(), 'fetchRow'), $this->select());
 
         	// if we should keep silence - just return what we got
         	if ($this->getSilenceIfEmpty() && !$row)
@@ -155,9 +177,9 @@ class FaZend_Db_Wrapper {
 	public function __call($name, $args) {
 
 		if (in_array($name, array('fetchAll')))
-			return call_user_func(array($this->_table, $name), $this->_select);
+			return call_user_func(array($this->table(), $name), $this->select());
 
-		$this->_select = call_user_func_array(array($this->_select, $name), $args);
+		$this->_select = call_user_func_array(array($this->select(), $name), $args);
 
 		return $this;
 

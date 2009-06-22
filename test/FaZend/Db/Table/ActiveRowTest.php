@@ -93,4 +93,11 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
 	}
 
+	public function testTableWithoutIDWorks () {
+
+		$list = FaZend_Db_Table_ActiveRow_car::retrieve()
+			->fetchAll();
+
+	}
+
 }

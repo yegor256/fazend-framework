@@ -32,3 +32,7 @@ $adapter->query(
 $adapter->query(
 	'insert into product values (10, "car", 132)');
 
+$adapter->query(
+	'create table car (name varchar(50) not null primary key, 
+		mark varchar(50))');
+
