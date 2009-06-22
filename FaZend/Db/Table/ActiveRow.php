@@ -33,7 +33,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
 		// if the ID provided - find this row and save it
 		if (is_integer($id)) {
+			
+			// create normal row
 			parent::__construct();
+
+			// find data to fill the internal variables
 			$rowset = $this->_table->find($id);
 
 			if (!count($rowset))

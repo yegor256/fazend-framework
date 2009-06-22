@@ -38,10 +38,16 @@ $adapter->query(
 		mark varchar(50))');
 
 $adapter->query(
+	'insert into car values ("bmw", "750iL")');
+
+$adapter->query(
 	'create table boat (
 		id integer not null, 
 		name varchar(50) not null, 
 		mark varchar(50))');
+
+$adapter->query(
+	'insert into boat values (1, "boat", "super 8")');
 
 $adapter->query(
 	'create table flower (

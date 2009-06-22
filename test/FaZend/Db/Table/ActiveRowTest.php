@@ -105,6 +105,8 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 		$list = FaZend_Db_Table_ActiveRow_boat::retrieve()
 			->fetchAll();
 
+		$boat = new FaZend_Db_Table_ActiveRow_boat (1);
+
 	}
 
 	public function testTableWithoutAnyKeyDoesntWork () {

@@ -21,5 +21,42 @@
  */
 abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
 
+        /**
+         * Returns table class properly configured
+         *
+         * @param string Name of the table in the DB
+         * @return void
+         */
+	public static function createTableClass($table) {
+
+		$tableClassName = 'FaZend_Db_ActiveTable_' . $table;
+
+		$cls = new $tableClassName();
+
+		// this page has primary key and Zend automatically detects it?
+		try {
+
+			$cls->info(Zend_Db_Table_Abstract::PRIMARY);
+
+		} catch (Zend_Db_Table_Exception $e) {
+			
+			// no, we can't detect it automatically
+			$cls = new $tableClassName(array('primary' => 'id'));
+
+			try {
+				// maybe we just have a field ID?
+				$cls->info(Zend_Db_Table_Abstract::PRIMARY);
+			
+			} catch (Zend_Db_Table_Exception $e2) {
+
+				FaZend_Exception::raise('FaZend_Db_Wrapper_NoIDFieldException',
+					"Table {$table} doesn't have either a primary or ID field");
+			}	
+		}
+
+		return $cls;	
+
+	}
+
 	
 }
