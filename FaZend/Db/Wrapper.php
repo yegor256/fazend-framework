@@ -115,6 +115,12 @@ class FaZend_Db_Wrapper {
 
 			$this->_table = new $tableClassName();
 
+			try {
+				$this->_table->info(Zend_Db_Table_Abstract::PRIMARY);
+			} catch (Zend_Db_Table_Exception $e) {
+				$this->_table = new $tableClassName(array('primary' => 'id'));
+			}	
+
 		}	
 
         	return $this->_table;
@@ -128,8 +134,10 @@ class FaZend_Db_Wrapper {
 	public function select() {
 
 		if (!isset($this->_select)) {
-			$this->_select = $this->table()->select()
-				->setIntegrityCheck(false);
+			
+			$this->_select = $this->table()->select();
+
+			$this->_select->setIntegrityCheck(false);
 
 			if ($this->_setFrom)	
 				$this->_select->from($this->table()->info(Zend_Db_Table_Abstract::NAME));

@@ -33,6 +33,13 @@ $adapter->query(
 	'insert into product values (10, "car", 132)');
 
 $adapter->query(
-	'create table car (name varchar(50) not null primary key, 
+	'create table car (
+		name varchar(50) not null primary key, 
+		mark varchar(50))');
+
+$adapter->query(
+	'create table boat (
+		id integer not null, 
+		name varchar(50) not null, 
 		mark varchar(50))');
 
