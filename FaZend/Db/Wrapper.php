@@ -69,7 +69,7 @@ class FaZend_Db_Wrapper {
          * @return void
          */
 	public function setRowClass($rowClass) {
-		$this->_table->setRowClass($rowClass);
+		$this->table()->setRowClass($rowClass);
 		return $this;
 	}
 
@@ -79,7 +79,7 @@ class FaZend_Db_Wrapper {
          * @return void
          */
 	public function getRowClass() {
-		return $this->_table->getRowClass();
+		return $this->table()->getRowClass();
 	}
 
         /**
