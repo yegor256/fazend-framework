@@ -81,10 +81,11 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                 		$lines[] = "{$line['file']} ({$line['line']})";
 
                 	mail (FaZend_Properties::get()->errors->email, 
-                		WEBSITE_URL.' internal PHP error, rev.'.FaZend_Revision::get().': '.$_SERVER['REQUEST_URI'], 
-        	        	$errors->exception->getMessage()."\n\n".
-        	        	implode("\n", $lines)."\n\n".
-        	        	print_r($errors->request->getParams(), true)."\n\n".
+                		WEBSITE_URL.' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'], 
+
+        	        	get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
+        	        	implode("\n", $lines) . "\n\n" .
+        	        	print_r($errors->request->getParams(), true) . "\n\n" .
         	        	$errors->exception->getTraceAsString());
         	}	
         } 
