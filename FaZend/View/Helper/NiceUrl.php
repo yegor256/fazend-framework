@@ -22,6 +22,8 @@
  */
 class FaZend_View_Helper_NiceUrl {
 
+	const DELIMITER = '-';
+
 	/**
 	* Converts and returns
 	*
@@ -29,7 +31,8 @@ class FaZend_View_Helper_NiceUrl {
 	*/
 	public function niceUrl($str) {
 
-		return trim(preg_replace('/\_+/', '_', preg_replace('/[^\w\d]/', '_', ucwords($str))), '_') . '.html';
+		return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
+			preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . '.html';
 	}
 
 }
