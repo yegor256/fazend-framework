@@ -20,6 +20,18 @@ class SomeClass {
 	function getBigValue($base, $pow) {
 		return pow($base, $pow);
 	}
+	function getDependentValue() {
+		FaZend::dependsOn('files');
+		return rand();
+	}
+	function getParentValue() {
+		$value = FaZend_Metric::create()
+			->setMethod('getDependentValue')
+			->setClass(new SomeClass())
+			->calculate();
+
+		return rand();
+	}
 }
 
 class FaZend_MetricTest extends AbstractTestCase {
@@ -34,6 +46,40 @@ class FaZend_MetricTest extends AbstractTestCase {
 			->calculate();
 
 		$this->assertEquals(64, $value, 'Failed to calculate, why?');	
+	}
+
+	public function testResourceDependencyWorks () {
+
+		$value1 = FaZend_Metric::create()
+			->setMethod('getDependentValue')
+			->setClass(new SomeClass())
+			->calculate();
+
+		FaZend_Metric::destroyResource('files');	
+
+		$value2 = FaZend_Metric::create()
+			->setMethod('getDependentValue')
+			->setClass(new SomeClass())
+			->calculate();
+
+		$this->assertNotEquals($value1, $value2, 'Values are the same, why?');	
+	}
+
+	public function testMetric2MetricDependencyWorks () {
+
+		$value1 = FaZend_Metric::create()
+			->setMethod('getParentValue')
+			->setClass(new SomeClass())
+			->calculate();
+
+		FaZend_Metric::destroyResource('files');	
+
+		$value2 = FaZend_Metric::create()
+			->setMethod('getParentValue')
+			->setClass(new SomeClass())
+			->calculate();
+
+		$this->assertNotEquals($value1, $value2, 'Values are the same, why?');	
 	}
 
 }
