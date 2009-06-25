@@ -61,7 +61,7 @@ $application->bootstrap();
 
 // you can redefine it later, if you wish
 if (!defined('WEBSITE_URL'))
-	define('WEBSITE_URL', 'http://'.$_SERVER['HTTP_HOST']);
+	define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']));
 
 // we're working from the command line?
 if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV != 'testing')) {
