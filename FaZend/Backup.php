@@ -329,6 +329,8 @@ class FaZend_Backup {
 
 		if (!@ftp_put($ftp, $object, $file, FTP_BINARY))	
 			$this->_log("Failed to upload " . $this->_nice($file), true);	
+		else
+			$this->_log("Uploaded by FTP: " . $this->_nice($file));	
 
 		if (!@ftp_close($ftp))
 			$this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");	
@@ -495,6 +497,8 @@ class FaZend_Backup {
 	 * @return string
 	 */
 	protected function _getSemaphoreFileName() {
+
+		$this->_log('Semaphore file unique name for ' . WEBSITE_URL);
 
 		return sys_get_temp_dir() . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
 
