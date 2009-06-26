@@ -15,6 +15,7 @@
  */
 
 /**
+ * Show google analytics JavaScript in your layout
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  */
@@ -24,14 +25,16 @@ class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
      * Show GA script
      *
      * @param boolean Show google analytics if the user is logged in?
-     * @return Zend_View
+     * @return string HTML code of GA
      */
     public function googleAnalytics($showForLoggedInUser = true) {
 
+    	// don't show if the user is not logged in
         if (!$showForLoggedInUser && !FaZend_User::isLoggedIn())
             return false;
 
-        if (APPLICATION_ENV != 'production')
+        // skip it for the testing and development environments           
+        if (APPLICATION_ENV !== 'production')
             return "<!-- google analytics skipped -->\n";
 
         $this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
