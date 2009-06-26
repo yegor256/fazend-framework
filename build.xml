@@ -18,7 +18,7 @@
  *
 -->
 
-<project name="fazend tests" basedir="." default="main">
+<project name="fazend tests" basedir="." default="main"> 
 
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
