@@ -34,7 +34,7 @@ class FaZend_Cli_Router {
         $argc = $_SERVER['argc'];
 
         if ($argc < 2)
-            return $this->_error('You should specify class name, which has to be located in APPLICATION_PATH/cli and should be an instance of FaZend_Cli_Interface.');
+            return $this->_error('You started the application from the command line ("php index.php" or something), not from the web. In such a case you should specify class name, which has to be located in APPLICATION_PATH/cli and should be an instance of FaZend_Cli_Interface.');
 
         if (empty($_SERVER['argv']))
             return $this->_error('$_SERVER[argv] is not defined, how come?');

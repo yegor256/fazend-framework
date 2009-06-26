@@ -60,15 +60,16 @@ unset($options);
 $application->bootstrap();
 
 // you can redefine it later, if you wish
+// now we define the site URL, without the leading WWW
 if (!defined('WEBSITE_URL'))
     define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']));
 
 // we're working from the command line?
-if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV != 'testing')) {
+if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing')) {
     $router = new FaZend_Cli_Router();
     echo $router->dispatch();
 } else {
-    if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV != 'testing'))
+    if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV !== 'testing'))
         $application->run();
 }
 
