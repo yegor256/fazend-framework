@@ -23,50 +23,50 @@ require_once 'phing/Task.php';
 */
 class PingFaZend extends Task {
 
-	private $url;
+    private $url;
 
-	/**
-	* Initiator (when the build.xml sees the task)
-	* 
-	* @return void
-	*/
-	public function init () {
-	}
+    /**
+    * Initiator (when the build.xml sees the task)
+    * 
+    * @return void
+    */
+    public function init () {
+    }
 
-	/**
-	* Executes
-	* 
-	* @return void
-	*/
-	public function main () {
+    /**
+    * Executes
+    * 
+    * @return void
+    */
+    public function main () {
 
-		$this->Log ("Pinging {$this->url}...");
+        $this->Log ("Pinging {$this->url}...");
 
-		$curl = curl_init();
+        $curl = curl_init();
 
-		if (!$curl)
-			throw new BuildException (curl_error($curl));	
+        if (!$curl)
+            throw new BuildException (curl_error($curl));    
 
-		curl_setopt ($curl, CURLOPT_URL, $this->url);
-		curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt ($curl, CURLOPT_HEADER, 0);
-		$response = curl_exec($curl);
+        curl_setopt ($curl, CURLOPT_URL, $this->url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($curl, CURLOPT_HEADER, 0);
+        $response = curl_exec($curl);
 
-		if (!$response)
-			throw new BuildException (curl_error($curl));	
-		
-		curl_close($curl);
+        if (!$response)
+            throw new BuildException (curl_error($curl));    
+        
+        curl_close($curl);
 
-		$this->Log("Response (" . strlen($response). "bytes): \n{$response}");
+        $this->Log("Response (" . strlen($response). "bytes): \n{$response}");
 
-	}
+    }
 
-	/**
-	* Initalizer
-	*
-	* @param $fileName string
-	*/
-	public function seturl($url) {
-		$this->url = $url;
-	}
+    /**
+    * Initalizer
+    *
+    * @param $fileName string
+    */
+    public function seturl($url) {
+        $this->url = $url;
+    }
 }

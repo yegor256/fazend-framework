@@ -22,28 +22,28 @@
  */
 class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
 
-        /**
-         * Defined by Zend_Filter_Interface
-         *
-         * Compress CSS into a long string
-         *
-         * @param  string $value
-         * @return string
-         */
-        public function filter($css) {
+    /**
+     * Defined by Zend_Filter_Interface
+     *
+     * Compress CSS into a long string
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function filter($css) {
 
-		return preg_replace(array(
-			'/[\n\r\t]/',
-			'/\s+([\,\:\{\}\.])/',
-			'/([\,\;\:\{\}])\s+/', // compress white spaces
-			'/\/\*.*?\*\//', // kill comments
-		), array(
-			' ',
-			'${1}', 
-			'${1}', 
-			'',
-		), $css);
+        return preg_replace(array(
+            '/[\n\r\t]/',
+            '/\s+([\,\:\{\}\.])/',
+            '/([\,\;\:\{\}])\s+/', // compress white spaces
+            '/\/\*.*?\*\//', // kill comments
+        ), array(
+            ' ',
+            '${1}', 
+            '${1}', 
+            '',
+        ), $css);
 
-        }
+    }
 
 }

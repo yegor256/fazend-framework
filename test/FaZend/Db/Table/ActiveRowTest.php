@@ -17,110 +17,110 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
-	
-	public function setUp () {
+    
+    public function setUp () {
 
-		parent::setUp();
+        parent::setUp();
 
-		include 'SetupSimpleDB.php';
-		include_once 'SimpleClasses.php';
+        include 'SetupSimpleDB.php';
+        include_once 'SimpleClasses.php';
 
-	}
+    }
 
-	public function testCreationWorks () {
+    public function testCreationWorks () {
 
-		$owner = new Owner(132);
+        $owner = new Owner(132);
 
-		$product = new Product();
-		$product->text = 'just test';
-		$product->owner = $owner;
-		$product->save();
+        $product = new Product();
+        $product->text = 'just test';
+        $product->owner = $owner;
+        $product->save();
 
-	}
+    }
 
-	public function testGettingWorks () {
+    public function testGettingWorks () {
 
-		$product = new Product(10);
-		
-		$this->assertNotEquals(false, $product->owner, "Owner is null, why?");
+        $product = new Product(10);
+        
+        $this->assertNotEquals(false, $product->owner, "Owner is null, why?");
 
-		$name = $product->owner->name;
-		
-		$this->assertNotEquals(false, $name, "Owner name is false, why?");
+        $name = $product->owner->name;
+        
+        $this->assertNotEquals(false, $name, "Owner name is false, why?");
 
-	}
+    }
 
-	public function testRetrieveWorks () {
+    public function testRetrieveWorks () {
 
-		$list = Owner::retrieve()
-			->where('name is not null')
-			->setRowClass('Owner')
-			->fetchRow();
+        $list = Owner::retrieve()
+            ->where('name is not null')
+            ->setRowClass('Owner')
+            ->fetchRow();
 
-		$list->isMe();
+        $list->isMe();
 
-	}
+    }
 
-	public function testDynamicExceptionWorks () {
+    public function testDynamicExceptionWorks () {
 
-		try {
-			$list = Owner::retrieve()
-				->where('id = 132')
-				->setRowClass('Owner')
-				->fetchRow();
+        try {
+            $list = Owner::retrieve()
+                ->where('id = 132')
+                ->setRowClass('Owner')
+                ->fetchRow();
 
-			// everything ok!
+            // everything ok!
 
-		} catch (Owner_NotFoundException $e) {
-			
-			$this->fail('no exception, why?');
+        } catch (Owner_NotFoundException $e) {
+            
+            $this->fail('no exception, why?');
 
-		}	
+        }    
 
-		try {
-			$list = Owner::retrieve()
-				->where('id = 888')
-				->setRowClass('Owner')
-				->fetchRow();
+        try {
+            $list = Owner::retrieve()
+                ->where('id = 888')
+                ->setRowClass('Owner')
+                ->fetchRow();
 
-			$this->fail('no exception, why?');
-				
-		} catch (Owner_NotFoundException $e) {
-			
-			// everything ok!
+            $this->fail('no exception, why?');
+                
+        } catch (Owner_NotFoundException $e) {
+            
+            // everything ok!
 
-		}	
+        }    
 
-	}
+    }
 
-	public function testTableWithoutIDWorks () {
+    public function testTableWithoutIDWorks () {
 
-		$list = FaZend_Db_Table_ActiveRow_car::retrieve()
-			->fetchAll();
+        $list = FaZend_Db_Table_ActiveRow_car::retrieve()
+            ->fetchAll();
 
-	}
+    }
 
-	public function testTableWithoutPrimaryKeyWorks () {
+    public function testTableWithoutPrimaryKeyWorks () {
 
-		$list = FaZend_Db_Table_ActiveRow_boat::retrieve()
-			->fetchAll();
+        $list = FaZend_Db_Table_ActiveRow_boat::retrieve()
+            ->fetchAll();
 
-		$boat = new FaZend_Db_Table_ActiveRow_boat (1);
+        $boat = new FaZend_Db_Table_ActiveRow_boat (1);
 
-	}
+    }
 
-	public function testTableWithoutAnyKeyDoesntWork () {
+    public function testTableWithoutAnyKeyDoesntWork () {
 
-		try {
-			$list = FaZend_Db_Table_ActiveRow_flower::retrieve()
-				->fetchAll();
+        try {
+            $list = FaZend_Db_Table_ActiveRow_flower::retrieve()
+                ->fetchAll();
 
-			$this->fail('no exception, why?');	
-		} catch (FaZend_Db_Wrapper_NoIDFieldException $e) {
+            $this->fail('no exception, why?');    
+        } catch (FaZend_Db_Wrapper_NoIDFieldException $e) {
 
-			// it's OK.
-		}	
+            // it's OK.
+        }    
 
-	}
+    }
 
 }

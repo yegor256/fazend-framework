@@ -22,39 +22,39 @@ define('CLI_ENVIRONMENT', true);
 
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
-        /**
-         * Setup test
-         *
-         *
-         */
-	public function setUp () {
-	
-		$this->bootstrap = array($this, 'myBootstrap');
+    /**
+     * Setup test
+     *
+     *
+     */
+    public function setUp () {
+    
+        $this->bootstrap = array($this, 'myBootstrap');
 
-		parent::setUp();
+        parent::setUp();
 
-		$this->view = new Zend_View();
+        $this->view = new Zend_View();
 
-	}
-	
-        /**
-         * Bootstrap as usual
-         *
-         *
-         */
-	public function myBootstrap () {
-		include 'FaZend/Application/index.php';
-	}	
+    }
+    
+    /**
+     * Bootstrap as usual
+     *
+     *
+     */
+    public function myBootstrap () {
+        include 'FaZend/Application/index.php';
+    }    
 
-        /**
-         * Close-out the test
-         *
-         *
-         */
-	public function tearDown () {
-		$this->resetRequest();
-		$this->resetResponse();
-		parent::tearDown();
-	}
-	
+    /**
+     * Close-out the test
+     *
+     *
+     */
+    public function tearDown () {
+        $this->resetRequest();
+        $this->resetResponse();
+        parent::tearDown();
+    }
+    
 }

@@ -21,67 +21,67 @@
  */
 abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
 
-        /**
-         * The router
-         *
-         * @var FaZend_Cli_Router
-         */
-	protected $_router;
+    /**
+     * The router
+     *
+     * @var FaZend_Cli_Router
+     */
+    protected $_router;
 
-        /**
-         * Options
-         *
-         * @var array
-         */
-	protected $_options = array();
+    /**
+     * Options
+     *
+     * @var array
+     */
+    protected $_options = array();
 
-        /**
-         * Save the instance of the router
-         *
-         * @param FaZend_Cli_Router instance of the router
-         * @return this
-         */
-	public function setRouter(FaZend_Cli_Router $router) {
-		$this->_router = $router;
-	}
+    /**
+     * Save the instance of the router
+     *
+     * @param FaZend_Cli_Router instance of the router
+     * @return this
+     */
+    public function setRouter(FaZend_Cli_Router $router) {
+        $this->_router = $router;
+    }
 
-        /**
-         * Save options
-         *
-         * @return this
-         */
-	public function setOptions(array $options) {
-		$this->_options = $options;
-	}
+    /**
+     * Save options
+     *
+     * @return this
+     */
+    public function setOptions(array $options) {
+        $this->_options = $options;
+    }
 
-        /**
-         * Get option value
-         *
-         * @return this
-         */
-	protected function _get($name, $throwException = true) {
+    /**
+     * Get option value
+     *
+     * @return this
+     */
+    protected function _get($name, $throwException = true) {
 
-		$name = strtolower($name);
+        $name = strtolower($name);
 
-		if (!isset($this->_options[$name])) {
-			if ($throwException)
-				throw new FaZend_Cli_OptionMissedException("Parameter '$name' is missed");
-			else
-				return false;	
-		}	
+        if (!isset($this->_options[$name])) {
+            if ($throwException)
+                throw new FaZend_Cli_OptionMissedException("Parameter '$name' is missed");
+            else
+                return false;    
+        }    
 
-		return $this->_options[$name];
-	}
+        return $this->_options[$name];
+    }
 
-        /**
-         * Get option value
-         *
-         * @return this
-         */
-	protected function _callCli($name) {
+    /**
+     * Get option value
+     *
+     * @return this
+     */
+    protected function _callCli($name) {
 
-		return $this->_router->call($name);
+        return $this->_router->call($name);
 
-	}
+    }
 
 }

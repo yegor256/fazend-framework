@@ -20,9 +20,9 @@
  */
 class FaZend_View_Helper_PageLoadTime {
 
-	public function pageLoadTime() {
- 		global $startTime; 
- 		return sprintf('%0.2fsec', round(microtime(true)-$startTime, 2));
- 	}
+    public function pageLoadTime() {
+         global $startTime; 
+         return sprintf('%0.2fsec', round(microtime(true)-$startTime, 2));
+     }
 
 }

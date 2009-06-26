@@ -17,17 +17,17 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_View_Helper_HtmlTableTest extends AbstractTestCase {
-	
-	/**
-	* Test table rendering
-	*
-	*/
-	public function testHtmlTableWorks () {
+    
+    /**
+    * Test table rendering
+    *
+    */
+    public function testHtmlTableWorks () {
 
-		$this->dispatch('/index/table');
+        $this->dispatch('/index/table');
 
-		$this->assertQuery('table', "Error in HTML: ".$this->getResponse()->getBody());
+        $this->assertQuery('table', "Error in HTML: ".$this->getResponse()->getBody());
 
-	}
+    }
 
 }

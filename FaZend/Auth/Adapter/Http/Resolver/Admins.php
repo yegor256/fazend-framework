@@ -21,35 +21,35 @@
  */
 class FaZend_Auth_Adapter_Http_Resolver_Admins implements Zend_Auth_Adapter_Http_Resolver_Interface {
 
-	protected $_scheme = 'basic';
+    protected $_scheme = 'basic';
 
-	/**
-	 * Set scheme
-	 *
-	 * @return void
-	 */
-	public function setScheme($scheme) {
-		$this->_scheme = strtolower($scheme);
-	}
+    /**
+     * Set scheme
+     *
+     * @return void
+     */
+    public function setScheme($scheme) {
+        $this->_scheme = strtolower($scheme);
+    }
 
-	/**
-	 * Resolve it
-	 *
-	 * @return value|false
-	 */
-	public function resolve($username, $realm) {
+    /**
+     * Resolve it
+     *
+     * @return value|false
+     */
+    public function resolve($username, $realm) {
 
-		$admins = FaZend_Properties::get()->admins->toArray();
+        $admins = FaZend_Properties::get()->admins->toArray();
 
-		$username = str_replace('.', '_', $username);
+        $username = str_replace('.', '_', $username);
 
-		if (!isset($admins[$username]))
-			return false;
+        if (!isset($admins[$username]))
+            return false;
 
-		if ($this->_scheme == 'basic')
-			return $admins[$username];
-		else	
-			return hash('md5', $admins[$username]);
+        if ($this->_scheme == 'basic')
+            return $admins[$username];
+        else    
+            return hash('md5', $admins[$username]);
 
-	}
+    }
 }

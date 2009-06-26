@@ -13,20 +13,20 @@
  * @version $Id$
  * @category FaZend
  */
-                        
+            
 /**
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  */
 class IndexController extends FaZend_Controller_Action {
 
-        /**
-         * Simple index controller
-         * 
-         * @return string
-         */
-        public function indexAction() {
+    /**
+     * Simple index controller
+     * 
+     * @return string
+     */
+    public function indexAction() {
 
-	}	
+    }    
 }
 

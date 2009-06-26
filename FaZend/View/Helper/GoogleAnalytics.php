@@ -20,23 +20,23 @@
  */
 class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
 
-	/**
-	 * Show GA script
-	 *
-	 * @param boolean Show google analytics if the user is logged in?
-	 * @return Zend_View
-	 */
-	public function googleAnalytics($showForLoggedInUser = true) {
+    /**
+     * Show GA script
+     *
+     * @param boolean Show google analytics if the user is logged in?
+     * @return Zend_View
+     */
+    public function googleAnalytics($showForLoggedInUser = true) {
 
-		if (!$showForLoggedInUser && !FaZend_User::isLoggedIn())
-			return false;
+        if (!$showForLoggedInUser && !FaZend_User::isLoggedIn())
+            return false;
 
-		if (APPLICATION_ENV != 'production')
-			return "<!-- google analytics skipped -->\n";
+        if (APPLICATION_ENV != 'production')
+            return "<!-- google analytics skipped -->\n";
 
-		$this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
-		return $this->getView()->render('google-analytics.phtml');
+        $this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
+        return $this->getView()->render('google-analytics.phtml');
 
-	}	
+    }    
 
 }

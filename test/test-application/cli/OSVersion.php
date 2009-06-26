@@ -21,18 +21,18 @@
 */
 class OSVersion extends FaZend_Cli_Abstract {
 
-        /**
-         * Executor of a command-line command
-         *
-         * @return string
-         */
-	public function execute() {
+    /**
+     * Executor of a command-line command
+     *
+     * @return string
+     */
+    public function execute() {
 
-	        $sub = $this->_callCli('Sub');
-		
-		return $sub . shell_exec('ver');
+        $sub = $this->_callCli('Sub');
+        
+        return $sub . shell_exec('ver');
 
-	}
-	
+    }
+    
 
 }

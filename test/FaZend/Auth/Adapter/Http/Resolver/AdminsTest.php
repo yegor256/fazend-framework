@@ -17,16 +17,16 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_Auth_Adapter_Http_Resolver_AdminsTest extends AbstractTestCase {
-	
-	public function testResolveWorks () {
+    
+    public function testResolveWorks () {
 
-		$resolver = new FaZend_Auth_Adapter_Http_Resolver_Admins();
+        $resolver = new FaZend_Auth_Adapter_Http_Resolver_Admins();
 
-		$credential = $resolver->resolve('super', 'adm');
+        $credential = $resolver->resolve('super', 'adm');
 
-		$this->assertNotEquals(false, $credential, "Empty password, why?");
+        $this->assertNotEquals(false, $credential, "Empty password, why?");
 
-	}
+    }
 
 }
-                
+        

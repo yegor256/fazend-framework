@@ -17,15 +17,15 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_View_Helper_HeadScriptTest extends AbstractTestCase {
-	
-	/**
-	* Test table rendering
-	*
-	*/
-	public function testHeadScriptWorks () {
+    
+    /**
+    * Test table rendering
+    *
+    */
+    public function testHeadScriptWorks () {
 
-		$this->dispatch('/index/headscript');
+        $this->dispatch('/index/headscript');
 
-	}
+    }
 
 }

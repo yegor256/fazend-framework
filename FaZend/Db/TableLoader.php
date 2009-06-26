@@ -1,4 +1,4 @@
-<?php                                                          
+<?php                              
 /**
  *
  * Copyright (c) FaZend.com
@@ -21,33 +21,33 @@
  */
 class FaZend_Db_TableLoader implements Zend_Loader_Autoloader_Interface {
 
-        /**
-         * Load class
-         *
-         * @return FaZend_Db_Table
-         */
-	public function autoload($class) {
+    /**
+     * Load class
+     *
+     * @return FaZend_Db_Table
+     */
+    public function autoload($class) {
 
-		if (class_exists($class))
-			return;
+        if (class_exists($class))
+            return;
 
-		$name = substr(strrchr($class, '_'), 1);
-	                                           
-		require_once 'FaZend/Db/ActiveTable.php';
-		eval(
-		
-		"class $class extends FaZend_Db_ActiveTable { 
-			public function __construct(array \$params = array()) {
-				return parent::__construct(array_merge(array(
-					'name' => '{$name}',
-					'rowClass' => 'FaZend_Db_Table_ActiveRow_{$name}',
-				), \$params));
-			}
-			public static function retrieve(\$param = true) {
-				return new FaZend_Db_Wrapper('{$name}', \$param);
-			}	
-		};");
+        $name = substr(strrchr($class, '_'), 1);
+                           
+        require_once 'FaZend/Db/ActiveTable.php';
+        eval(
+        
+        "class $class extends FaZend_Db_ActiveTable { 
+            public function __construct(array \$params = array()) {
+                return parent::__construct(array_merge(array(
+                    'name' => '{$name}',
+                    'rowClass' => 'FaZend_Db_Table_ActiveRow_{$name}',
+                ), \$params));
+            }
+            public static function retrieve(\$param = true) {
+                return new FaZend_Db_Wrapper('{$name}', \$param);
+            }    
+        };");
 
-	}
+    }
 
 }

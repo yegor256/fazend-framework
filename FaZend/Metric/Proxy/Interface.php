@@ -21,11 +21,11 @@
  */
 interface FaZend_Metric_Proxy_Abstract {
 
-        /**
-         * Get the value
-         *
-         * @return string|array|value...
-         */
-	public function getCode();
+    /**
+     * Get the value
+     *
+     * @return string|array|value...
+     */
+    public function getCode();
 
 }

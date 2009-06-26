@@ -22,15 +22,15 @@
  */
 class FaZend_View_Helper_IncludeJS extends FaZend_View_Helper {
 
-	/**
-	* Include a JS file as a link
-	*
-	* @return void
-	*/
-	public function includeJS($script) {
+    /**
+    * Include a JS file as a link
+    *
+    * @return void
+    */
+    public function includeJS($script) {
 
-		$this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>$script), 'js', true));
+        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>$script), 'js', true));
 
-	}
+    }
 
 }

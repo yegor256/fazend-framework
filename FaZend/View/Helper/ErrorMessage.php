@@ -21,20 +21,20 @@
  */
 class FaZend_View_Helper_ErrorMessage extends FaZend_View_Helper {
 
-	/**
-	* Strip CSS and include it into HEAD section of the layout
-	*
-	* @return void
-	*/
-	public function errorMessage() {
+    /**
+    * Strip CSS and include it into HEAD section of the layout
+    *
+    * @return void
+    */
+    public function errorMessage() {
 
-		$request = Zend_Controller_Front::getInstance()->getRequest();
+        $request = Zend_Controller_Front::getInstance()->getRequest();
 
-		if (!$request->getParam('error'))
-			return '';
+        if (!$request->getParam('error'))
+            return '';
 
-		return "<p class='error'>" . $request->getParam('error') . "</p>";
+        return "<p class='error'>" . $request->getParam('error') . "</p>";
 
-	}
+    }
 
 }

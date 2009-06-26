@@ -17,51 +17,51 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
-	
-	/**
-	* Test PNG rendering
-	*
-	*/
-	public function testSqueezePNGWorks () {
+    
+    /**
+    * Test PNG rendering
+    *
+    */
+    public function testSqueezePNGWorks () {
 
-		// this page contains html with squeze
-		$this->dispatch('/index/squeeze');
+        // this page contains html with squeze
+        $this->dispatch('/index/squeeze');
 
-		$this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
+        $this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
 
-	}
+    }
 
-	/**
-	* Test PNG showing
-	*
-	*/
-	public function testSqueezePNGShowsActualPNG () {
+    /**
+    * Test PNG showing
+    *
+    */
+    public function testSqueezePNGShowsActualPNG () {
 
-		$this->dispatch($this->view->url(array('id'=>256), 'squeeze', true));
-		$png = $this->getResponse()->getBody();
+        $this->dispatch($this->view->url(array('id'=>256), 'squeeze', true));
+        $png = $this->getResponse()->getBody();
 
-		$file = tempnam(sys_get_temp_dir(), 'fazend');
-		file_put_contents($file, $png);
+        $file = tempnam(sys_get_temp_dir(), 'fazend');
+        file_put_contents($file, $png);
 
-		$img = imagecreatefrompng($file);
+        $img = imagecreatefrompng($file);
 
-		$this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG: '.htmlspecialchars($png));
+        $this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG: '.htmlspecialchars($png));
 
-	}
+    }
 
-	/**
-	* Test image compression
-	*
-	*/
-	public function testSqueezeIsCompressedAtItsMaximum () {
+    /**
+    * Test image compression
+    *
+    */
+    public function testSqueezeIsCompressedAtItsMaximum () {
 
-	        eval ('class Foo extends FaZend_View_Helper_SqueezePNG { function testCompress(array $images) { return $this->_compress($images); } };');
-		
-		$foo = new Foo();
-		$images = array();
-		$images = $foo->testCompress($images);
+        eval ('class Foo extends FaZend_View_Helper_SqueezePNG { function testCompress(array $images) { return $this->_compress($images); } };');
+        
+        $foo = new Foo();
+        $images = array();
+        $images = $foo->testCompress($images);
 
-	}
+    }
 
 }
 

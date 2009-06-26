@@ -21,17 +21,17 @@
  */
 class FaZend_Revision {
 
-        /**
-         * Cut long line
-         *
-         * @return string
-         */
-	public static function get () {
+    /**
+     * Cut long line
+     *
+     * @return string
+     */
+    public static function get () {
 
-		$revFile = APPLICATION_PATH.'/deploy/subversion/revision.txt';
+        $revFile = APPLICATION_PATH.'/deploy/subversion/revision.txt';
 
-		return (file_exists ($revFile) ? file_get_contents ($revFile) : 'local');	
+        return (file_exists ($revFile) ? file_get_contents ($revFile) : 'local');    
 
-	}
+    }
 
 }

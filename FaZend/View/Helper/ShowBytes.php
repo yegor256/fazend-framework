@@ -22,38 +22,38 @@
  */
 class FaZend_View_Helper_ShowBytes {
 
-	/**
-	 * Show size
-	 *
-	 * @return string
-	 */
-	public function showBytes($size) {
-		return self::show($size);
-	}
+    /**
+     * Show size
+     *
+     * @return string
+     */
+    public function showBytes($size) {
+        return self::show($size);
+    }
 
-	/**
-	 * Show size
-	 *
-	 * @return string
-	 */
-	public static function show($size) {
+    /**
+     * Show size
+     *
+     * @return string
+     */
+    public static function show($size) {
 
-		switch (true) {
-			case($size < 1024*5):
-				return $size.'bytes';
-		
-			case($size < 1024*1024*4):
-				return round($size/1024, 2).'Kb';	
-		
-			case($size < 1024*1024*1024*3):
-				return round($size/(1024*1024), 2).'Mb';	
+        switch (true) {
+            case($size < 1024*5):
+                return $size.'bytes';
+        
+            case($size < 1024*1024*4):
+                return round($size/1024, 2).'Kb';    
+        
+            case($size < 1024*1024*1024*3):
+                return round($size/(1024*1024), 2).'Mb';    
 
-			case($size < 1024*1024*1024*1024*2):
-				return round($size/(1024*1024*1024), 2).'Gb';	
-		
-			default:	
-				return round($size/(1024*1024*1024*1024), 2).'Tb';	
-		}
-	}
+            case($size < 1024*1024*1024*1024*2):
+                return round($size/(1024*1024*1024), 2).'Gb';    
+        
+            default:    
+                return round($size/(1024*1024*1024*1024), 2).'Tb';    
+        }
+    }
 
 }

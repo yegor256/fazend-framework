@@ -18,86 +18,86 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_Controller_UserControllerTest extends AbstractTestCase {
 
-	public function setUp() {
-		parent::setUp();
+    public function setUp() {
+        parent::setUp();
 
-		Zend_Db_Table_Abstract::getDefaultAdapter()->query(
-			"insert into user values (null, 'good@fazend.com', 'good')");
+        Zend_Db_Table_Abstract::getDefaultAdapter()->query(
+            "insert into user values (null, 'good@fazend.com', 'good')");
 
-	}
-	
-	public function testLoginFormIsVisible () {
-		if (FaZend_User::isLoggedIn()) {
-			FaZend_User::getCurrentUser()->logOut();
-		}	
+    }
+    
+    public function testLoginFormIsVisible () {
+        if (FaZend_User::isLoggedIn()) {
+            FaZend_User::getCurrentUser()->logOut();
+        }    
 
-		$this->dispatch('/');
-		$this->assertQuery('input#email', "Error in HTML: ".$this->getResponse()->getBody());
-	}
+        $this->dispatch('/');
+        $this->assertQuery('input#email', "Error in HTML: ".$this->getResponse()->getBody());
+    }
 
-	public function testWrongLoginIsProcessed () {
-		if (FaZend_User::isLoggedIn()) {
-			FaZend_User::getCurrentUser()->logOut();
-		}	
+    public function testWrongLoginIsProcessed () {
+        if (FaZend_User::isLoggedIn()) {
+            FaZend_User::getCurrentUser()->logOut();
+        }    
 
-		$this->request->setPost(array(
-			'email' => 'wrong@fazend.com',
-			'pwd' => 'wrong',
-			'submit' => 'Login',
-		));
-		$this->request->setMethod('POST');
+        $this->request->setPost(array(
+            'email' => 'wrong@fazend.com',
+            'pwd' => 'wrong',
+            'submit' => 'Login',
+        ));
+        $this->request->setMethod('POST');
 
-		$this->dispatch('/');
-		$this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
-	}
+        $this->dispatch('/');
+        $this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
+    }
 
-	public function testWrongPasswordIsProcessed () {
-		if (FaZend_User::isLoggedIn()) {
-			FaZend_User::getCurrentUser()->logOut();
-		}	
+    public function testWrongPasswordIsProcessed () {
+        if (FaZend_User::isLoggedIn()) {
+            FaZend_User::getCurrentUser()->logOut();
+        }    
 
-		$this->request->setPost(array(
-			'email' => 'good@fazend.com',
-			'pwd' => 'wrong',
-			'submit' => 'Login',
-		));
-		$this->request->setMethod('POST');
+        $this->request->setPost(array(
+            'email' => 'good@fazend.com',
+            'pwd' => 'wrong',
+            'submit' => 'Login',
+        ));
+        $this->request->setMethod('POST');
 
-		$this->dispatch('/');
-		$this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
-	}
+        $this->dispatch('/');
+        $this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
+    }
 
-	public function testCorrectLoginIsProcessed () {
-		if (FaZend_User::isLoggedIn()) {
-			FaZend_User::getCurrentUser()->logOut();
-		}	
+    public function testCorrectLoginIsProcessed () {
+        if (FaZend_User::isLoggedIn()) {
+            FaZend_User::getCurrentUser()->logOut();
+        }    
 
-		$this->request->setPost(array(
-			'email' => 'good@fazend.com',
-			'pwd' => 'good',
-			'submit' => 'Login',
-		));
-		$this->request->setMethod('POST');
+        $this->request->setPost(array(
+            'email' => 'good@fazend.com',
+            'pwd' => 'good',
+            'submit' => 'Login',
+        ));
+        $this->request->setMethod('POST');
 
-		$this->dispatch('/');
-		$this->assertQueryContentContains('a', 'logout', "Error in HTML: ".$this->getResponse()->getBody());
-	}
+        $this->dispatch('/');
+        $this->assertQueryContentContains('a', 'logout', "Error in HTML: ".$this->getResponse()->getBody());
+    }
 
-	public function testLogoutWorks () {
-		$user = FaZend_User::findByEmail('good@fazend.com');
-		$user->logIn();
+    public function testLogoutWorks () {
+        $user = FaZend_User::findByEmail('good@fazend.com');
+        $user->logIn();
 
-		$this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
-		$this->assertEquals(false, FaZend_User::isLoggedIn());
-	}
+        $this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
+        $this->assertEquals(false, FaZend_User::isLoggedIn());
+    }
 
-	public function testDoubleLogoutWorks () {
-		if (FaZend_User::isLoggedIn()) {
-			FaZend_User::getCurrentUser()->logOut();
-		}	
+    public function testDoubleLogoutWorks () {
+        if (FaZend_User::isLoggedIn()) {
+            FaZend_User::getCurrentUser()->logOut();
+        }    
 
-		$this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
-		$this->assertEquals(false, FaZend_User::isLoggedIn());
-	}
+        $this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
+        $this->assertEquals(false, FaZend_User::isLoggedIn());
+    }
 
 }

@@ -21,43 +21,43 @@
  */
 class Fazend_PingController extends FaZend_Controller_Action {
 
-        /**
-         * We always reply with text/plain
-         *
-         * @return void
-         */
-        public function preDispatch() {
+    /**
+     * We always reply with text/plain
+     *
+     * @return void
+     */
+    public function preDispatch() {
 
-        	$this->getResponse()->setHeader('Content-type', 'text/plain');
-	        $this->_helper->layout->disableLayout();
-	        $this->view->setFilter(null);
+        $this->getResponse()->setHeader('Content-type', 'text/plain');
+        $this->_helper->layout->disableLayout();
+        $this->view->setFilter(null);
 
-	        // no limit in time execution
-	        set_time_limit(0);
+        // no limit in time execution
+        set_time_limit(0);
 
-        }
+    }
 
-        /**
-         * Shows the list of all available actions
-         *
-         * @return void
-         */
-        public function indexAction() {
+    /**
+     * Shows the list of all available actions
+     *
+     * @return void
+     */
+    public function indexAction() {
 
 
-        }
+    }
 
-        /**
-         * Backup all live data and save them
-         *
-         * @return void
-         */
-        public function backupAction() {
+    /**
+     * Backup all live data and save them
+     *
+     * @return void
+     */
+    public function backupAction() {
 
-        	$backup = new FaZend_Backup();
-        	$backup->execute();
-        	$this->view->log = $backup->getLog();
+        $backup = new FaZend_Backup();
+        $backup->execute();
+        $this->view->log = $backup->getLog();
 
-        }
+    }
 
 }

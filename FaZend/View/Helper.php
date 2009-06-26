@@ -21,29 +21,29 @@
  */
 abstract class FaZend_View_Helper {
 
-	/**
-	 * Instance of the view
-	 *
-	 * @var Zend_View
-	 */
-	private $_view;
+    /**
+     * Instance of the view
+     *
+     * @var Zend_View
+     */
+    private $_view;
 
-	/**
-	* Save view locally
-	*
-	* @return void
-	*/
-	public function setView(Zend_View_Interface $view) {
-		$this->_view = $view;
-	}           
+    /**
+    * Save view locally
+    *
+    * @return void
+    */
+    public function setView(Zend_View_Interface $view) {
+        $this->_view = $view;
+    }       
 
-	/**
-	* Get view saved locally
-	*
-	* @return Zend_View
-	*/
-	public function getView() {
-		return $this->_view;
-	}
+    /**
+    * Get view saved locally
+    *
+    * @return Zend_View
+    */
+    public function getView() {
+        return $this->_view;
+    }
 
 }

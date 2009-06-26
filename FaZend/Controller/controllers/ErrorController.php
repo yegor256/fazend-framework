@@ -21,72 +21,72 @@
  */ 
 class Fazend_ErrorController extends FaZend_Controller_Action { 
 
-        /**
-         * errorAction() is the action that will be called by the "ErrorHandler" 
-         * plugin.  When an error/exception has been encountered
-         * in a ZF MVC application (assuming the ErrorHandler has not been disabled
-         * in your bootstrap) - the Errorhandler will set the next dispatchable 
-         * action to come here.  This is the "default" module, "error" controller, 
-         * specifically, the "error" action.  These options are configurable. 
-         * 
-         * @see http://framework.zend.com/manual/en/zend.controller.plugins.html
-         *
-         * @return void
-         */
-        public function errorAction() { 
+    /**
+     * errorAction() is the action that will be called by the "ErrorHandler" 
+     * plugin.  When an error/exception has been encountered
+     * in a ZF MVC application (assuming the ErrorHandler has not been disabled
+     * in your bootstrap) - the Errorhandler will set the next dispatchable 
+     * action to come here.  This is the "default" module, "error" controller, 
+     * specifically, the "error" action.  These options are configurable. 
+     * 
+     * @see http://framework.zend.com/manual/en/zend.controller.plugins.html
+     *
+     * @return void
+     */
+    public function errorAction() { 
 
-                // Ensure the default view suffix is used so we always return good 
-                // content
-                $this->_helper->viewRenderer->setViewSuffix('phtml');
+        // Ensure the default view suffix is used so we always return good 
+        // content
+        $this->_helper->viewRenderer->setViewSuffix('phtml');
 
-                // Grab the error object from the request
-                $errors = $this->_getParam('error_handler'); 
+        // Grab the error object from the request
+        $errors = $this->_getParam('error_handler'); 
 
-                // if this is a broken URL
-                $exceptions = $this->getResponse()->getException();
-		$exception = $exceptions[0];
+        // if this is a broken URL
+        $exceptions = $this->getResponse()->getException();
+        $exception = $exceptions[0];
 
-                if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException')
-                	return $this->_forwardWithMessage($exception->getMessage());
+        if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException')
+            return $this->_forwardWithMessage($exception->getMessage());
 
-                // $errors will be an object set as a parameter of the request object, 
-                // type is a property
-                switch ($errors->type) { 
-                        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER: 
-                        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION: 
+        // $errors will be an object set as a parameter of the request object, 
+        // type is a property
+        switch ($errors->type) { 
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER: 
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION: 
 
-                                // 404 error -- controller or action not found 
-                                $this->getResponse()->setHttpResponseCode(404); 
-                                //$this->view->message = 'Page not found'; 
+                // 404 error -- controller or action not found 
+                $this->getResponse()->setHttpResponseCode(404); 
+                //$this->view->message = 'Page not found'; 
 
-                                return $this->_forwardWithMessage('Error 404: page not found');
+                return $this->_forwardWithMessage('Error 404: page not found');
 
-                        default: 
-                                // application error 
-                                $this->getResponse()->setHttpResponseCode(500); 
-                                $this->view->message = 'Internal application error #'.rand (100, 999); 
-                } 
-
-                // pass the actual exception object to the view
-                $this->view->exception = $errors->exception; 
-                
-                // pass the request to the view
-                $this->view->request = $errors->request; 
-
-                $this->view->showError = FaZend_Properties::get()->errors->display;
-
-                if (FaZend_Properties::get()->errors->email) {
-                	$lines = array ();
-                	foreach (debug_backtrace () as $line) 
-                		$lines[] = "{$line['file']} ({$line['line']})";
-
-                	mail (FaZend_Properties::get()->errors->email, 
-                		WEBSITE_URL.' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'], 
-
-        	        	get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
-        	        	implode("\n", $lines) . "\n\n" .
-        	        	print_r($errors->request->getParams(), true) . "\n\n" .
-        	        	$errors->exception->getTraceAsString());
-        	}	
+            default: 
+                // application error 
+                $this->getResponse()->setHttpResponseCode(500); 
+                $this->view->message = 'Internal application error #'.rand (100, 999); 
         } 
+
+        // pass the actual exception object to the view
+        $this->view->exception = $errors->exception; 
+        
+        // pass the request to the view
+        $this->view->request = $errors->request; 
+
+        $this->view->showError = FaZend_Properties::get()->errors->display;
+
+        if (FaZend_Properties::get()->errors->email) {
+            $lines = array ();
+            foreach (debug_backtrace () as $line) 
+                $lines[] = "{$line['file']} ({$line['line']})";
+
+            mail (FaZend_Properties::get()->errors->email, 
+                WEBSITE_URL.' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'], 
+
+                get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
+                implode("\n", $lines) . "\n\n" .
+                print_r($errors->request->getParams(), true) . "\n\n" .
+                $errors->exception->getTraceAsString());
+        }    
+    } 
 }

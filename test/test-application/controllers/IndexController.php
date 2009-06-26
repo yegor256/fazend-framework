@@ -20,56 +20,56 @@
  */
 class IndexController extends FaZend_Controller_Action {
 
-        /**
-         * Test total application
-         *
-         * @return void
-         */
-        public function indexAction() {
+    /**
+     * Test total application
+     *
+     * @return void
+     */
+    public function indexAction() {
 
-        }
-	
-        /**
-         * Test htmlTable helper
-         *
-         * @return void
-         */
-        public function tableAction() {
+    }
+    
+    /**
+     * Test htmlTable helper
+     *
+     * @return void
+     */
+    public function tableAction() {
 
-		$array = array(
-			array(
-				'id' => 123,
-				'email' => 'test@fazend.com',
-				'password' => 'test'
-			),
-			array(
-				'id' => 124,
-				'email' => 'test@fazend.com',
-				'password' => 'test'
-			),
-		);
+        $array = array(
+            array(
+                'id' => 123,
+                'email' => 'test@fazend.com',
+                'password' => 'test'
+            ),
+            array(
+                'id' => 124,
+                'email' => 'test@fazend.com',
+                'password' => 'test'
+            ),
+        );
 
-		$paginator = Zend_Paginator::factory($array);
-		$this->view->paginator = $paginator;
-        }
+        $paginator = Zend_Paginator::factory($array);
+        $this->view->paginator = $paginator;
+    }
 
-        /**
-         * Test squeezePNG helper
-         *
-         * @return void
-         */
-        public function squeezeAction() {
+    /**
+     * Test squeezePNG helper
+     *
+     * @return void
+     */
+    public function squeezeAction() {
 
-        }
-	
-        /**
-         * HeadScriptTest
-         *
-         * @return void
-         */
-        public function headscriptAction() {
+    }
+    
+    /**
+     * HeadScriptTest
+     *
+     * @return void
+     */
+    public function headscriptAction() {
 
-        }
-	
+    }
+    
 
 }

@@ -21,10 +21,10 @@
  */
 class FaZend_Form_Element_AjaxText extends Zend_Form_Element_Text {
 
-	/**
-	 * Default form view helper to use for rendering
-	 * @var string
-	 */
-	public $helper = 'formAjaxText';
-        
+    /**
+     * Default form view helper to use for rendering
+     * @var string
+     */
+    public $helper = 'formAjaxText';
+    
 }

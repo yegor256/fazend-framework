@@ -21,21 +21,21 @@
  */
 class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
 
-	/**
-	 * Strip CSS and include it into HEAD section of the layout
-	 *
-	 * @return void
-	 */
-	public function stripCSS($script) {
+    /**
+     * Strip CSS and include it into HEAD section of the layout
+     *
+     * @return void
+     */
+    public function stripCSS($script) {
 
-		$content = $this->getView()->render($script);
+        $content = $this->getView()->render($script);
 
-		$filter = new FaZend_View_Filter_CssCompressor();
-		$content = $filter->filter($content);
+        $filter = new FaZend_View_Filter_CssCompressor();
+        $content = $filter->filter($content);
 
-		$this->getView()->headStyle($content);
+        $this->getView()->headStyle($content);
 
-		return $this;
-	}
+        return $this;
+    }
 
 }

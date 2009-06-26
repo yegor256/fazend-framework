@@ -21,25 +21,25 @@
  */
 interface FaZend_Cli_Interface {
 
-        /**
-         * Executor of a command-line command
-         *
-         * @return string
-         */
-	public function execute();
+    /**
+     * Executor of a command-line command
+     *
+     * @return string
+     */
+    public function execute();
 
-        /**
-         * Save options
-         *
-         * @return this
-         */
-	public function setOptions(array $options);
+    /**
+     * Save options
+     *
+     * @return this
+     */
+    public function setOptions(array $options);
 
-        /**
-         * Save the instance of the router
-         *
-         * @param FaZend_Cli_Router instance of the router
-         * @return this
-         */
-	public function setRouter(FaZend_Cli_Router $router);
+    /**
+     * Save the instance of the router
+     *
+     * @param FaZend_Cli_Router instance of the router
+     * @return this
+     */
+    public function setRouter(FaZend_Cli_Router $router);
 }

@@ -17,28 +17,28 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_EmailTest extends AbstractTestCase {
-	
-	public function setUp () {
+    
+    public function setUp () {
 
-		parent::setUp();
+        parent::setUp();
 
-		require_once 'stubMailer.php';
-	}
+        require_once 'stubMailer.php';
+    }
 
-	public function testEmailsAreRenderedAndSent () {
+    public function testEmailsAreRenderedAndSent () {
 
-		$mailer = new stubMailer();
-		Zend_Mail::setDefaultTransport($mailer);
+        $mailer = new stubMailer();
+        Zend_Mail::setDefaultTransport($mailer);
 
-		FaZend_Email::create('test.tmpl')
-			->set('toEmail', 'manager@fazend.com')
-			->set('subject', 'subject line')
-			->set('bodyText', 'test for body')
-			->send(true);
+        FaZend_Email::create('test.tmpl')
+            ->set('toEmail', 'manager@fazend.com')
+            ->set('subject', 'subject line')
+            ->set('bodyText', 'test for body')
+            ->send(true);
 
-		$this->assertNotEquals(false, $mailer->body, "Empty email generated, why?");
+        $this->assertNotEquals(false, $mailer->body, "Empty email generated, why?");
 
-	}
+    }
 
 }
-                
+        

@@ -20,17 +20,17 @@
  */
 class FaZend_View_Helper_StaticFile {
 
-	public function staticFile($file) {
-	        //trim the file name (just in case)
-		$file = trim($file);
+    public function staticFile($file) {
+        //trim the file name (just in case)
+        $file = trim($file);
 
-	        //front controller
-        	$frontController = Zend_Controller_Front::getInstance();
+        //front controller
+        $frontController = Zend_Controller_Front::getInstance();
 
-	        //base url for this application
-	        $baseUrl = $frontController->getBaseUrl();
+        //base url for this application
+        $baseUrl = $frontController->getBaseUrl();
 
-	        return WEBSITE_URL . $baseUrl . '/' . $file;
-	}
+        return WEBSITE_URL . $baseUrl . '/' . $file;
+    }
 
 }

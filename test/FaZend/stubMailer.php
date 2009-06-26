@@ -15,8 +15,8 @@
  */
 
 class stubMailer extends Zend_Mail_Transport_Sendmail {
-	public function _sendMail() {
-		return true;
-	}
+    public function _sendMail() {
+        return true;
+    }
 }
 

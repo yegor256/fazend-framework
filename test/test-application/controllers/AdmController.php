@@ -15,7 +15,7 @@
  */
 
 require_once 'FaZend/Controller/controllers/AdmController.php';
-                    
+            
 /**
  * Admin functions
  * 
@@ -23,14 +23,14 @@ require_once 'FaZend/Controller/controllers/AdmController.php';
  */
 class AdmController extends Fazend_AdmController {
 
-        /**
-         * Custom action, to test
-         *
-         * @return void
-         */
-        public function customAction() {
+    /**
+     * Custom action, to test
+     *
+     * @return void
+     */
+    public function customAction() {
 
 
-        }
+    }
 
 }

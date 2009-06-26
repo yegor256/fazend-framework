@@ -21,29 +21,29 @@
  */
 class FaZend_Properties {
 
-        /**
-         * All properties
-         *
-         * @var Zend_Config
-         */
-        private static $_options = array();
+    /**
+     * All properties
+     *
+     * @var Zend_Config
+     */
+    private static $_options = array();
 
-        /**
-         * Save options
-         *
-         * @return void
-         */
-	public static function setOptions(Zend_Config $config) {
-		self::$_options = $config;
-	}
+    /**
+     * Save options
+     *
+     * @return void
+     */
+    public static function setOptions(Zend_Config $config) {
+        self::$_options = $config;
+    }
 
-        /**
-         * Returns a config
-         *
-         * @return Zend_Config
-         */
-	public static function get() {
-		return self::$_options;
-	}
+    /**
+     * Returns a config
+     *
+     * @return Zend_Config
+     */
+    public static function get() {
+        return self::$_options;
+    }
 
 }

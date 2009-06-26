@@ -13,41 +13,41 @@
  * @version $Id$
  * @category FaZend
  */
-                        
+            
 /**
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  */
 class Fazend_JsController extends FaZend_Controller_Action {
 
-        /**
-         * Show one Java Script
-         * 
-         * @return string
-         */
-        public function indexAction() {
+    /**
+     * Show one Java Script
+     * 
+     * @return string
+     */
+    public function indexAction() {
 
-        	// if it's absent
-        	//if (!file_exists($script = APPLICATION_PATH . '/views/scripts/js/' . $this->_getParam('script')) &&
-        	//	!file_exists($script = FAZEND_PATH . '/View/scripts/js/' . $this->_getParam('script')))
-        	//	$this->_forwardWithMessage('path not found');
+        // if it's absent
+        //if (!file_exists($script = APPLICATION_PATH . '/views/scripts/js/' . $this->_getParam('script')) &&
+        //    !file_exists($script = FAZEND_PATH . '/View/scripts/js/' . $this->_getParam('script')))
+        //    $this->_forwardWithMessage('path not found');
 
-        	$this->getResponse()
-        		->setHeader('Content-type', 'text/javascript');
+        $this->getResponse()
+            ->setHeader('Content-type', 'text/javascript');
 
-        	// tell browser to cache this content	
-        	$this->_cacheContent();	
+        // tell browser to cache this content    
+        $this->_cacheContent();    
 
-		$this->_helper->viewRenderer
-			->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));
-	        
-	        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer
+            ->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));
+        
+        $this->_helper->layout->disableLayout();
 
-	        $this->view->setFilter(null);
+        $this->view->setFilter(null);
 
-		$this->_helper->viewRenderer($this->_getParam('script'));
+        $this->_helper->viewRenderer($this->_getParam('script'));
 
 
-	}	
+    }    
 }
 

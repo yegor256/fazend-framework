@@ -21,52 +21,52 @@
  */
 class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 
-	/**
-	 * Compress all scripts into one text
-	 *
-	 * Inline scripts written one after one should be compressed into
-	 * one script. For the sake of space saving.
-	 *
-	 * @return string
-	 */
-	public function toString($indent = null) {
+    /**
+     * Compress all scripts into one text
+     *
+     * Inline scripts written one after one should be compressed into
+     * one script. For the sake of space saving.
+     *
+     * @return string
+     */
+    public function toString($indent = null) {
 
-		$container = $this->getContainer();
+        $container = $this->getContainer();
 
-		$new = new Zend_View_Helper_Placeholder_Container();
+        $new = new Zend_View_Helper_Placeholder_Container();
 
-		foreach($container as $id=>$script) {
-			// so we meet new text script
-			if (($script->type == 'text/javascript') && empty($script->attributes['src']) && !empty($script->source)) {
-				
-				if (!isset($aggregator))
-					$aggregator = $script;
-				else	
-					$aggregator->source .= $container->getSeparator() . $script->source;	
+        foreach($container as $id=>$script) {
+            // so we meet new text script
+            if (($script->type == 'text/javascript') && empty($script->attributes['src']) && !empty($script->source)) {
+                
+                if (!isset($aggregator))
+                    $aggregator = $script;
+                else    
+                    $aggregator->source .= $container->getSeparator() . $script->source;    
 
-				continue;
+                continue;
 
-			// we had some texts before	
-			}
-			
-			if (isset($aggregator)) {
-				
-				$new[] = $aggregator;
-				unset($aggregator);
+            // we had some texts before    
+            }
+            
+            if (isset($aggregator)) {
+                
+                $new[] = $aggregator;
+                unset($aggregator);
 
-			}
+            }
 
-			$new[] = $script;
-		}	
+            $new[] = $script;
+        }    
 
-		// if we still have something in the aggregator
-		if (isset($aggregator)) 
-			$new[] = $aggregator;
+        // if we still have something in the aggregator
+        if (isset($aggregator)) 
+            $new[] = $aggregator;
 
-		$this->setContainer($new);
+        $this->setContainer($new);
 
-		return parent::toString($indent);
+        return parent::toString($indent);
 
-	}
+    }
 
 }

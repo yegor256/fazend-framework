@@ -17,17 +17,17 @@
 require_once 'AbstractTestCase.php';
 
 class FaZend_BackupTest extends AbstractTestCase {
-	
-	public function testBackupWorks () {
+    
+    public function testBackupWorks () {
 
-		$backup = new FaZend_Backup();
-		$backup->execute();
+        $backup = new FaZend_Backup();
+        $backup->execute();
 
-		$log = $backup->getLog();
+        $log = $backup->getLog();
 
-		$this->assertNotEquals(false, $log, "Empty log, why?");
+        $this->assertNotEquals(false, $log, "Empty log, why?");
 
-	}
+    }
 
 }
-                
+        

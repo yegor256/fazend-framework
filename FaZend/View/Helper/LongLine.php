@@ -21,11 +21,11 @@
  */
 class FaZend_View_Helper_LongLine {
 
-	public function longLine($line, $length) {
-		if (strlen($line) < $length)
-			return $line;
+    public function longLine($line, $length) {
+        if (strlen($line) < $length)
+            return $line;
 
-		return substr($line, 0, $length-3).'...';	
-	}
+        return substr($line, 0, $length-3).'...';    
+    }
 
 }

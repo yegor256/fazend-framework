@@ -16,41 +16,41 @@
 
 $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
 $adapter->query(
-	'create table owner (
-		id integer not null primary key autoincrement, 
-		name varchar(50) not null)');
+    'create table owner (
+        id integer not null primary key autoincrement, 
+        name varchar(50) not null)');
 
 $adapter->query(
-	'create table product (
-		id integer not null primary key autoincrement, 
-		text varchar(1024) not null, 
-		owner integer not null constraint fk_product_owner references owner(id))');
+    'create table product (
+        id integer not null primary key autoincrement, 
+        text varchar(1024) not null, 
+        owner integer not null constraint fk_product_owner references owner(id))');
 
 $adapter->query(
-	'insert into owner values (132, "john smith")');
+    'insert into owner values (132, "john smith")');
 
 $adapter->query(
-	'insert into product values (10, "car", 132)');
+    'insert into product values (10, "car", 132)');
 
 $adapter->query(
-	'create table car (
-		name varchar(50) not null primary key, 
-		mark varchar(50))');
+    'create table car (
+        name varchar(50) not null primary key, 
+        mark varchar(50))');
 
 $adapter->query(
-	'insert into car values ("bmw", "750iL")');
+    'insert into car values ("bmw", "750iL")');
 
 $adapter->query(
-	'create table boat (
-		id integer not null, 
-		name varchar(50) not null, 
-		mark varchar(50))');
+    'create table boat (
+        id integer not null, 
+        name varchar(50) not null, 
+        mark varchar(50))');
 
 $adapter->query(
-	'insert into boat values (1, "boat", "super 8")');
+    'insert into boat values (1, "boat", "super 8")');
 
 $adapter->query(
-	'create table flower (
-		name varchar(50) not null, 
-		mark varchar(50))');
+    'create table flower (
+        name varchar(50) not null, 
+        mark varchar(50))');
 

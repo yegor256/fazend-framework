@@ -13,42 +13,42 @@
  * @version $Id$
  * @category FaZend
  */
-                        
+            
 /**
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  */
 class Fazend_CssController extends FaZend_Controller_Action {
 
-        /**
-         * Show one Java Script
-         * 
-         * @return string
-         */
-        public function indexAction() {
+    /**
+     * Show one Java Script
+     * 
+     * @return string
+     */
+    public function indexAction() {
 
-        	// if it's absent
-        	//if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
-        	//	$this->_forwardWithMessage('path not found');
+        // if it's absent
+        //if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
+        //    $this->_forwardWithMessage('path not found');
 
-        	$this->getResponse()
-        		->setHeader('Content-type', 'text/css');
+        $this->getResponse()
+            ->setHeader('Content-type', 'text/css');
 
-        	$this->_cacheContent();
+        $this->_cacheContent();
 
-		$this->_helper->viewRenderer
-			->setViewScriptPathSpec(':controller/'.$this->_getParam('css'));
-	        
-	        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer
+            ->setViewScriptPathSpec(':controller/'.$this->_getParam('css'));
+        
+        $this->_helper->layout->disableLayout();
 
-	        $this->view->setFilter(null);
+        $this->view->setFilter(null);
 
-	        if (FaZend_Properties::get()->htmlCompression)
-	        	$this->view->addFilter('CssCompressor');
+        if (FaZend_Properties::get()->htmlCompression)
+            $this->view->addFilter('CssCompressor');
 
-		$this->_helper->viewRenderer($this->_getParam('css'));
+        $this->_helper->viewRenderer($this->_getParam('css'));
 
 
-	}	
+    }    
 }
 

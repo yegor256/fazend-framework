@@ -22,17 +22,17 @@
  */
 class FaZend_View_Helper_NiceUrl {
 
-	const DELIMITER = '-';
+    const DELIMITER = '-';
 
-	/**
-	* Converts and returns
-	*
-	* @return string
-	*/
-	public function niceUrl($str) {
+    /**
+    * Converts and returns
+    *
+    * @return string
+    */
+    public function niceUrl($str) {
 
-		return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
-			preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . '.html';
-	}
+        return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
+            preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . '.html';
+    }
 
 }

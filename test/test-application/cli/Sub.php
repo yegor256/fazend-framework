@@ -21,16 +21,16 @@
 */
 class Sub extends FaZend_Cli_Abstract {
 
-        /**
-         * Executor of a command-line command
-         *
-         * @return string
-         */
-	public function execute() {
+    /**
+     * Executor of a command-line command
+     *
+     * @return string
+     */
+    public function execute() {
 
-		return 'sub works';
+        return 'sub works';
 
-	}
-	
+    }
+    
 
 }

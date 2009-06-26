@@ -21,18 +21,18 @@
  */
 abstract class FaZend_Metric_Proxy_Abstract implements FaZend_Metric_Proxy_Interface {
 
-        /**
-         * Get the value
-         *
-         * @return string|array|value...
-         */
-	public function getCode() {
-		
-		if (Model_User::isLoggedIn())
-			return md5(Model_User::getCurrentUser()->email);
+    /**
+     * Get the value
+     *
+     * @return string|array|value...
+     */
+    public function getCode() {
+        
+        if (Model_User::isLoggedIn())
+            return md5(Model_User::getCurrentUser()->email);
 
-		return md5('no user');	
+        return md5('no user');    
 
-	}
+    }
 
 }

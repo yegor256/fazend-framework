@@ -24,17 +24,17 @@
  */
 class FaZend_Application_Resource_Email extends Zend_Application_Resource_ResourceAbstract {
 
-	/**
-	* Defined by Zend_Application_Resource_Resource
-	*
-	* @return boolean
-	*/
-	public function init() {
+    /**
+    * Defined by Zend_Application_Resource_Resource
+    *
+    * @return boolean
+    */
+    public function init() {
 
-		$options = $this->getOptions();
+        $options = $this->getOptions();
 
-		FaZend_Email::config(new Zend_Config($options));
+        FaZend_Email::config(new Zend_Config($options));
 
-		return true;
-	}
+        return true;
+    }
 }

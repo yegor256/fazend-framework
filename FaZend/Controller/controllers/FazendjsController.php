@@ -21,21 +21,21 @@
  */
 class Fazend_FazendjsController extends FaZend_Controller_Action {
 
-        /**
-         *
-         * @return void
-         */
-        public function indexAction() {
+    /**
+     *
+     * @return void
+     */
+    public function indexAction() {
 
-        	$this->getResponse()->setHeader('Content-type', 'text/javascript');
-	        $this->_helper->layout->disableLayout();
-	        $this->view->setFilter(null);
+        $this->getResponse()->setHeader('Content-type', 'text/javascript');
+        $this->_helper->layout->disableLayout();
+        $this->view->setFilter(null);
 
-		$this->_helper->viewRenderer
-			->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));
+        $this->_helper->viewRenderer
+            ->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));
 
-		$this->_helper->viewRenderer($this->_getParam('script'));
+        $this->_helper->viewRenderer($this->_getParam('script'));
 
-        }
+    }
 
 }
