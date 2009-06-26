@@ -40,7 +40,7 @@ class FaZend_Db_Wrapper {
      *
      * @var boolean
      */
-    private $_silenceIfEmpty;
+    private $_silenceIfEmpty = false;
 
     /**
      * Set FROM attribute to select?
