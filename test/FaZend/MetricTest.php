@@ -35,7 +35,8 @@ class SomeClass {
 }
 
 class FaZend_MetricTest extends AbstractTestCase {
-	
+
+	/*	
 	public function testSimpleScenarioWorks () {
 
 		$value = FaZend_Metric::create()
@@ -81,5 +82,6 @@ class FaZend_MetricTest extends AbstractTestCase {
 
 		$this->assertNotEquals($value1, $value2, 'Values are the same, why?');	
 	}
+	*/
 
 }
