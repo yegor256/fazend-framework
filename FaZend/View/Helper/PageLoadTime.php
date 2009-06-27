@@ -15,14 +15,27 @@
  */
 
 /**
+ * Show the time in seconds of the page loading
  *
- * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
+ * @package FaZend
  */
 class FaZend_View_Helper_PageLoadTime {
 
+    /**
+     * Show the time in seconds of the page loading
+     *
+     * You should call this function at the end of your layout/scripts/layout.phtml
+     *
+     * @return string Time in seconds, properly formatted
+     */
     public function pageLoadTime() {
+
+         // this variable is set in FaZend/Application/index.php
          global $startTime; 
-         return sprintf('%0.2fsec', round(microtime(true)-$startTime, 2));
+
+         // we calculate the difference, and format the value
+         return sprintf('%0.2f', round(microtime(true)-$startTime, 2)) . 'sec';
+
      }
 
 }

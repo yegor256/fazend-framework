@@ -15,12 +15,20 @@
  */
 
 /**
+ * Simplified link for a static file
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  */
 class FaZend_View_Helper_StaticFile {
 
+    /**
+     * Simplified link for a static file
+     *
+     * @param string Path of the file, from /public directory
+     * @return string URL of the file
+     */
     public function staticFile($file) {
+
         //trim the file name (just in case)
         $file = trim($file);
 
@@ -31,6 +39,7 @@ class FaZend_View_Helper_StaticFile {
         $baseUrl = $frontController->getBaseUrl();
 
         return WEBSITE_URL . $baseUrl . '/' . $file;
+
     }
 
 }

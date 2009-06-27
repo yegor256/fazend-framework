@@ -15,8 +15,8 @@
  */
 
 /**
+ * Compress and minify CSS text and return it
  *
- * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
 class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
@@ -24,6 +24,7 @@ class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
     /**
      * Strip CSS and include it into HEAD section of the layout
      *
+     * @param string CSS content
      * @return void
      */
     public function stripCSS($script) {
@@ -35,7 +36,6 @@ class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
 
         $this->getView()->headStyle($content);
 
-        return $this;
     }
 
 }

@@ -15,6 +15,9 @@
  */
 
 /**
+ * Instead of a standard headScript()
+ *
+ * It is packing together inline scripts into one single <SCRIPT> block
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
@@ -27,12 +30,18 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
      * Inline scripts written one after one should be compressed into
      * one script. For the sake of space saving.
      *
+     * This method is executed when it's time to show all script blocks,
+     * hopefully at the END of your HTML, right before <BODY> tag.
+     *
+     * @param boolean We don't touch this parameter, just pass it to the parent
      * @return string
      */
     public function toString($indent = null) {
 
+        // get the existing container, from the parent class
         $container = $this->getContainer();
 
+        // create new container, where new <SCRIPT> blocks will be placed
         $new = new Zend_View_Helper_Placeholder_Container();
 
         foreach($container as $id=>$script) {
@@ -63,8 +72,10 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
         if (isset($aggregator)) 
             $new[] = $aggregator;
 
+        // save new container to the parent class
         $this->setContainer($new);
 
+        // parent class will output the new structure of <SCRIPT> blocks
         return parent::toString($indent);
 
     }

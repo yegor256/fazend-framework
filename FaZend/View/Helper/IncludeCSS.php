@@ -22,10 +22,10 @@
 class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper {
 
     /**
-    * Include a CSS file as a link
-    *
-    * @return void
-    */
+     * Include a CSS file as a link
+     *
+     * @return void
+     */
     public function includeCSS($script) {
 
         $this->getView()->headLink()->appendStylesheet($this->getView()->url(array('css'=>$script), 'css', true));

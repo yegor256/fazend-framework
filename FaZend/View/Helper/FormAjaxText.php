@@ -15,8 +15,8 @@
  */
 
 /**
+ * Text field with an Ajax drop down list of possible values
  *
- * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
 class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {

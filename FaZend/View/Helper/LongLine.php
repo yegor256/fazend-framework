@@ -15,17 +15,26 @@
  */
 
 /**
+ * Cut the line to a required length
  *
- * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
 class FaZend_View_Helper_LongLine {
 
+    /**
+     * Cut the line to a required length
+     *
+     * @return string
+     */
     public function longLine($line, $length) {
+
+        // if it's short enough - just return it
         if (strlen($line) < $length)
             return $line;
 
-        return substr($line, 0, $length-3).'...';    
+        // cut the end
+        return substr($line, 0, $length-3) . '...';    
+
     }
 
 }

@@ -25,14 +25,16 @@ class FaZend_View_Helper_NiceUrl {
     const DELIMITER = '-';
 
     /**
-    * Converts and returns
-    *
-    * @return string
-    */
+     * Converts and returns
+     *
+     * @return string
+     */
     public function niceUrl($str) {
 
+        // replace anything strange, and compress it into a nice URL
         return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
             preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . '.html';
+
     }
 
 }

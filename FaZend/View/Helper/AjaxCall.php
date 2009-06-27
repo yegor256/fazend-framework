@@ -15,8 +15,8 @@
  */
 
 /**
+ * Dynamic DIV object on the page, downloadable automatically or by a user click
  *
- * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package FaZend 
  */
 class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
