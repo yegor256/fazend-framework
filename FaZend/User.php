@@ -38,11 +38,12 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * Returns current user
      *
      * @return FaZend_User
+     * @throw FaZend_User_NotLoggedIn
      */
     public static function getCurrentUser () {
         
         if (!self::isLoggedIn())
-            throw new Exception ('user is not logged in');
+            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'user is not logged in');
 
         return FaZend_User::findByEmail(Zend_Auth::getInstance()->getIdentity()->email);    
     }
@@ -51,6 +52,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * Login this user
      *
      * @return void
+     * @throw FaZend_User_LoginFailed
      */
     public function logIn () {
 
@@ -65,7 +67,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
         $result = $auth->authenticate($authAdapter);
 
         if (!$result->isValid())
-            throw new FaZend_User_LoginException(implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
+            FaZend_Exception::raise('FaZend_User_LoginFailed', implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
 
         $data = $authAdapter->getResultRowObject(); 
         $auth->getStorage()->write($data);
@@ -73,7 +75,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
     }
 
     /**
-     * Logout
+     * Logout current user
      *
      * @return void
      */
@@ -86,6 +88,26 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
     /**
      * Register a new user
      *
+     * It is assumed that you have a table in DB with these fields:
+     *
+     * <code>
+     * CREATE TABLE IF NOT EXISTS `user` (
+     * `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT "Unique ID of the user",
+     * `email` VARBINARY(200) NOT NULL COMMENT "Unique user email",
+     * `password` VARBINARY(50) NOT NULL COMMENT "User password",
+     * `nickname` VARCHAR(50) NOT NULL COMMENT "User nickname publicly available",
+     * `photo` MEDIUMBLOB COMMENT "Photo in BLOB form (GIF, JPG, PNG), 150x150",
+     * `text` TEXT COMMENT "User profile",
+     * PRIMARY KEY USING BTREE (`id`),
+     * UNIQUE (`email`)
+     * ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+     * </code>
+     *
+     * Columns nickname, photo, and text are optional. Id, email and password are mandatory
+     *
+     * @param string Email of the user
+     * @param string Password
+     * @param array Associative array of other data for USER table
      * @return boolean
      */
     public static function register ($email, $password, array $data = array()) {
@@ -99,25 +121,54 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 
         $user->save();
 
+        // we're trying to send an email to admin about this
+        // account registration. if this file (emails/adminNewUserRegistered.tmpl) exists
+        // the email will be sent. otherwise the exception will come from FaZend_Email
+        // and we skip this process
+        try {
+
+            // send email to admin, with one variable inside
+            // the template should use it like $this->user
+            FaZend_Email::create('adminNewUserRegistered.tmpl')
+                ->set('user', $user)
+                ->send();
+
+        } catch (FaZend_Email_NoTemplate $e) {
+            // don't do anything        
+        }
+
+        // now we will try send an email to the user, telling him/her
+        // about successful registration of the account
+        try {
+
+            // send email to admin, with one variable inside
+            // the template should use it like $this->user
+            FaZend_Email::create('AccountRegistered.tmpl')
+                ->set('toEmail', $user->email)
+                ->set('toName', $user->email)
+                ->set('user', $user)
+                ->send();
+
+        } catch (FaZend_Email_NoTemplate $e) {
+            // don't do anything        
+        }
+
         return $user;    
+
     }
 
     /**
      * Get user by email
      *
+     * @param string Email of the user
      * @return boolean
      */
     public static function findByEmail ($email) {
 
-        $user = self::retrieve()
+        return self::retrieve()
             ->where('email = ?', $email)
             ->setRowClass('FaZend_User')
             ->fetchRow();
-
-        if (!$user)
-            throw new FaZend_User_NotFoundException();
-
-        return $user;    
 
     }
 
@@ -136,6 +187,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
     /**
      * This password is ok for the user?
      *
+     * @param string Password
      * @return boolean
      */
     public function isGoodPassword ($password) {

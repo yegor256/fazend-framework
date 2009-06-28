@@ -65,25 +65,25 @@ class FaZend_Email {
             return;
 
         if (!isset(self::$_config->notifier))
-            throw new Exception("you should define resources.Email.notifier in app.ini (author of notify messages)");
+            FaZend_Exception::raise('FaZend_Email_NoNotified', "you should define resources.Email.notifier in app.ini (author of notify messages)");
 
         if (!isset(self::$_config->notifier->email))
-            throw new Exception("you should define resources.Email.notifier.email in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoEmailInNotified', "you should define resources.Email.notifier.email in app.ini");
 
         if (!isset(self::$_config->notifier->name))
-            throw new Exception("you should define resources.Email.notifier.name in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoNameInNotified'"you should define resources.Email.notifier.name in app.ini");
 
         $this->set('fromEmail', self::$_config->notifier->email);
         $this->set('fromName', self::$_config->notifier->name);
 
         if (!isset(self::$_config->manager))
-            throw new Exception("you should define resources.Email.manager in app.ini (receiver of system emails)");
+            FaZend_Exception::raise('FaZend_Email_NoManager', "you should define resources.Email.manager in app.ini (receiver of system emails)");
 
         if (!isset(self::$_config->manager->email))
-            throw new Exception("you should define resources.Email.manager.email in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoEmailForManager', "you should define resources.Email.manager.email in app.ini");
 
         if (!isset(self::$_config->manager->name))
-            throw new Exception("you should define resources.Email.manager.name in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoNameForManager', "you should define resources.Email.manager.name in app.ini");
 
         $this->set('toEmail', self::$_config->manager->email);
         $this->set('toName', self::$_config->manager->name);
@@ -128,6 +128,10 @@ class FaZend_Email {
 
         // in this folder all email templates are located
         $view->setScriptPath(self::$_config->folder);
+
+        // maybe email template is missed?
+        if (!file_exists(self::$_config->folder . '/' . $this->get('template')))
+            FaZend_Exception::raise('FaZend_Email_NoTemplate', 'Template ' . $this->get('template') . ' is missed in ' . self::$_config->folder);
 
         // set all variables to View for rendering
         foreach ($this->_variables as $key=>$value)
