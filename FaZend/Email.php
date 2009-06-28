@@ -71,7 +71,7 @@ class FaZend_Email {
             FaZend_Exception::raise('FaZend_Email_NoEmailInNotified', "you should define resources.Email.notifier.email in app.ini");
 
         if (!isset(self::$_config->notifier->name))
-            FaZend_Exception::raise('FaZend_Email_NoNameInNotified'"you should define resources.Email.notifier.name in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoNameInNotified', "you should define resources.Email.notifier.name in app.ini");
 
         $this->set('fromEmail', self::$_config->notifier->email);
         $this->set('fromName', self::$_config->notifier->name);
