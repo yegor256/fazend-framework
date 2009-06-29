@@ -15,7 +15,15 @@
  */
 
 /**
- * Simple table
+ * Wrapper around tables, adapters etc. 
+ *
+ * Usase sample:
+ *
+ * <code>
+ * $rowset = FaZend_Db_ActiveTable_user::retrieve()
+ *    ->where('email = ?', 'me@example.com')
+ *    ->fetchAll();
+ * </code>
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
  */
@@ -168,17 +176,24 @@ class FaZend_Db_Wrapper {
     }
 
     /**
-     * Call wrapping
+     * Fetch all wrapper
      *
-     * @return void
+     * @return FaZend_Db_RowsetWrapper
+     */
+    public function fetchAll() {
+
+        return new FaZend_Db_RowsetWrapper($this->table(), $this->select());
+
+    }
+
+    /**
+     * Call wrapping, all other functions will go directly to SELECT object
+     *
+     * @return FaZend_Db_Wrapper
      */
     public function __call($name, $args) {
 
-        if (in_array($name, array('fetchAll')))
-            return call_user_func(array($this->table(), $name), $this->select());
-
         $this->_select = call_user_func_array(array($this->select(), $name), $args);
-
         return $this;
 
     }

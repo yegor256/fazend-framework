@@ -36,7 +36,7 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
 
         foreach($masked as $tag) {
             $matches = array();
-            preg_match_all('/\<'.$tag.'(.*?)\>(.*?)\<\/'.$tag.'\>/msi', $html, $matches);
+            preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match)
                 $html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_encode($matches[2][$id])."</{$tag}>", $html);
         }    
@@ -56,7 +56,7 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
         ), $html));
 
         foreach($masked as $tag) {
-            preg_match_all('/\<'.$tag.'(.*?)\>(.*?)\<\/'.$tag.'\>/msi', $html, $matches);
+            preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match)
                 $html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_decode($matches[2][$id])."</{$tag}>", $html);
         }    

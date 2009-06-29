@@ -25,17 +25,15 @@ function bug($var) { echo '<pre>'.htmlspecialchars(print_r($var, true)).'</pre>'
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     /**
-     * Initialize view
+     * Initialize key application elements
      *
-     * @return
+     * @return Zend_View
      */
     protected function _initApp() {
 
+        // make sure the front controller already bootstraped
         $this->bootstrap('frontController');
         $front = $this->getResource('frontController');
-
-        $this->bootstrap('view');
-        $view = $this->getResource('view');
 
         // throw exceptions if failed
         // only in development/testing environment
@@ -43,13 +41,26 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         if ((APPLICATION_ENV !== 'production') || defined('CLI_ENVIRONMENT'))
             $front->throwExceptions(true);
 
+        // setup error plugin
+        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
+            'module' => 'fazend',
+            'controller' => 'error',
+            'action' => 'error'
+        )));
+        
+        // make sure the view already bootstraped
+        $this->bootstrap('view');
+        $view = $this->getResource('view');
+
         // set the type of docs
         $view->doctype(Zend_View_Helper_Doctype::XHTML1_STRICT);
 
+        // set proper paths for view helpers and filters
         $view->addHelperPath(APPLICATION_PATH . '/helpers', 'Helper');
         $view->addHelperPath(FAZEND_PATH . '/View/Helper', 'FaZend_View_Helper');
         $view->addFilterPath(FAZEND_PATH . '/View/Filter', 'FaZend_View_Filter');
 
+        // turn ON html compressor, if necessary
         $this->bootstrap('Fazend');
         if (FaZend_Properties::get()->htmlCompression)
             $view->addFilter('HtmlCompressor');
@@ -62,12 +73,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         if (defined('CLI_ENVIRONMENT'))
             Zend_Session::$_unitTestEnabled = true;
 
-        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
-            'module' => 'fazend',
-            'controller' => 'error',
-            'action' => 'error'
-        )));
-        
         // Return it, so that it can be stored by the bootstrap
         return $view;
     }
