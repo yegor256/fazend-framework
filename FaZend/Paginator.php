@@ -27,7 +27,12 @@ class FaZend_Paginator extends Zend_Paginator {
      * @return void
      */
     public static function addPaginator($iterator, Zend_View $view, $page, $name = 'paginator') {
-        $paginator = new FaZend_Paginator(new Zend_Paginator_Adapter_Iterator($iterator));
+        if ($iteration instanceof FaZend_Db_RowsetWrapper)
+            $adapter = new Zend_Paginator_Adapter_DbSelect($iteration->select());
+        else
+            $adapter = new Zend_Paginator_Adapter_Iterator($iterator);
+
+        $paginator = new FaZend_Paginator($adapter);
         
         $paginator->setView($view);
         $paginator->setItemCountPerPage(10);

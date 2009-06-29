@@ -57,6 +57,17 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     }
 
     /**
+     * Returns select object
+     *
+     * @return Zend_Db_Select
+     */
+    public function select() {
+
+        return $this->_select;
+
+    }
+
+    /**
      * Count objects in the rowset
      *
      * @return int
