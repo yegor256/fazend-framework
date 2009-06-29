@@ -153,5 +153,24 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 
     }    
 
+    /**
+     * Configure profiler for development environment
+     *
+     * @return void
+     */
+    protected function _initDbProfiler() {
+
+        // profiler is used ONLY in development environment
+        if ((APPLICATION_ENV !== 'development'))
+            return true;
+
+        $this->bootstrap('db');
+        $db = $this->getResource('db');
+
+        // turn ON the profiler
+        $db->setProfiler(true);
+
+    }
+
 }
 

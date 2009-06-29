@@ -34,7 +34,15 @@ class FaZend_View_Helper_PageLoadTime {
          global $startTime; 
 
          // we calculate the difference, and format the value
-         return sprintf('%0.2f', round(microtime(true)-$startTime, 2)) . 'sec';
+         $html = sprintf('%0.2f', round(microtime(true)-$startTime, 2)) . 'sec';
+
+         // add information from DB profiler, if any
+         if (APPLICATION_ENV == 'development') {
+             $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
+             $html .= '&#32;['. $profiler->getTotalNumQueries() . ' queries, ' . $profiler->getTotalElapsedSecs() . ' sec]';
+         }
+
+         return $html;
 
      }
 
