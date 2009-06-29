@@ -89,7 +89,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function seek($position) {
-        return $this->__call('seek', $position);
+        return $this->__call('seek', array($position));
     }
 
     /**
@@ -98,7 +98,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function key() {
-        return $this->__call('key');
+        return $this->__call('key', array());
     }
 
     /**
@@ -107,7 +107,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function next() {
-        return $this->__call('next');
+        return $this->__call('next', array());
     }
 
     /**
@@ -116,7 +116,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function current() {
-        return $this->__call('current');
+        return $this->__call('current', array());
     }
 
     /**
@@ -125,7 +125,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function valid() {
-        return $this->__call('valid');
+        return $this->__call('valid', array());
     }
 
     /**
@@ -134,7 +134,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function rewind() {
-        return $this->__call('rewind');
+        return $this->__call('rewind', array());
     }
 
     /**
@@ -143,7 +143,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function offsetExists($offset) {
-        return $this->__call('offsetExists', $offset);
+        return $this->__call('offsetExists', array($offset));
     }
 
     /**
@@ -152,7 +152,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function offsetGet($offset) {
-        return $this->__call('offsetGet', $offset);
+        return $this->__call('offsetGet', array($offset));
     }
 
     /**
@@ -161,7 +161,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function offsetSet($offset, $value) {
-        return $this->__call('offsetSet', $offset, $value);
+        return $this->__call('offsetSet', array($offset, $value));
     }
 
     /**
@@ -170,7 +170,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return 
      */
     public function offsetUnset($offset) {
-        return $this->__call('offsetUnset', $offset);
+        return $this->__call('offsetUnset', array($offset));
     }
 
 }
