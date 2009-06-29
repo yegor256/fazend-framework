@@ -21,10 +21,13 @@
  */
 class FaZend_Cli_Router {
 
+    // to be returned in case of error
+    const ERROR_CODE = -1;
+
     /**
      * Dispatch command line call
      *
-     * @return string
+     * @return int Exit code
      */
     public function dispatch() {
 
@@ -54,14 +57,15 @@ class FaZend_Cli_Router {
      */
     protected function _error($msg) {
 
-        return 'FaZend_Cli_Router::dispatch() raises error in dispatching: ' . $msg . "\n";
+        echo 'FaZend_Cli_Router::dispatch() raises error in dispatching: ' . $msg . "\n";
+        return self::ERROR_CODE;
 
     }
 
     /**
      * Call one class
      *
-     * @return string
+     * @return int Exit code
      */
     public function call($name, $options = false) {
 

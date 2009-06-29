@@ -65,7 +65,7 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
 
         if (!isset($this->_options[$name])) {
             if ($throwException)
-                throw new FaZend_Cli_OptionMissedException("Parameter '$name' is missed");
+                FaZend_Exception::raise('FaZend_Cli_OptionMissedException', "Parameter '$name' is missed");
             else
                 return false;    
         }    
@@ -74,9 +74,9 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
     }
 
     /**
-     * Get option value
+     * Call another CLI class, by name
      *
-     * @return this
+     * @return string
      */
     protected function _callCli($name) {
 
