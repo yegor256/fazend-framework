@@ -39,7 +39,7 @@ class FaZend_View_Helper_PageLoadTime {
          // add information from DB profiler, if any
          if (APPLICATION_ENV == 'development') {
              $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
-             $html .= '&#32;['. $profiler->getTotalNumQueries() . ' queries, ' . $profiler->getTotalElapsedSecs() . ' sec]';
+             $html .= '&#32;['. $profiler->getTotalNumQueries() . ' queries, ' . sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]';
          }
 
          return $html;
