@@ -38,7 +38,9 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         $view = $this->getResource('view');
 
         // throw exceptions if failed
-        if (APPLICATION_ENV != 'production')
+        // only in development/testing environment
+        // or in CLI execution
+        if ((APPLICATION_ENV !== 'production') || defined('CLI_ENVIRONMENT'))
             $front->throwExceptions(true);
 
         // set the type of docs
