@@ -91,7 +91,7 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
         } else {
             // call on the click
             $this->getView()->headScript()->appendScript(
-                "document.getElementById('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
+                "$('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
         }
 
         // clear the URL to avoid double execution

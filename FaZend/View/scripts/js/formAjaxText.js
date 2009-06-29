@@ -2,16 +2,16 @@
 
 function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 
-	var mask = document.getElementById(field).value;
+	var mask = $(field).value;
 
 	if (!mask) {
-		document.getElementById(list).style.display = 'none';
+		$(list).style.display = 'none';
 		return;
 	}
 
 	// hide the error, if it is visible since last form submit
-	if (document.getElementById(field + 'Errors'))
-		document.getElementById(field + 'Errors').style.display = 'none';
+	if ($(field + 'Errors'))
+		$(field + 'Errors').style.display = 'none';
 
 	new Ajax.Request(url, {
 		method:'post',
@@ -19,7 +19,7 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 		requestHeaders: {Accept: 'application/json'},
 		onSuccess: function(transport){
 
-			var listDiv = document.getElementById(list);
+			var listDiv = $(list);
 			while (listDiv.hasChildNodes()) {
 				listDiv.removeChild(listDiv.firstChild);
 			}	
@@ -28,9 +28,9 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 				var keyword = document.createElement('li');
 				keyword.innerHTML = line.replace(mask, '<b>'+mask+'</b>');
 				keyword.onclick=function(){
-					document.getElementById(field).value = this.innerHTML.replace(/<\/?b>/gi, '');
-					if (document.getElementById(next))
-						document.getElementById(next).focus();
+					$(field).value = this.innerHTML.replace(/<\/?b>/gi, '');
+					if ($(next))
+						$(next).focus();
 					ajax_CheckField(field, hand, handUrl);
 				};
 				listDiv.appendChild(keyword);
@@ -51,16 +51,16 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 function ajax_LostFocus(list) {
 
 	setTimeout(function(){
-		document.getElementById(list).style.display = 'none';
+		$(list).style.display = 'none';
 	}, 200);
 
 }
 
 function ajax_CheckField(field, hand, handUrl) {
 	
-	var mask = document.getElementById(field).value;
+	var mask = $(field).value;
 
-	var div = document.getElementById(hand);
+	var div = $(hand);
 	if (!mask) {
 		div.style.visibility = 'hidden';
 		return;

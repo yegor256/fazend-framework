@@ -1,6 +1,6 @@
 function ajaxCall(id, url) {
 
-	var div = document.getElementById(id);
+	var div = $(id);
 	div.style.cursor = 'wait';
 
 	if (!div) {

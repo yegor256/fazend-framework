@@ -59,7 +59,7 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
         // initialize JS handlers
         $callback = "function() {ajax_UpdateList('{$id}', '{$listId}', '{$url}', '".$this->_getDefault($opts, 'next')."', '{$handId}', '{$handUrl}');}";
         $this->view->headScript()->appendScript(
-            "var div_{$id} = document.getElementById('{$id}');\n" .
+            "var div_{$id} = $('{$id}');\n" .
             "div_{$id}.onkeyup = {$callback};\n" .
             "div_{$id}.onfocus = {$callback};\n" .
             "div_{$id}.onblur = function() {ajax_LostFocus('{$listId}');};\n");
