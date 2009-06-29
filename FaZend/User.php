@@ -24,13 +24,20 @@
 class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 
     /**
+     * Auth
+     *
+     * @var Zend_Auth
+     */
+    private static $_auth;
+
+    /**
      * User is logged in?
      *
      * @return boolean
      */
     public static function isLoggedIn () {
 
-        return Zend_Auth::getInstance()->hasIdentity();
+        return self::_auth()->hasIdentity();
 
     }
 
@@ -45,7 +52,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
         if (!self::isLoggedIn())
             FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'user is not logged in');
 
-        return FaZend_User::findByEmail(Zend_Auth::getInstance()->getIdentity()->email);    
+        return FaZend_User::findByEmail(self::_auth()->getIdentity()->email);    
     }
 
     /**
@@ -63,14 +70,13 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
             ->setIdentity(strtolower($this->email))
             ->setCredential($this->password);
 
-        $auth = Zend_Auth::getInstance();
-        $result = $auth->authenticate($authAdapter);
+        $result = self::_auth()->authenticate($authAdapter);
 
         if (!$result->isValid())
             FaZend_Exception::raise('FaZend_User_LoginFailed', implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
 
         $data = $authAdapter->getResultRowObject(); 
-        $auth->getStorage()->write($data);
+        self::_auth()->getStorage()->write($data);
 
     }
 
@@ -81,7 +87,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      */
     public function logOut () {
 
-        Zend_Auth::getInstance()->clearIdentity();
+        self::_auth()->clearIdentity();
 
     }
 
@@ -192,6 +198,21 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      */
     public function isGoodPassword ($password) {
         return $this->password == $password;
+    }
+
+    /**
+     * Get auth
+     *
+     * @return Zend_Auth
+     */
+    protected static function _auth() {
+
+        if (!isset(self::$_auth)) {
+            self::$_auth = Zend_Auth::getInstance();
+        }
+
+        return self::$_auth;
+
     }
 
 }

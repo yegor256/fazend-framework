@@ -31,6 +31,9 @@ class FaZend_Cli_Router {
      */
     public function dispatch() {
 
+        if (!defined('APPLICATION_ENV')) 
+            define('APPLICATION_ENV', true);
+
         if (empty($_SERVER['argc']))
             return $this->_error('$_SERVER[argc] is not defined, how come?');
 
