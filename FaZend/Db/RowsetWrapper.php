@@ -63,7 +63,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      */
     public function count() {
 
-        return $this->_table->getAdapter()->fetchOne('SELECT COUNT(*) FROM (' . (string)$this->_select) . ')';
+        return $this->_table->getAdapter()->fetchOne('SELECT COUNT(*) FROM (' . (string)$this->_select . ')');
 
     }
 
