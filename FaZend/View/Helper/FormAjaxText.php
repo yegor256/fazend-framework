@@ -54,7 +54,7 @@ class FaZend_View_Helper_FormAjaxText extends Zend_View_Helper_FormText {
         $this->view->headScript()->appendFile($this->view->url(array('script'=>'formAjaxText.js'), 'js', true));
 
         // jQuery is required for this    
-        $this->getView()->includeJQuery();
+        $this->view->includeJQuery();
 
         // initialize JS handlers
         $callback = "function() {ajax_UpdateList('{$id}', '{$listId}', '{$url}', '".$this->_getDefault($opts, 'next')."', '{$handId}', '{$handUrl}');}";
