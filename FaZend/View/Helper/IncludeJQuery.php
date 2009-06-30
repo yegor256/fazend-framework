@@ -31,7 +31,7 @@ class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper {
      */
     public function includeJQuery() {
 
-        $this->getView()->headLink()->appendFile(self::JQUERY_PATH);
+        $this->getView()->headScript()->appendFile(self::JQUERY_PATH);
 
     }
 
