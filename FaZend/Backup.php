@@ -487,7 +487,7 @@ class FaZend_Backup {
         $this->_log[] = '[' . date('h:i:s') . '] ' . $message;
 
         if ($throw)
-            throw new FaZend_Backup_Exception();
+            FaZend_Exception::raise('FaZend_Backup_Exception');
 
     }
 
