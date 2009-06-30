@@ -62,7 +62,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
             // $id is NOT equal to FALSE
             // if it's not an array - that it's a mistake for sure
             if (!is_array($id))
-                FaZend_Exception::raise('FaZend_Db_Table_ActiveRow_InvalidConstructor', 
+                FaZend_Exception::raise('FaZend_Db_Table_InvalidConstructor', 
                     get_class($this)."::new() has incorrect param type (neither INT nor ARRAY)");
 
             // otherwise just pass through to the default constructor
@@ -120,7 +120,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
             // if we failed to find anything with the given ID
             if (!count($rowset))
-                FaZend_Exception::raise(get_class($this) . '_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
+                FaZend_Exception::raise('FaZend_Db_Table_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
 
             // if we found something  fill the data inside this class
             // and stop on it
