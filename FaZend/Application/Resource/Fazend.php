@@ -53,21 +53,14 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     */
     protected function _initTableCache($options) {
 
-        // cache works only in production environment
-        if (APPLICATION_ENV !== 'production')
-            return;
-
-        $cache = Zend_Cache::factory('Core', 'File',
+        $cache = Zend_Cache::factory('Core', new FaZend_Cache_Backend_Memory(),
             array(
                 'caching' => true,
                 'lifetime' => null, // forever 
                 'cache_id_prefix' => $options['name'] . '_' . FaZend_Revision::get(),
-                'automatic_serialization' => true
-
+                'automatic_serialization' => false
             ),
-            array(
-                'cache_dir' => sys_get_temp_dir(),
-            ));
+            array());
              
         // metadata cacher
         // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching    
