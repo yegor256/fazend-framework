@@ -42,7 +42,10 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
              $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
              $html .= "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>". 
                  $profiler->getTotalNumQueries() . ' queries</span>, ' . sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]' .
-             	 "<p id='profiler' style='display:none;'>" . implode('<br/>', array_map(create_function('$query', 'return $query->getQuery();'), $profiler->getQueryProfiles())) . '</p>';
+             	 "<p id='profiler' style='display:none;'>" . 
+             	 implode('<br/>', array_map(create_function('$query', 
+             	     'return "[" . sprintf("%0.3f", $query->getElapsedSecs()) . "]&#32;" . $query->getQuery();'), $profiler->getQueryProfiles())) . 
+             	 '</p>';
 
             // jQuery is required for this    
             $this->getView()->includeJQuery();
