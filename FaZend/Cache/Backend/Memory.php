@@ -81,6 +81,7 @@ class FaZend_Cache_Backend_Memory extends Zend_Cache_Backend implements Zend_Cac
     public function save($data, $label, $tags = array(), $specificLifetime = false) {
 
         $this->_cache[$label] = $data;
+        return true;
 
     }
 
@@ -93,6 +94,7 @@ class FaZend_Cache_Backend_Memory extends Zend_Cache_Backend implements Zend_Cac
     public function remove($id) {
 
         unset($this->_cache[$id]);
+        return true;
 
     }
 
