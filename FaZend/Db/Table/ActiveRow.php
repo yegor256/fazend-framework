@@ -29,6 +29,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     private static $_allTables;
 
     /**
+     * Internal holder of ROW id, until the data array is filled
+     *
+     * @return int|string
+     */
+    private $_preliminaryKey;
+
+    /**
      * Create new row or load the existing one
      *
      * @return FaZend_Db_Table_Row
@@ -44,24 +51,34 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
             // create normal row
             parent::__construct();
 
-            // find data to fill the internal variables
-            $rowset = $this->_table->find($id);
-
-            if (!count($rowset))
-                throw new FaZend_Db_Table_RowNotFoundException(get_class($this)." not found (id: $id)");
-
-            $this->_data = $this->_cleanData = $rowset->current()->toArray();
+            // save the id into the class
+            // we don't load any data from DB at this stage, just remembering
+            // the ID of the row
+            // later data will be loaded, but later, in __get() method
+            $this->_preliminaryKey = $id;
 
         } elseif ($id !== false) {    
 
+            // $id is NOT equal to FALSE
+            // if it's not an array - that it's a mistake for sure
             if (!is_array($id))
-                throw new Exception(get_class($this)."::new() has incorrect param type (neither Int nor Array)");
+                FaZend_Exception::raise('FaZend_Db_Table_ActiveRow_InvalidConstructor', 
+                    get_class($this)."::new() has incorrect param type (neither INT nor ARRAY)");
 
+            // otherwise just pass through to the default constructor
             parent::__construct($id);
+
         } else {
+
+            // $id is empty (equals to FALSE) and it means that we should
+            // create a NEW object, from scratch
             parent::__construct();
 
+            // get information from the table
             $info = $this->_table->info();
+
+            // and create internal data array with empty values
+            // for all columns
             $this->_data = array_fill_keys($info['cols'], null);
         }    
     }
@@ -89,6 +106,30 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         // system field
         if (strtolower($name) == '__id')
             $name = 'id';
+
+        // if we are interested in just ID and data are not loaded yet
+        // we just return the ID, that's it
+        if ($name === 'id' && isset($this->_preliminaryKey))
+            return (string)$this->_preliminaryKey;
+
+        // if the class data are not loaded yet, it's a good moment to do it
+        if (isset($this->_preliminaryKey)) {
+
+            // find data to fill the internal variables
+            $rowset = $this->_table->find($this->_preliminaryKey);
+
+            // if we failed to find anything with the given ID
+            if (!count($rowset))
+                FaZend_Exception::raise(get_class($this) . '_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
+
+            // if we found something  fill the data inside this class
+            // and stop on it
+            $this->_data = $this->_cleanData = $rowset->current()->toArray();
+
+            // kill this variable, since we have LIVE data in the class already
+            unset($this->_preliminaryKey);
+
+        }
 
         $value = parent::__get($name);
 
