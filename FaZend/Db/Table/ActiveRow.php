@@ -22,6 +22,13 @@
 abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
     /**
+     * List of all tables in the db schema
+     *
+     * @return string[]
+     */
+    private static $_allTables;
+
+    /**
      * Create new row or load the existing one
      *
      * @return FaZend_Db_Table_Row
@@ -85,11 +92,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         $value = parent::__get($name);
 
-        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
-        $tables = $db->listTables();
-
-        if (is_numeric($value) && (in_array($name, $tables))) {
+        if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
             
             if (class_exists('Model_'.ucfirst($name)))
                 $rowClass = 'Model_'.ucfirst($name);
@@ -126,6 +129,24 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     public function getObject($name, $class) {
         $id = $this->$name;
         return new $class((int)$id);
+    }
+
+    /**
+     * Does this column may be a link to subtable?
+     *
+     * @param string Name of the table
+     * @param string Name of the column
+     * @return boolean
+     */
+    public function _isForeignKey($table, $column) {
+        
+        if (!isset(self::$_allTables)) {
+            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+            self::$_allTables = $db->listTables();
+        }
+
+        return in_array($column, self::$_allTables);
+
     }
 
 }
