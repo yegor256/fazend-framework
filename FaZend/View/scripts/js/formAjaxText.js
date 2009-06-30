@@ -5,26 +5,25 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 	var mask = $(field).value;
 
 	if (!mask) {
-		$(list).style.display = 'none';
+		$(list).hide();
 		return;
 	}
 
 	// hide the error, if it is visible since last form submit
 	if ($(field + 'Errors'))
-		$(field + 'Errors').style.display = 'none';
+		$(field + 'Errors').hide();
 
-	new Ajax.Request(url, {
-		method:'post',
-		parameters: {mask: mask},
-		requestHeaders: {Accept: 'application/json'},
-		onSuccess: function(transport){
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: {mask: mask},
+		dataType: "json",
+		success: function(data){
 
 			var listDiv = $(list);
-			while (listDiv.hasChildNodes()) {
-				listDiv.removeChild(listDiv.firstChild);
-			}	
+			listDiv.empty();
 			
-			transport.responseText.evalJSON(true).each(function(line) {
+			data.each(function(line) {
 				var keyword = document.createElement('li');
 				keyword.innerHTML = line.replace(mask, '<b>'+mask+'</b>');
 				keyword.onclick=function(){
@@ -33,13 +32,13 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 						$(next).focus();
 					ajax_CheckField(field, hand, handUrl);
 				};
-				listDiv.appendChild(keyword);
+				listDiv.append(keyword);
 			});
 
 			if (listDiv.firstChild) {
-				listDiv.style.display = 'block';
+				listDiv.show();
 			} else {
-				listDiv.style.display = 'none';
+				listDiv.hide();
 			}	
 
 		}       
@@ -50,9 +49,7 @@ function ajax_UpdateList(field, list, url, next, hand, handUrl) {
 
 function ajax_LostFocus(list) {
 
-	setTimeout(function(){
-		$(list).style.display = 'none';
-	}, 200);
+	setTimeout(function() {$(list).hide();}, 200);
 
 }
 
@@ -62,22 +59,21 @@ function ajax_CheckField(field, hand, handUrl) {
 
 	var div = $(hand);
 	if (!mask) {
-		div.style.visibility = 'hidden';
+		div.hide();
 		return;
 	}
 
-	new Ajax.Request(handUrl, {
-		method:'post',
-		parameters: {mask: mask},
-		requestHeaders: {Accept: 'application/json'},
-		onSuccess: function(transport){
+	$.ajax({
+		url: handUrl,
+		type: "POST",
+		data: {mask: mask},
+		dataType: "json",
+		success: function(data){
 
-			var json = transport.responseText.evalJSON(true);
-
-			if (json == true) {
-				div.style.visibility = 'visible';
+			if (data == true) {
+				div.show();
 			} else {
-				div.style.visibility = 'hidden';
+				div.hide();
 			}	
 		}      
 	});
