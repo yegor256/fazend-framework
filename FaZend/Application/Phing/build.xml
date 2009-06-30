@@ -26,6 +26,9 @@
 	<includepath classpath="${project.basedir}/src/library" />
 	<includepath classpath="${project.basedir}/test" />
 
+	<!-- ftp uploader -->
+	<taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
+
 	<property name="serverDocs" value="/home/continuum/public_html" />
 
 	<target name="lint" description="Run syntax check for all classes" >
@@ -81,7 +84,6 @@
 		<echo msg="Uploading revision: ${svn.revision}" />	
 
 		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-		<taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 		<uploadByFTP server="${ftp.server}"
 			username="${ftp.user}"
 			password="${ftp.password}"

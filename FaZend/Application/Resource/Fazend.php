@@ -74,6 +74,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     */
     protected function _initPluginCache($options) {
 
+        // only in production
+        if (APPLICATION_ENV !== 'production')
+            return;
+
         // plugin cache
         // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html#zend.loader.pluginloader.performance.example
         $classFileIncCache = sys_get_temp_dir() . '/'.$options['name'].'-includeCache.php';
