@@ -50,7 +50,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
             } catch (Zend_Db_Table_Exception $e2) {
 
                 FaZend_Exception::raise('FaZend_Db_Wrapper_NoIDFieldException',
-                    "Table {$table} doesn't have either a primary or ID field. Error1: " . $e1->getMessage() . '. Error2: ' . $e2->getMessage());
+                    "Table {$table} doesn't have either a primary or ID field. Error1: " . $e->getMessage() . '. Error2: ' . $e2->getMessage());
             }    
         }
 
