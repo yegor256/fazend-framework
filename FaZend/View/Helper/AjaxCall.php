@@ -77,8 +77,8 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
         if (!$this->_url)
             FaZend_Exception::raise('FaZend_View_Helper_AjaxCall_URLNotDefined');
 
-        // prototype is required for this    
-        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'prototype.js'), 'js', true));
+        // jQuery is required for this    
+        $this->getView()->includeJQuery();
 
         // ajas function for loading content
         $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>'ajaxCall.js'), 'js', true));

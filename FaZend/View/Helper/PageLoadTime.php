@@ -44,7 +44,9 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
                  $profiler->getTotalNumQueries() . ' queries</span>, ' . sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]' .
              	 "<p id='profiler' style='display:none;'>" . implode('<br/>', array_map(create_function('$query', 'return $query->getQuery();'), $profiler->getQueryProfiles())) . '</p>';
 
-             $this->getView()->includeJS('prototype.js');
+            // jQuery is required for this    
+            $this->getView()->includeJQuery();
+
          }
 
          return $html;
