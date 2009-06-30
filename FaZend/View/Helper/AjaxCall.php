@@ -87,11 +87,11 @@ class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 
         if ($this->_immediateExecution) {
             // call right now
-            $this->getView()->headScript()->appendScript("ajaxCall('{$id}', '{$this->_url}');");
+            $this->getView()->headScript()->appendScript("ajaxCall($('#{$id}'), '{$this->_url}');");
         } else {
             // call on the click
             $this->getView()->headScript()->appendScript(
-                "$('{$id}').onclick = function() { ajaxCall('{$id}', '{$this->_url}'); };");
+                "$('#{$id}').bind('click', function() { ajaxCall($('#{$id}'), '{$this->_url}'); });");
         }
 
         // clear the URL to avoid double execution

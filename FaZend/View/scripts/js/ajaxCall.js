@@ -1,18 +1,14 @@
-function ajaxCall(id, url) {
+function ajaxCall(div, url) {
 
-	var div = $(id);
-	div.style.cursor = 'wait';
+	div.css('cursor:wait');
 
-	if (!div) {
-		return;
-	}
-
-	new Ajax.Request(url, {
-		method:'get',
-		requestHeaders: {Accept: 'application/json'},
-		onSuccess: function(transport){
-			div.innerHTML = transport.responseText.evalJSON(true);
-			div.style.cursor = 'default';
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+		success: function(json){
+			div.html(json);
+			div.css('cursor:default');
 		}       
 	});
 
