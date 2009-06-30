@@ -112,24 +112,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         if ($name === 'id' && isset($this->_preliminaryKey))
             return (string)$this->_preliminaryKey;
 
-        // if the class data are not loaded yet, it's a good moment to do it
-        if (isset($this->_preliminaryKey)) {
-
-            // find data to fill the internal variables
-            $rowset = $this->_table->find($this->_preliminaryKey);
-
-            // if we failed to find anything with the given ID
-            if (!count($rowset))
-                FaZend_Exception::raise('FaZend_Db_Table_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
-
-            // if we found something  fill the data inside this class
-            // and stop on it
-            $this->_data = $this->_cleanData = $rowset->current()->toArray();
-
-            // kill this variable, since we have LIVE data in the class already
-            unset($this->_preliminaryKey);
-
-        }
+        // make sure the class has live data from DB
+        $this->_loadLiveData();
 
         $value = parent::__get($name);
 
@@ -154,11 +138,41 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      */
     public function __set($name, $value) {
 
+        // make sure the class has live data from DB
+        $this->_loadLiveData();
+
         if ($value instanceof Zend_Db_Table_Row) {
             $value = $value->__id;
         }
 
         return parent::__set($name, $value);
+
+    }
+
+    /**
+     * Load real data into the row
+     *
+     * @return void
+     */
+    protected function _loadLiveData() {
+
+        // if the class data are not loaded yet, it's a good moment to do it
+        if (!isset($this->_preliminaryKey))
+            return;
+
+        // find data to fill the internal variables
+        $rowset = $this->_table->find($this->_preliminaryKey);
+
+        // if we failed to find anything with the given ID
+        if (!count($rowset))
+            FaZend_Exception::raise('FaZend_Db_Table_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
+
+        // if we found something  fill the data inside this class
+        // and stop on it
+        $this->_data = $this->_cleanData = $rowset->current()->toArray();
+
+        // kill this variable, since we have LIVE data in the class already
+        unset($this->_preliminaryKey);
 
     }
 
