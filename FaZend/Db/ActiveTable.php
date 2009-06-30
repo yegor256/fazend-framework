@@ -41,7 +41,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
         } catch (Zend_Db_Table_Exception $e) {
             
             // no, we can't detect it automatically
-            $cls = new $tableClassName(array('primary' => 'id'));
+            $cls = new $tableClassName(array('primary'=>'id'));
 
             try {
                 // maybe we just have a field ID?
@@ -50,7 +50,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
             } catch (Zend_Db_Table_Exception $e2) {
 
                 FaZend_Exception::raise('FaZend_Db_Wrapper_NoIDFieldException',
-                    "Table {$table} doesn't have either a primary or ID field");
+                    "Table {$table} doesn't have either a primary or ID field. Error1: " . $e1->getMessage() . '. Error2: ' . $e2->getMessage());
             }    
         }
 
