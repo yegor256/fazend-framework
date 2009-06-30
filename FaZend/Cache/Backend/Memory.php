@@ -48,7 +48,9 @@ class FaZend_Cache_Backend_Memory extends Zend_Cache_Backend implements Zend_Cac
      */
     public function load($id, $doNotTestCacheValidity = false) {
 
-        return $this->_cache[$id];
+        if (isset($this->_cache[$id]))
+            return $this->_cache[$id];
+        return false;
 
     }
 
