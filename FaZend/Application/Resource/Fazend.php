@@ -58,7 +58,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
                 'caching' => true,
                 'lifetime' => null, // forever 
                 'cache_id_prefix' => $options['name'] . '_' . FaZend_Revision::get(),
-                'automatic_serialization' => false
+                'automatic_serialization' => true
             ),
             array());
              
