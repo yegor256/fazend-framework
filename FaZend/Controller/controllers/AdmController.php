@@ -115,10 +115,16 @@ class Fazend_AdmController extends FaZend_Controller_Action {
 
         $this->view->filePath = ini_get('error_log');
 
-        if ($this->_hasParam('clear'))
-            file_put_contents($this->view->filePath, 'cleared on ' . date('m/d/y h:i:s'));
+        // maybe error_log is not set?
+        if ($this->view->filePath) {
 
-        $this->view->log = file_get_contents($this->view->filePath);
+            if ($this->_hasParam('clear'))
+                file_put_contents($this->view->filePath, 'cleared on ' . date('m/d/y h:i:s'));
+
+            $this->view->log = file_get_contents($this->view->filePath);
+
+        } else
+            $this->view->log = 'no [phpSettings.error_log] variable set in app.ini';
 
     }
 
