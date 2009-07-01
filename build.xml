@@ -25,7 +25,6 @@
 
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
-	<includepath classpath="${project.basedir}/../zend-trunk/" />
 
 	<target name="main" depends="lint, test" >
 	</target>

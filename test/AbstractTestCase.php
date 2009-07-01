@@ -14,8 +14,14 @@
  * @category FaZend
  */
 
-// include path for Zend is defined in build.xml!
+// you should have Zend checked out from truck
+// in the directory ../../zend-trunk
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(dirname(__FILE__) . '/../../zend-trunk'),
+    realpath(dirname(__FILE__) . '/..'),
+    get_include_path())));
 
+// we inherit from Zend Test Case
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 define('APPLICATION_ENV', 'testing');
