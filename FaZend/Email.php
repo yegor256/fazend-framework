@@ -158,10 +158,14 @@ class FaZend_Email {
 
         }    
 
-        $body = implode("\n", array_slice ($lines, $id+1));
+        $body = trim(implode("\n", array_slice ($lines, $id+1)), " \n\r");
 
         // set body of the email
-        $mail->setBodyText(trim ($body, " \n\r").file_get_contents ($view->getScriptPath('signature.txt')));
+        $signatureFile = $view->getScriptPath('signature.txt');
+        if (file_exists($signatureFile))
+            $body .= file_get_contents($signatureFile);
+            
+        $mail->setBodyText($body);
 
         // set from user
         $mail->setFrom($this->get('fromEmail'), $this->get('fromName'));
