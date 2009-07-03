@@ -22,13 +22,6 @@
 class FaZend_Metric {
 
     /**
-     * Environment proxy
-     *
-     * @var FaZend_Metric_Proxy_Interface
-     */
-    protected static $_proxy;
-
-    /**
      * Associative array of metrics running now
      *
      * @var array
@@ -81,9 +74,9 @@ class FaZend_Metric {
         // if the metric already exists in cache,
         // we just load the value and return it
         if ($metric->exists()) {
-            eval("\$value = \$metric->load();");
+            $value = $metric->load();
         } else {
-            eval("\$value = \$metric->save(\$metric->_calculate());");
+            $value = $metric->save($metric->_calculate());
         }
 
         // save variable name to the class variable
@@ -91,27 +84,6 @@ class FaZend_Metric {
 
         // return TRUE in any case
         return true;
-    }
-
-    /**
-     * Set environment proxy
-     *
-     * @return void
-     */
-    public static function setProxy(FaZend_Metric_Proxy_Interface $proxy) {
-        self::$_proxy = $proxy;
-    }
-
-    /**
-     * Get environment proxy and initialize it, if necessary
-     *
-     * @return void
-     */
-    public static function getProxy() {
-        if (!isset(self::$_proxy))
-            self::setProxy(new FaZend_Metric_Proxy());
-
-        return self::$_proxy;
     }
 
     /**
