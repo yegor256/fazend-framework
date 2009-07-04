@@ -87,12 +87,35 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     }
 
     /**
+     * Return object by the field
+     *
+     * @param string Name of the column
+     * @param string Name of the class to be used for instantiating of this row
+     * @return void
+     */
+    public function getObject($name, $class) {
+        return new $class((int)$this->$name);
+    }
+
+    /**
      * Show the ROW as a string 
      *
      * @return string
      */
     public function __toString() {
         return $this->__id;
+    }
+
+    /**
+     * Before any call we have to be sure that live data are available
+     *
+     * @return void
+     */
+    public function __call($method, $args) {
+        // make sure the class has live data from DB
+        $this->_loadLiveData();
+
+        return parent::__call($method, $args);
     }
 
     /**
@@ -188,16 +211,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         // kill this variable, since we have LIVE data in the class already
         unset($this->_preliminaryKey);
 
-    }
-
-    /**
-     * Return object by the field
-     *
-     * @return void
-     */
-    public function getObject($name, $class) {
-        $id = $this->$name;
-        return new $class((int)$id);
     }
 
     /**
