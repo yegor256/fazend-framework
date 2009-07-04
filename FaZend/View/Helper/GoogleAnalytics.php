@@ -30,7 +30,7 @@ class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
     public function googleAnalytics($showForLoggedInUser = true) {
 
     	// don't show if the user is not logged in
-        if (!$showForLoggedInUser && !FaZend_User::isLoggedIn())
+        if (!$showForLoggedInUser && FaZend_User::isLoggedIn())
             return false;
 
         // skip it for the testing and development environments           
