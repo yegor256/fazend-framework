@@ -24,6 +24,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * List of all tables in the db schema
      *
+     * Locally cached in order to avoid 'SHOW TABLES' request to the
+     * database performed by listTables()
+     *
      * @return string[]
      */
     private static $_allTables;
@@ -152,6 +155,10 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * Load real data into the row
      *
+     * The method is called only when the live data are really necessary
+     * in the row. For as long as possible we should wait and NOT load
+     * the data. Since every load of the live data means new SQL query.
+     *
      * @return void
      */
     protected function _loadLiveData() {
@@ -165,7 +172,14 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         // if we failed to find anything with the given ID
         if (!count($rowset))
-            FaZend_Exception::raise('FaZend_Db_Table_NotFoundException', get_class($this) . " not found (ID: {$this->_preliminaryKey})");
+            // if the name of this class starts with 'FaZend' it means
+            // that this row was received from retrieve() method from the table
+            // without explicit notification of the RowClass. In such a case
+            // we can't create an exception with class FaZend_Db_Table_tablename_NotFoundException
+            // because we will end up in new table automatic creation by the table loader
+            FaZend_Exception::raise(preg_match('/^FaZend_/', get_class($this)) ? 'FaZend_Db_Table_NotFoundException' : get_class($this) . '_NotFoundException', 
+                get_class($this) . " not found (ID: {$this->_preliminaryKey})",
+                'FaZend_Db_Table_NotFoundException');
 
         // if we found something  fill the data inside this class
         // and stop on it
@@ -189,17 +203,18 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * Does this column may be a link to subtable?
      *
-     * @param string Name of the table
+     * @param string Name of the table, temporarily NOT used
      * @param string Name of the column
      * @return boolean
      */
     public function _isForeignKey($table, $column) {
         
-        if (!isset(self::$_allTables)) {
-            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-            self::$_allTables = $db->listTables();
-        }
+        // if the array of ALL tables in the db is NOT already defined
+        // we should grab it from the DB by SQL request
+        if (!isset(self::$_allTables))
+            self::$_allTables = Zend_Db_Table_Abstract::getDefaultAdapter()->listTables();
 
+        // whether this table is in the DB or not?
         return in_array($column, self::$_allTables);
 
     }
