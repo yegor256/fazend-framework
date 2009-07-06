@@ -14,6 +14,13 @@
  * @category FaZend
  */
 
+require_once 'Zend/Controller/Action.php';
+
+/**
+ * Action controller
+ *
+ * @package Controller
+ */
 class FaZend_Controller_Action extends Zend_Controller_Action {
 
     /**
