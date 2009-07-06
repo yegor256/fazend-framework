@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Loader/Autoloader/Interface.php';
+
 /**
  * Loader of active row classes
  *

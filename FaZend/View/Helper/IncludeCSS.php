@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/

@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  * Compresses many PNG/GIF files into one big holder
  *

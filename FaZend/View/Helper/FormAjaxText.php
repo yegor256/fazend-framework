@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/View/Helper/FormText.php';
+
 /**
  * Text field with an Ajax drop down list of possible values
  *

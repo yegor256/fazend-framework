@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  * Includes JQuery into the list of scripts to load
  * 

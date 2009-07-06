@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Db/Table/Row.php';
+
 /**
  * One row
  *

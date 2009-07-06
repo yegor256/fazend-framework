@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/Controller/Action.php';
+
 /**
  * default ErrorController
  *

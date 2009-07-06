@@ -17,6 +17,8 @@
 // system testing function
 function bug($var) { echo '<pre>'.htmlspecialchars(print_r($var, true)).'</pre>'; die(); }
 
+require_once 'Zend/Application/Bootstrap/Bootstrap.php';
+
 /**
 * Bootstrap
 *

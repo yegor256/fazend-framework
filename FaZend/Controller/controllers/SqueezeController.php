@@ -14,8 +14,10 @@
  * @category FaZend
  */
 
+require_once 'FaZend/Controller/Action.php';
+
 /**
- *
+ * SqueezePNG delivery
  * 
  *
  */

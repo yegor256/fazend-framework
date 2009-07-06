@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/Cli/Interface.php';
+
 /**
  * Class for a CLI executor
  *

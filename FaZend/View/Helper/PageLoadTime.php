@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  * Show the time in seconds of the page loading
  *

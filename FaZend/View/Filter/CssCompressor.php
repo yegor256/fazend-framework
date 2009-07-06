@@ -14,8 +14,10 @@
  * @category FaZend
  */
 
+require_once 'Zend/Filter/Interface.php';
+
 /**
- *
+ * CSS compression
  *
  * @category   FaZend
  * @package    FaZend_View_Filter

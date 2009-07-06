@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Paginator.php';
+
 /**
  * Paginator
  *

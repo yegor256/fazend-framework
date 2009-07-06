@@ -14,6 +14,8 @@
  * @category FaZend
  */
             
+require_once 'FaZend/Controller/Action.php';
+
 /**
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload

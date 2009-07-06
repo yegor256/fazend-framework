@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  * Include single JS file
  *

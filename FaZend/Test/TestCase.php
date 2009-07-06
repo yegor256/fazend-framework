@@ -14,11 +14,11 @@
  * @category FaZend
  */
 
-require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
-
 define('APPLICATION_ENV', 'testing');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
 define('CLI_ENVIRONMENT', true);
+
+require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 

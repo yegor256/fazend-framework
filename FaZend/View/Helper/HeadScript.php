@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper/HeadScript.php';
+
 /**
  * Instead of a standard headScript()
  *

@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Auth/Adapter/Http/Resolver/Interface.php';
+
 /**
  * Resolver from app.ini
  *

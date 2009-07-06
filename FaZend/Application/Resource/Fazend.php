@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Application/Resource/ResourceAbstract.php';
+
 /**
  * Resource for initializing FaZend framework
  *

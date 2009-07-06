@@ -14,7 +14,10 @@
  * @category FaZend
  */
             
+require_once 'FaZend/Controller/Action.php';
+
 /**
+ * JS delivery
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  */

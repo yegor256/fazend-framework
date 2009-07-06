@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'FaZend/View/Helper.php';
+
 /**
  * Dynamic DIV object on the page, downloadable automatically or by a user click
  *

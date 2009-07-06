@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+require_once 'Zend/Filter/Interface.php';
+
 /**
  * Html compressor
  *
