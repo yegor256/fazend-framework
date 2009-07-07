@@ -21,51 +21,24 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(dirname(__FILE__) . '/..'),
     get_include_path())));
 
-// we inherit from Zend Test Case
-require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
-
-define('APPLICATION_ENV', 'testing');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
-define('CLI_ENVIRONMENT', true);
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 
-class AbstractTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
+// we inherit from Zend Test Case
+require_once 'FaZend/Test/TestCase.php';
+
+class AbstractTestCase extends FaZend_Test_TestCase {
 
     /**
-     * Setup test
+     * Specific setup for test environment
      *
-     *
+     * @return void
      */
-    public function setUp () {
-    
-        $this->bootstrap = array($this, 'myBootstrap');
-
+    public function setUp() {
         parent::setUp();
 
-        $this->view = new Zend_View();
-
-    }
-    
-    /**
-     * Bootstrap as usual
-     *
-     *
-     */
-    public function myBootstrap () {
-        include 'FaZend/Application/index.php';
-
-        include 'SetupDB.php';
+        $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $adapter->query('create table user (id integer not null primary key autoincrement, email varchar(50) not null, password varchar(50) not null)');
     }    
 
-    /**
-     * Close-out the test
-     *
-     *
-     */
-    public function tearDown () {
-        $this->resetRequest();
-        $this->resetResponse();
-        parent::tearDown();
-    }
-    
 }

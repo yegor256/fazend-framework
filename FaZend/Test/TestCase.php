@@ -20,19 +20,27 @@ define('CLI_ENVIRONMENT', true);
 
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
+/**
+ * Test case
+ *
+ * @category FaZend
+ */
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
     /**
      * Setup test
      *
-     *
+     * @return void
      */
-    public function setUp () {
+    public function setUp() {
     
-        $this->bootstrap = array($this, 'myBootstrap');
+        // run this method before everything else
+        $this->bootstrap = array($this, 'testBootstrap');
 
+        // perform normal operations of the test case
         parent::setUp();
 
+        // create local view, since it's a controller
         $this->view = new Zend_View();
 
     }
@@ -40,21 +48,27 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
     /**
      * Bootstrap as usual
      *
-     *
+     * @return void
      */
-    public function myBootstrap () {
+    public function testBootstrap() {
+        
+        // bootstrap the application
         include 'FaZend/Application/index.php';
+
     }    
 
     /**
      * Close-out the test
      *
-     *
+     * @return void
      */
-    public function tearDown () {
+    public function tearDown() {
+
         $this->resetRequest();
         $this->resetResponse();
+
         parent::tearDown();
+
     }
     
 }
