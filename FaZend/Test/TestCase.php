@@ -14,9 +14,9 @@
  * @category FaZend
  */
 
-define('APPLICATION_ENV', 'testing');
-define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
-define('CLI_ENVIRONMENT', true);
+defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing');
+defined('APPLICATION_PATH') or define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
+defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
 
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
