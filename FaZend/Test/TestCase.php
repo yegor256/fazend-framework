@@ -35,7 +35,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
     public function setUp() {
     
         // run this method before everything else
-        $this->bootstrap = array($this, 'testBootstrap');
+        $this->bootstrap = array($this, 'fazendTestBootstrap');
 
         // perform normal operations of the test case
         parent::setUp();
@@ -50,7 +50,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      *
      * @return void
      */
-    public function testBootstrap() {
+    public function fazendTestBootstrap() {
         
         // bootstrap the application
         include 'FaZend/Application/index.php';
