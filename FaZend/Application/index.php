@@ -38,6 +38,9 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+// small simple and nice PHP functions
+require_once 'FaZend/Application/functions.php';
+
 // Create application, bootstrap, and run
 require_once 'Zend/Application.php';
 $application = new Zend_Application(APPLICATION_ENV);
