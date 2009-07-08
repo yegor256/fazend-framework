@@ -17,7 +17,7 @@
 require_once 'Zend/Form.php';
 
 /**
- * Form
+ * Form, in a more convenient way to manage
  *
  * @package FaZend 
  */
@@ -28,10 +28,13 @@ class FaZend_Form extends Zend_Form {
      *
      * @return string
      */
-    public static function create($file, Zend_View $view) {
+    public static function create($file, Zend_View $view = null) {
 
-        $form = new FaZend_Form(new Zend_Config_Ini(APPLICATION_PATH . '/config/form'.$file.'.ini', 'form'));
-        $view->form = $form;
+        $form = new FaZend_Form(new Zend_Config_Ini(APPLICATION_PATH . '/config/form' . $file . '.ini', 'form'));
+
+        // if it's null, ignore it
+        if ($view !== null)
+            $view->form = $form;
 
         return $form;
 
