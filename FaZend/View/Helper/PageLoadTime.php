@@ -36,7 +36,12 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
          global $startTime; 
 
          // we calculate the difference, and format the value
-         $html = sprintf('%0.2f', round(microtime(true)-$startTime, 2)) . 'sec';
+         $time = round(microtime(true)-$startTime, 2); // in secs
+         $html = sprintf('%0.2f', $time) . 'sec';
+
+         // encolor with red, if more than 2 seconds
+         if ($time > 2)
+             $html = '<b style="color:red;">' . $html . '</b>';
 
          // add information from DB profiler, if any
          if (APPLICATION_ENV == 'development') {
