@@ -39,6 +39,19 @@ class FaZend_MetricTest extends AbstractTestCase {
         $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_dependency.schema.sqlite.sql');
         $this->_dbAdapter->query($schemaSql);
     }      
+
+    /**
+     * Clean test environment
+     *
+     * @return void
+     */
+    public function tearDown() {
+        parent::tearDown();
+
+        $this->_dbAdapter->query('DROP TABLE fz_dependency');
+        $this->_dbAdapter->query('DROP TABLE fz_metric');
+        $this->_dbAdapter->query('DROP TABLE fz_source');
+    }    
     
     /**
      * Sample metrics usage scenario
