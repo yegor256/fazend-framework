@@ -17,11 +17,6 @@
 require_once 'AbstractTestCase.php';
 
 /**
- * FaZend_Metric_SampleCalculator
- */
-require_once 'Metric/SampleCalculator.php';
-
-/**
  * Metric tester
  *
  * @package test
@@ -39,7 +34,7 @@ class FaZend_MetricTest extends AbstractTestCase {
      */
     public function testSimpleScenarioWorks() {
 
-        $calculator = new FaZend_Metric_SampleCalculator();
+        $calculator = new Model_SampleCalculator();
 
         // we suppose to get the result of pow(2,6)
         $value = $calculator->getBigValue(2, 6);
@@ -58,7 +53,7 @@ class FaZend_MetricTest extends AbstractTestCase {
      */
     public function testResourceDependencyWorks() {
 
-        $calculator = new FaZend_Metric_SampleCalculator();
+        $calculator = new Model_SampleCalculator();
 
         $value1 = $calculator->getDependentValue();
 
@@ -81,7 +76,7 @@ class FaZend_MetricTest extends AbstractTestCase {
      */
     public function testMetric2MetricDependencyWorks() {
 
-        $calculator = new FaZend_Metric_SampleCalculator();
+        $calculator = new Model_SampleCalculator();
 
         $value1 = $calculator->getParentValue();
 

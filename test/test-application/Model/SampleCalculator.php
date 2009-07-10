@@ -19,7 +19,7 @@
  *
  * @package test
  */
-class FaZend_Metric_SampleCalculator {
+class Model_SampleCalculator {
     
     function getBigValue($base, $pow) {
         if (FaZend_Metric::calculate())
