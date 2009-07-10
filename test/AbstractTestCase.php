@@ -35,6 +35,14 @@ require_once 'FaZend/Test/TestCase.php';
  */
 class AbstractTestCase extends FaZend_Test_TestCase {
 
+    
+    /**
+     * Connection to database
+     *
+     * @var Zend_Db_Adapter
+     */
+    protected $_dbAdapter;
+    
     /**
      * Specific setup for test environment
      *
@@ -45,6 +53,7 @@ class AbstractTestCase extends FaZend_Test_TestCase {
 
         $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
         $adapter->query('create table user (id integer not null primary key autoincrement, email varchar(50) not null, password varchar(50) not null)');
+        $this->_dbAdapter = $adapter;
     }    
 
 }

@@ -23,6 +23,23 @@ require_once 'AbstractTestCase.php';
  */
 class FaZend_MetricTest extends AbstractTestCase {
 
+    
+    /**
+     * Specific setup for test environment
+     *
+     * @return void
+     */
+    public function setUp() {
+        parent::setUp();
+
+        $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_metric.schema.sqlite.sql');
+        $this->_dbAdapter->getConnection()->exec($schemaSql);
+        $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_source.schema.sqlite.sql');
+        $this->_dbAdapter->getConnection()->exec($schemaSql);
+        $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_dependency.schema.sqlite.sql');
+        $this->_dbAdapter->getConnection()->exec($schemaSql);
+    }      
+    
     /**
      * Sample metrics usage scenario
      *
