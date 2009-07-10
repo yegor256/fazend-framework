@@ -21,7 +21,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
     public function setUp() {
         parent::setUp();
 
-        Zend_Db_Table_Abstract::getDefaultAdapter()->query(
+        $this->_dbAdapter->query(
             "insert into user values (null, 'good@fazend.com', 'good')");
 
     }

@@ -33,11 +33,11 @@ class FaZend_MetricTest extends AbstractTestCase {
         parent::setUp();
 
         $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_metric.schema.sqlite.sql');
-        $this->_dbAdapter->getConnection()->exec($schemaSql);
+        $this->_dbAdapter->query($schemaSql);
         $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_source.schema.sqlite.sql');
-        $this->_dbAdapter->getConnection()->exec($schemaSql);
+        $this->_dbAdapter->query($schemaSql);
         $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_dependency.schema.sqlite.sql');
-        $this->_dbAdapter->getConnection()->exec($schemaSql);
+        $this->_dbAdapter->query($schemaSql);
     }      
     
     /**
