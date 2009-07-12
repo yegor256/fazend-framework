@@ -162,7 +162,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
             
-            if (class_exists('Model_'.ucfirst($name), false))
+            // try to find this class and LOAD it if possible
+            if (class_exists('Model_'.ucfirst($name)))
                 $rowClass = 'Model_'.ucfirst($name);
             else    
                 $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
