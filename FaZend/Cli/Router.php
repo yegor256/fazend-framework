@@ -32,16 +32,21 @@ class FaZend_Cli_Router {
     public function dispatch() {
 
         if (!defined('APPLICATION_ENV')) 
-            define('APPLICATION_ENV', true);
+            define('APPLICATION_ENV', 'production');
 
+        // strange situation, we should flag it
         if (empty($_SERVER['argc']))
             return $this->_error('$_SERVER[argc] is not defined, how come?');
 
         $argc = $_SERVER['argc'];
 
+        // if there are not enough arguments
         if ($argc < 2)
-            return $this->_error('You started the application from the command line ("php index.php" or something), not from the web. In such a case you should specify class name, which has to be located in APPLICATION_PATH/cli and should be an instance of FaZend_Cli_Interface.');
+            return $this->_error('You started the application from the command line ("php index.php" or something), not from Web. ' .
+                'In such a case you should specify a class name, which has to be located in APPLICATION_PATH/cli and should be ' .
+                'an instance of FaZend_Cli_Interface, e.g. "php index.php Backup" ("Backup" is a sample class name).');
 
+        // strange situation, we should flag it
         if (empty($_SERVER['argv']))
             return $this->_error('$_SERVER[argv] is not defined, how come?');
 
