@@ -109,9 +109,23 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     }
 
     /**
+     * Delete the row
+     *
+     * @return void|var
+     */
+    public function delete() {
+        // make sure the class has live data from DB
+        $this->_loadLiveData();
+
+        return parent::delete();
+    }
+
+    /**
      * Before any call we have to be sure that live data are available
      *
-     * @return void
+     * @param string Name of the method being called
+     * @param array List of parameters passed
+     * @return void|var
      */
     public function __call($method, $args) {
         // make sure the class has live data from DB
@@ -123,6 +137,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * Find sub-objects by ID 
      *
+     * @param string Name of the property to get
      * @return FaZend_Db_Table_Row|var
      */
     public function __get($name) {
@@ -147,7 +162,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
             
-            if (class_exists('Model_'.ucfirst($name)))
+            if (class_exists('Model_'.ucfirst($name), false))
                 $rowClass = 'Model_'.ucfirst($name);
             else    
                 $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;

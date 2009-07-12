@@ -123,4 +123,11 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
     }
 
+    public function testDeleteRowWorks () {
+
+        $owner = new Owner(132);
+        $owner->delete();
+
+    }
+
 }
