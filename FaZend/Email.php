@@ -61,9 +61,6 @@ class FaZend_Email {
     public function __construct ($template = false) {
         $this->set('template', $template);
 
-        if (!self::$_config->send)
-            return;
-
         if (!isset(self::$_config->notifier))
             FaZend_Exception::raise('FaZend_Email_NoNotified', "you should define resources.Email.notifier in app.ini (author of notify messages)");
 
@@ -92,9 +89,11 @@ class FaZend_Email {
     /**
      * Set local value
      *
+     * @param string Name of the property
+     * @param string Value
      * @return void
      */
-    public function set ($key, $value) {
+    public function set($key, $value) {
         $this->_variables[$key] = $value;
         return $this;
     }
@@ -102,9 +101,10 @@ class FaZend_Email {
     /**
      * Get local value
      *
+     * @param string Name of the element
      * @return var
      */
-    public function get ($key) {
+    public function get($key) {
         return $this->_variables[$key];
     }
 
@@ -187,7 +187,7 @@ class FaZend_Email {
      * @return Zend_Mail
      */
     protected function _createZendMailer () {
-        return new Zend_Mail('windows-1251');
+        return new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
     }
 
 }
