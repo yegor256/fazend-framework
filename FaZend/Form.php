@@ -71,6 +71,12 @@ class FaZend_Form extends Zend_Form {
         if (!$request->isPost())
             return false;
 
+        // if there is NO element with name 'submit', the form should
+        // not be used in FaZend
+        if (!$this->submit)
+            FaZend_Exception::raise('FaZend_Form_SubmitAbsentException'
+                'Form submit button element should have a name "submit"');
+
         // whether this particular form was submitted    
         if ($this->submit->getLabel() != $request->getPost('submit'))    
             return false;
