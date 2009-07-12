@@ -32,7 +32,7 @@ class FaZend_View_Helper_ViewFile extends FaZend_View_Helper {
         //trim the file name (just in case)
         $file = trim($file);
 
-        return $this->getView()->url(array('file'=>$file), 'file', true);
+        return $this->getView()->url(array('file'=>$file), 'file', true, false);
 
     }
 
