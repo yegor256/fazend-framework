@@ -40,7 +40,7 @@ class FaZend_Email {
      *
      * @return FaZend_Email
      */
-    public static function config (Zend_Config $config) {
+    public static function config(Zend_Config $config) {
         self::$_config = $config;
     }
 
@@ -49,7 +49,7 @@ class FaZend_Email {
      *
      * @return FaZend_Email
      */
-    public static function create ($template) {
+    public static function create($template) {
         return new FaZend_Email($template);
     }
 
@@ -62,13 +62,13 @@ class FaZend_Email {
         $this->set('template', $template);
 
         if (!isset(self::$_config->notifier))
-            FaZend_Exception::raise('FaZend_Email_NoNotified', "you should define resources.Email.notifier in app.ini (author of notify messages)");
+            FaZend_Exception::raise('FaZend_Email_NoNotifier', "you should define resources.Email.notifier in app.ini (author of notify messages)");
 
         if (!isset(self::$_config->notifier->email))
-            FaZend_Exception::raise('FaZend_Email_NoEmailInNotified', "you should define resources.Email.notifier.email in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoEmailInNotifier', "you should define resources.Email.notifier.email in app.ini");
 
         if (!isset(self::$_config->notifier->name))
-            FaZend_Exception::raise('FaZend_Email_NoNameInNotified', "you should define resources.Email.notifier.name in app.ini");
+            FaZend_Exception::raise('FaZend_Email_NoNameInNotifier', "you should define resources.Email.notifier.name in app.ini");
 
         $this->set('fromEmail', self::$_config->notifier->email);
         $this->set('fromName', self::$_config->notifier->name);

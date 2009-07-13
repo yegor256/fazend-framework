@@ -50,7 +50,6 @@ class Fazend_JsController extends FaZend_Controller_Action {
 
         $this->_helper->viewRenderer($this->_getParam('script'));
 
-
     }    
 }
 
