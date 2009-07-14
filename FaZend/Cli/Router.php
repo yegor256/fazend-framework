@@ -15,8 +15,9 @@
  */
 
 /**
- * Router of Cli calls
+ * Router of CLI (command line interface) calls
  *
+ * @see http://code.google.com/p/fazend/wiki/FaZend_Cli
  * @package FaZend 
  */
 class FaZend_Cli_Router {
@@ -30,9 +31,6 @@ class FaZend_Cli_Router {
      * @return int Exit code
      */
     public function dispatch() {
-
-        if (!defined('APPLICATION_ENV')) 
-            define('APPLICATION_ENV', 'production');
 
         // strange situation, we should flag it
         if (empty($_SERVER['argc']))
@@ -59,9 +57,10 @@ class FaZend_Cli_Router {
     }                
 
     /**
-     * Error message
+     * Error message to show
      *
-     * @return string
+     * @param string Message to show to the user
+     * @return int CLI error code
      */
     protected function _error($msg) {
 
@@ -73,6 +72,8 @@ class FaZend_Cli_Router {
     /**
      * Call one class
      *
+     * @param string Name of the CLI class
+     * @param array Associative array of options to pass
      * @return int Exit code
      */
     public function call($name, $options = false) {

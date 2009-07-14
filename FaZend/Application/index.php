@@ -69,10 +69,14 @@ if (!defined('WEBSITE_URL'))
 
 // we're working from the command line?
 if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing')) {
+
     $router = new FaZend_Cli_Router();
     exit($router->dispatch());
+
 } else {
+
     if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV !== 'testing'))
         $application->run();
+
 }
 
