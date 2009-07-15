@@ -21,7 +21,7 @@
  */
 class FaZend_Log_ErrorLog extends Zend_Log {
 
-    const MAX_LENGTH = 20000; // maximum length of the log file
+    const MAX_LENGTH = 20000; // maximum length of the log file, in bytes
 
     /**
      * Instance of the class, singleton pattern
