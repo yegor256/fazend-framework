@@ -173,6 +173,10 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         if ((APPLICATION_ENV !== 'development'))
             return;
 
+        // maybe there is no DB in the application, sometimes it happens :)
+        if (!$this->hasResource('db'))
+            return;
+
         $this->bootstrap('db');
         $db = $this->getResource('db');
 
