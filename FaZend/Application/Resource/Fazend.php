@@ -27,10 +27,10 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract {
 
     /**
-    * Defined by Zend_Application_Resource_Resource
-    *
-    * @return boolean
-    */
+     * Defined by Zend_Application_Resource_Resource
+     *
+     * @return boolean
+     */
     public function init() {
 
         $options = $this->getOptions();
@@ -49,10 +49,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     }
 
     /**
-    * Initialize cache for tables
-    *
-    * @return void
-    */
+     * Initialize cache for tables
+     *
+     * @return void
+     */
     protected function _initTableCache($options) {
 
         $cache = Zend_Cache::factory('Core', new FaZend_Cache_Backend_Memory(),
@@ -70,10 +70,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     }    
 
     /**
-    * Initialize cache for includes
-    *
-    * @return void
-    */
+     * Initialize cache for includes
+     *
+     * @return void
+     */
     protected function _initPluginCache($options) {
 
         // only in production

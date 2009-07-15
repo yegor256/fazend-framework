@@ -75,20 +75,28 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
         // pass the request to the view
         $this->view->request = $errors->request; 
 
+        // shall we show this error to the user?
         $this->view->showError = FaZend_Properties::get()->errors->display;
 
+        // notify admin by email
         if (FaZend_Properties::get()->errors->email) {
             $lines = array ();
             foreach (debug_backtrace () as $line) 
                 $lines[] = "{$line['file']} ({$line['line']})";
 
-            mail (FaZend_Properties::get()->errors->email, 
-                WEBSITE_URL.' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'], 
+            // send email to the site admin admin
+            FaZend_Email::create('fazendException.tmpl')
+                ->set('toEmail', FaZend_Properties::get()->errors->email)
+                ->set('toName', 'Admin of ' . WEBSITE_URL)
+                ->set('subject', WEBSITE_URL . ' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'])
+                ->set('text', 
+                    get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
+                    implode("\n", $lines) . "\n\n" .
+                    print_r($errors->request->getParams(), true) . "\n\n" .
+                    $errors->exception->getTraceAsString())
+                ->send()
+                ->logError();
 
-                get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
-                implode("\n", $lines) . "\n\n" .
-                print_r($errors->request->getParams(), true) . "\n\n" .
-                $errors->exception->getTraceAsString());
         }    
     } 
 }

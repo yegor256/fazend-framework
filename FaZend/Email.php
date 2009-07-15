@@ -26,14 +26,21 @@ class FaZend_Email {
      *
      * @var Zend_Config
      */
-    private static $_config;
+    protected static $_config;
 
     /**
      * Set of local variables defined through set()
      *
      * @var array
      */
-    private $_variables;
+    protected $_variables;
+
+    /**
+     * Mailer
+     *
+     * @var Zend_Mail
+     */
+    protected $_mailer;
 
     /**
      * Creates an object of class FaZend_Email, statically
@@ -112,13 +119,37 @@ class FaZend_Email {
      * Sends the email
      *
      * @param boolean Send it anyway (no matter what)
-     * @return void
+     * @return FaZend_Email
      */
     public function send ($force = false) {
 
-        // don't send!
-        if (!self::$_config->send && !$force)
-            return;
+        if (self::$_config->send || $force)
+            // send it out
+            $this->_getFilledMailer()->send();
+
+        return $this;
+
+    }
+
+    /**
+     * Log this email to the error log
+     *
+     * @return FaZend_Email
+     */
+    public function logError() {
+
+        FaZend_Log_ErrorLog::getInstance()->error($this->_getFilledMailer()->getBodyText());
+
+        return $this;
+
+    }
+
+    /**
+     * Get filled mailer, with parsed data
+     *
+     * @return Zend_Mail
+     */
+    protected function _getFilledMailer() {
 
         // this class will send email
         $mail = $this->_createZendMailer();
@@ -128,17 +159,31 @@ class FaZend_Email {
 
         // in this folder all email templates are located
         $view->setScriptPath(self::$_config->folder);
+        $template = $this->get('template');
 
         // maybe email template is missed?
-        if (!file_exists(self::$_config->folder . '/' . $this->get('template')))
-            FaZend_Exception::raise('FaZend_Email_NoTemplate', 'Template ' . $this->get('template') . ' is missed in ' . self::$_config->folder);
+        if (!file_exists(self::$_config->folder . '/' . $template)) {
+
+            // maybe we can find in FaZend?
+            if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
+
+                $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
+
+            } else {
+
+                FaZend_Exception::raise('FaZend_Email_NoTemplate', 
+                    'Template ' . $template . ' is missed in ' . self::$_config->folder);
+
+            }
+
+        }
 
         // set all variables to View for rendering
         foreach ($this->_variables as $key=>$value)
             $view->assign($key, $value);
 
         // render the body and kill all \r signs    
-        $body = str_replace ("\r", '', $view->render($this->get('template')));    
+        $body = str_replace ("\r", '', $view->render($template));    
 
         // parse body for extra variables
         $lines = explode ("\n", $body);
@@ -176,9 +221,8 @@ class FaZend_Email {
         // set recepient
         $mail->addTo($this->get('toEmail'), $this->get('toName'));
 
-        if (self::$_config->send || $force)
-            // send it out
-            $mail->send();
+        return $mail;
+
     }
 
     /**
@@ -187,7 +231,12 @@ class FaZend_Email {
      * @return Zend_Mail
      */
     protected function _createZendMailer () {
-        return new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
+
+        if (!isset($this->_mailer))
+            $this->_mailer = new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
+
+        return $this->_mailer;
+
     }
 
 }
