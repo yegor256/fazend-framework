@@ -44,7 +44,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
              $html = '<b style="color:red;">' . $html . '</b>';
 
          // add information from DB profiler, if any
-         if (APPLICATION_ENV == 'development') {
+         if ((APPLICATION_ENV == 'development') && !is_null(Zend_Db_Table::getDefaultAdapter())) {
 
              $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
 
