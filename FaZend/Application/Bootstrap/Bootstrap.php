@@ -24,11 +24,11 @@ require_once 'Zend/Application/Bootstrap/Bootstrap.php';
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     /**
-     * Initialize key application elements
+     * Initialize front controller options
      *
-     * @return Zend_View
+     * @return void
      */
-    protected function _initApp() {
+    protected function _initFrontControllerOptions() {
 
         // make sure the front controller already bootstraped
         $this->bootstrap('frontController');
@@ -46,7 +46,16 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
             'controller' => 'error',
             'action' => 'error'
         )));
+
+    }
         
+    /**
+     * Initialize key options of Zend_View
+     *
+     * @return void
+     */
+    protected function _initViewOptions() {
+
         // make sure the view already bootstraped
         $this->bootstrap('view');
         $view = $this->getResource('view');
@@ -75,8 +84,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         if (defined('CLI_ENVIRONMENT'))
             Zend_Session::$_unitTestEnabled = true;
 
-        // Return it, so that it can be stored by the bootstrap
-        return $view;
     }
 
     /**
@@ -164,7 +171,7 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 
         // profiler is used ONLY in development environment
         if ((APPLICATION_ENV !== 'development'))
-            return true;
+            return;
 
         $this->bootstrap('db');
         $db = $this->getResource('db');

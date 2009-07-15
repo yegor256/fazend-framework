@@ -30,7 +30,12 @@ class FaZend_Form extends Zend_Form {
      */
     public static function create($file, Zend_View $view = null) {
 
-        $form = new FaZend_Form(new Zend_Config_Ini(APPLICATION_PATH . '/config/form' . $file . '.ini', 'form'));
+        $formIniFile = APPLICATION_PATH . '/config/form' . $file . '.ini';
+
+        if (!file_exists($formIniFile))
+            FaZend_Exception::raise('FaZend_Form_IniFileMissed', "File {$formIniFile} is missed");
+
+        $form = new FaZend_Form(new Zend_Config_Ini($formIniFile, 'form'));
 
         // if it's null, ignore it
         if ($view !== null)

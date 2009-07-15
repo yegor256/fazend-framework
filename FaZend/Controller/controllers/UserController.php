@@ -44,7 +44,15 @@ class Fazend_UserController extends FaZend_Controller_Action {
         if (FaZend_User::isLoggedIn())
             return $this->_forwardWithMessage('you are already logged in');
 
-        $form = FaZend_Form::create('RegisterAccount', $this->view);
+        // if the RegisterAccount.ini file is missed
+        // we should not raise the exception, but indicate about it
+        // in the $form variable in View.
+        try {
+            $form = FaZend_Form::create('RegisterAccount', $this->view);
+        } catch (FaZend_Form_IniFileMissed $e) {
+            $this->view->form = $e->getMessage();
+            return;
+        }
         if (!$form->isFilled())
             return;
 
