@@ -209,6 +209,9 @@ class UploadByFTP extends Task {
     
             } else {
 
+                // compress the file
+                $compressedFile = $this->_compressed($fileName);
+
                 // this file already exists?
                 if (in_array($entry, $ftpList)) {
                     $lastModified = @ftp_mdtm($this->ftp, $entry);
@@ -224,13 +227,13 @@ class UploadByFTP extends Task {
                             throw new BuildException("Failed to get size from ftp_size('$entry')");    
 
                         // if the files are of the same size, don't upload again
-                        if ($currentSize == filesize($fileName))
+                        if ($currentSize == filesize($compressedFile))
                             continue;    
                     }
 
                 }    
 
-                if (@ftp_put($this->ftp, $entry, $this->_compressed($fileName), FTP_BINARY) === false)    
+                if (@ftp_put($this->ftp, $entry, $compressedFile, FTP_BINARY) === false)    
                     throw new BuildException("Failed to upload '$fileName' (".filesize($fileName)." bytes)");    
 
                 $uploaded++;
