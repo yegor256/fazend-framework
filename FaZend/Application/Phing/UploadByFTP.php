@@ -23,10 +23,8 @@ require_once 'phing/Task.php';
 */
 class UploadByFTP extends Task {
 
-    const NO_LATER_THAN = '5/2/2009';
-
     // these directories/files won't be uploaded
-    private static $forbidden = array(
+    protected static $_forbidden = array(
         '.svn',
     );
 
@@ -186,7 +184,8 @@ class UploadByFTP extends Task {
 
         foreach ($dir as $entry) {
 
-            if (($entry == '.') || ($entry == '..') || in_array($entry, self::$forbidden))
+            // don't upload directories or forbidden files
+            if (($entry == '.') || ($entry == '..') || in_array($entry, self::$_forbidden))
                 continue;
 
             $fileName = $path.'/'.$entry;
@@ -213,11 +212,19 @@ class UploadByFTP extends Task {
                 // this file already exists?
                 if (in_array($entry, $ftpList)) {
                     $lastModified = @ftp_mdtm($this->ftp, $entry);
-                    if ($lastModified == -1)
-                        throw new BuildException("Failed to get mdtm from '$entry'");    
+                    if ($lastModified === -1)
+                        throw new BuildException("Failed to get file modification time from ftp_mdtm('$entry')");    
 
                     // if the server version is younger than the local - we skip this file    
-                    if (($lastModified > filemtime($fileName)) && ($lastModified > strtotime(self::NO_LATER_THAN)))
+                    if ($lastModified > filemtime($fileName))
+                        continue;    
+
+                    $currentSize = @ftp_size($this->ftp, $entry);
+                    if ($currentSize === -1)
+                        throw new BuildException("Failed to get size from ftp_size('$entry')");    
+
+                    // if the files are of the same size, don't upload again
+                    if ($currentSize == filesize($fileName))
                         continue;    
                 }    
 
