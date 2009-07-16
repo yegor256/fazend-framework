@@ -216,16 +216,18 @@ class UploadByFTP extends Task {
                         throw new BuildException("Failed to get file modification time from ftp_mdtm('$entry')");    
 
                     // if the server version is younger than the local - we skip this file    
-                    if ($lastModified > filemtime($fileName))
-                        continue;    
+                    // only if the sizes are similar
+                    if ($lastModified > filemtime($fileName)) {
 
-                    $currentSize = @ftp_size($this->ftp, $entry);
-                    if ($currentSize === -1)
-                        throw new BuildException("Failed to get size from ftp_size('$entry')");    
+                        $currentSize = @ftp_size($this->ftp, $entry);
+                        if ($currentSize === -1)
+                            throw new BuildException("Failed to get size from ftp_size('$entry')");    
 
-                    // if the files are of the same size, don't upload again
-                    if ($currentSize == filesize($fileName))
-                        continue;    
+                        // if the files are of the same size, don't upload again
+                        if ($currentSize == filesize($fileName))
+                            continue;    
+                    }
+
                 }    
 
                 if (@ftp_put($this->ftp, $entry, $this->_compressed($fileName), FTP_BINARY) === false)    
