@@ -75,7 +75,7 @@ if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing')) {
 
 } else {
 
-    if (!defined('FAZEND_DONT_RUN') && (APPLICATION_ENV !== 'testing'))
+    if (!defined('FAZEND_DONT_RUN'))
         $application->run();
 
 }

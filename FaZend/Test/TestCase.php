@@ -15,6 +15,7 @@
  */
 
 defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing');
+defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true);
 defined('APPLICATION_PATH') or define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
 defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
 
