@@ -144,8 +144,9 @@ class UploadByFTP extends Task {
 
         $this->Log("Current directory in FTP: ".ftp_pwd($this->ftp));    
 
+        $start = time();
         $uploaded = $this->_uploadFiles($this->_srcDir);
-        $this->Log("Uploaded {$uploaded} files");    
+        $this->Log("Uploaded {$uploaded} files, " . sprintf('%0.2f', (time() - $start)/60) . 'mins');    
 
         if (@ftp_close($this->ftp) === false)
             throw new BuildException("Failed to close connection to ftp ({$this->_server})");    
