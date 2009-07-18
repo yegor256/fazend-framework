@@ -173,12 +173,11 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         if ((APPLICATION_ENV !== 'development'))
             return;
 
-        $this->bootstrap('db');
-
         // maybe there is no DB in the application, sometimes it happens :)
-        if (!$this->hasResource('db'))
+        if (!$this->hasPluginResource('db'))
             return;
 
+        $this->bootstrap('db');
         $db = $this->getResource('db');
 
         // turn ON the profiler
