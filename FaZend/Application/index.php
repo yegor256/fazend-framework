@@ -21,6 +21,11 @@ defined('APPLICATION_PATH')
     || define('APPLICATION_PATH',
         realpath(dirname(__FILE__) . '/../../../application'));
 
+// temp files location
+defined('TEMP_PATH')
+    || define('TEMP_PATH',
+        realpath(sys_get_temp_dir()));
+
 // Define path to FaZend
 defined('FAZEND_PATH')
     || define('FAZEND_PATH',

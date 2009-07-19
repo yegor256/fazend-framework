@@ -172,7 +172,7 @@ class FaZend_Backup {
             return $this->_log("Since [content.db] is empty, we won't backup database");
 
         // mysqldump
-        $file = tempnam(sys_get_temp_dir(), 'fz');
+        $file = tempnam(TEMP_PATH, 'fz');
         $config = Zend_Db_Table::getDefaultAdapter()->getConfig();
 
         // @see: http://dev.mysql.com/doc/refman/5.1/en/mysqldump.html
@@ -220,7 +220,7 @@ class FaZend_Backup {
             return $this->_log("Since [content.file] is empty, we won't backup files");
 
         // all files into .TAR
-        $file = tempnam(sys_get_temp_dir(), 'fz');
+        $file = tempnam(TEMP_PATH, 'fz');
         $cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
 
         foreach($this->_getConfig()->content->files->toArray() as $dir)
@@ -500,7 +500,7 @@ class FaZend_Backup {
 
         $this->_log('Semaphore file unique name for ' . WEBSITE_URL);
 
-        return sys_get_temp_dir() . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
+        return TEMP_PATH . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
 
     }
 

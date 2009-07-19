@@ -152,6 +152,11 @@ class UploadByFTP extends Task {
             throw new BuildException("Failed to close connection to ftp ({$this->_server})");    
 
         $this->Log("Disconnected from FTP");    
+
+        // kill temp file
+        if (isset($this->_tempFileName))
+            unlink($this->_tempFileName);
+
     }
 
     /**
@@ -261,7 +266,7 @@ class UploadByFTP extends Task {
 
         // create ONE temp file for all compressions
         if (!isset($this->_tempFileName))
-            $this->_tempFileName = tempnam(sys_get_temp_dir(), 'zendUploader');
+            $this->_tempFileName = tempnam(TEMP_PATH, 'zendUploader');
 
         // compress it with 'PHP -W' option
         file_put_contents($this->_tempFileName, shell_exec("php -w {$fileName}"));    

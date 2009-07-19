@@ -41,7 +41,7 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      * @return string
      */
     public function getImagePath() {
-        return sys_get_temp_dir() . '/fazend-' . md5(WEBSITE_URL) . '-' . FaZend_Revision::get() . '.png';
+        return TEMP_PATH . '/fazend-' . md5(WEBSITE_URL) . '-' . FaZend_Revision::get() . '.png';
     }       
 
     /**
