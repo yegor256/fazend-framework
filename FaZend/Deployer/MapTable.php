@@ -36,6 +36,13 @@ class FaZend_Deployer_MapTable {
     protected $_name;
     
     /**
+     * Table info
+     *
+     * @var array[]
+     */
+    protected $_info;
+    
+    /**
      * Constructor
      *
      * @return void
@@ -53,6 +60,28 @@ class FaZend_Deployer_MapTable {
     public function draw($img, $x, $y) {
 
         imagettftext($img, 10, 0, $x, $y, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), $this->_name);
+
+        $line = 1;
+        foreach ($this->_getInfo() as $column) {
+            imagettftext($img, 9, 0, $x, $y + $line*10, 
+                $this->_map->getColor('table.column'), 
+                $this->_map->getFont('table.column'), 
+                $column['COLUMN_NAME']);
+            $line++;
+        }
+
+    }
+
+    /**
+     * Get info
+     *
+     * @return void
+     */
+    public function _getInfo() {
+
+        if (!isset($this->_info))
+            $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
+        return $this->_info;
 
     }
 

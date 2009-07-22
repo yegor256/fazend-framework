@@ -91,6 +91,7 @@ class FaZend_Deployer_Map {
             'background' => 'ffffff',
             'border' => 'dddddd',
             'table.title' => '0055ff',
+            'table.column' => '00ff55',
         );
 
         $color = $colors[$mnemo];
