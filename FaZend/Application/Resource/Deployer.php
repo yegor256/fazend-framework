@@ -41,8 +41,7 @@ class FaZend_Application_Resource_Deployer extends Zend_Application_Resource_Res
         $options = $this->getOptions();
 
         // configure deployer and deploy DB schema
-        $deployer = new FaZend_Deployer(new Zend_Config($options));
-        $deployer->deploy();
+        FaZend_Deployer::getInstance(new Zend_Config($options))->deploy();
 
         return true;
 

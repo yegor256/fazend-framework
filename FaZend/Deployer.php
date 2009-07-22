@@ -24,6 +24,13 @@ class FaZend_Deployer {
     const EXCEPTION_CLASS = 'FaZend_Deployer_Exception';
 
     /**
+     * Instance of the class
+     *
+     * @var FaZend_Deployer
+     */
+    protected static $_instance;
+
+    /**
      * Configuration options
      *
      * @var Zend_Config
@@ -31,11 +38,31 @@ class FaZend_Deployer {
     protected $_options;
 
     /**
-     * Constructor
+     * Instance of DB deployer
      *
+     * @param Zend_Config Configuration parameters
      * @return void
      */
-    public function __construct(Zend_Config $config) {
+    public static function getInstance(Zend_Config $config = null) {
+        if (!isset(self::$_instance)) {
+            if (is_null($config))
+                FaZend_Exception::raise('FaZend_Deployer_InvalidConfig', 
+                    "First time getInstance() should be called with valid config",
+                    self::EXCEPTION_CLASS);
+
+            self::$_instance = new FaZend_Deployer($config);
+        }
+
+        return self::$_instance;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param Zend_Config Configuration parameters
+     * @return void
+     */
+    protected function __construct(Zend_Config $config) {
         $this->_config = $config;
     }
 
