@@ -62,8 +62,8 @@ class FaZend_Deployer {
      * @param Zend_Config Configuration parameters
      * @return void
      */
-    protected function __construct(Zend_Config $config) {
-        $this->_config = $config;
+    protected function __construct(Zend_Config $options) {
+        $this->_options = $options;
     }
 
     /**
@@ -73,9 +73,13 @@ class FaZend_Deployer {
      */
     public function deploy() {
 
+        // if it's turned off
+        if (!$this->_options->deploy)
+            return;
+        
         // check the existence of the flag
         // it it's absent, we should do anything
-        $flagFile = APPLICATION_PATH . '/deploy/flag.txt';
+        $flagFile = $this->_flagName();
         if (!file_exists($flagFile) && (APPLICATION_ENV !== 'testing'))
             return;
 
@@ -155,7 +159,7 @@ class FaZend_Deployer {
         $list = array();
 
         $matches = array();
-        foreach (scandir($dir) as $file)
+        foreach (scandir($this->_dirName()) as $file)
             if (preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
                 $list[] = $matches[1];
 
@@ -174,10 +178,20 @@ class FaZend_Deployer {
         $dir = $this->_dirName();
         foreach (scandir($dir) as $file)
             if (preg_match('/^\d+\s' . preg_quote($table) . '\.sql$/i', $file))
-                return $this->_sqlInfo($table, file_get_contents($dir . '/' . $file));
+                return $this->_sqlInfo(file_get_contents($dir . '/' . $file));
 
         FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
 
+    }
+
+    /**
+     * Get table information from sql
+     *
+     * @param string SQL
+     * @return array[]
+     */
+    public function getSqlInfo($sql) {
+        return $this->_sqlInfo($sql);
     }
 
     /**
@@ -186,7 +200,16 @@ class FaZend_Deployer {
      * @return string
      */
     protected function _dirName() {
-        return APPLICATION_PATH . '/deploy/database';
+        return $this->_options->folder;
+    }
+
+    /**
+     * Location of the flag
+     *
+     * @return string
+     */
+    protected function _flagName() {
+        return $this->_options->flag;
     }
 
     /**
@@ -250,7 +273,7 @@ class FaZend_Deployer {
         // sanity check
         if (!preg_match('/^create (?:table|view)?/i', $sql))
             FaZend_Exception::raise('FaZend_Deployer_WrongFormat', 
-                "Every SQL file should start with 'create table' or 'create view'",
+                "Every SQL file should start with 'create table' or 'create view', we get this: " . cutLongLine($sql, 50),
                 self::EXCEPTION_CLASS);
 
         // this is view, we just drop it and create new
