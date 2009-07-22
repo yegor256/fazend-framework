@@ -298,6 +298,10 @@ class FaZend_Deployer {
             if (preg_match('/^constraint/i', $column))
                 continue;
 
+            // skip unique-s
+            if (preg_match('/^unique/i', $column))
+                continue;
+
             $info[$matches[1][$id]] = array(
                 'COLUMN_NAME' => $matches[1][$id],
                 'DATA_TYPE' => $matches[2][$id],
