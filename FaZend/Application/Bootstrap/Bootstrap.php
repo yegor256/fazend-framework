@@ -185,21 +185,5 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 
     }
 
-    /**
-     * Configure dynamic options for session
-     *
-     * @return void
-     */
-    protected function _initSessionOptions() {
-
-        // maybe there is no session in the application
-        //if (!$this->hasPluginResource('session'))
-        //    return;
-        //$this->bootstrap('session');
-
-        Zend_Session::setOptions(array('save_path' => realpath(TEMP_PATH . '/' . FaZend_Properties::get()->name)));
-
-    }
-
 }
 

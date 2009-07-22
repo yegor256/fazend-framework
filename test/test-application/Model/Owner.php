@@ -15,11 +15,12 @@
  */
 
 // ORM auto-mapping classes
-class Owner extends FaZend_Db_Table_ActiveRow_owner {
+class Model_Owner extends FaZend_Db_Table_ActiveRow_owner {
+
     function isMe() {
         return true;
     }
+
 }
 
-class Product extends FaZend_Db_Table_ActiveRow_product {}
 

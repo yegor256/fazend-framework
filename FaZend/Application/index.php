@@ -58,7 +58,7 @@ $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLIC
 if (!file_exists($options->bootstrap->path)) {
     $options->bootstrap->path = FAZEND_PATH . '/Application/Bootstrap/Bootstrap.php';
     $options->bootstrap->class = 'FaZend_Application_Bootstrap_Bootstrap';
-}
+}                                             
 
 // load system options
 $application->setOptions($options->toArray());

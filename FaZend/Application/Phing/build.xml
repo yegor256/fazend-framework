@@ -20,98 +20,104 @@
 
 <project basedir="." default="main">
 
-	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
-	<tstamp/>
+    <!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+    <tstamp/>
 
-	<includepath classpath="${project.basedir}/src/library" />
-	<includepath classpath="${project.basedir}/test" />
+    <includepath classpath="${project.basedir}/src/library" />
+    <includepath classpath="${project.basedir}/test" />
 
-	<!-- ftp uploader -->
-	<taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
+    <!-- ftp uploader -->
+    <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
-	<property name="serverDocs" value="/home/continuum/public_html" />
+    <property name="serverDocs" value="/home/continuum/public_html" />
 
-	<target name="lint" description="Run syntax check for all classes" >
-		<phplint haltonfailure="yes">
-			<fileset dir="${project.basedir}/src/application">
-				<include name="**/*.php"/>
-				<include name="**/*.html"/>
-				<include name="**/*.phtml"/>
-				<exclude name=".svn/**"/>
-			</fileset>
-		</phplint>
-	</target>
+    <target name="lint" description="Run syntax check for all classes" >
+        <phplint haltonfailure="yes">
+            <fileset dir="${project.basedir}/src/application">
+                <include name="**/*.php"/>
+                <include name="**/*.html"/>
+                <include name="**/*.phtml"/>
+                <exclude name=".svn/**"/>
+            </fileset>
+        </phplint>
+    </target>
 
-	<target name="dbdeploy" description="Deploy db changes" >
-	        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
-		<property name="deployScript" value="${project.basedir}/src/application/deploy/scripts/deploy.sql" />
+    <target name="dbdeploy" description="Deploy db changes" >
+            <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+        <property name="deployScript" value="${project.basedir}/src/application/deploy/scripts/deploy.sql" />
 
-		<dbdeploy
-			url="mysql:host=${db.host};dbname=${db.name}"
-			userid="${db.user}"
-			password="${db.password}"
-			dir="${project.basedir}/database/deltas"
-			outputfile="${deployScript}"
-			undooutputfile="${deployScript}.undo" />
+        <dbdeploy
+            url="mysql:host=${db.host};dbname=${db.name}"
+            userid="${db.user}"
+            password="${db.password}"
+            dir="${project.basedir}/database/deltas"
+            outputfile="${deployScript}"
+            undooutputfile="${deployScript}.undo" />
 
-		<exec 
-			command="${progs.mysql} -h${db.host} -u${db.user} -p${db.password} ${db.name} &lt; ${deployScript}"  
-			dir="${project.basedir}/src"  
-			passthru="true"
-			checkreturn="true" />  
-	</target>	
+        <exec 
+            command="${progs.mysql} -h${db.host} -u${db.user} -p${db.password} ${db.name} &lt; ${deployScript}"  
+            dir="${project.basedir}/src"  
+            passthru="true"
+            checkreturn="true" />  
+    </target>    
             
-	<target name="test" description="Run all existing unit-tests" >
-       		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-			<formatter type="plain" usefile="no" />
-			<formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
-			<batchtest>
-				<fileset dir="${project.basedir}/test">
-					<include name="**/*Test*.php"/>
-					<exclude name="**/Abstract*.php"/>
-					<exclude name="**/_*.php"/>
-					<exclude name=".svn/**"/>
-				</fileset>
-			</batchtest>
-		</phpunit>
-	</target>	
+    <target name="test" description="Run all existing unit-tests" >
+               <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+            <formatter type="plain" usefile="no" />
+            <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
+            <batchtest>
+                <fileset dir="${project.basedir}/test">
+                    <include name="**/*Test*.php"/>
+                    <exclude name="**/Abstract*.php"/>
+                    <exclude name="**/_*.php"/>
+                    <exclude name=".svn/**"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>    
 
-	<target name="deploy" description="Copy working files to FTP">
-		<svnlastrevision
-			workingcopy="${project.basedir}"
-			propertyname="svn.revision" />
-		<echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />	
-		<echo msg="Uploading revision: ${svn.revision}" />	
+    <target name="deploy" description="Copy working files to FTP">
+        <svnlastrevision
+            workingcopy="${project.basedir}"
+            propertyname="svn.revision" />
+        
 
-		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-		<uploadByFTP server="${ftp.server}"
-			username="${ftp.user}"
-			password="${ftp.password}"
-			srcdir="${project.basedir}/${ftp.srcdir}"
-			destdir="${ftp.destdir}">
-		</uploadByFTP>
-	</target>
+        <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
-	<target name="ping" description="Ping the production server and show the result">
-		<!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-		<taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
+        <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
+        <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/flag.txt" />
+            
+        <echo msg="Uploading revision: ${svn.revision}" />    
 
-		<pingFaZend url="${live.home}/__ping/backup" />
-	</target>
+        <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+        <uploadByFTP server="${ftp.server}"
+            username="${ftp.user}"
+            password="${ftp.password}"
+            srcdir="${project.basedir}/${ftp.srcdir}"
+            destdir="${ftp.destdir}">
+        </uploadByFTP>
+    </target>
 
-	<target name="doc" description="Create phpDoc documentation" >
+    <target name="ping" description="Ping the production server and show the result">
+        <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+        <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
 
-		<delete dir="${project.basedir}/build/doc" failonerror="true" verbose="false" includeemptydirs="true" />
+        <pingFaZend url="${live.home}/__ping/backup" />
+    </target>
 
-		<exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" passthru="no" />	
-		
-		<!-- delete previous documentation and copy a new one -->
-		<delete dir="${serverDocs}/${phing.project.name}" failonerror="true" verbose="false" includeemptydirs="true" />
-		<mkdir dir="${serverDocs}/${phing.project.name}" />
-		<copy todir="${serverDocs}/${phing.project.name}" >
-			<fileset dir="${project.basedir}/build/doc" />
-		</copy>
+    <target name="doc" description="Create phpDoc documentation" >
 
-	</target>	
+        <delete dir="${project.basedir}/build/doc" failonerror="true" verbose="false" includeemptydirs="true" />
+
+        <exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" passthru="no" />    
+        
+        <!-- delete previous documentation and copy a new one -->
+        <delete dir="${serverDocs}/${phing.project.name}" failonerror="true" verbose="false" includeemptydirs="true" />
+        <mkdir dir="${serverDocs}/${phing.project.name}" />
+        <copy todir="${serverDocs}/${phing.project.name}" >
+            <fileset dir="${project.basedir}/build/doc" />
+        </copy>
+
+    </target>    
 
 </project>
