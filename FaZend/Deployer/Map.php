@@ -91,7 +91,7 @@ class FaZend_Deployer_Map {
             'background' => 'ffffff',
             'border' => 'dddddd',
             'table.title' => '0055ff',
-            'table.column' => '00ff55',
+            'table.column' => '333333',
         );
 
         $color = $colors[$mnemo];
@@ -140,7 +140,7 @@ class FaZend_Deployer_Map {
      */
     public function _getDimensions() {
 
-        return array(1000, 1000);
+        return array(800, 600);
 
     }
 
