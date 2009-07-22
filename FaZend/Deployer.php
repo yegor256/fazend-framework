@@ -21,6 +21,8 @@
  */
 class FaZend_Deployer {
 
+    const EXCEPTION_CLASS = 'FaZend_Deployer_Exception';
+
     /**
      * Configuration options
      *
@@ -57,7 +59,7 @@ class FaZend_Deployer {
             return;
         }
 
-        $dir = APPLICATION_PATH . '/deploy/database';
+        $dir = $this->_dirName();
         if (!file_exists($dir) || !is_dir($dir)) {
             return;
         }
@@ -66,31 +68,98 @@ class FaZend_Deployer {
         if (!method_exists($this->_db(), 'listTables'))
             return;
         
-        // get full list of existing(!) tables in Db
-        $tables = $this->_db()->listTables();
-        
-        // get full list of files
-        $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
+        try {
 
-        // sort in right order
-        usort($files, array($this, '_sorter'));
+            // get full list of existing(!) tables in Db
+            $tables = $this->_db()->listTables();
+            
+            // get full list of files
+            $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
 
-        // go through all .SQL files
-        foreach ($files as $file) {
+            // sort in right order
+            usort($files, array($this, '_sorter'));
 
-            $matches = array();
-            preg_match('/^\d+\s(.*)\.sql$/', $file, $matches);
-            $table = $matches[1];
+            // go through all .SQL files
+            foreach ($files as $file) {
 
-            // this table already exists?
-            if (in_array($table, $tables)) {
-                $this->_update($table, file_get_contents($dir . '/' . $file));
-            } else {
-                $this->_create($table, file_get_contents($dir . '/' . $file));
+                $matches = array();
+                preg_match('/^\d+\s(.*)\.sql$/', $file, $matches);
+                $table = $matches[1];
+
+                // this table already exists?
+                if (in_array($table, $tables)) {
+                    $this->_update($table, file_get_contents($dir . '/' . $file));
+                } else {
+                    $this->_create($table, file_get_contents($dir . '/' . $file));
+                }
+
             }
 
-        }
+        } catch (FaZend_Deployer_Exception $exception) {
 
+            // if there is no email - show the error
+            if (FaZend_Properties::get()->errors->email) {
+
+                // send email to the site admin admin
+                FaZend_Email::create('fazendDeployerException.tmpl')
+                    ->set('toEmail', FaZend_Properties::get()->errors->email)
+                    ->set('toName', 'Admin of ' . WEBSITE_URL)
+                    ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' database deployment exception, rev.' . FaZend_Revision::get())
+                    ->set('text', $exception->getMessage())
+                    ->send()
+                    ->logError();
+
+             }
+
+             // throw it to the application
+             throw $exception;
+
+        } 
+
+    }
+
+    /**
+     * Get list of tables ready for deployment
+     *
+     * @return string[]
+     */
+    public function getTables() {
+
+        $list = array();
+
+        $matches = array();
+        foreach (scandir($dir) as $file)
+            if (preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
+                $list[] = $matches[1];
+
+        return $list;
+
+    }
+
+    /**
+     * Get table information
+     *
+     * @param string Name of the table
+     * @return array[]
+     */
+    public function getTableInfo($table) {
+
+        $dir = $this->_dirName();
+        foreach (scandir($dir) as $file)
+            if (preg_match('/^\d+\s' . preg_quote($table) . '\.sql$/i', $file))
+                return $this->_sqlInfo($table, file_get_contents($dir . '/' . $file));
+
+        FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
+
+    }
+
+    /**
+     * Location of .SQL files, directory
+     *
+     * @return string
+     */
+    protected function _dirName() {
+        return APPLICATION_PATH . '/deploy/database';
     }
 
     /**
@@ -115,10 +184,20 @@ class FaZend_Deployer {
      */
     protected function _update($table, $sql) {
 
+        try {
+            $infoSql = $this->_sqlInfo($sql);
+        } catch (FaZend_Deployer_NotTableButView $e) {
+
+            // this is VIEW, not table
+            // we just drop and create again
+            $this->_db->query("DROP VIEW $table");
+            $this->_create($table, $sql);
+            return;
+        }
+
         $infoDb = $this->_db()->describeTable($table);
 
-        $infoSql = $this->_sqlInfo($sql);
-
+        // tbd
         foreach ($infoSql as $column);
     
     }
@@ -131,8 +210,52 @@ class FaZend_Deployer {
      */
     protected function _sqlInfo($sql) {
 
-        // TBD
-        return array();
+        $sql = preg_replace(array(
+            '/--.*?\n/', // kill comments
+            '/[\n\t\r]/', // no special chars
+            '/\s+/', // compress spaces
+            '/`/', // remove backticks
+            ), ' ', $sql . "\n");
+
+        // no double spaces
+        $sql = trim($sql);
+
+        // sanity check
+        if (!preg_match('/^create (?:table|view)?/i', $sql))
+            FaZend_Exception::raise('FaZend_Deployer_WrongFormat', 
+                "Every SQL file should start with 'create table' or 'create view'",
+                self::EXCEPTION_CLASS);
+
+        // this is view, we just drop it and create new
+        if (preg_match('/^create view/i', $sql))
+            FaZend_Exception::raise('FaZend_Deployer_NotTableButView');
+
+        // cut out the text between starting and ending brackets
+        $columnsText = substr($sql, strpos($sql, '(')+1);
+        $columnsText = trim(substr($columnsText, 0, strrpos($columnsText, ')'))) . ', ';
+
+        $matches = array();
+        preg_match_all('/([\w\d\_]+)\s([\w\(\)\_\s\d]+)(?:\scomment\s\"(.*?)\")?\,/i', $columnsText, $matches);
+
+        $info = array();
+        foreach ($matches[0] as $id=>$column) {
+
+            // skip primary key
+            if (preg_match('/^primary key/i', $column))
+                continue;
+
+            // skip contstraings
+            if (preg_match('/^constraint/i', $column))
+                continue;
+
+            $info[$matches[1][$id]] = array(
+                'COLUMN_NAME' => $matches[1][$id],
+                'DATA_TYPE' => $matches[2][$id],
+                'COMMENT' => $matches[3][$id],
+            );
+        }
+
+        return $info;
         
     }
 
