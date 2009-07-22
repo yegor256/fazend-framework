@@ -47,23 +47,29 @@ class FaZend_Deployer_Map {
 
         // create an image
         $this->_image = imagecreatetruecolor($width, $height);
+        imagefill($this->_image, 0, 0, $this->getColor('background'));
+        imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
 
         // intitial coordinates
         $angle = 0;
-        $radius = 50;
+        $radius = $width * 0.2;
+
+        $tables = $this->_getTables();
+
+        $angleDelta = 360/count($tables);
+        $radiusDelta = ($width * 0.3) / count($tables);
 
         // put all tables onto it
         // going by a clock-rolling spiral
-        $tables = $this->_getTables();
         foreach ($tables as $table) {
 
-            $x = round($width/2 + $radius * cos($angle));
-            $y = round($height/2 + $radius * sin($angle));
+            $x = round($width * 0.4 + $radius * cos($angle));
+            $y = round($height * 0.4 + $radius * sin($angle));
 
             $table->draw($this->_image, $x, $y);
 
-            $angle += 360/count($tables);
-            $radius += ($width/2) / count($tables);
+            $angle += $angleDelta;
+            $radius += $radiusDelta;
 
         }
 
@@ -81,7 +87,18 @@ class FaZend_Deployer_Map {
      */
     public function getColor($mnemo) {
 
-        return imagecolorallocate($this->_image, 0xff, 0xff, 0xff);
+        $colors = array(
+            'background' => 'ffffff',
+            'border' => 'dddddd',
+            'table.title' => '0055ff',
+        );
+
+        $color = $colors[$mnemo];
+
+        return imagecolorallocate($this->_image, 
+            hexdec('0x' . $color{0} . $color{1}), 
+            hexdec('0x' . $color{2} . $color{3}), 
+            hexdec('0x' . $color{4} . $color{5}));
 
     }
 
@@ -122,7 +139,7 @@ class FaZend_Deployer_Map {
      */
     public function _getDimensions() {
 
-        return array(400, 400);
+        return array(1000, 1000);
 
     }
 
