@@ -88,7 +88,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
             FaZend_Email::create('fazendException.tmpl')
                 ->set('toEmail', FaZend_Properties::get()->errors->email)
                 ->set('toName', 'Admin of ' . WEBSITE_URL)
-                ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' internal PHP error, rev.' . FaZend_Revision::get() . ': ' . $_SERVER['REQUEST_URI'])
+                ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' internal PHP error, rev.' . FaZend_Revision::get() . ', ' . $_SERVER['REQUEST_URI'])
                 ->set('text', 
                     get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
                     implode("\n", $lines) . "\n\n" .
