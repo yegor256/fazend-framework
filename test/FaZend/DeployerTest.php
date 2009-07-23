@@ -61,7 +61,12 @@ class FaZend_DeployerTest extends AbstractTestCase {
 
         $info = $deployer->getSqlInfo($sql);
 
-        $this->assertTrue(count($info) > 0);
+        $this->assertTrue(count($info) > 0, 'No information about the table, why?');
+
+        foreach ($info as $column) {
+            $this->assertTrue($column['COLUMN_NAME'] != 'PRIMARY');
+        }
+
 
     }
 
