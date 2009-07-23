@@ -305,7 +305,7 @@ class FaZend_Deployer {
         foreach ($matches[0] as $id=>$column) {
 
             // skip primary key
-            if (preg_match('/^(primary\skey|index|constraint|unique|foreign\skey)\s\(/i', $column))
+            if (preg_match('/^(primary\skey|index|constraint|unique|foreign\skey)\s?\(/i', $column))
                 continue;
 
             $info[$matches[1][$id]] = array(
