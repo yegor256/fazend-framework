@@ -140,7 +140,9 @@ class FaZend_Deployer_Map {
      */
     public function _getDimensions() {
 
-        return array(800, 600);
+        $total = count($this->_getTables());
+
+        return array(200 + $total * 70, 200 + $total * 50);
 
     }
 
