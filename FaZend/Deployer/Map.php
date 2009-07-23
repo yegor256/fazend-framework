@@ -195,10 +195,14 @@ class FaZend_Deployer_Map {
      */
     public function _getDimensions() {
 
-        $total = count($this->_getTables());
+        $tables = $this->_getTables();
+
+        $total = count($tables);
+
+        $biggest = array_pop($tables);
 
         return array(round(200 + sqrt($total) * 250), 
-            round(200 + sqrt($total) * 200));
+            round(200 + sqrt($total) * 130) + $biggest->size * 50);
 
     }
 
