@@ -64,7 +64,7 @@ class FaZend_Deployer_Map {
         foreach ($tables as $table) {
 
             $x = round($width * 0.4 + $radius * cos($angle));
-            $y = round($height * 0.4 + $radius * sin($angle));
+            $y = round($height * 0.4 + $radius * sin($angle) * $height/$width);
 
             $table->draw($this->_image, $x, $y);
 
@@ -142,7 +142,7 @@ class FaZend_Deployer_Map {
 
         $total = count($this->_getTables());
 
-        return array(200 + $total * 70, 200 + $total * 50);
+        return array(200 + $total * 80, 200 + $total * 50);
 
     }
 
