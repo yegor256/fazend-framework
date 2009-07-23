@@ -42,7 +42,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function registerAction() {
 
         if (FaZend_User::isLoggedIn())
-            return $this->_forwardWithMessage('you are already logged in');
+            return $this->_redirectFlash('already logged in');
 
         $form = FaZend_Form::create('RegisterAccount', $this->view);
         if (!$form->isFilled())
@@ -85,7 +85,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function remindAction() {
 
         if (FaZend_User::isLoggedIn()) 
-            return $this->_forwardWithMessage('you are already logged in');
+            return $this->_redirectFlash('already logged in');
 
         $form = FaZend_Form::create('RemindPassword', $this->view);
         if (!$form->isFilled())
@@ -125,7 +125,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function logoutAction() {
 
         if (!FaZend_User::isLoggedIn())
-            return $this->_forwardWithMessage('you are not logged in yet');
+            return $this->_redirectFlash('not logged in yet');
 
         FaZend_User::getCurrentUser()->logOut();
 

@@ -31,7 +31,7 @@ class Fazend_CssController extends FaZend_Controller_Action {
 
         // if it's absent
         //if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
-        //    $this->_forwardWithMessage('path not found');
+        //    $this->_redirectFlash('path not found');
 
         $this->getResponse()
             ->setHeader('Content-type', 'text/css');

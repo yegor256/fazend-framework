@@ -17,25 +17,27 @@
 require_once 'FaZend/View/Helper.php';
 
 /**
- * Error message to show in layout/scripts/layout.phtml
+ * Flash message to show in layout/scripts/layout.phtml
  *
  * @package FaZend 
  */
-class FaZend_View_Helper_ErrorMessage extends FaZend_View_Helper {
+class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper {
 
     /**
-     * Strip CSS and include it into HEAD section of the layout
+     * Render message
      *
      * @return void
      */
-    public function errorMessage() {
+    public function flashMessage() {
 
-        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $actionHelperFlashMessenger = new Zend_Controller_Action_Helper_FlashMessenger();
+        $flashMessages = $actionHelperFlashMessenger->setNamespace('Fazend_Messages')->getMessages();
 
-        if (!$request->getParam('error'))
-            return '';
+        if (empty($flashMessages)) {
+        	return;
+        }
 
-        return "<p class='error'>" . $request->getParam('error') . "</p>";
+        return "<p class='flash'>" . $flashMessages[0] . "</p>";
 
     }
 
