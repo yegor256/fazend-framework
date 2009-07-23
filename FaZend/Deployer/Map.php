@@ -76,21 +76,27 @@ class FaZend_Deployer_Map {
 
         $tables = $this->_getTables();
 
-        $angleDelta = 360/count($tables);
-        $radiusDelta = ($width * 0.3) / count($tables);
+        if (count($tables)) {
 
-        // put all tables onto it
-        // going by a clock-rolling spiral
-        foreach ($tables as $table) {
+            $angleDelta = 360/count($tables);
+            $radiusDelta = ($width * 0.3) / count($tables);
 
-            $x = round($width * 0.4 + $radius * cos($angle));
-            $y = round($height * 0.4 + $radius * sin($angle) * $height/$width);
+            // put all tables onto it
+            // going by a clock-rolling spiral
+            foreach ($tables as $table) {
 
-            $table->draw($x, $y);
+                $x = round($width * 0.4 + $radius * cos($angle));
+                $y = round($height * 0.4 + $radius * sin($angle) * $height/$width);
 
-            $angle += $angleDelta;
-            $radius += $radiusDelta;
+                $table->draw($x, $y);
 
+                $angle += $angleDelta;
+                $radius += $radiusDelta;
+
+            }
+
+        } else {
+            imagettftext($this->_getImage(), 12, 0, 0, 15, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), 'No tables found');
         }
 
         // return the PNG content
