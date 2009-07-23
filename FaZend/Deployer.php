@@ -159,9 +159,17 @@ class FaZend_Deployer {
         $list = array();
 
         $matches = array();
-        foreach (scandir($this->_dirName()) as $file)
-            if (preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
-                $list[] = $matches[1];
+        foreach (scandir($this->_dirName()) as $file) {
+            if (!preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
+                continue;
+
+            try {
+                $this->getTableInfo($matches[1]);
+            } catch (FaZend_Deployer_NotTableButView $e) {
+            }
+
+            $list[] = $matches[1];
+        }
 
         return $list;
 
