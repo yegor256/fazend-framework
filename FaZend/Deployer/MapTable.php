@@ -63,10 +63,14 @@ class FaZend_Deployer_MapTable {
 
         $line = 1;
         foreach ($this->_getInfo() as $column) {
+      
+            $matches = array();
+            preg_match('/^(\w+)/i', $column['DATA_TYPE'], $matches);
+
             imagettftext($img, 10, 0, $x, $y + $line * 11, 
                 $this->_map->getColor('table.column'), 
                 $this->_map->getFont('table.column'), 
-                $column['COLUMN_NAME']);
+                $column['COLUMN_NAME'] . ': ' . $matches[1]);
             $line++;
         }
 
