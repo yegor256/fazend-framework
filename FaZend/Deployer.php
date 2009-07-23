@@ -166,6 +166,7 @@ class FaZend_Deployer {
             try {
                 $this->getTableInfo($matches[1]);
             } catch (FaZend_Deployer_NotTableButView $e) {
+                continue;
             }
 
             $list[] = $matches[1];
