@@ -80,12 +80,12 @@ class FaZend_Deployer {
         // check the existence of the flag
         // it it's absent, we should do anything
         $flagFile = $this->_flagName();
-        if (!file_exists($flagFile) && (APPLICATION_ENV !== 'testing'))
+        if (!file_exists($flagFile) && (APPLICATION_ENV === 'production'))
             return;
 
         // remove it
         // we will never come back here again
-        if ((@unlink($flagFile) === false) && (APPLICATION_ENV !== 'testing')) {
+        if ((@unlink($flagFile) === false) && (APPLICATION_ENV === 'production')) {
             $this->_log('Failed to remove flag file: ' . $flagFile);
             return;
         }
