@@ -37,6 +37,17 @@ class FaZend_DeployerTest extends AbstractTestCase {
                     CONSTRAINT `fk_ad_keyword` FOREIGN KEY (`keyword`) REFERENCES `keyword` (`id`) ON UPDATE CASCADE,
                     CONSTRAINT `fk_ad_user` FOREIGN KEY (`author`) REFERENCES `user` (`id`) ON UPDATE CASCADE
                     ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ENGINE=InnoDB;"),
+            array(
+                'tag',
+                "CREATE TABLE IF NOT EXISTS `tag` (
+                    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT \"Unique ID of the tag\",
+                    `question` INT(10) UNSIGNED NOT NULL COMMENT \"Id of the question\",
+                    `keyword` VARCHAR(80) NOT NULL COMMENT \"Text keyword\",
+                    PRIMARY KEY USING BTREE (`id`),
+                    UNIQUE (`question`, `keyword`),
+                    CONSTRAINT `fk_tag_question` FOREIGN KEY (`question`) REFERENCES `question` (`id`) ON UPDATE CASCADE
+                    ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ENGINE=InnoDB;"
+            )
         );
 
     }
