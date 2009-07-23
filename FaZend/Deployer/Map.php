@@ -55,6 +55,14 @@ class FaZend_Deployer_Map {
             
             // draw border as rectangle
             imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
+
+            // label image
+            $label = imagecreatefrompng(dirname(__FILE__) . '/images/label.png');
+
+            // put the label onto the image
+            imagecopy($this->_image, $label, 
+                $width - imagesx($label) - 1, $height - imagesy($height) - 1, 
+                0, 0, imagesx($label), imagesy($label));
         }
 
         return $this->_image;
