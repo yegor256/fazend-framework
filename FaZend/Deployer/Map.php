@@ -85,7 +85,13 @@ class FaZend_Deployer_Map {
             // going by a clock-rolling spiral
             foreach ($tables as $table) {
 
-                $x = round($width * 0.3 + $radius * cos(deg2rad($angle)));
+                // right part of the image should be moved right, a bit
+                if (cos(deg2rad($angle)) > 0)
+                    $scaleX = 1.5; 
+                else 
+                    $scaleX = 1;
+
+                $x = round($width * 0.3 + $radius * cos(deg2rad($angle)) * $scaleX);
                 $y = round($height * 0.3 + $radius * sin(deg2rad($angle)) * $height/$width);
 
                 $table->draw($x, $y);
