@@ -36,6 +36,31 @@ class FaZend_Deployer_Map {
     protected $_image;
     
     /**
+     * Get the image
+     *
+     * @var int
+     */
+    public function getImage() {
+
+        if (!isset($this->_image)) {
+        
+            // get the size of the image
+            list($width, $height) = $this->_getDimensions();
+
+            // create an image
+            $this->_image = imagecreatetruecolor($width, $height);
+            
+            // fill it
+            imagefill($this->_image, 0, 0, $this->getColor('background'));
+            
+            // draw border as rectangle
+            imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
+        }
+
+        return $this->_image;
+    }
+
+    /**
      * Build PNG image
      *
      * @var string
@@ -45,14 +70,9 @@ class FaZend_Deployer_Map {
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
-        // create an image
-        $this->_image = imagecreatetruecolor($width, $height);
-        imagefill($this->_image, 0, 0, $this->getColor('background'));
-        imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
-
         // intitial coordinates
         $angle = 0;
-        $radius = $width * 0.2;
+        $radius = $width * 0.15;
 
         $tables = $this->_getTables();
 
@@ -66,7 +86,7 @@ class FaZend_Deployer_Map {
             $x = round($width * 0.4 + $radius * cos($angle));
             $y = round($height * 0.4 + $radius * sin($angle) * $height/$width);
 
-            $table->draw($this->_image, $x, $y);
+            $table->draw($x, $y);
 
             $angle += $angleDelta;
             $radius += $radiusDelta;
@@ -75,7 +95,7 @@ class FaZend_Deployer_Map {
 
         // return the PNG content
         ob_start();
-        imagepng($this->_image);
+        imagepng($this->getImage());
         return ob_get_clean();
 
     }
@@ -92,6 +112,7 @@ class FaZend_Deployer_Map {
             'border' => 'dddddd',
             'table.title' => '0055ff',
             'table.column' => '333333',
+            'table.comment' => '777777',
         );
 
         $color = $colors[$mnemo];
@@ -142,7 +163,7 @@ class FaZend_Deployer_Map {
 
         $total = count($this->_getTables());
 
-        return array(200 + $total * 80, 200 + $total * 50);
+        return array(200 + $total * 100, 200 + $total * 80);
 
     }
 

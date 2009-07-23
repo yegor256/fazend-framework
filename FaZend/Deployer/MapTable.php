@@ -57,20 +57,32 @@ class FaZend_Deployer_MapTable {
      *
      * @return void
      */
-    public function draw($img, $x, $y) {
+    public function draw($x, $y) {
 
-        imagettftext($img, 12, 0, $x, $y, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), $this->_name);
+        imagettftext($this->_getImage(), 12, 0, $x, $y, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), $this->_name);
+        imageline($this->_getImage(), $x, $y+3, $x+strlen($this->_name)*10, $y+3, $this->_map->getColor('table.title'));
 
         $line = 1;
+        $y += 3;
         foreach ($this->_getInfo() as $column) {
       
             $matches = array();
             preg_match('/^(\w+)/i', $column['DATA_TYPE'], $matches);
 
-            imagettftext($img, 10, 0, $x, $y + $line * 11, 
+            imagettftext($this->_getImage(), 10, 0, $x, $y + $line * 12, 
                 $this->_map->getColor('table.column'), 
                 $this->_map->getFont('table.column'), 
                 $column['COLUMN_NAME'] . ': ' . $matches[1]);
+
+            if (!empty($column['COMMENT'])) {
+                $line++;
+
+                imagettftext($this->_getImage(), 9, 0, $x+10, $y + $line * 12 - 1, 
+                    $this->_map->getColor('table.comment'), 
+                    $this->_map->getFont('table.comment'), 
+                    cutLongLine($column['COMMENT'], 50));
+            }
+
             $line++;
         }
 
@@ -87,6 +99,15 @@ class FaZend_Deployer_MapTable {
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
 
+    }
+
+    /**
+     * Get image
+     *
+     * @return int
+     */
+    public function _getImage() {
+        return $this->_map->getImage();
     }
 
 }
