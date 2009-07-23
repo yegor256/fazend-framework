@@ -71,13 +71,14 @@ class FaZend_Deployer_Map {
         list($width, $height) = $this->_getDimensions();
 
         // intitial coordinates
-        $angle = 180;
+        $angle = 180; // start with left position
         $radius = $width * 0.25;
 
         $tables = $this->_getTables();
 
         if (count($tables)) {
 
+            // change angle and radius, but the clock-order circle
             $angleDelta = 360/count($tables);
             $radiusDelta = ($width * 0.05) / count($tables);
 
@@ -91,9 +92,11 @@ class FaZend_Deployer_Map {
                 else 
                     $scaleX = 1;
 
+                // calculate coordinates
                 $x = round($width * 0.3 + $radius * cos(deg2rad($angle)) * $scaleX);
                 $y = round($height * 0.3 + $radius * sin(deg2rad($angle)) * $height/$width);
 
+                // draw one table
                 $table->draw($x, $y);
 
                 $angle += $angleDelta;
@@ -102,7 +105,12 @@ class FaZend_Deployer_Map {
             }
 
         } else {
-            imagettftext($this->_getImage(), 12, 0, 0, 15, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), 'No tables found');
+
+            // one system message instead of a picture
+            imagettftext($this->_getImage(), 12, 0, 0, 15, 
+                $this->_map->getColor('error'), $this->_map->getFont('table.title'), 
+                'No tables found');
+
         }
 
         // return the PNG content
@@ -115,21 +123,23 @@ class FaZend_Deployer_Map {
     /**
      * Get the color code
      *
+     * @param string Mnemo code of the color
      * @var int
      */
     public function getColor($mnemo) {
 
         $colors = array(
-            'background' => 'ffffff',
-            'border' => 'dddddd',
-            'table.title' => '0055ff',
-            'table.column' => '333333',
-            'table.comment' => '777777',
+            'background' => 'ffffff', // white
+            'border' => 'dddddd', // light gray
+            'error' => 'ff0000', // red
+            'table.title' => '0055ff', // blue
+            'table.column' => '333333', // gray
+            'table.comment' => '777777', // light gray
         );
 
         $color = $colors[$mnemo];
 
-        return imagecolorallocate($this->_image, 
+        return imagecolorallocate($this->getImage(), 
             hexdec('0x' . $color{0} . $color{1}), 
             hexdec('0x' . $color{2} . $color{3}), 
             hexdec('0x' . $color{4} . $color{5}));
@@ -139,6 +149,7 @@ class FaZend_Deployer_Map {
     /**
      * Get the location of TTF font file
      *
+     * @param string Mnemo code of the font
      * @var string
      */
     public function getFont($mnemo) {

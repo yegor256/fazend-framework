@@ -235,13 +235,18 @@ class FaZend_Deployer {
     protected function _update($table, $sql) {
 
         try {
+
             $infoSql = $this->_sqlInfo($sql);
+
         } catch (FaZend_Deployer_NotTableButView $e) {
 
             // this is VIEW, not table
             // we just drop and create again
             $this->_db()->query("DROP VIEW $table");
+
+            // create this VIEW again
             $this->_create($table, $sql);
+
             return;
         }
 
