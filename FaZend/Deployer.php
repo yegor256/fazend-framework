@@ -102,7 +102,7 @@ class FaZend_Deployer {
         try {
 
             // get full list of existing(!) tables in Db
-            $tables = $this->_db()->listTables();
+            $tables = array_map(create_function('$a', 'return strtolower($a);'), $this->_db()->listTables());
             
             // get full list of files
             $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
@@ -118,7 +118,7 @@ class FaZend_Deployer {
                 $table = $matches[1];
 
                 // this table already exists?
-                if (in_array($table, $tables)) {
+                if (in_array(strtolower($table), $tables)) {
                     $this->_update($table, file_get_contents($dir . '/' . $file));
                 } else {
                     $this->_create($table, file_get_contents($dir . '/' . $file));
