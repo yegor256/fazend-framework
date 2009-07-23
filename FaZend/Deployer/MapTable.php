@@ -80,12 +80,12 @@ class FaZend_Deployer_MapTable {
         foreach ($this->_getInfo() as $column) {
       
             $matches = array();
-            preg_match('/^(\w+(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
+            preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
             imagettftext($this->_getImage(), 10, 0, $x, $y + $line * 12, 
                 $this->_map->getColor('table.column'), 
                 $this->_map->getFont('table.column'), 
-                $column['COLUMN_NAME'] . ': ' . $matches[1]);
+                $column['COLUMN_NAME'] . ': ' . str_replace(' ', '', $matches[1]));
 
             if (!empty($column['COMMENT'])) {
                 $comments = explode("\n", wordwrap(cutLongLine($column['COMMENT'], 80), 30, "\n", true));
