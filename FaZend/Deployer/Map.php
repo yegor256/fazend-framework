@@ -71,7 +71,7 @@ class FaZend_Deployer_Map {
         list($width, $height) = $this->_getDimensions();
 
         // intitial coordinates
-        $angle = 0;
+        $angle = 180;
         $radius = $width * 0.15;
 
         $tables = $this->_getTables();
@@ -85,8 +85,8 @@ class FaZend_Deployer_Map {
             // going by a clock-rolling spiral
             foreach ($tables as $table) {
 
-                $x = round($width * 0.4 + $radius * cos($angle));
-                $y = round($height * 0.4 + $radius * sin($angle) * $height/$width);
+                $x = round($width * 0.4 + $radius * cos(deg2rad($angle)));
+                $y = round($height * 0.4 + $radius * sin(deg2rad($angle)) * $height/$width);
 
                 $table->draw($x, $y);
 
@@ -156,6 +156,9 @@ class FaZend_Deployer_Map {
         foreach (FaZend_Deployer::getInstance()->getTables() as $table)
             $this->_tables[] = new FaZend_Deployer_MapTable($table, $this);
 
+        // smaller tables come first
+        usort($this->_tables, create_function('$a, $b', 'return $a->size > $b->size;'));
+
         return $this->_tables;
 
     }
@@ -169,7 +172,8 @@ class FaZend_Deployer_Map {
 
         $total = count($this->_getTables());
 
-        return array(200 + $total * 100, 200 + $total * 80);
+        return array(round(200 + sqrt($total) * 250), 
+            round(200 + sqrt($total) * 200));
 
     }
 
