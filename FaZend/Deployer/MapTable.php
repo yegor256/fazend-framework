@@ -88,7 +88,7 @@ class FaZend_Deployer_MapTable {
                 $column['COLUMN_NAME'] . ': ' . $matches[1]);
 
             if (!empty($column['COMMENT'])) {
-                $comments = explode("\n", wordwrap(cutLongLine($column['COMMENT'], 80), 25, "\n", true));
+                $comments = explode("\n", wordwrap(cutLongLine($column['COMMENT'], 80), 30, "\n", true));
 
                 foreach ($comments as $comment) {
                     $line++;
