@@ -202,7 +202,7 @@ class FaZend_Deployer_Map {
         $biggest = array_pop($tables);
 
         return array(round(200 + sqrt($total) * 250), 
-            round(200 + sqrt($total) * 130) + $biggest->size * 30);
+            round(200 + sqrt($total) * 130) + $biggest->size * 40);
 
     }
 
