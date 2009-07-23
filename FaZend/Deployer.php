@@ -285,7 +285,7 @@ class FaZend_Deployer {
         $columnsText = trim(substr($columnsText, 0, strrpos($columnsText, ')'))) . ', ';
 
         $matches = array();
-        preg_match_all('/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s\"(.*?)\")?\,/i', $columnsText, $matches);
+        preg_match_all('/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s[\"\'](.*?)[\'\"])?\,/i', $columnsText, $matches);
 
         $info = array();
         foreach ($matches[0] as $id=>$column) {

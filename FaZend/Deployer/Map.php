@@ -72,21 +72,21 @@ class FaZend_Deployer_Map {
 
         // intitial coordinates
         $angle = 180;
-        $radius = $width * 0.15;
+        $radius = $width * 0.25;
 
         $tables = $this->_getTables();
 
         if (count($tables)) {
 
             $angleDelta = 360/count($tables);
-            $radiusDelta = ($width * 0.3) / count($tables);
+            $radiusDelta = ($width * 0.05) / count($tables);
 
             // put all tables onto it
             // going by a clock-rolling spiral
             foreach ($tables as $table) {
 
-                $x = round($width * 0.4 + $radius * cos(deg2rad($angle)));
-                $y = round($height * 0.4 + $radius * sin(deg2rad($angle)) * $height/$width);
+                $x = round($width * 0.3 + $radius * cos(deg2rad($angle)));
+                $y = round($height * 0.3 + $radius * sin(deg2rad($angle)) * $height/$width);
 
                 $table->draw($x, $y);
 
