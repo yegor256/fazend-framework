@@ -61,7 +61,7 @@ class FaZend_Deployer_Map {
 
             // put the label onto the image
             imagecopy($this->_image, $label, 
-                $width - imagesx($label) - 1, $height - imagesy($height) - 1, 
+                $width - imagesx($label) - 1, $height - imagesy($label) - 1, 
                 0, 0, imagesx($label), imagesy($label));
         }
 
