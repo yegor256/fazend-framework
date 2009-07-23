@@ -80,7 +80,7 @@ class FaZend_Deployer_MapTable {
         foreach ($this->_getInfo() as $column) {
       
             $matches = array();
-            preg_match('/^(\w+)/i', $column['DATA_TYPE'], $matches);
+            preg_match('/^(\w+(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
             imagettftext($this->_getImage(), 10, 0, $x, $y + $line * 12, 
                 $this->_map->getColor('table.column'), 
