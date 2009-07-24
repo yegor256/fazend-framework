@@ -56,6 +56,14 @@ class FaZend_UiModeller_Mockup {
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
+        $title = $this->_script . '.phtml';
+
+        $bbox = imagettfbbox(9, 0, $this->_getImage()->getFont('mockup.title'), $title);
+        $this->_getImage()->imagettftext(9, 0, $width-$bbox[4] - 3, -$bbox[5], 
+            $this->_getImage()->getColor('mockup.title'), 
+            $this->_getImage()->getFont('mockup.title'), 
+            $title);
+
         $line = 0;
         foreach ($this->_getMetas() as $meta) {
 
@@ -120,7 +128,7 @@ class FaZend_UiModeller_Mockup {
 
         $total = count($metas);
 
-        return array(800, $total * 150);
+        return array(800, 200 + $total * 100);
 
     }
 

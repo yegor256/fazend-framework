@@ -104,8 +104,13 @@ class FaZend_Image {
             'table.title' => '0055ff', // blue
             'table.column' => '333333', // gray
             'table.comment' => '777777', // light gray
+
+            'mockup.title' => 'bbbbbb', // name of the mockup script
         );
 
+        if (!isset($colors[$mnemo]))
+            $mnemo = 'error';
+            	
         $color = $colors[$mnemo];
 
         return imagecolorallocate($this->_image, 
