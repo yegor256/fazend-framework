@@ -43,11 +43,15 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
 
         $y = $top;
 
-        for ($i=0; $i<$this->totalLines; $i++) {
+        for ($i=0; $i<=$this->totalLines; $i++) {
 
             // horizontal line
             $this->_image->imageline(FaZend_UiModeller_Mockup::INDENT, $y,
                 FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT, $y, $this->_image->getColor('mockup.table.grid')); 
+
+            // just draw the bottom horizontal line
+            if ($i == $this->totalLines)
+                break;
 
             $height = 1; 
             foreach ($columns as $column=>$details) {
@@ -73,12 +77,18 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         }
 
         // draw verticals in grid
-        for ($i=0; $i<$this->totalLines; $i++) {
-            foreach ($columns as $column=>$details) {
-                $x = $details['x'] + FaZend_UiModeller_Mockup::INDENT - 2;
-                $this->_image->imageline($x, $top, $x, $y, $this->_image->getColor('mockup.table.grid')); 
-            }
+        $xs = array();
+        foreach ($columns as $column=>$details)
+            $xs[] = $details['x'] + FaZend_UiModeller_Mockup::INDENT - 2;
+        $xs[] = end($xs) + $details['widthPixels'];
+
+        if (end($xs) < FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT) {
+            array_pop($xs);
+            $xs[] = FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT;
         }
+                      
+        foreach ($xs as $x)
+            $this->_image->imageline($x, $top, $x, $y, $this->_image->getColor('mockup.table.grid')); 
             
         return $y + $i * self::FONT_SIZE;
 
