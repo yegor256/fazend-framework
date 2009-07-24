@@ -22,11 +22,11 @@
 class FaZend_Deployer_MapTable {
 
     /**
-     * Map where thie table belongs
+     * Image where thie table belongs
      *
-     * @var FaZend_Deployer_Map
+     * @var FaZend_Image
      */
-    protected $_map;
+    protected $_image;
     
     /**
      * Name of the table, in db schema
@@ -47,9 +47,9 @@ class FaZend_Deployer_MapTable {
      *
      * @return void
      */
-    public function __construct($name, FaZend_Deployer_Map $map) {
+    public function __construct($name, FaZend_Image $image) {
         $this->_name = $name;
-        $this->_map = $map;
+        $this->_image = $image;
     }
 
     /**
@@ -71,10 +71,10 @@ class FaZend_Deployer_MapTable {
      */
     public function draw($x, $y) {
 
-        imagettftext($this->_getImage(), 13, 0, $x, $y, $this->_map->getColor('table.title'), $this->_map->getFont('table.title'), $this->_name);
+        $this->_image->imagettftext(13, 0, $x, $y, $this->_image->getColor('table.title'), $this->_image->getFont('table.title'), $this->_name);
         $y += 3;
 
-        imageline($this->_getImage(), $x, $y, $x+strlen($this->_name)*10, $y, $this->_map->getColor('table.title'));
+        $this->_image->imageline($x, $y, $x+strlen($this->_name)*10, $y, $this->_image->getColor('table.title'));
 
         $line = 1;
         foreach ($this->_getInfo() as $column) {
@@ -82,9 +82,9 @@ class FaZend_Deployer_MapTable {
             $matches = array();
             preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
-            imagettftext($this->_getImage(), 10, 0, $x, $y + $line * 12, 
-                $this->_map->getColor('table.column'), 
-                $this->_map->getFont('table.column'), 
+            $this->_image->imagettftext(10, 0, $x, $y + $line * 12, 
+                $this->_image->getColor('table.column'), 
+                $this->_image->getFont('table.column'), 
                 $column['COLUMN_NAME'] . ': ' . str_replace(' ', '', $matches[1]));
 
             if (!empty($column['COMMENT'])) {
@@ -93,9 +93,9 @@ class FaZend_Deployer_MapTable {
                 foreach ($comments as $comment) {
                     $line++;
 
-                    imagettftext($this->_getImage(), 9, 0, $x+10, $y + $line * 12 - 1, 
-                        $this->_map->getColor('table.comment'), 
-                        $this->_map->getFont('table.comment'), 
+                    $this->_image->imagettftext(9, 0, $x+10, $y + $line * 12 - 1, 
+                        $this->_image->getColor('table.comment'), 
+                        $this->_image->getFont('table.comment'), 
                         $comment);
                 }
             }
@@ -116,15 +116,6 @@ class FaZend_Deployer_MapTable {
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
 
-    }
-
-    /**
-     * Get image
-     *
-     * @return int
-     */
-    public function _getImage() {
-        return $this->_map->getImage();
     }
 
 }
