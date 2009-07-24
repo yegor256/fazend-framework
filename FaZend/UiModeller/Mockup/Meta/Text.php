@@ -24,9 +24,17 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
     /**
      * Draw 
      *
-     * @return void
+     * @return int Height
      */
-    public function draw($line) {
+    public function draw($y) {
+
+        $this->_image->imagettftext(14, 0, $this->_indent, $y + 14, 
+            $this->_image->getColor('mockup.content'), 
+            $this->_image->getFont('mockup.content'), 
+            $this->_label);
+
+        return 30;
+
     }
 
 }

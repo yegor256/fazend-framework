@@ -106,6 +106,7 @@ class FaZend_Image {
             'table.comment' => '777777', // light gray
 
             'mockup.title' => 'bbbbbb', // name of the mockup script
+            'mockup.content' => '333333', // texts in mockups
         );
 
         if (!isset($colors[$mnemo]))

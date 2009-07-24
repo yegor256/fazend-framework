@@ -24,8 +24,15 @@ interface FaZend_UiModeller_Mockup_Meta_Interface {
     /**
      * Draw 
      *
+     * @return int Height of the element
+     */
+    public function draw($y);
+
+    /**
+     * Set label
+     *
      * @return void
      */
-    public function draw($line);
+    public function setLabel($label);
 
 }

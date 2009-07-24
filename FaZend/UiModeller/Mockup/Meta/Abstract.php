@@ -21,4 +21,44 @@
  */
 abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModeller_Mockup_Meta_Interface {
 
+    /**
+     * Image to put this element onto
+     *
+     * @var FaZend_Image
+     */
+    protected $_image;
+    
+    /**
+     * Indent, right and left
+     *
+     * @var int
+     */
+    protected $_indent;
+    
+    /**
+     * Label
+     *
+     * @var string
+     */
+    protected $_label;
+    
+    /**
+     * Initialize this class
+     *
+     * @return void
+     */
+    public function __construct(FaZend_Image $image, $indent) {
+        $this->_image = $image;
+        $this->_indent = $indent;
+    }
+
+    /**
+     * Set label
+     *
+     * @return void
+     */
+    public function setLabel($label) {
+        $this->_label = $label;
+    }
+
 }

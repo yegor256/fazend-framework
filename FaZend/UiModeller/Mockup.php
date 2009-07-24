@@ -21,6 +21,8 @@
  */
 class FaZend_UiModeller_Mockup {
 
+    const INDENT = 50;
+
     /**
      * Name of the script, like 'index/settings'
      *
@@ -64,11 +66,10 @@ class FaZend_UiModeller_Mockup {
             $this->_getImage()->getFont('mockup.title'), 
             $title);
 
-        $line = 0;
+        $y = self::INDENT;
         foreach ($this->_getMetas() as $meta) {
 
-            $meta->draw($line);
-            $line++;
+            $y += $meta->draw($y);
 
         }
 
@@ -111,7 +112,23 @@ class FaZend_UiModeller_Mockup {
 
         $metas = array();
 
-        $metas[] = new FaZend_UiModeller_Mockup_Meta_Text($this->_getImage());
+        $html = preg_replace('/[\n\t\r\s]/', ' ',
+            file_get_contents(APPLICATION_PATH . '/views/scripts/' . $this->_script . '.phtml'));
+
+        $matches = array();
+        preg_match_all('/\<\!\-\-\s?\@(\w+)\((.*?)\)(.*?)\-\-\>/', $html, $matches);
+        foreach ($matches[0] as $id=>$match) {
+
+            $className = 'FaZend_UiModeller_Mockup_Meta_' . ucfirst($matches[1][$id]);
+
+            $meta = new $className($this->_getImage(), self::INDENT);
+
+            if (!empty($matches[2][$id]))
+                $meta->setLabel(trim($matches[2][$id], '"\''));
+                
+            $metas[] = $meta;
+
+        }
 
         return $this->_metas = $metas;
 
@@ -128,7 +145,7 @@ class FaZend_UiModeller_Mockup {
 
         $total = count($metas);
 
-        return array(800, 200 + $total * 100);
+        return array(800, 200 + $total * 70);
 
     }
 
