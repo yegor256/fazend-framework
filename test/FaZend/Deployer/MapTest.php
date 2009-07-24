@@ -22,7 +22,7 @@ class FaZend_Deployer_MapTest extends AbstractTestCase {
 
         $map = new FaZend_Deployer_Map();
 
-        $this->assertTrue($map->png());
+        $this->assertNotEquals(false, $map->png());
 
     }
 

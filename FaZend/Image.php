@@ -29,11 +29,19 @@ class FaZend_Image {
     protected $_image;
     
     /**
-     * Build PNG image
+     * Constructor
      *
-     * @var string
+     * @return void
      */
-    public function __construct($width, $height) {
+    public function __construct() {
+    }
+
+    /**
+     * Set dimensions
+     *
+     * @return void
+     */
+    public function setDimensions($width, $height) {
 
         // create an image
         $this->_image = imagecreatetruecolor($width, $height);
@@ -115,7 +123,7 @@ class FaZend_Image {
      */
     public function getFont($mnemo) {
 
-        return dirname(__FILE__) . '/fonts/arial.ttf';
+        return FAZEND_PATH . '/Image/fonts/arial.ttf';
 
     }
 

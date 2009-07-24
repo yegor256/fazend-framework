@@ -65,9 +65,7 @@ class FaZend_UiModeller_Mockup {
         }
 
         // return the PNG content
-        ob_start();
-        imagepng($this->_getImage());
-        return ob_get_clean();
+        return $this->_getImage()->png();
 
     }
 
@@ -79,11 +77,15 @@ class FaZend_UiModeller_Mockup {
     public function _getImage() {
 
         if (!isset($this->_image)) {
+
+            // create it
+            $this->_image = new FaZend_Image();
+
             // get the size of the image
             list($width, $height) = $this->_getDimensions();
 
             // create new image
-            $this->_image = new FaZend_Image($width, $height);
+            $this->_image->setDimensions($width, $height);
         }
 
         return $this->_image;
@@ -99,11 +101,11 @@ class FaZend_UiModeller_Mockup {
         if (isset($this->_metas))
             return $this->_metas;
 
-        $this->_metas = array();
+        $metas = array();
 
-        $this->_metas[] = new FaZend_UiModeller_Mockup_Meta_Text($this->_getImage());
+        $metas[] = new FaZend_UiModeller_Mockup_Meta_Text($this->_getImage());
 
-        return $this->_metas;
+        return $this->_metas = $metas;
 
     }
 

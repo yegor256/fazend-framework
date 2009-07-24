@@ -101,11 +101,15 @@ class FaZend_Deployer_Map {
     public function _getImage() {
 
         if (!isset($this->_image)) {
+            
+            // create image
+            $this->_image = new FaZend_Image();
+
             // get the size of the image
             list($width, $height) = $this->_getDimensions();
 
-            // create new image
-            $this->_image = new FaZend_Image($width, $height);
+            // set dimensions
+            $this->_image->setDimensions($width, $height);
         }
 
         return $this->_image;
@@ -121,15 +125,15 @@ class FaZend_Deployer_Map {
         if (isset($this->_tables))
             return $this->_tables;
 
-        $this->_tables = array();
+        $tables = array();
 
         foreach (FaZend_Deployer::getInstance()->getTables() as $table)
-            $this->_tables[] = new FaZend_Deployer_MapTable($table, $this->_getImage());
+            $tables[] = new FaZend_Deployer_MapTable($table, $this->_getImage());
 
         // smaller tables come first
-        usort($this->_tables, create_function('$a, $b', 'return $a->size > $b->size;'));
+        usort($tables, create_function('$a, $b', 'return $a->size > $b->size;'));
 
-        return $this->_tables;
+        return $this->_tables = $tables;
 
     }
 
