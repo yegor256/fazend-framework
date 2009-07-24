@@ -22,6 +22,13 @@
 class FaZend_Image {
 
     /**
+     * Enable drawing
+     *
+     * @var boolean
+     */
+    protected $_enabled = true;
+
+    /**
      * The image we build
      *
      * @var int
@@ -37,6 +44,24 @@ class FaZend_Image {
     }
 
     /**
+     * Disable any drawing
+     *
+     * @return void
+     */
+    public function disableDrawing() {
+        $this->_enabled = false;
+    }
+
+    /**
+     * Enable any drawing
+     *
+     * @return void
+     */
+    public function enableDrawing() {
+        $this->_enabled = true;
+    }
+
+    /**
      * Set dimensions
      *
      * @return void
@@ -47,16 +72,16 @@ class FaZend_Image {
         $this->_image = imagecreatetruecolor($width, $height);
         
         // fill it
-        imagefill($this->_image, 0, 0, $this->getColor('background'));
+        $this->imagefill(0, 0, $this->getColor('background'));
         
         // draw border as rectangle
-        imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
+        $this->imagerectangle(0, 0, $width-1, $height-1, $this->getColor('border'));
 
         // label image
         $label = imagecreatefrompng(FAZEND_PATH . '/Image/images/label.png');
 
         // put the label onto the image
-        imagecopy($this->_image, $label, 
+        $this->imagecopy($label, 
             $width - imagesx($label) - 1, $height - imagesy($label) - 1, 
             0, 0, imagesx($label), imagesy($label));
 
@@ -68,6 +93,9 @@ class FaZend_Image {
      * @return void
      */
     public function __call($method, $args) {
+
+        if (!$this->_enabled)
+            return;
 
         array_unshift($args, $this->_image);
 
@@ -107,6 +135,8 @@ class FaZend_Image {
 
             'mockup.title' => 'bbbbbb', // name of the mockup script
             'mockup.content' => '333333', // texts in mockups
+
+            'mockup.table.grid' => 'dddddd', // grids
         );
 
         if (!isset($colors[$mnemo]))
@@ -114,7 +144,7 @@ class FaZend_Image {
             	
         $color = $colors[$mnemo];
 
-        return imagecolorallocate($this->_image, 
+        return $this->imagecolorallocate( 
             hexdec('0x' . $color{0} . $color{1}), 
             hexdec('0x' . $color{2} . $color{3}), 
             hexdec('0x' . $color{4} . $color{5}));

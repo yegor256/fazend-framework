@@ -22,6 +22,7 @@
 class FaZend_UiModeller_Mockup {
 
     const INDENT = 50;
+    const WIDTH = 800;
 
     /**
      * Name of the script, like 'index/settings'
@@ -66,6 +67,20 @@ class FaZend_UiModeller_Mockup {
             $this->_getImage()->getFont('mockup.title'), 
             $title);
 
+        $this->_draw();
+
+        // return the PNG content
+        return $this->_getImage()->png();
+
+    }
+
+    /**
+     * Draw all metas and return total Height
+     *
+     * @return int
+     */
+    public function _draw() {
+
         $y = self::INDENT;
         foreach ($this->_getMetas() as $meta) {
 
@@ -73,8 +88,7 @@ class FaZend_UiModeller_Mockup {
 
         }
 
-        // return the PNG content
-        return $this->_getImage()->png();
+        return $y;
 
     }
 
@@ -123,8 +137,13 @@ class FaZend_UiModeller_Mockup {
 
             $meta = new $className($this->_getImage(), self::INDENT);
 
+            // set label if required
             if (!empty($matches[2][$id]))
                 $meta->setLabel(trim($matches[2][$id], '"\''));
+                
+            // execute other calls
+            if (!empty($matches[3][$id]))
+                eval('$meta ' . $matches[3][$id] . ';');
                 
             $metas[] = $meta;
 
@@ -141,11 +160,11 @@ class FaZend_UiModeller_Mockup {
      */
     public function _getDimensions() {
 
-        $metas = $this->_getMetas();
+        $this->_getImage()->disableDrawing();
+        $height = $this->_draw();
+        $this->_getImage()->enableDrawing();
 
-        $total = count($metas);
-
-        return array(800, 200 + $total * 70);
+        return array(self::WIDTH, self::INDENT + $height);
 
     }
 

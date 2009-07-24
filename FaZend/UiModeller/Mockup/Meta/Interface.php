@@ -28,11 +28,4 @@ interface FaZend_UiModeller_Mockup_Meta_Interface {
      */
     public function draw($y);
 
-    /**
-     * Set label
-     *
-     * @return void
-     */
-    public function setLabel($label);
-
 }

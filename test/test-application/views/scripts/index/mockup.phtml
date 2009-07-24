@@ -6,12 +6,12 @@
 <p>You can edit your photos:</p>
 
 <!-- @table()
-    ->addColumn("id")
-    ->addColumn("description")
-    ->columnFormat("id", "%3d")
-    ->columnFormat("description", "%100s")
-    ->addOption("disable")
-    ->addOption("enable") -->
+    ->setColumn("id")
+    ->setColumn("description")
+    ->setColumnFormat("id", "%3d")
+    ->setColumnFormat("description", "%100s")
+    ->setOption("disable")
+    ->setOption("enable") -->
 
 <table>
     <tr><td><?=$this->line?></td></tr>
@@ -22,7 +22,7 @@
 <a href="<?=$this->url(array('controller'=>'photos', 'action'=>'upload'), 'default', true)?>">upload new photo</a>
 
 <!-- @form()
-    ->addField("text", "Title of your photo:")
-    ->addField("textarea", "Description") -->
+    ->setField("text", "Title of your photo:")
+    ->setField("textarea", "Description") -->
 
 <?=$this->form?>
