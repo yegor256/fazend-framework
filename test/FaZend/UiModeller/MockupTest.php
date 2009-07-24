@@ -16,15 +16,14 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_Deployer_MapTest extends AbstractTestCase {
+class FaZend_UiModeller_MockupTest extends AbstractTestCase {
+    
+    public function testMockupCreationWorks () {
 
-    public function testPngBuilderWorks() {
+        $mockup = new FaZend_UiModeller_Mockup('index/mockup');
 
-        $map = new FaZend_Deployer_Map();
-
-        $this->assertTrue($map->png());
+        $this->assertNotEquals(false, $mockup->png());
 
     }
 
 }
-        

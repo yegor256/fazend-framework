@@ -14,17 +14,11 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
-
-class FaZend_Deployer_MapTest extends AbstractTestCase {
-
-    public function testPngBuilderWorks() {
-
-        $map = new FaZend_Deployer_Map();
-
-        $this->assertTrue($map->png());
-
-    }
+/**
+ * Mockup meta element
+ *
+ * @package FaZend 
+ */
+abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModeller_Mockup_Meta_Interface {
 
 }
-        

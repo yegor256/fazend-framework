@@ -31,7 +31,7 @@ class FaZend_UiModeller_Mockup {
     /**
      * The image we build
      *
-     * @var int
+     * @var FaZend_Image
      */
     protected $_image;
     
@@ -40,32 +40,10 @@ class FaZend_UiModeller_Mockup {
      *
      * @var int
      */
-    public function getImage() {
+    public function __construct($script) {
 
-        if (!isset($this->_image)) {
-        
-            // get the size of the image
-            list($width, $height) = $this->_getDimensions();
+        $this->_script = $script;
 
-            // create an image
-            $this->_image = imagecreatetruecolor($width, $height);
-            
-            // fill it
-            imagefill($this->_image, 0, 0, $this->getColor('background'));
-            
-            // draw border as rectangle
-            imagerectangle($this->_image, 0, 0, $width-1, $height-1, $this->getColor('border'));
-
-            // label image
-            $label = imagecreatefrompng(FAZEND_PATH . '/Deployer/images/label.png');
-
-            // put the label onto the image
-            imagecopy($this->_image, $label, 
-                $width - imagesx($label) - 1, $height - imagesy($label) - 1, 
-                0, 0, imagesx($label), imagesy($label));
-        }
-
-        return $this->_image;
     }
 
     /**
@@ -78,70 +56,54 @@ class FaZend_UiModeller_Mockup {
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
+        $line = 0;
+        foreach ($this->_getMetas() as $meta) {
+
+            $meta->draw($line);
+            $line++;
+
+        }
+
         // return the PNG content
         ob_start();
-        imagepng($this->getImage());
+        imagepng($this->_getImage());
         return ob_get_clean();
 
     }
 
     /**
-     * Get the color code
+     * Get the image
      *
-     * @param string Mnemo code of the color
-     * @var int
+     * @return FaZend_Image
      */
-    public function getColor($mnemo) {
+    public function _getImage() {
 
-        $colors = array(
-            'background' => 'ffffff', // white
-            'border' => 'dddddd', // light gray
-            'error' => 'ff0000', // red
-            'table.title' => '0055ff', // blue
-            'table.column' => '333333', // gray
-            'table.comment' => '777777', // light gray
-        );
+        if (!isset($this->_image)) {
+            // get the size of the image
+            list($width, $height) = $this->_getDimensions();
 
-        $color = $colors[$mnemo];
+            // create new image
+            $this->_image = new FaZend_Image($width, $height);
+        }
 
-        return imagecolorallocate($this->getImage(), 
-            hexdec('0x' . $color{0} . $color{1}), 
-            hexdec('0x' . $color{2} . $color{3}), 
-            hexdec('0x' . $color{4} . $color{5}));
-
+        return $this->_image;
     }
 
     /**
-     * Get the location of TTF font file
+     * Get the list of metas in the page
      *
-     * @param string Mnemo code of the font
-     * @var string
+     * @return FaZend_UiModeller_Mockup_Meta_Interface[]
      */
-    public function getFont($mnemo) {
+    public function _getMetas() {
 
-        return dirname(__FILE__) . '/fonts/arial.ttf';
+        if (isset($this->_metas))
+            return $this->_metas;
 
-    }
+        $this->_metas = array();
 
-    /**
-     * Get the list of tables in collection
-     *
-     * @return FaZend_Deployer_MapTable[]
-     */
-    public function _getTables() {
+        $this->_metas[] = new FaZend_UiModeller_Mockup_Meta_Text($this->_getImage());
 
-        if (isset($this->_tables))
-            return $this->_tables;
-
-        $this->_tables = array();
-
-        foreach (FaZend_Deployer::getInstance()->getTables() as $table)
-            $this->_tables[] = new FaZend_Deployer_MapTable($table, $this);
-
-        // smaller tables come first
-        usort($this->_tables, create_function('$a, $b', 'return $a->size > $b->size;'));
-
-        return $this->_tables;
+        return $this->_metas;
 
     }
 
@@ -152,14 +114,11 @@ class FaZend_UiModeller_Mockup {
      */
     public function _getDimensions() {
 
-        $tables = $this->_getTables();
+        $metas = $this->_getMetas();
 
-        $total = count($tables);
+        $total = count($metas);
 
-        $biggest = array_pop($tables);
-
-        return array(round(200 + sqrt($total) * 250), 
-            round(200 + sqrt($total) * 110) + $biggest->size * 40);
+        return array(800, $total * 150);
 
     }
 

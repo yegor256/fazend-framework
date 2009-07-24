@@ -254,7 +254,7 @@ class FaZend_Deployer {
             //$this->_db()->query("DROP VIEW $table");
 
             // create this VIEW again
-            $this->_create($table, $sql);
+            //$this->_create($table, $sql);
 
             return;
         }

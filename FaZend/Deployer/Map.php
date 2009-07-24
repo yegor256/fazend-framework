@@ -36,24 +36,6 @@ class FaZend_Deployer_Map {
     protected $_image;
     
     /**
-     * Get the image
-     *
-     * @return FaZend_Image
-     */
-    public function getImage() {
-
-        if (!isset($this->_image)) {
-            // get the size of the image
-            list($width, $height) = $this->_getDimensions();
-
-            // create new image
-            $this->_image = new FaZend_Image($width, $height);
-        }
-
-        return $this->_image;
-    }
-
-    /**
      * Build PNG image
      *
      * @var string
@@ -100,15 +82,33 @@ class FaZend_Deployer_Map {
         } else {
 
             // one system message instead of a picture
-            $this->getImage()->imagettftext(12, 0, 0, 15, 
-                $this->getImage()->getColor('error'), $this->getImage()->getFont('table.title'), 
+            $this->_getImage()->imagettftext(12, 0, 0, 15, 
+                $this->_getImage()->getColor('error'), $this->_getImage()->getFont('table.title'), 
                 'No tables found');
 
         }
 
         // return the PNG content
-        return $this->getImage()->png();
+        return $this->_getImage()->png();
 
+    }
+
+    /**
+     * Get the image
+     *
+     * @return FaZend_Image
+     */
+    public function _getImage() {
+
+        if (!isset($this->_image)) {
+            // get the size of the image
+            list($width, $height) = $this->_getDimensions();
+
+            // create new image
+            $this->_image = new FaZend_Image($width, $height);
+        }
+
+        return $this->_image;
     }
 
     /**
@@ -124,7 +124,7 @@ class FaZend_Deployer_Map {
         $this->_tables = array();
 
         foreach (FaZend_Deployer::getInstance()->getTables() as $table)
-            $this->_tables[] = new FaZend_Deployer_MapTable($table, $this->getImage());
+            $this->_tables[] = new FaZend_Deployer_MapTable($table, $this->_getImage());
 
         // smaller tables come first
         usort($this->_tables, create_function('$a, $b', 'return $a->size > $b->size;'));

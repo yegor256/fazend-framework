@@ -1,0 +1,28 @@
+
+<!-- @actor("RegisteredUser") -->
+
+<!-- @text("You can edit your photos...") -->
+
+<p>You can edit your photos:</p>
+
+<!-- @table()
+    ->addColumn("id")
+    ->addColumn("description")
+    ->columnFormat("id", "%3d")
+    ->columnFormat("description", "%100s")
+    ->addOption("disable")
+    ->addOption("enable") -->
+
+<table>
+    <tr><td><?=$this->line?></td></tr>
+</table>
+
+<!-- @link("Upload new photo", "photos/upload") -->
+
+<a href="<?=$this->url(array('controller'=>'photos', 'action'=>'upload'), 'default', true)?>">upload new photo</a>
+
+<!-- @form()
+    ->addField("text", "Title of your photo:")
+    ->addField("textarea", "Description") -->
+
+<?=$this->form?>
