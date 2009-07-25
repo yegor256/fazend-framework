@@ -57,8 +57,10 @@ class FaZend_UiModeller_Navigation {
      * @return void
      */
     protected function __construct() {
-        $this->_container = new Zend_Navigation();
         $this->_acl = new Zend_Acl();
+
+        $this->_acl->deny();
+        $this->_acl->addRole(new Zend_Acl_Role(self::ANONYMOUS));
     }
 
     /**
@@ -79,10 +81,12 @@ class FaZend_UiModeller_Navigation {
      * @param string Script name, like 'index/settings'
      * @return void
      */
-    public function discover($script) {
+    public function discover($script = 'index/index') {
 
-        // clear container
-        $this->_container->removePages();
+        if (isset($this->_container))
+            return $this->_container;
+
+        $this->_container = new Zend_Navigation();
 
         // full list of controllers
         foreach (glob(APPLICATION_PATH . '/views/scripts/*') as $controller) {
@@ -101,11 +105,9 @@ class FaZend_UiModeller_Navigation {
             $section = new Zend_Navigation_Page_Uri(array(
                 'label' => $controller,
                 'title' => $controller,
+                'class' => 'controller',
             ));
 
-            // add this page to the container
-            $this->_container->addPage($section);
-            
             // full list of actions
             foreach (glob(APPLICATION_PATH . '/views/scripts/' . $controller . '/*') as $action) {
 
@@ -123,7 +125,8 @@ class FaZend_UiModeller_Navigation {
                     'label' => $action,
                     'title' => $label,
                     'uri' => Zend_Registry::getInstance()->view->url(array('action'=>'index', 'id'=>$label), 'ui', true, false),
-                    'resource' => $script,
+                    'resource' => $label,
+                    'class' => 'action',
                 ));
 
                 if ($label == $script)
@@ -135,10 +138,10 @@ class FaZend_UiModeller_Navigation {
                 $matches = array();
                 if (preg_match_all('/<!--\s?\@actor\s?\([\"\'](.*?)[\'\"]\)/', $content, $matches)) {
                     foreach ($matches[1] as $match) {
-                        $this->_allow($match, $script);
+                        $this->_allow($match, $label);
                     }
                 } else {
-                    $this->_allow(self::ANONYMOUS, $script);
+                    $this->_allow(self::ANONYMOUS, $label);
                 }
 
                 // add this page to the container
@@ -146,6 +149,9 @@ class FaZend_UiModeller_Navigation {
             
             }
 
+            // add this page to the container
+            $this->_container->addPage($section);
+            
         }
 
         return $this->_container;
@@ -158,6 +164,8 @@ class FaZend_UiModeller_Navigation {
      * @return Zend_Acl
      */
     public function getAcl() {
+        $this->discover();
+
         return $this->_acl;
     }
 
@@ -167,6 +175,8 @@ class FaZend_UiModeller_Navigation {
      * @return string[]
      */
     public function getActors() {
+        $this->discover();
+
         return $this->_actors;
     }
 

@@ -46,14 +46,13 @@ class FaZend_UiModeller_Mockup {
     protected $_view;
     
     /**
-     * Get the image
+     * Constructor
      *
-     * @var int
+     * @param string Name of the view script, like 'index/settings'
+     * @return void
      */
     public function __construct($script) {
-
         $this->_script = $script;
-
     }
 
     /**
@@ -127,6 +126,21 @@ class FaZend_UiModeller_Mockup {
         }
 
         return $this->_image;
+    }
+
+    /**
+     * Get list of actors
+     *
+     * @return string[]
+     */
+    public function getActors() {
+        $actors = array();
+
+        foreach ($this->_getMetas() as $meta)
+            if ($meta instanceof FaZend_UiModeller_Mockup_Meta_Actor)
+                $actors[] = $meta->label;
+
+        return $actors;
     }
 
     /**

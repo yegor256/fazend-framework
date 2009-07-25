@@ -42,16 +42,19 @@ class Fazend_UiController extends FaZend_Controller_Action {
      */
     public function indexAction() {
 
-        $this->view->actor = $actor = $this->_getActor();
         $this->view->script = $script = $this->_getParam('id');
+
+        // build the mockup
+        $mockup = new FaZend_UiModeller_Mockup($script);
+        $this->view->page = $mockup->html($this->view);
+
+        // get current actor from user session
+        $this->view->actor = $actor = $this->_getActor($mockup);
 
         // search and build the whole MAP of the project
         $this->view->navigation()->setContainer(FaZend_UiModeller_Navigation::getInstance()->discover($script))
             ->setAcl(FaZend_UiModeller_Navigation::getInstance()->getAcl())
             ->setRole($actor);
-
-        $mockup = new FaZend_UiModeller_Mockup($script);
-        $this->view->page = $mockup->html($this->view);
 
         $this->view->actors = '<ul><li>';
         foreach (FaZend_UiModeller_Navigation::getInstance()->getActors() as $a) {
@@ -88,23 +91,59 @@ class Fazend_UiController extends FaZend_Controller_Action {
 
         list($script, $actor) = explode(':', $this->_getParam('id'));
 
-        $this->_setActor($actor);
-
+        // this script should go to next Action
         $this->_setParam('id', $script);
+
+        // maybe new actor can't access this page?
+        if (!FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $script)) {
+
+            // we will try to find another script
+            $script = false;
+            $pages = FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('class', 'action');
+            foreach ($pages as $page) {
+                if (FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $page->resource)) {
+                    $script = $page->resource;
+                    break;
+                }
+            }
+
+            if ($script)
+                $this->_setParam('id', $script);
+
+        }
+
+        if ($script)
+            $this->_setActor($actor);
 
         $this->_forward('index');
 
     }
 
     /**
-     * Get current actor
+     * Get current actor, taking into account mockup
      *
+     * @param FaZend_UiModeller_Mockup
      * @return string
      */
-    protected function _getActor() {
+    protected function _getActor(FaZend_UiModeller_Mockup $mockup) {
         $actor = $this->_getNamespace()->actor;
         if (!$actor)
             $actor = FaZend_UiModeller_Navigation::ANONYMOUS;
+
+        // maybe we should switch the actor?
+        $availableActors = $mockup->getActors();
+        if (!in_array($actor, $availableActors) && ($actor != FaZend_UiModeller_Navigation::ANONYMOUS)) {
+
+            // maybe the list is empty and we should toggle to anonymous?
+            if (!count($availableActors))
+                $actor = FaZend_UiModeller_Navigation::ANONYMOUS;
+            else
+                $actor = $availableActors[array_rand($availableActors)];
+
+            $this->_setActor($actor);
+
+        }
+
         return $actor;
     }
 
