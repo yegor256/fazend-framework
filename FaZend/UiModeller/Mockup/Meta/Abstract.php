@@ -117,7 +117,7 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
             $txt = '%s';
 
         $matches = array();
-        preg_match_all('/%(\d+)?([sdf])?/', $txt, $matches);
+        preg_match_all('/%(\d+)?([sdf])/', $txt, $matches);
 
         $args = array();
         foreach ($matches[0] as $id=>$match)
