@@ -133,6 +133,9 @@ class FaZend_Image {
             'mockup.title' => 'bbbbbb', // name of the mockup script
             'mockup.content' => '333333', // texts in mockups
 
+            'mockup.button' => 'eeeeee', // background of buttons
+            'mockup.button.border' => 'cccccc', // borders of buttons
+
             'mockup.table.grid' => 'dddddd', // grids
             'mockup.table.header' => 'ffffff',
             'mockup.table.header.background' => 'aaaaff',
