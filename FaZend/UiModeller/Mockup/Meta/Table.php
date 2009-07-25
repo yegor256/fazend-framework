@@ -81,7 +81,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             foreach ($columns as $details) {
 
                 if (is_array($details['mask']))
-                    $txt = array_rand($details['mask']);
+                    $txt = $details['mask'][array_rand($details['mask'])];
                 else
                     $txt = $this->_parse($details['mask']);
 
