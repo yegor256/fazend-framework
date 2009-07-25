@@ -118,14 +118,11 @@ class FaZend_Image {
     }
 
     /**
-     * Get the color code
+     * List of mnemo's and codes
      *
-     * @param string Mnemo code of the color
-     * @var int
+     * @var string[]
      */
-    public function getColor($mnemo) {
-
-        $colors = array(
+    private static $_colors = array(
             'background' => 'ffffff', // white
             'border' => 'dddddd', // light gray
             'error' => 'ff0000', // red
@@ -141,15 +138,35 @@ class FaZend_Image {
             'mockup.table.header.background' => 'aaaaff',
         );
 
-        if (!isset($colors[$mnemo]))
+    /**
+     * Get the color code for CSS
+     *
+     * @param string Mnemo code of the color
+     * @return string
+     */
+    public static function getCssColor($mnemo) {
+     
+        if (!isset(self::$_colors[$mnemo]))
             $mnemo = 'error';
             	
-        $color = $colors[$mnemo];
+        return '#' . self::$_colors[$mnemo];
+
+    }
+
+    /**
+     * Get the color code
+     *
+     * @param string Mnemo code of the color
+     * @return int
+     */
+    public function getColor($mnemo) {
+
+        $color = self::getCssColor($mnemo);
 
         return $this->imagecolorallocate( 
-            hexdec('0x' . $color{0} . $color{1}), 
-            hexdec('0x' . $color{2} . $color{3}), 
-            hexdec('0x' . $color{4} . $color{5}));
+            hexdec('0x' . $color{1} . $color{2}), 
+            hexdec('0x' . $color{3} . $color{4}), 
+            hexdec('0x' . $color{5} . $color{6}));
 
     }
 

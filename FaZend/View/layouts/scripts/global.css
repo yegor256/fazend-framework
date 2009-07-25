@@ -1,88 +1,88 @@
 * {
-	padding: 0px;
-	margin: 0px;
+    padding: 0px;
+    margin: 0px;
 }
 
 body {
         font-family: Verdana;
-	font-style: normal;
-	font-size: 12px;
-	line-height: 1.9em;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1.9em;
 
-	color: #122632;
-	background-color: white;
-	margin: 5px;
+    color: #122632;
+    background-color: white;
+    margin: 5px;
 }
 
 img {
-	border: none;
+    border: none;
 }
 
 th {
-	text-align: left;
+    text-align: left;
 }
 
-	td, th {
-		text-align: left;
-		vertical-align: top;
-		padding: 2px;
-	}
+    td, th {
+        text-align: left;
+        vertical-align: top;
+        padding: 2px;
+    }
 
-	th {
-		background-color: #0093d0;
-		color: white;
-		font-weight: bold;
-	}
+    th {
+        background-color: #0093d0;
+        color: white;
+        font-weight: bold;
+    }
 
-	tr.even {
-		color: inherit;
-		background-color: #e7e9ea;
-	}	
+    tr.even {
+        color: inherit;
+        background-color: #e7e9ea;
+    }    
 
-	tr.highlight {
-		color: inherit;
-		background-color: #9cacb6;
-	}	
+    tr.highlight {
+        color: inherit;
+        background-color: #9cacb6;
+    }    
 
 /* normal links and link-free hrefs */
 .ahref, a {
-	text-decoration: none;
-	cursor: pointer;
-	color: #122632;
-	background-color: inherit;
-	border-bottom: 1px dotted #122632;
+    text-decoration: none;
+    cursor: pointer;
+    color: #122632;
+    background-color: inherit;
+    border-bottom: 1px dotted #122632;
 }
-	
-	a:visited {
-	}
+    
+    a:visited {
+    }
 
-	a:hover {
-		color: #0093d0;
-		background-color: inherit;
-		border-bottom: 1px dotted #0093d0;
-	}
+    a:hover {
+        color: #0093d0;
+        background-color: inherit;
+        border-bottom: 1px dotted #0093d0;
+    }
 
 p {
-	padding-top: 3px;
-	padding-bottom: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 input, textarea, select {
-	padding: 2px;
+    padding: 2px;
         font-family: Verdana;
 }
 
 ul.errors {
-	color: red;
-	background-color: inherit;
+    color: red;
+    background-color: inherit;
 }
 
-	ul.errors li {
-		list-style-type: none;
-		padding-bottom: 10px;
-	}
+    ul.errors li {
+        list-style-type: none;
+        padding-bottom: 10px;
+    }
 
 .error {
-	color: red;
+    color: red;
 }
 

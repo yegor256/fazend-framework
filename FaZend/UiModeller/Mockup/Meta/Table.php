@@ -21,7 +21,48 @@
  */
 class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_Abstract {
 
-    const FONT_SIZE = 12;
+    const FONT_SIZE = 12; // font size to use
+
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view) {
+
+        $html = '<p><div style="display: inline-block; background:' . FaZend_Image::getCssColor ('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
+
+        $columns = $this->_getOptions('/^column.*/');
+
+        // draw table header
+        $html .= '<tr>';
+        foreach ($columns as $details) {
+            $html .= '<th>' . $details['title'] . '</th>';
+        }
+        $html .= '</tr>';
+
+        for ($i=0; $i<=$this->totalLines; $i++) {
+
+            $html .= '<tr>';
+            foreach ($columns as $details) {
+
+                if (is_array($details['mask']))
+                    $txt = $details['mask'][array_rand($details['mask'])];
+                else
+                    $txt = $this->_parse($details['mask']);
+
+                $html .= '<td>' . $txt . '</td>';
+            }
+            $html .= '</tr>';
+
+        }
+
+        $html .= '</table></div></p>';
+
+        return $html;
+
+    }
 
     /**
      * Draw 

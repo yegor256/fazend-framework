@@ -31,4 +31,14 @@ class FaZend_UiModeller_Mockup_Meta_Form extends FaZend_UiModeller_Mockup_Meta_A
 
     }
 
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view) {
+        return 'form...';
+    }
+
 }

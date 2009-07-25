@@ -31,4 +31,15 @@ class FaZend_UiModeller_Mockup_Meta_Link extends FaZend_UiModeller_Mockup_Meta_A
 
     }
 
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view) {
+        return '<p><a href="' . $view->url(array('action'=>'index', 'id'=>$this->destination), 'ui', true, false). '">' . 
+            $this->_parse($this->label). '</a></p>';
+    }
+
 }

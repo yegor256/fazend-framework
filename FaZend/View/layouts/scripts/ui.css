@@ -1,0 +1,115 @@
+
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    font-family: Verdana;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1.9em;
+
+    color: #122632;
+    background-color: white;
+    margin: 5px;
+}
+
+img {
+    border: none;
+}
+
+/* global wrapper */
+div.wrapper {
+    width: <?=FaZend_UiModeller_Mockup::WIDTH?>px;
+    clear: both;
+    margin: 10px auto 20px auto;
+    position: relative;
+}
+
+/* header above the page */
+div.header {
+    position: relative;
+    height: 100px;
+}
+
+    /* active actor */
+    div.header div.actor {
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+    }
+
+    /* link to static PNG of the page */
+    div.header div.path {
+        position: absolute;
+        left: 150px;
+        bottom: 10px;
+        font-size: 2em;
+    }
+
+    /* link to static PNG of the page */
+    div.header div.link {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+    }
+
+/* global wrapper */
+div.page {
+    border: 1px solid <?=FaZend_Image::getCssColor('border')?>;
+    padding: <?=FaZend_UiModeller_Mockup::INDENT?>px;
+}
+
+    div.page p {
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    div.page input, 
+    div.page textarea, 
+    div.page select {
+        padding: 2px;
+        font-family: Verdana;
+    }
+
+    /* normal links and link-free hrefs */
+    div.page a {
+        text-decoration: none;
+        cursor: pointer;
+        color: #122632;
+        background-color: inherit;
+        border-bottom: 1px dotted #122632;
+    }
+        
+        div.page a:hover {
+            color: #0093d0;
+            background-color: inherit;
+            border-bottom: 1px dotted #0093d0;
+        }
+
+    div.page th {
+        text-align: left;
+    }
+
+        div.page td, 
+        div.page th {
+            text-align: left;
+            vertical-align: top;
+            padding: 2px;
+            margin: 1px;
+            background: white;
+            font-size: <?=FaZend_UiModeller_Mockup_Meta_Table::FONT_SIZE?>px;
+        }
+
+        div.page th {
+            background-color: <?=FaZend_Image::getCssColor('mockup.table.header.background')?>;
+            color: <?=FaZend_Image::getCssColor('mockup.table.header')?>;
+            font-weight: normal;
+        }
+
+div.logo {
+    text-align: right;
+    font-size: 0.8em;
+    color: gray;
+}

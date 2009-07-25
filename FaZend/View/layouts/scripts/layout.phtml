@@ -1,6 +1,6 @@
 <?
 $this->headMeta()
-	->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
+    ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
 
 $this->stripCSS('global.css');
 
@@ -19,26 +19,26 @@ $this->stripCSS('global.css');
 <?=$this->errorMessage()?>
 
 <div style="position: fixed; top: 0; right: 0; padding: 5px;">
-	
-	<?=$this->action('login', 'user', 'fazend')?>
+    
+    <?=$this->action('login', 'user', 'fazend')?>
 
-        <? if (Model_User::isLoggedIn()): ?>
-        	<p><a href="<?=$this->url(array(), 'adm', true)?>">admin</a></p>	
-        <? endif; ?>
+    <? if (Model_User::isLoggedIn()): ?>
+        <p><a href="<?=$this->url(array(), 'adm', true)?>">admin</a></p>    
+    <? endif; ?>
 </div>
 
 <div style='min-height: 350px; width: 900px;'>
 <?=$this->layout()->content?>
 </div>
-	
+    
 <div style="margin-top: 40px; line-height: 1.4em; clear: both; font-size: 0.8em; color: gray;">
-	<span style='padding-top: 3px; border-top: 1px gray solid;'>(c) <?=date('Y')?> fazend.com, 
-	rev.<?=FaZend_Revision::get()?>,
-	<?=$this->pageLoadTime()?></span>
-</div>	
+    <span style='padding-top: 3px; border-top: 1px gray solid;'>(c) <?=date('Y')?> fazend.com, 
+    rev.<?=FaZend_Revision::get()?>,
+    <?=$this->pageLoadTime()?></span>
+</div>    
 
 </div>
 
-</body>
 <?=$this->headScript() ?>
+</body>
 </html>

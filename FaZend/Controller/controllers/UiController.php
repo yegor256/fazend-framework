@@ -26,8 +26,28 @@ class Fazend_UiController extends FaZend_Controller_Action {
      *
      * @return void
      */
+    public function preDispatch() {
+        
+        // layout reconfigure to fazend
+        $layout = Zend_Layout::getMvcInstance();
+        $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
+        $layout->setLayout('ui');
+
+    }
+
+    /**
+     * Show the entire map of the system
+     *
+     * @return void
+     */
     public function indexAction() {
-        // not implemented yet
+
+        $this->view->actor = 'actor?';
+        $this->view->script = $script = $this->_getParam('id');
+
+        $mockup = new FaZend_UiModeller_Mockup($script);
+        $this->view->page = $mockup->html($this->view);
+
     }
 
     /**

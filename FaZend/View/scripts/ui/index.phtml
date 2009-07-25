@@ -1,0 +1,31 @@
+
+<div class="wrapper">
+
+    <div class="header">
+        <div class="actor">
+            <?=$this->actor?>
+        </div>
+
+        <div class="path">
+            <?=$this->script?>
+        </div>
+
+        <div class="link">
+            <a href="<?=$this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>">PNG</a>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="nav">
+            <?=$this->navigation()->menu()?>
+        </div>
+
+        <?=$this->page?>
+    </div>
+
+    <div class="logo">
+        (c) FaZend.com
+    </div>
+
+</div>
+

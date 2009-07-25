@@ -22,10 +22,18 @@
 interface FaZend_UiModeller_Mockup_Meta_Interface {
 
     /**
-     * Draw 
+     * Draw on the image
      *
      * @return int Height of the element
      */
     public function draw($y);
+
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view);
 
 }

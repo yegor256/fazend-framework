@@ -52,7 +52,7 @@ class FaZend_UiModeller_Mockup {
     /**
      * Build PNG image
      *
-     * @var string
+     * @return string PNG image
      */
     public function png() {
 
@@ -72,6 +72,20 @@ class FaZend_UiModeller_Mockup {
         // return the PNG content
         return $this->_getImage()->png();
 
+    }
+
+    /**
+     * Build HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML of the page
+     */
+    public function html(Zend_View $view) {
+        $html = '';
+        foreach ($this->_getMetas() as $meta) {
+            $html .= $meta->html($view);
+        }
+        return $html;
     }
 
     /**
@@ -126,26 +140,31 @@ class FaZend_UiModeller_Mockup {
 
         $metas = array();
 
-        $html = preg_replace('/[\n\t\r\s]/', ' ',
-            file_get_contents(APPLICATION_PATH . '/views/scripts/' . $this->_script . '.phtml'));
+        $scriptFile = APPLICATION_PATH . '/views/scripts/' . $this->_script . '.phtml';
 
-        $matches = array();
-        preg_match_all('/\<\!\-\-\s?\@(\w+)\((.*?)\)(.*?)\-\-\>/', $html, $matches);
-        foreach ($matches[0] as $id=>$match) {
+        if (file_exists($scriptFile)) {
 
-            $className = 'FaZend_UiModeller_Mockup_Meta_' . ucfirst($matches[1][$id]);
+            $html = preg_replace('/[\n\t\r\s]/', ' ', file_get_contents($scriptFile));
 
-            $meta = new $className($this->_getImage(), self::INDENT);
+            $matches = array();
+            preg_match_all('/\<\!\-\-\s?\@(\w+)\((.*?)\)(.*?)\-\-\>/', $html, $matches);
+            foreach ($matches[0] as $id=>$match) {
 
-            // set label if required
-            if (!empty($matches[2][$id]))
-                $meta->setLabel(trim($matches[2][$id], '"\''));
-                
-            // execute other calls
-            if (!empty($matches[3][$id]))
-                eval('$meta ' . $matches[3][$id] . ';');
-                
-            $metas[] = $meta;
+                $className = 'FaZend_UiModeller_Mockup_Meta_' . ucfirst($matches[1][$id]);
+
+                $meta = new $className($this->_getImage());
+
+                // set label if required
+                if (!empty($matches[2][$id]))
+                    $meta->setLabel(trim($matches[2][$id], '"\''));
+                    
+                // execute other calls
+                if (!empty($matches[3][$id]))
+                    eval('$meta ' . $matches[3][$id] . ';');
+                    
+                $metas[] = $meta;
+
+            }
 
         }
 

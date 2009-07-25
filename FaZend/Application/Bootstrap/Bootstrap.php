@@ -112,7 +112,7 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         // layout reconfigure, if necessary
         $layout = Zend_Layout::getMvcInstance();
         if (!file_exists($layout->getViewScriptPath()))
-            $layout->setViewScriptPath(FAZEND_PATH . '/View/layout/scripts');
+            $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
 
         // controller
         $this->bootstrap('frontController');

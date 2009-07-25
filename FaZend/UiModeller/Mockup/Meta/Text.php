@@ -46,4 +46,15 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
 
     }
 
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view) {
+        return '<p style="font-size: ' . self::FONT_SIZE . 'px; color: ' . FaZend_Image::getCssColor ('mockup.content') . ';' .
+            '">' . $this->_parse($this->label) . '</p>';
+    }
+
 }

@@ -28,4 +28,14 @@ class FaZend_UiModeller_Mockup_Meta_Actor extends FaZend_UiModeller_Mockup_Meta_
      */
     public function draw($y) {}
 
+    /**
+     * Convert to HTML
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function html(Zend_View $view) {
+        return '';
+    }
+
 }
