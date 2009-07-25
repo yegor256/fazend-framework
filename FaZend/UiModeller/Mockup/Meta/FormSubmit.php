@@ -15,24 +15,32 @@
  */
 
 /**
- * Mockup meta element
+ * Form text
  *
  * @package FaZend 
  */
-interface FaZend_UiModeller_Mockup_Meta_Interface {
+class FaZend_UiModeller_Mockup_Meta_FormSubmit extends FaZend_UiModeller_Mockup_Meta_FormElement {
 
     /**
-     * Draw on the image
+     * Draw 
      *
-     * @return int Height of the element
+     * @return int Height
      */
-    public function draw($y);
+    public function draw($y) {
+
+
+    }
 
     /**
      * Convert to HTML
      *
      * @return string HTML image of the element
      */
-    public function html();
+    public function html() {
+
+        return '<p>' . $this->_htmlLink($this->header, '<span class="submit">' . 
+            $this->_parse($this->value). '</span>') . '</p>';
+
+    }
 
 }

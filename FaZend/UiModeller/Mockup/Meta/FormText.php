@@ -15,11 +15,11 @@
  */
 
 /**
- * Form
+ * Form text
  *
  * @package FaZend 
  */
-class FaZend_UiModeller_Mockup_Meta_Form extends FaZend_UiModeller_Mockup_Meta_Abstract {
+class FaZend_UiModeller_Mockup_Meta_FormText extends FaZend_UiModeller_Mockup_Meta_FormElement {
 
     /**
      * Draw 
@@ -38,34 +38,10 @@ class FaZend_UiModeller_Mockup_Meta_Form extends FaZend_UiModeller_Mockup_Meta_A
      */
     public function html() {
 
-        $fields = $this->_getOptions('/^field.*/');
-
-        $html = '';
-
-        foreach ($fields as $field) {
-            $html .= $field->html();
-        }
+        $html = '<p>' . $this->_parse($this->header) . ':<br/>' .
+            '<input type="text" value="' . $this->_parse($this->value) . '"/></p>';
 
         return $html;
-    }
-
-    /**
-     * Add new field
-     *
-     * @return this
-     */
-    public function addField($name, $type, $value, $header) {
-
-        $type = 'FaZend_UiModeller_Mockup_Meta_Form' . ucfirst($type);
-
-        $cls = new $type($this->_mockup);
-        $cls->__call('setValue', array($value));
-        $cls->__call('setHeader', array($header));
-
-        $this->__set('field' . $name, $cls);
-
-        return $this;
-
     }
 
 }

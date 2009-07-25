@@ -32,14 +32,14 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
 
         $txt = $this->_parse($this->label);
 
-        $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_image->getFont('mockup.content'), $txt);
+        $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
 
         $scale = $bbox[4]/(FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT*2);
         $txt = wordwrap($txt, strlen($txt) / $scale);
 
-        $this->_image->imagettftext(self::FONT_SIZE, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
-            $this->_image->getColor('mockup.content'), 
-            $this->_image->getFont('mockup.content'), 
+        $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
+            $this->_mockup->getImage()->getColor('mockup.content'), 
+            $this->_mockup->getImage()->getFont('mockup.content'), 
             $txt);
 
         return (substr_count($txt, "\n") + 1) * self::FONT_SIZE * 1.6 + self::FONT_SIZE;
@@ -49,10 +49,9 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
     /**
      * Convert to HTML
      *
-     * @param Zend_View Current view
      * @return string HTML image of the element
      */
-    public function html(Zend_View $view) {
+    public function html() {
         return '<p style="font-size: ' . self::FONT_SIZE . 'px; color: ' . FaZend_Image::getCssColor ('mockup.content') . ';' .
             '">' . $this->_parse($this->label) . '</p>';
     }

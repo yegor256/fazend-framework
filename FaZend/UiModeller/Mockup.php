@@ -39,6 +39,13 @@ class FaZend_UiModeller_Mockup {
     protected $_image;
     
     /**
+     * View to show text into
+     *
+     * @var Zend_View
+     */
+    protected $_view;
+    
+    /**
      * Get the image
      *
      * @var int
@@ -61,16 +68,16 @@ class FaZend_UiModeller_Mockup {
 
         $title = $this->_script . '.phtml';
 
-        $bbox = imagettfbbox(9, 0, $this->_getImage()->getFont('mockup.title'), $title);
-        $this->_getImage()->imagettftext(9, 0, $width-$bbox[4] - 3, -$bbox[5], 
-            $this->_getImage()->getColor('mockup.title'), 
-            $this->_getImage()->getFont('mockup.title'), 
+        $bbox = imagettfbbox(9, 0, $this->getImage()->getFont('mockup.title'), $title);
+        $this->getImage()->imagettftext(9, 0, $width-$bbox[4] - 3, -$bbox[5], 
+            $this->getImage()->getColor('mockup.title'), 
+            $this->getImage()->getFont('mockup.title'), 
             $title);
 
         $this->_draw();
 
         // return the PNG content
-        return $this->_getImage()->png();
+        return $this->getImage()->png();
 
     }
 
@@ -81,6 +88,9 @@ class FaZend_UiModeller_Mockup {
      * @return string HTML of the page
      */
     public function html(Zend_View $view) {
+        
+        $this->_view = $view;
+        
         $html = '';
         foreach ($this->_getMetas() as $meta) {
             $html .= $meta->html($view);
@@ -89,30 +99,21 @@ class FaZend_UiModeller_Mockup {
     }
 
     /**
-     * Draw all metas and return total Height
+     * Get the instance of View
      *
-     * @return int
+     * @return Zend_View
      */
-    public function _draw() {
-
-        $y = self::INDENT;
-        foreach ($this->_getMetas() as $meta) {
-
-            $y += $meta->draw($y);
-
-        }
-
-        return $y;
-
+    public function getView() {
+        return $this->_view;
     }
-
+                       
     /**
      * Get the image
      *
      * @return FaZend_Image
      */
-    public function _getImage() {
-
+    public function getImage() {
+                       
         if (!isset($this->_image)) {
 
             // create it
@@ -129,11 +130,29 @@ class FaZend_UiModeller_Mockup {
     }
 
     /**
+     * Draw all metas and return total Height
+     *
+     * @return int
+     */
+    protected function _draw() {
+
+        $y = self::INDENT;
+        foreach ($this->_getMetas() as $meta) {
+
+            $y += $meta->draw($y);
+
+        }
+
+        return $y;
+
+    }
+
+    /**
      * Get the list of metas in the page
      *
      * @return FaZend_UiModeller_Mockup_Meta_Interface[]
      */
-    public function _getMetas() {
+    protected function _getMetas() {
 
         if (isset($this->_metas))
             return $this->_metas;
@@ -152,7 +171,7 @@ class FaZend_UiModeller_Mockup {
 
                 $className = 'FaZend_UiModeller_Mockup_Meta_' . ucfirst($matches[1][$id]);
 
-                $meta = new $className($this->_getImage());
+                $meta = new $className($this);
 
                 // set label if required
                 if (!empty($matches[2][$id]))
@@ -177,11 +196,11 @@ class FaZend_UiModeller_Mockup {
      *
      * @return array
      */
-    public function _getDimensions() {
+    protected function _getDimensions() {
 
-        $this->_getImage()->disableDrawing();
+        $this->getImage()->disableDrawing();
         $height = $this->_draw();
-        $this->_getImage()->enableDrawing();
+        $this->getImage()->enableDrawing();
 
         return array(self::WIDTH, self::INDENT + $height);
 

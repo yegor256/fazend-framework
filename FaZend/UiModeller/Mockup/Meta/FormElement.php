@@ -15,24 +15,11 @@
  */
 
 /**
- * Mockup meta element
+ * Form element
  *
  * @package FaZend 
  */
-interface FaZend_UiModeller_Mockup_Meta_Interface {
+abstract class FaZend_UiModeller_Mockup_Meta_FormElement extends FaZend_UiModeller_Mockup_Meta_Abstract {
 
-    /**
-     * Draw on the image
-     *
-     * @return int Height of the element
-     */
-    public function draw($y);
-
-    /**
-     * Convert to HTML
-     *
-     * @return string HTML image of the element
-     */
-    public function html();
 
 }

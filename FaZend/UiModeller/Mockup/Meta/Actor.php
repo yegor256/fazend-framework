@@ -31,10 +31,9 @@ class FaZend_UiModeller_Mockup_Meta_Actor extends FaZend_UiModeller_Mockup_Meta_
     /**
      * Convert to HTML
      *
-     * @param Zend_View Current view
      * @return string HTML image of the element
      */
-    public function html(Zend_View $view) {
+    public function html() {
         return '';
     }
 

@@ -26,10 +26,9 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
     /**
      * Convert to HTML
      *
-     * @param Zend_View Current view
      * @return string HTML image of the element
      */
-    public function html(Zend_View $view) {
+    public function html() {
 
         $html = '<p><div style="display: inline-block; background:' . FaZend_Image::getCssColor ('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
 
@@ -72,7 +71,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
     public function draw($top) {
 
         // calculate the height of one line of text
-        $lineHeight = $this->_getLineHeight(self::FONT_SIZE, $this->_image->getFont('mockup.content'));
+        $lineHeight = $this->_getLineHeight(self::FONT_SIZE, $this->_mockup->getImage()->getFont('mockup.content'));
 
         $columns = $this->_getOptions('/^column.*/');
         $leftMargin = $x = FaZend_UiModeller_Mockup::INDENT;
@@ -92,17 +91,17 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         foreach ($columns as $details) {
 
             // filled header
-            $this->_image->imagefilledrectangle(
+            $this->_mockup->getImage()->imagefilledrectangle(
                 $details['x'] - 2, $y, 
                 $details['x'] + $details['widthPixels'] - 2, $y + $lineHeight, 
-                $this->_image->getColor('mockup.table.header.background')); 
+                $this->_mockup->getImage()->getColor('mockup.table.header.background')); 
 
             $txt = $this->_parse($details['title']);
-            $this->_image->imagettftext(self::FONT_SIZE, 0, 
+            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, 
                 $details['x'], 
                 $y + $lineHeight - 3, // because (x,y) in text is at the left-bottom corner
-                $this->_image->getColor('mockup.table.header'), 
-                $this->_image->getFont('mockup.content'), 
+                $this->_mockup->getImage()->getColor('mockup.table.header'), 
+                $this->_mockup->getImage()->getFont('mockup.content'), 
                 $txt);
         }
 
@@ -111,8 +110,8 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         for ($i=0; $i<=$this->totalLines; $i++) {
 
             // horizontal line
-            $this->_image->imageline($leftMargin, $y,
-                $rightMargin, $y, $this->_image->getColor('mockup.table.grid')); 
+            $this->_mockup->getImage()->imageline($leftMargin, $y,
+                $rightMargin, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
 
             // just draw the bottom horizontal line
             if ($i == $this->totalLines)
@@ -126,16 +125,16 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
                 else
                     $txt = $this->_parse($details['mask']);
 
-                $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_image->getFont('mockup.content'), $txt);
+                $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
 
                 $scale = 1.1 * $bbox[4]/$details['widthPixels'];
                 $txt = wordwrap($txt, strlen($txt) / $scale, "\n", true);
 
-                $this->_image->imagettftext(self::FONT_SIZE, 0, 
+                $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, 
                     $details['x'], 
                     $y + $lineHeight, // because (x,y) in text is at the left-bottom corner
-                    $this->_image->getColor('mockup.content'), 
-                    $this->_image->getFont('mockup.content'), 
+                    $this->_mockup->getImage()->getColor('mockup.content'), 
+                    $this->_mockup->getImage()->getFont('mockup.content'), 
                     $txt);
 
                 $height = max($height, substr_count($txt, "\n") + 1);
@@ -151,7 +150,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             $xs[] = $details['x'] - 2;
         $xs[] = end($xs) + $details['widthPixels'];
         foreach ($xs as $x)
-            $this->_image->imageline($x, $top, $x, $y, $this->_image->getColor('mockup.table.grid')); 
+            $this->_mockup->getImage()->imageline($x, $top, $x, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
 
         // return the height of the table 
         return $y;

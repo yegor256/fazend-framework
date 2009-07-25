@@ -108,6 +108,12 @@ div.page {
             font-weight: normal;
         }
 
+    div.page span.submit {
+        padding: 4px;
+        border: 2px solid <?=FaZend_Image::getCssColor('mockup.button.border')?>;
+        background: <?=FaZend_Image::getCssColor('mockup.button')?>;
+    }
+
 div.logo {
     text-align: right;
     font-size: 0.8em;

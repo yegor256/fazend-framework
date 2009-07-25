@@ -29,19 +29,19 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
     protected $_options = array();
 
     /**
-     * Image to put this element onto
+     * Mockup, where this element is located
      *
-     * @var FaZend_Image
+     * @var FaZend_UiModeller_Mockup
      */
-    protected $_image;
+    protected $_mockup;
     
     /**
      * Initialize this class
      *
      * @return void
      */
-    public function __construct(FaZend_Image $image) {
-        $this->_image = $image;
+    public function __construct(FaZend_UiModeller_Mockup $mockup) {
+        $this->_mockup = $mockup;
     }
 
     /**
@@ -82,6 +82,8 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
      * @return this
      */
     public function __get($var) {
+        if (!isset($this->_options[$var]))
+            FaZend_Exception::raise('FaZend_UiModeller_Mockup_Meta_OptionMissed', "Option '$var' is not set yet in " . get_class($this));
         return $this->_options[$var];
     }
 
@@ -138,6 +140,22 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
 
     }
 
+    /**
+     * Build HTML link
+     *
+     * @param Zend_View Current view
+     * @return string HTML image of the element
+     */
+    public function _htmlLink($script, $label) {
+        return '<a href="' . $this->_mockup->getView()->url(array('action'=>'index', 'id'=>$script), 'ui', true, false). '">' . 
+            $label. '</a>';
+    }
+
+    /**
+     * List of stupid texts
+     *
+     * @var string[]
+     */
     private $_loremIpsumSlices = array(
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         'Nunc convallis nulla id eros interdum aliquam',
