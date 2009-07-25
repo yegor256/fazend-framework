@@ -121,7 +121,8 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
         foreach ($matches[0] as $id=>$match)
             switch ($matches[2][$id]) {
                 case 'd':
-                    $args[] = rand(0, 100);
+                    $pow = empty($matches[1][$id]) ? 2 : (int)$matches[1][$id];
+                    $args[] = rand(pow(10, $pow-1), pow(10, $pow));
                     break;
 
                 case 's':

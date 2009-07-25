@@ -137,6 +137,8 @@ class FaZend_Image {
             'mockup.content' => '333333', // texts in mockups
 
             'mockup.table.grid' => 'dddddd', // grids
+            'mockup.table.header' => 'ffffff',
+            'mockup.table.header.background' => 'aaaaff',
         );
 
         if (!isset($colors[$mnemo]))

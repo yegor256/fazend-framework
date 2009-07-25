@@ -34,27 +34,51 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         $lineHeight = $this->_getLineHeight(self::FONT_SIZE, $this->_image->getFont('mockup.content'));
 
         $columns = $this->_getOptions('/^column.*/');
-        $x = 0;
-        foreach ($columns as $column=>&$dets) {
+        $leftMargin = $x = FaZend_UiModeller_Mockup::INDENT;
+        foreach ($columns as &$dets) {
             $dets['widthPixels'] = $dets['width'] * self::FONT_SIZE;
             $dets['x'] = $x;
             $x += $dets['widthPixels'];
         }
 
+        // right border of the table
+        $rightMargin = $x - 2;
+
+        // start with top
         $y = $top;
+
+        // draw table header
+        foreach ($columns as $details) {
+
+            // filled header
+            $this->_image->imagefilledrectangle(
+                $details['x'] - 2, $y, 
+                $details['x'] + $details['widthPixels'] - 2, $y + $lineHeight, 
+                $this->_image->getColor('mockup.table.header.background')); 
+
+            $txt = $this->_parse($details['title']);
+            $this->_image->imagettftext(self::FONT_SIZE, 0, 
+                $details['x'], 
+                $y + $lineHeight - 3, // because (x,y) in text is at the left-bottom corner
+                $this->_image->getColor('mockup.table.header'), 
+                $this->_image->getFont('mockup.content'), 
+                $txt);
+        }
+
+        $y += $lineHeight;
 
         for ($i=0; $i<=$this->totalLines; $i++) {
 
             // horizontal line
-            $this->_image->imageline(FaZend_UiModeller_Mockup::INDENT, $y,
-                FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT, $y, $this->_image->getColor('mockup.table.grid')); 
+            $this->_image->imageline($leftMargin, $y,
+                $rightMargin, $y, $this->_image->getColor('mockup.table.grid')); 
 
             // just draw the bottom horizontal line
             if ($i == $this->totalLines)
                 break;
 
             $height = 1; 
-            foreach ($columns as $column=>$details) {
+            foreach ($columns as $details) {
 
                 $txt = $this->_parse($details['mask']);
                 $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_image->getFont('mockup.content'), $txt);
@@ -63,7 +87,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
                 $txt = wordwrap($txt, strlen($txt) / $scale, "\n", true);
 
                 $this->_image->imagettftext(self::FONT_SIZE, 0, 
-                    FaZend_UiModeller_Mockup::INDENT + $details['x'], 
+                    $details['x'], 
                     $y + $lineHeight, // because (x,y) in text is at the left-bottom corner
                     $this->_image->getColor('mockup.content'), 
                     $this->_image->getFont('mockup.content'), 
@@ -78,19 +102,14 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
 
         // draw verticals in grid
         $xs = array();
-        foreach ($columns as $column=>$details)
-            $xs[] = $details['x'] + FaZend_UiModeller_Mockup::INDENT - 2;
+        foreach ($columns as $details)
+            $xs[] = $details['x'] - 2;
         $xs[] = end($xs) + $details['widthPixels'];
-
-        if (end($xs) < FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT) {
-            array_pop($xs);
-            $xs[] = FaZend_UiModeller_Mockup::WIDTH - FaZend_UiModeller_Mockup::INDENT;
-        }
-                      
         foreach ($xs as $x)
             $this->_image->imageline($x, $top, $x, $y, $this->_image->getColor('mockup.table.grid')); 
-            
-        return $y + $i * self::FONT_SIZE;
+
+        // return the height of the table 
+        return $y;
 
     }
 
@@ -100,7 +119,10 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
      * @return this
      */
     public function addColumn($name, $mask, $width) {
-        $this->__set('column' . $name, array('mask'=>$mask, 'width'=>$width));
+        $this->__set('column' . $name, array(
+            'title'=>$name,
+            'mask'=>$mask, 
+            'width'=>$width));
         return $this;
     }
 
