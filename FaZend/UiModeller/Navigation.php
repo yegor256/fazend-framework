@@ -55,6 +55,10 @@ class FaZend_UiModeller_Navigation {
             // full list of actions
             foreach (glob(APPLICATION_PATH . '/views/scripts/' . $controller . '/*') as $action) {
 
+                // filter out 
+                if (!preg_match('/\.phtml$/', $action))
+                    continue;
+
                 $action = pathinfo($action, PATHINFO_FILENAME);
             
                 // get the file name, without extension

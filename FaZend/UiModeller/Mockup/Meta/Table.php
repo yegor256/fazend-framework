@@ -153,7 +153,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             $this->_mockup->getImage()->imageline($x, $top, $x, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
 
         // return the height of the table 
-        return $y;
+        return $y - $top + self::FONT_SIZE * 2;
 
     }
 

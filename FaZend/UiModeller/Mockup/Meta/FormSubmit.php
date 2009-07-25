@@ -52,7 +52,7 @@ class FaZend_UiModeller_Mockup_Meta_FormSubmit extends FaZend_UiModeller_Mockup_
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
             $txt);
 
-        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 2;
+        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 3;
 
     }
 

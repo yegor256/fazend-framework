@@ -62,7 +62,7 @@ class FaZend_UiModeller_Mockup_Meta_FormTextarea extends FaZend_UiModeller_Mocku
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
             $this->_parse($this->value));
 
-        return $height + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.5;
+        return $height + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 3.5;
 
     }
 
