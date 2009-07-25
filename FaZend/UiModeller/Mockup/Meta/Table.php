@@ -51,7 +51,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
                 else
                     $txt = $this->_parse($details['mask']);
 
-                $html .= '<td>' . $txt . '</td>';
+                $html .= '<td style="width:' . ($details['width'] * self::FONT_SIZE) . 'px">' . $txt . '</td>';
             }
             $html .= '</tr>';
 
