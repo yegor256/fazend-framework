@@ -80,7 +80,11 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             $height = 1; 
             foreach ($columns as $details) {
 
-                $txt = $this->_parse($details['mask']);
+                if (is_array($details['mask']))
+                    $txt = array_rand($details['mask']);
+                else
+                    $txt = $this->_parse($details['mask']);
+
                 $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_image->getFont('mockup.content'), $txt);
 
                 $scale = 1.1 * $bbox[4]/$details['widthPixels'];
