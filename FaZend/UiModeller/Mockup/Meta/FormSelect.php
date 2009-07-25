@@ -28,6 +28,45 @@ class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_
      */
     public function draw($y) {
 
+        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 15;
+
+        // element header
+        $this->_mockup->getImage()->imagettftext(FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 0, 
+            FaZend_UiModeller_Mockup::INDENT, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 
+            $this->_mockup->getImage()->getColor('mockup.content'), 
+            $this->_mockup->getImage()->getFont('mockup.content'), 
+            $this->_parse($this->header) . ':');
+
+        $y += FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 2;
+
+        // white rectangle
+        $this->_mockup->getImage()->imagefilledrectangle( 
+            FaZend_UiModeller_Mockup::INDENT, $y, 
+            FaZend_UiModeller_Mockup::INDENT + $width, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE*2, 
+            $this->_mockup->getImage()->getColor('mockup.input'));
+
+        // border
+        $this->_mockup->getImage()->imagerectangle( 
+            FaZend_UiModeller_Mockup::INDENT, $y, 
+            FaZend_UiModeller_Mockup::INDENT + $width, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE*2, 
+            $this->_mockup->getImage()->getColor('mockup.input.border'));
+
+        // triangle
+        $this->_mockup->getImage()->imagefilledpolygon( 
+            array(
+                FaZend_UiModeller_Mockup::INDENT + $width - 16, $y + 8, 
+                FaZend_UiModeller_Mockup::INDENT + $width - 4, $y + 8,
+                FaZend_UiModeller_Mockup::INDENT + $width - 10, $y + 18), 
+            3, $this->_mockup->getImage()->getColor('mockup.input.border'));
+
+        // text inside the field
+        $this->_mockup->getImage()->imagettftext(FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 0, 
+            FaZend_UiModeller_Mockup::INDENT + 3, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.5, 
+            $this->_mockup->getImage()->getColor('mockup.input.text'), 
+            $this->_mockup->getImage()->getFont('mockup.input.text'), 
+            $this->_parse($this->value[array_rand($this->value)]));
+
+        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 5;
 
     }
 

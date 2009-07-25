@@ -28,6 +28,13 @@ class FaZend_UiModeller_Mockup_Meta_Form extends FaZend_UiModeller_Mockup_Meta_A
      */
     public function draw($y) {
 
+        $fields = $this->_getOptions('/^field.*/');
+
+        foreach ($fields as $field) {
+            $y += $field->draw($y);
+        }
+
+        return $y;
 
     }
 
@@ -47,6 +54,7 @@ class FaZend_UiModeller_Mockup_Meta_Form extends FaZend_UiModeller_Mockup_Meta_A
         }
 
         return $html;
+
     }
 
     /**

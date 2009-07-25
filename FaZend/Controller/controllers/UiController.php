@@ -45,6 +45,9 @@ class Fazend_UiController extends FaZend_Controller_Action {
         $this->view->actor = 'actor?';
         $this->view->script = $script = $this->_getParam('id');
 
+        // search and build the whole MAP of the project
+        FaZend_UiModeller_Navigation::populateNavigation($this->view->navigation(), $script);
+
         $mockup = new FaZend_UiModeller_Mockup($script);
         $this->view->page = $mockup->html($this->view);
 

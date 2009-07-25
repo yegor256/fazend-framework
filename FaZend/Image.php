@@ -136,6 +136,10 @@ class FaZend_Image {
             'mockup.button' => 'eeeeee', // background of buttons
             'mockup.button.border' => 'cccccc', // borders of buttons
 
+            'mockup.input' => 'ffffff', // background of inputs
+            'mockup.input.border' => '555555', // borders of inputs
+            'mockup.input.text' => '000099', // texts in input fields
+
             'mockup.table.grid' => 'dddddd', // grids
             'mockup.table.header' => 'ffffff',
             'mockup.table.header.background' => 'aaaaff',

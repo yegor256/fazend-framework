@@ -59,6 +59,7 @@ div.header {
 div.page {
     border: 1px solid <?=FaZend_Image::getCssColor('border')?>;
     padding: <?=FaZend_UiModeller_Mockup::INDENT?>px;
+    position: relative;
 }
 
     div.page p {
@@ -71,6 +72,9 @@ div.page {
     div.page select {
         padding: 2px;
         font-family: Verdana;
+        color: <?=FaZend_Image::getCssColor('mockup.input.text')?>;
+        border: 1px solid <?=FaZend_Image::getCssColor('mockup.input.border')?>;
+        background:<?=FaZend_Image::getCssColor('mockup.input')?>;
     }
 
     /* normal links and link-free hrefs */
@@ -113,6 +117,31 @@ div.page {
         border: 2px solid <?=FaZend_Image::getCssColor('mockup.button.border')?>;
         background: <?=FaZend_Image::getCssColor('mockup.button')?>;
     }
+
+    div.page div.nav {
+        position: absolute;
+        top: 0px;
+        left: -220px;
+        width: 200px;
+        line-height: 1.4em;
+        text-align: right;
+    }
+
+        div.page div.nav ul {
+        }
+
+        div.page div.nav li {
+            list-style: none;
+            margin-bottom: 18px; 
+        }
+
+            div.page div.nav li li {
+                margin-bottom: 0px !important; 
+            }
+
+                div.page div.nav li li.active {
+                    font-weight: bold;
+                }
 
 div.logo {
     text-align: right;

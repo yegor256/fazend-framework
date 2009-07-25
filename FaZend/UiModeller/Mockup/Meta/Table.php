@@ -41,7 +41,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         }
         $html .= '</tr>';
 
-        for ($i=0; $i<=$this->totalLines; $i++) {
+        for ($i=0; $i<$this->totalLines; $i++) {
 
             $html .= '<tr>';
             foreach ($columns as $details) {

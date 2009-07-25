@@ -1,4 +1,8 @@
 
+<?
+    $this->headTitle($this->script);
+?>
+
 <div class="wrapper">
 
     <div class="header">
@@ -17,7 +21,9 @@
 
     <div class="page">
         <div class="nav">
-            <?=$this->navigation()->menu()?>
+            <?=$this->navigation()->menu()
+                ->setMaxDepth(2)
+                ->setRenderParents(true)?>
         </div>
 
         <?=$this->page?>
