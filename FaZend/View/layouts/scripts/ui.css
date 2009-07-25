@@ -130,7 +130,7 @@ div.page {
     div.page div.actors {
         position: absolute;
         top: 0px;
-        left: -220px;
+        left: -210px;
         width: 200px;
         line-height: 1.4em;
         text-align: right;
@@ -151,8 +151,9 @@ div.page {
     div.page div.nav {
         position: absolute;
         top: 0px;
-        right: -<?=FaZend_UiModeller_Mockup::INDENT + 20?>px;
+        right: -160px;
         line-height: 1.4em;
+        width: 150px;
     }
 
         div.page div.nav ul {
