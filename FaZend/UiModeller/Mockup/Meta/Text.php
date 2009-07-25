@@ -52,8 +52,7 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
      * @return string HTML image of the element
      */
     public function html() {
-        return '<p style="font-size: ' . self::FONT_SIZE . 'px; color: ' . FaZend_Image::getCssColor ('mockup.content') . ';' .
-            '">' . $this->_parse($this->label) . '</p>';
+        return '<p>' . $this->_parse($this->label) . '</p>';
     }
 
 }
