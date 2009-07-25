@@ -108,6 +108,9 @@ class FaZend_UiModeller_Navigation {
                 'class' => 'controller',
             ));
 
+            // list of actors who CAN access this controller
+            $actors = array();
+
             // full list of actions
             foreach (glob(APPLICATION_PATH . '/views/scripts/' . $controller . '/*') as $action) {
 
@@ -138,10 +141,10 @@ class FaZend_UiModeller_Navigation {
                 $matches = array();
                 if (preg_match_all('/<!--\s?\@actor\s?\([\"\'](.*?)[\'\"]\)/', $content, $matches)) {
                     foreach ($matches[1] as $match) {
-                        $this->_allow($match, $label);
+                        $actors[] = $this->_allow($match, $label);
                     }
                 } else {
-                    $this->_allow(self::ANONYMOUS, $label);
+                    $actors[] = $this->_allow(self::ANONYMOUS, $label);
                 }
 
                 // add this page to the container
@@ -149,8 +152,16 @@ class FaZend_UiModeller_Navigation {
             
             }
 
-            // add this page to the container
-            $this->_container->addPage($section);
+            if (count($actors)) {
+                // add all of them to the controller
+                foreach ($actors as $actor)
+                    $this->_allow($actor, $controller);
+
+                $section->resource = $controller;
+
+                // add this page to the container
+                $this->_container->addPage($section);
+            }
             
         }
 
@@ -185,7 +196,7 @@ class FaZend_UiModeller_Navigation {
      *
      * @param string Name of the actor
      * @param string Script
-     * @return void
+     * @return string name of actor
      */
     protected function _allow($actor, $script) {
 
@@ -201,6 +212,8 @@ class FaZend_UiModeller_Navigation {
 
         // allow access for this actor to this resource
         $this->_acl->allow($actor, $script);
+
+        return $actor;
 
     }
 
