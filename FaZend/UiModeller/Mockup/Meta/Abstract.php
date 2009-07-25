@@ -124,7 +124,7 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
             switch ($matches[2][$id]) {
                 case 'd':
                     $pow = empty($matches[1][$id]) ? 2 : (int)$matches[1][$id];
-                    $args[] = rand(pow(10, $pow-1), pow(10, $pow));
+                    $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
                     break;
 
                 case 's':
@@ -147,7 +147,13 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
      * @return string HTML image of the element
      */
     public function _htmlLink($script, $label) {
-        return '<a href="' . $this->_mockup->getView()->url(array('action'=>'index', 'id'=>$script), 'ui', true, false). '">' . 
+
+        // broken link?
+        if (!FaZend_UiModeller_Navigation::getInstance()->getAcl()->has($script))
+            return '<span class="broken" title="Script ' . $script . ' is absent">' . $label . '</span>';
+
+        return '<a href="' . $this->_mockup->getView()->url(array('action'=>'index', 'id'=>$script), 'ui', true, false). 
+            '" title="' . $script . '">' . 
             $label. '</a>';
     }
 

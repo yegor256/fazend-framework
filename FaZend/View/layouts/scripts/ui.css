@@ -112,6 +112,12 @@ div.page {
             font-weight: normal;
         }
 
+    /* broken link */
+    div.page span.broken {
+        border-bottom: 1px dotted red;
+    }
+
+    /* SUBMIT button at the end of the form */
     div.page span.submit {
         padding: 4px;
         border: 2px solid <?=FaZend_Image::getCssColor('mockup.button.border')?>;
