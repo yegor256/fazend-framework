@@ -118,13 +118,33 @@ div.page {
         background: <?=FaZend_Image::getCssColor('mockup.button')?>;
     }
 
-    div.page div.nav {
+    /* list of all active actor */
+    div.page div.actors {
         position: absolute;
         top: 0px;
         left: -220px;
         width: 200px;
         line-height: 1.4em;
         text-align: right;
+    }
+
+        div.page div.actors li {
+            list-style: none;
+            margin-bottom: 18px; 
+        }
+
+            div.page div.actors li.active {
+                list-style: none;
+                margin-bottom: 18px; 
+                font-weight: bold;
+            }
+
+    /* list of all scripts */
+    div.page div.nav {
+        position: absolute;
+        top: 0px;
+        right: -<?=FaZend_UiModeller_Mockup::INDENT + 20?>px;
+        line-height: 1.4em;
     }
 
         div.page div.nav ul {

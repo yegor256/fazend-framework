@@ -21,6 +21,57 @@
  */
 class FaZend_UiModeller_Navigation {
 
+    const ANONYMOUS = 'anonymous';
+
+    /**
+     * Instance of this class
+     *
+     * @var FaZend_UiModeller_Navigation
+     */
+    protected static $_instance;
+
+    /**
+     * Container
+     *
+     * @var Zend_Navigation
+     */
+    protected $_container;
+
+    /**
+     * ACL
+     *
+     * @var Zend_ACL
+     */
+    protected $_acl;
+
+    /**
+     * List of all actors found
+     *
+     * @var string[]
+     */
+    protected $_actors = array();
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
+    protected function __construct() {
+        $this->_container = new Zend_Navigation();
+        $this->_acl = new Zend_Acl();
+    }
+
+    /**
+     * Singleton
+     *
+     * @return FaZend_UiModeller_Navigation
+     */
+    public function getInstance() {
+        if (!isset(self::$_instance))
+            self::$_instance = new FaZend_UiModeller_Navigation();
+        return self::$_instance;
+    }
+
     /**
      * Populate nagivation containter with pages
      *
@@ -28,7 +79,10 @@ class FaZend_UiModeller_Navigation {
      * @param string Script name, like 'index/settings'
      * @return void
      */
-    public static function populateNavigation(&$container, $script) {
+    public function discover($script) {
+
+        // clear container
+        $this->_container->removePages();
 
         // full list of controllers
         foreach (glob(APPLICATION_PATH . '/views/scripts/*') as $controller) {
@@ -50,7 +104,7 @@ class FaZend_UiModeller_Navigation {
             ));
 
             // add this page to the container
-            $container->addPage($section);
+            $this->_container->addPage($section);
             
             // full list of actions
             foreach (glob(APPLICATION_PATH . '/views/scripts/' . $controller . '/*') as $action) {
@@ -69,10 +123,23 @@ class FaZend_UiModeller_Navigation {
                     'label' => $action,
                     'title' => $label,
                     'uri' => Zend_Registry::getInstance()->view->url(array('action'=>'index', 'id'=>$label), 'ui', true, false),
+                    'resource' => $script,
                 ));
 
                 if ($label == $script)
                     $page->active = true;
+
+                // get the file
+                $content = file_get_contents(APPLICATION_PATH . '/views/scripts/' . $controller . '/' . $action . '.phtml');
+
+                $matches = array();
+                if (preg_match_all('/<!--\s?\@actor\s?\([\"\'](.*?)[\'\"]\)/', $content, $matches)) {
+                    foreach ($matches[1] as $match) {
+                        $this->_allow($match, $script);
+                    }
+                } else {
+                    $this->_allow(self::ANONYMOUS, $script);
+                }
 
                 // add this page to the container
                 $section->addPage($page);
@@ -81,6 +148,51 @@ class FaZend_UiModeller_Navigation {
 
         }
 
+        return $this->_container;
+
     }
+
+    /**
+     * Get ACL
+     *
+     * @return Zend_Acl
+     */
+    public function getAcl() {
+        return $this->_acl;
+    }
+
+    /**
+     * Get list of actors
+     *
+     * @return string[]
+     */
+    public function getActors() {
+        return $this->_actors;
+    }
+
+    /**
+     * Allow this actor to this page
+     *
+     * @param string Name of the actor
+     * @param string Script
+     * @return void
+     */
+    protected function _allow($actor, $script) {
+
+        // create a role if it is absent
+        if (!$this->_acl->hasRole($actor)) {
+            $this->_acl->addRole(new Zend_Acl_Role($actor));
+            $this->_actors[] = $actor;
+        }
+
+        // create resource if absent
+        if (!$this->_acl->has($script))
+            $this->_acl->add(new Zend_Acl_Resource($script));
+
+        // allow access for this actor to this resource
+        $this->_acl->allow($actor, $script);
+
+    }
+
 
 }

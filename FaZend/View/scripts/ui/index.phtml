@@ -20,10 +20,15 @@
     </div>
 
     <div class="page">
+        
         <div class="nav">
             <?=$this->navigation()->menu()
                 ->setMaxDepth(2)
                 ->setRenderParents(true)?>
+        </div>
+
+        <div class="actors">
+            <?=$this->actors?>
         </div>
 
         <?=$this->page?>
