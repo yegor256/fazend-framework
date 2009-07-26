@@ -139,6 +139,8 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
                     break;
             }
 
+        $txt = str_replace('\n', "\n", $txt);
+
         return vsprintf($txt, $args);
 
     }
