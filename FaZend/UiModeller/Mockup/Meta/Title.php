@@ -35,7 +35,7 @@ class FaZend_UiModeller_Mockup_Meta_Title extends FaZend_UiModeller_Mockup_Meta_
             $this->_mockup->getImage()->getFont('mockup.content.title'), 
             $this->_parse($this->label));
 
-        return self::FONT_SIZE * 2;
+        return self::FONT_SIZE * 2.5;
 
     }
 
