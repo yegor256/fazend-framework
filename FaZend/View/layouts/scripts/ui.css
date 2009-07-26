@@ -63,6 +63,13 @@ div.page {
     min-height: 400px;
 }
 
+    div.page h1 {
+        font-weight: normal;
+        font-size: <?=FaZend_UiModeller_Mockup_Meta_Title::FONT_SIZE?>px;
+        margin-bottom: 1em;
+        color: <?=FaZend_Image::getCssColor('mockup.content.title')?>;
+    }
+
     div.page p {
         padding-top: 1em;
         padding-bottom: 1em;

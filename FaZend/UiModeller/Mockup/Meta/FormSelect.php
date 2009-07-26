@@ -17,6 +17,9 @@
 /**
  * Form select field
  *
+ * - header: title to show
+ * - value: list of values into the list
+ *
  * @package FaZend 
  */
 class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_Meta_FormElement {
