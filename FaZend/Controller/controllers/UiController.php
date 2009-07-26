@@ -106,7 +106,7 @@ class Fazend_UiController extends FaZend_Controller_Action {
 
             // we will try to find another script
             $script = false;
-            $pages = FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('class', 'action');
+            $pages = FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('type', 'action');
             foreach ($pages as $page) {
                 if (FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $page->resource)) {
                     $script = $page->resource;
