@@ -38,7 +38,13 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         // draw table header
         $html .= '<tr>';
         foreach ($columns as $details) {
-            $html .= '<th>' . $details['title'] . '</th>';
+
+            $txt = $details['title'];
+
+            if (!empty($details['sorter']))
+                $txt .= '<span style="font-weight:bold;cursor:pointer;" title="sort by column">&darr;</span>';
+
+            $html .= '<th>' . $txt . '</th>';
         }
         if (count($options))
             $html .= '<th>options</th>';
@@ -50,6 +56,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             foreach ($columns as $details) {
                 $txt = $this->_parse($details['mask']);
 
+                // put a link onto this field
                 if (!empty($details['link']))
                     $txt = $this->_htmlLink($details['link'], $txt);
 
@@ -183,9 +190,9 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
      *
      * @return this
      */
-    public function addOption($name, $link = false) {
+    public function addOption($name, $link = false, $header = null) {
         $this->__set('option' . $name, array(
-            'title'=>$name,
+            'title'=>($header ? $header : $name),
             'link'=>$link));
         return $this;
     }
@@ -198,6 +205,18 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
     public function addLink($name, $link = false) {
         $details = $this->__get('column' . $name);
         $details['link'] = $link;
+        $this->__set('column' . $name, $details);
+        return $this;
+    }
+
+    /**
+     * Add a sorter to column
+     *
+     * @return this
+     */
+    public function addSorter($name) {
+        $details = $this->__get('column' . $name);
+        $details['sorter'] = true;
         $this->__set('column' . $name, $details);
         return $this;
     }
