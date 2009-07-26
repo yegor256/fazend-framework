@@ -66,8 +66,10 @@ class Fazend_UiController extends FaZend_Controller_Action {
         foreach (FaZend_UiModeller_Navigation::getInstance()->getActors() as $a) {
 
             // this actor is NOT active
-            if ($a != $actor)
-                $a = '<a href="' . $this->view->url(array('action'=>'actor', 'id'=>$script . ':' . $a), 'ui', true, false) . '">' . $a . '</a>';
+            if ($a != $actor) {
+                $a = '<a href="' . $this->view->url(array('action'=>'actor', 'id'=>$script . ':' . $a), 'ui', true, false) . 
+                    '" title="Toggle to ' . $a . '\'s view point">' . $a . '</a>';
+            }
 
             $this->view->actors .= '<li class="pic' . ($a == $actor ? ' picActive' : false) . 
                 '"></li><li class="actor' . ($a == $actor ? ' active' : false) . '">' . $a . '</li>';
