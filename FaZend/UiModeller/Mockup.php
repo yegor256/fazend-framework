@@ -225,7 +225,7 @@ class FaZend_UiModeller_Mockup {
         $height = $this->_draw();
         $this->getImage()->enableDrawing();
 
-        return array(self::WIDTH, self::INDENT + $height);
+        return array(self::WIDTH, max(self::INDENT + $height, 400));
 
     }
 

@@ -15,7 +15,10 @@
  */
 
 /**
- * Form text
+ * Form submit button
+ *
+ * - header: link
+ * - value: text
  *
  * @package FaZend 
  */
