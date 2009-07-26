@@ -147,8 +147,8 @@ class FaZend_Image {
 
             'mockup.link' => self::BRAND_BLUE3, // AHREF links
 
-            'mockup.button' => self::BRAND_LIGHTGRAY, // background of buttons
-            'mockup.button.border' => self::BRAND_GRAY, // borders of buttons
+            'mockup.button' => 'dddddd', // background of buttons
+            'mockup.button.border' => self::BRAND_LIGHTGRAY, // borders of buttons
 
             'mockup.input' => 'ffffff', // background of inputs
             'mockup.input.border' => self::BRAND_GRAY, // borders of inputs
