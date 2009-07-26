@@ -98,6 +98,15 @@ class FaZend_UiModeller_Mockup {
     }
 
     /**
+     * Get script
+     *
+     * @return string
+     */
+    public function getScript() {
+        return $this->_script;
+    }
+                       
+    /**
      * Get the instance of View
      *
      * @return Zend_View

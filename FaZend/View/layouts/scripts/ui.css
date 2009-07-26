@@ -60,6 +60,7 @@ div.page {
     border: 1px solid <?=FaZend_Image::getCssColor('border')?>;
     padding: <?=FaZend_UiModeller_Mockup::INDENT?>px;
     position: relative;
+    min-height: 400px;
 }
 
     div.page p {
@@ -136,16 +137,30 @@ div.page {
         text-align: right;
     }
 
-        div.page div.actors li {
+        div.page div.actors li.actor {
             list-style: none;
             margin-bottom: 18px; 
+            text-align: right;
         }
 
-            div.page div.actors li.active {
-                list-style: none;
-                margin-bottom: 18px; 
-                font-weight: bold;
-            }
+        div.page div.actors li.pic {
+            background: transparent url('<?=$this->viewFile('ui/actor.gif')?>');
+            display: inline-block;
+            width: 13px;
+            height: 20px;
+        }
+
+        div.page div.actors li.picActive {
+            background: transparent url('<?=$this->viewFile('ui/actorActive.gif')?>');
+            width: 25px;
+            height: 39px;
+        }
+
+        div.page div.actors li.active {
+            list-style: none;
+            margin-bottom: 18px; 
+            font-weight: bold;
+        }
 
     /* list of all scripts */
     div.page div.nav {
@@ -166,6 +181,7 @@ div.page {
 
             div.page div.nav li li {
                 margin-bottom: 0px !important; 
+                margin-left: 5px;
             }
 
                 div.page div.nav li li.active {

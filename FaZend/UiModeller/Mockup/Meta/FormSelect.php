@@ -64,7 +64,7 @@ class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_
             FaZend_UiModeller_Mockup::INDENT + 3, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $this->_parse($this->value[array_rand($this->value)]));
+            $this->_parse($this->value));
 
         return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 5;
 

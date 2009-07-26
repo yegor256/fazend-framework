@@ -42,7 +42,13 @@ class Fazend_UiController extends FaZend_Controller_Action {
      */
     public function indexAction() {
 
-        $this->view->script = $script = $this->_getParam('id');
+        if ($this->_hasParam('id'))
+            $script = $this->_getParam('id');
+        else
+            $script = FaZend_UiModeller_Navigation::DEFAULT_SCRIPT;
+
+        // pass it to View
+        $this->view->script = $script;
 
         // build the mockup
         $mockup = new FaZend_UiModeller_Mockup($script);
@@ -56,16 +62,17 @@ class Fazend_UiController extends FaZend_Controller_Action {
             ->setAcl(FaZend_UiModeller_Navigation::getInstance()->getAcl())
             ->setRole($actor);
 
-        $this->view->actors = '<ul><li>';
+        $this->view->actors = '<ul>';
         foreach (FaZend_UiModeller_Navigation::getInstance()->getActors() as $a) {
 
             // this actor is NOT active
             if ($a != $actor)
                 $a = '<a href="' . $this->view->url(array('action'=>'actor', 'id'=>$script . ':' . $a), 'ui', true, false) . '">' . $a . '</a>';
 
-            $this->view->actors .= '<li' . ($a == $actor ? ' class="active"' : false) . '>' . $a . '</li>';
+            $this->view->actors .= '<li class="pic' . ($a == $actor ? ' picActive' : false) . 
+                '"></li><li class="actor' . ($a == $actor ? ' active' : false) . '">' . $a . '</li>';
         }
-        $this->view->actors .= '</li></ul>';
+        $this->view->actors .= '</ul>';
 
     }
 

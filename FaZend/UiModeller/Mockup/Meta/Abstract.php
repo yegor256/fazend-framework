@@ -109,12 +109,15 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
     /**
      * Parse text
      *
+     * @param string|array|false Text to show
      * @return void
      */
     protected function _parse($txt) {
 
         if (!$txt)
             $txt = '%s';
+        elseif (is_array($txt)) 
+            $txt = $txt[array_rand($txt)];
 
         $matches = array();
         preg_match_all('/%(\d+)?([sdf])/', $txt, $matches);
@@ -147,6 +150,10 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
      * @return string HTML image of the element
      */
     public function _htmlLink($script, $label) {
+
+        // maybe it's a self link?
+        if (!$script)
+            $script = $this->_mockup->getScript();
 
         // broken link?
         if (!FaZend_UiModeller_Navigation::getInstance()->getAcl()->has($script))

@@ -22,6 +22,7 @@
 class FaZend_UiModeller_Navigation {
 
     const ANONYMOUS = 'anonymous';
+    const DEFAULT_SCRIPT = 'index/index';
 
     /**
      * Instance of this class
@@ -81,7 +82,46 @@ class FaZend_UiModeller_Navigation {
      * @param string Script name, like 'index/settings'
      * @return void
      */
-    public function discover($script = 'index/index') {
+    public function discover($script = null) {
+
+        $this->_discover();
+
+        if (!is_null($script))
+            $this->_setActiveScript($script);
+
+        return $this->_container;
+
+    }
+
+    /**
+     * Get ACL
+     *
+     * @return Zend_Acl
+     */
+    public function getAcl() {
+        $this->discover();
+
+        return $this->_acl;
+    }
+
+    /**
+     * Get list of actors
+     *
+     * @return string[]
+     */
+    public function getActors() {
+        $this->discover();
+
+        return $this->_actors;
+    }
+
+    /**
+     * Populate nagivation containter with pages
+     *
+     * @param Zend_Navigation
+     * @return void
+     */
+    protected function _discover() {
 
         if (isset($this->_container))
             return $this->_container;
@@ -132,9 +172,6 @@ class FaZend_UiModeller_Navigation {
                     'class' => 'action',
                 ));
 
-                if ($label == $script)
-                    $page->active = true;
-
                 // get the file
                 $content = file_get_contents(APPLICATION_PATH . '/views/scripts/' . $controller . '/' . $action . '.phtml');
 
@@ -170,25 +207,15 @@ class FaZend_UiModeller_Navigation {
     }
 
     /**
-     * Get ACL
+     * Set active script
      *
-     * @return Zend_Acl
+     * @param string Script name, like 'index/settings'
+     * @return void
      */
-    public function getAcl() {
-        $this->discover();
+    protected function _setActiveScript($script) {
 
-        return $this->_acl;
-    }
+        $this->_container->findOneBy('resource', $script)->active = true;
 
-    /**
-     * Get list of actors
-     *
-     * @return string[]
-     */
-    public function getActors() {
-        $this->discover();
-
-        return $this->_actors;
     }
 
     /**

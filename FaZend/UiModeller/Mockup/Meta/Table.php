@@ -33,26 +33,32 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         $html = '<p><div style="display: inline-block; background:' . FaZend_Image::getCssColor ('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
 
         $columns = $this->_getOptions('/^column.*/');
+        $options = $this->_getOptions('/^option.*/');
 
         // draw table header
         $html .= '<tr>';
         foreach ($columns as $details) {
             $html .= '<th>' . $details['title'] . '</th>';
         }
+        if (count($options))
+            $html .= '<th>options</th>';
         $html .= '</tr>';
 
         for ($i=0; $i<$this->totalLines; $i++) {
 
             $html .= '<tr>';
             foreach ($columns as $details) {
-
-                if (is_array($details['mask']))
-                    $txt = $details['mask'][array_rand($details['mask'])];
-                else
-                    $txt = $this->_parse($details['mask']);
-
-                $html .= '<td style="width:' . ($details['width'] * self::FONT_SIZE) . 'px">' . $txt . '</td>';
+                $html .= '<td style="width:' . ($details['width'] * self::FONT_SIZE) . 'px">' . $this->_parse($details['mask']) . '</td>';
             }
+
+            if (count($options)) {
+            
+                $hrefs = array();
+                foreach ($options as $opt)
+                    $hrefs[] = $this->_htmlLink($opt['link'], $this->_parse($opt['title']));
+                $html .= '<td>' . implode(' | ', $hrefs) . '</td>';
+            }
+
             $html .= '</tr>';
 
         }
@@ -120,10 +126,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             $height = 1; 
             foreach ($columns as $details) {
 
-                if (is_array($details['mask']))
-                    $txt = $details['mask'][array_rand($details['mask'])];
-                else
-                    $txt = $this->_parse($details['mask']);
+                $txt = $this->_parse($details['mask']);
 
                 $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
 
@@ -176,7 +179,9 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
      * @return this
      */
     public function addOption($name, $link = false) {
-        $this->__set('option' . $name, array('link'=>$link));
+        $this->__set('option' . $name, array(
+            'title'=>$name,
+            'link'=>$link));
         return $this;
     }
 
