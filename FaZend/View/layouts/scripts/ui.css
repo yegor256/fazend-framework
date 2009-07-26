@@ -118,6 +118,7 @@ div.page {
     /* broken link */
     div.page span.broken {
         border-bottom: 1px dotted red;
+        cursor: pointer;
     }
 
     /* SUBMIT button at the end of the form */

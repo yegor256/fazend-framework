@@ -75,7 +75,13 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
 
         }
 
-        $html .= '</table></div></p>';
+        $html .= '</table></div>';
+
+        if($this->paginator) {
+            $html .= '<br/><span style="cursor:pointer;" title="Pages">prev 1 2 3 4 5 6 7 ... next</span>';
+        }
+        
+        $html .= '</p>';
 
         return $html;
 
