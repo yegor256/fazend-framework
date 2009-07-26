@@ -137,9 +137,9 @@ class FaZend_Image {
             'border' => self::BRAND_LIGHTGRAY, // light gray
             'error' => 'ff0000', // red
 
-            'table.title' => '0055ff', // blue
-            'table.column' => '333333', // gray
-            'table.comment' => '777777', // light gray
+            'table.title' => self::BRAND_BLUE3, // blue
+            'table.column' => self::BRAND_GRAY, // gray
+            'table.comment' => self::BRAND_LIGHTGRAY, // light gray
 
             'mockup.title' => self::BRAND_LIGHTGRAY, // name of the mockup script
             'mockup.content' => '333333', // texts in mockups
