@@ -21,7 +21,7 @@
  */
 class FaZend_UiModeller_Mockup_Meta_FormText extends FaZend_UiModeller_Mockup_Meta_FormElement {
 
-    const WIDTH = 18;
+    const WIDTH = 25; // maximum width
 
     /**
      * Draw 
@@ -30,7 +30,8 @@ class FaZend_UiModeller_Mockup_Meta_FormText extends FaZend_UiModeller_Mockup_Me
      */
     public function draw($y) {
 
-        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * self::WIDTH;
+        $txt = $this->_parse($this->value);
+        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * min(self::WIDTH, strlen($txt) + 2);
 
         // element header
         $this->_mockup->getImage()->imagettftext(FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 0, 
@@ -58,7 +59,7 @@ class FaZend_UiModeller_Mockup_Meta_FormText extends FaZend_UiModeller_Mockup_Me
             FaZend_UiModeller_Mockup::INDENT + 3, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $this->_parse($this->value));
+            $txt);
 
         return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 5;
 
@@ -71,8 +72,11 @@ class FaZend_UiModeller_Mockup_Meta_FormText extends FaZend_UiModeller_Mockup_Me
      */
     public function html() {
 
+        $txt = $this->_parse($this->value);
+
         $html = '<p>' . $this->_parse($this->header) . ':<br/>' .
-            '<input type="text" value="' . $this->_parse($this->value) . '" size=" ' . self::WIDTH . '"/></p>';
+            '<input type="text" value="' . $txt . '" size=" ' . 
+            min(self::WIDTH, strlen($txt)) . '"/></p>';
 
         return $html;
     }
