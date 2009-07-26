@@ -52,7 +52,7 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
      * @return string HTML image of the element
      */
     public function html() {
-        return '<p>' . $this->_parse($this->label) . '</p>';
+        return '<p' . ($this->bold ? ' style="font-weight:bold;"' : false) . '>' . $this->_parse($this->label) . '</p>';
     }
 
 }

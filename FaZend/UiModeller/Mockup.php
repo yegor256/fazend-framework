@@ -189,7 +189,7 @@ class FaZend_UiModeller_Mockup {
             $html = preg_replace('/[\n\t\r\s]/', ' ', file_get_contents($scriptFile));
 
             $matches = array();
-            preg_match_all('/\<\!\-\-\s?\@(\w+)\((.*?)\)(.*?)\-\-\>/', $html, $matches);
+            preg_match_all('/\<\!\-\-\s?\@(\w+)\(((?:\(.*?\)|.)*?)\)(.*?)\-\-\>/', $html, $matches);
             foreach ($matches[0] as $id=>$match) {
 
                 $className = 'FaZend_UiModeller_Mockup_Meta_' . ucfirst($matches[1][$id]);

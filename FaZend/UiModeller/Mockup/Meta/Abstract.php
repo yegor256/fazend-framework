@@ -83,7 +83,7 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
      */
     public function __get($var) {
         if (!isset($this->_options[$var]))
-            FaZend_Exception::raise('FaZend_UiModeller_Mockup_Meta_OptionMissed', "Option '$var' is not set yet in " . get_class($this));
+            return false;
         return $this->_options[$var];
     }
 
@@ -114,7 +114,7 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
      */
     protected function _parse($txt) {
 
-        if (!$txt)
+        if ($txt === false)
             $txt = '%s';
         elseif (is_array($txt)) 
             $txt = $txt[array_rand($txt)];

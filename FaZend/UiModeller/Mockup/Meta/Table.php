@@ -48,7 +48,12 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
 
             $html .= '<tr>';
             foreach ($columns as $details) {
-                $html .= '<td style="width:' . ($details['width'] * self::FONT_SIZE) . 'px">' . $this->_parse($details['mask']) . '</td>';
+                $txt = $this->_parse($details['mask']);
+
+                if (!empty($details['link']))
+                    $txt = $this->_htmlLink($details['link'], $txt);
+
+                $html .= '<td style="width:' . ($details['width'] * self::FONT_SIZE) . 'px">' . $txt . '</td>';
             }
 
             if (count($options)) {
@@ -182,6 +187,18 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         $this->__set('option' . $name, array(
             'title'=>$name,
             'link'=>$link));
+        return $this;
+    }
+
+    /**
+     * Add a link to column
+     *
+     * @return this
+     */
+    public function addLink($name, $link = false) {
+        $details = $this->__get('column' . $name);
+        $details['link'] = $link;
+        $this->__set('column' . $name, $details);
         return $this;
     }
 
