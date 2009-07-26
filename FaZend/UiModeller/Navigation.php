@@ -145,7 +145,7 @@ class FaZend_UiModeller_Navigation {
             $section = new Zend_Navigation_Page_Uri(array(
                 'label' => $controller,
                 'title' => $controller,
-                'class' => 'controller',
+                'type' => 'controller',
             ));
 
             // list of actors who CAN access this controller
@@ -169,7 +169,7 @@ class FaZend_UiModeller_Navigation {
                     'title' => $label,
                     'uri' => Zend_Registry::getInstance()->view->url(array('action'=>'index', 'id'=>$label), 'ui', true, false),
                     'resource' => $label,
-                    'class' => 'action',
+                    'type' => 'action',
                 ));
 
                 // get the file
@@ -183,6 +183,10 @@ class FaZend_UiModeller_Navigation {
                 } else {
                     $actors[] = $this->_allow(self::ANONYMOUS, $label);
                 }
+
+                // maybe it's a home page?
+                if (preg_match_all('/<!--\s?\@home\s?\(\s?\)/', $content, $matches))
+                    $page->class = 'home';
 
                 // add this page to the container
                 $section->addPage($page);

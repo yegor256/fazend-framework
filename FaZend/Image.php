@@ -17,9 +17,19 @@
 /**
  * Image creator
  *
- *
+ * @package FaZend
  */
 class FaZend_Image {
+
+    // brand colors of fazend, don't change them
+
+    const BRAND_BLUE1 = '062B35'; // dark blue, almost black
+    const BRAND_BLUE2 = '134558'; // dark blue, in logo
+    const BRAND_BLUE3 = '2276A4'; // blue, in logo
+    const BRAND_BLUE4 = '92BECE'; // light blue
+
+    const BRAND_GRAY      = '6D6F71'; // gray
+    const BRAND_LIGHTGRAY = 'BCBEC0'; // light gray
 
     /**
      * Enable drawing
@@ -124,26 +134,29 @@ class FaZend_Image {
      */
     private static $_colors = array(
             'background' => 'ffffff', // white
-            'border' => 'dddddd', // light gray
+            'border' => self::BRAND_LIGHTGRAY, // light gray
             'error' => 'ff0000', // red
+
             'table.title' => '0055ff', // blue
             'table.column' => '333333', // gray
             'table.comment' => '777777', // light gray
 
-            'mockup.title' => 'bbbbbb', // name of the mockup script
+            'mockup.title' => self::BRAND_LIGHTGRAY, // name of the mockup script
             'mockup.content' => '333333', // texts in mockups
             'mockup.content.title' => '333333', // titles of pages in mockups
 
-            'mockup.button' => 'eeeeee', // background of buttons
-            'mockup.button.border' => 'cccccc', // borders of buttons
+            'mockup.link' => self::BRAND_BLUE3, // AHREF links
+
+            'mockup.button' => self::BRAND_LIGHTGRAY, // background of buttons
+            'mockup.button.border' => self::BRAND_GRAY, // borders of buttons
 
             'mockup.input' => 'ffffff', // background of inputs
-            'mockup.input.border' => '555555', // borders of inputs
-            'mockup.input.text' => '000099', // texts in input fields
+            'mockup.input.border' => self::BRAND_GRAY, // borders of inputs
+            'mockup.input.text' => self::BRAND_BLUE1, // texts in input fields
 
-            'mockup.table.grid' => 'dddddd', // grids
+            'mockup.table.grid' => self::BRAND_LIGHTGRAY, // grids
             'mockup.table.header' => 'ffffff',
-            'mockup.table.header.background' => 'aaaaff',
+            'mockup.table.header.background' => self::BRAND_BLUE3,
         );
 
     /**

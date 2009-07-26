@@ -15,29 +15,18 @@
  */
 
 /**
- * Mockup meta element, page title
+ * Mark this page as a home page of the actor
  *
  * @package FaZend 
  */
-class FaZend_UiModeller_Mockup_Meta_Title extends FaZend_UiModeller_Mockup_Meta_Abstract {
-
-    const FONT_SIZE = 22;
+class FaZend_UiModeller_Mockup_Meta_Home extends FaZend_UiModeller_Mockup_Meta_Abstract {
 
     /**
      * Draw 
      *
      * @return int Height
      */
-    public function draw($y) {
-
-        $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
-            $this->_mockup->getImage()->getColor('mockup.content.title'), 
-            $this->_mockup->getImage()->getFont('mockup.content.title'), 
-            $this->_parse($this->label));
-
-        return self::FONT_SIZE * 2;
-
-    }
+    public function draw($y) {}
 
     /**
      * Convert to HTML
@@ -45,7 +34,7 @@ class FaZend_UiModeller_Mockup_Meta_Title extends FaZend_UiModeller_Mockup_Meta_
      * @return string HTML image of the element
      */
     public function html() {
-        return '<h1>' . nl2br($this->_parse($this->label)) . '</h1>';
+        return '';
     }
 
 }

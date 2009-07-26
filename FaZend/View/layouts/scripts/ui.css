@@ -10,7 +10,7 @@ body {
     font-size: 11px;
     line-height: 1.9em;
 
-    color: #122632;
+    color: <?=FaZend_Image::getCssColor('mockup.content')?>;
     background-color: white;
     margin: 5px;
 }
@@ -91,15 +91,14 @@ div.page {
     div.page a {
         text-decoration: none;
         cursor: pointer;
-        color: #122632;
+        color: <?=FaZend_Image::getCssColor('mockup.link')?>;
         background-color: inherit;
-        border-bottom: 1px dotted #122632;
+        border-bottom: 1px dotted <?=FaZend_Image::getCssColor('mockup.link')?>;
     }
         
         div.page a:hover {
-            color: #0093d0;
-            background-color: inherit;
-            border-bottom: 1px dotted #0093d0;
+            color: white;
+            background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
         }
 
     div.page th {
@@ -124,7 +123,7 @@ div.page {
 
     /* broken link */
     div.page span.broken {
-        border-bottom: 1px dotted red;
+        border-bottom: 1px dotted <?=FaZend_Image::getCssColor('error')?>;
         cursor: pointer;
     }
 
@@ -196,8 +195,12 @@ div.page {
                     font-weight: bold;
                 }
 
+            div.page div.nav li li a.home:after {
+                content: "\00035";
+            }
+
 div.logo {
     text-align: right;
     font-size: 0.8em;
-    color: gray;
+    color: #<?=FaZend_Image::BRAND_GRAY?>;
 }
