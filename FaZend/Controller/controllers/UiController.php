@@ -106,7 +106,13 @@ class Fazend_UiController extends FaZend_Controller_Action {
 
             // we will try to find another script
             $script = false;
-            $pages = FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('type', 'action');
+
+            // first we try to find HOME, and then any other page
+            $pages = array_merge(
+                FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('class', 'home'),
+                FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('type', 'action'));
+
+            // go through the list of pages trying to find one that is allowed for the given actor
             foreach ($pages as $page) {
                 if (FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $page->resource)) {
                     $script = $page->resource;

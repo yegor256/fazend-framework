@@ -195,8 +195,12 @@ div.page {
                     font-weight: bold;
                 }
 
+            div.page div.nav li li a.home:before {
+                content: "[";
+            }
+
             div.page div.nav li li a.home:after {
-                content: "\00035";
+                content: "]";
             }
 
 div.logo {
