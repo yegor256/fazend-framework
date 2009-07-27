@@ -31,7 +31,9 @@ class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_
      */
     public function draw($y) {
 
-        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 15;
+        $txt = $this->_parse($this->value);
+
+        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * min(25, strlen($txt));
 
         // element header
         $this->_mockup->getImage()->imagettftext(FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 0, 
@@ -67,7 +69,7 @@ class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_
             FaZend_UiModeller_Mockup::INDENT + 3, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $this->_parse($this->value));
+            $txt);
 
         return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 5;
 
