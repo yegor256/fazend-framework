@@ -176,7 +176,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
             $this->_mockup->getImage()->imageline($x, $top, $x, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
 
         if($this->paginator) {
-            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE * 0.9, 
+            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE * 0.9, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
                 $this->_mockup->getImage()->getColor('mockup.link'), 
                 $this->_mockup->getImage()->getFont('mockup.content'), 
                 self::PAGINATOR);
