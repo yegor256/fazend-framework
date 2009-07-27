@@ -72,6 +72,9 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         if ($map['md5'] != md5_file($this->getImagePath()))    
             return array();
 
+        // clean it out
+        $this->_clean($map);
+
         return $map;    
     }       
 
@@ -188,14 +191,14 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         // add new file to the map
         $this->_addFile($map, $file);    
 
-               // get PNG content and save it
-               $png = $this->_buildPNG($map);
-               $this->saveMap($map, $png);
+        // get PNG content and save it
+        $png = $this->_buildPNG($map);
+        $this->saveMap($map, $png);
 
-               // return it after all changes done
-               return $map;
+        // return it after all changes done
+        return $map;
 
-           }
+    }
 
     /**
     * Removes old and exprired files from the map
@@ -205,19 +208,19 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     */
     protected function _clean(array &$map) {
 
-               // if it's very fresh - prepare it
-               if (!isset($map['images']))
-                   $map['images'] = array();
+        // if it's very fresh - prepare it
+        if (!isset($map['images']))
+            $map['images'] = array();
 
-               // delete obsolete elements from the map (lost images)
-               foreach ($map['images'] as $id=>$img) {
-                   if (file_exists($id))
-                       continue;
+        // delete obsolete elements from the map (lost images)
+        foreach ($map['images'] as $id=>$img) {
+            if (file_exists($id))
+                continue;
 
-                   unset($map['images'][$id]);
-               }
+            unset($map['images'][$id]);
+        }
 
-           }    
+    }    
 
     /**
     * Add new file to the map
@@ -228,15 +231,15 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     */
     protected function _addFile(array &$map, $file) {
 
-               // add new image
-               $png = imagecreatefrompng($file);
-               $thisImage = array(
-                   'md5' => md5_file($file),
-                   'mtime' => filemtime($file)
-               );
-               $map['images'][$file] = $thisImage;
+        // add new image
+        $png = imagecreatefrompng($file);
+        $thisImage = array(
+            'md5' => md5_file($file),
+            'mtime' => filemtime($file)
+        );
+        $map['images'][$file] = $thisImage;
 
-           }    
+    }    
 
     /**
     * Compress existing map
@@ -251,26 +254,26 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         // start with top left
         $x = $y = $height = 0;
 
-               foreach ($map['images'] as $id=>&$img) {
+        foreach ($map['images'] as $id=>&$img) {
 
-                   $png = $metadata['images'][$id];
+            $png = $metadata['images'][$id];
 
-                   $img['x'] = $x;
-                   $img['y'] = $y;
-                   $img['width'] = imagesx($png);
-                   $img['height'] = imagesy($png);
+            $img['x'] = $x;
+            $img['y'] = $y;
+            $img['width'] = imagesx($png);
+            $img['height'] = imagesy($png);
 
-                   $x += $img['width'];
-                   $height = max($height, $img['height']);
+            $x += $img['width'];
+            $height = max($height, $img['height']);
 
-               }    
+        }    
 
-               $metadata['width'] = $x;
-               $metadata['height'] = $height;
+        $metadata['width'] = $x;
+        $metadata['height'] = $height;
 
-               return $metadata;
+        return $metadata;
 
-           }    
+    }    
 
     /**
     * Load images into metadata array
@@ -288,24 +291,24 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
             $map['images'] = array();
 
         // load them all!    
-               foreach ($map['images'] as $id=>&$img) {
+        foreach ($map['images'] as $id=>&$img) {
 
-                   $image = @imagecreatefrompng($id);
-                   if (!$image) {
-                       $image = @imagecreatefromgif($id);
-                       if (!$image) {
-                           unset($map['images'][$id]);
-                           continue;
-                       }
-                   }    
+            $image = @imagecreatefrompng($id);
+            if (!$image) {
+                $image = @imagecreatefromgif($id);
+                if (!$image) {
+                    unset($map['images'][$id]);
+                    continue;
+                }
+            }    
 
-                   $metadata['images'][$id] = $image;
+            $metadata['images'][$id] = $image;
 
-               }    
+        }    
 
-               return $metadata;
+        return $metadata;
 
-           }    
+    }    
 
     /**
     * Build the holder PNG file
@@ -316,38 +319,38 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     protected function _buildPNG(array &$map) {
 
         // compress the map to remove white spaces
-               $metadata = $this->_compress($map);
+        $metadata = $this->_compress($map);
 
-             $holder = imagecreatetruecolor($metadata['width'], $metadata['height']);
+        $holder = imagecreatetruecolor($metadata['width'], $metadata['height']);
 
-               // see: http://www.php.net/manual/en/function.imagealphablending.php
-               imagealphablending($holder, false);
+        // see: http://www.php.net/manual/en/function.imagealphablending.php
+        imagealphablending($holder, false);
 
-               $white = imagecolorallocate($holder, 255, 255, 255);
-               imagefill($holder, 0, 0, $white);
+        $white = imagecolorallocate($holder, 255, 255, 255);
+        imagefill($holder, 0, 0, $white);
 
-               // copy all images to the holder, in proper places
-               foreach ($map['images'] as $id=>&$img) {
+        // copy all images to the holder, in proper places
+        foreach ($map['images'] as $id=>&$img) {
         
             // copy new image to the holder
-                   imagecopy($holder, $metadata['images'][$id], $img['x'], $img['y'], 0, 0, $img['width'], $img['height']);
+            imagecopy($holder, $metadata['images'][$id], $img['x'], $img['y'], 0, 0, $img['width'], $img['height']);
 
         }
 
-               ob_start();
-               // see: http://www.php.net/manual/en/function.imagesavealpha.php
-               imagesavealpha($holder, true);
+        ob_start();
+        // see: http://www.php.net/manual/en/function.imagesavealpha.php
+        imagesavealpha($holder, true);
 
-               // see: http://www.php.net/manual/en/function.imagepng.php
-               // no compression
-               // output to stream (not file)
-               imagepng($holder, null, 8, PNG_ALL_FILTERS);
+        // see: http://www.php.net/manual/en/function.imagepng.php
+        // no compression
+        // output to stream (not file)
+        imagepng($holder, null, 8, PNG_ALL_FILTERS);
 
-               $pngContent = ob_get_contents();
-               ob_end_clean();
+        $pngContent = ob_get_contents();
+        ob_end_clean();
 
-               return $pngContent;
+        return $pngContent;
 
-           }    
+    }    
 
 }

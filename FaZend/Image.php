@@ -101,11 +101,16 @@ class FaZend_Image {
      * Call forward to GD library
      *
      * @return void
+     * @throw FaZend_Image_NoDimensionsSet
      */
     public function __call($method, $args) {
 
         if (!$this->_enabled)
             return;
+
+        // sanity check
+        if (!isset($this->_image))
+            FaZend_Exception::raise('FaZend_Image_NoDimensionsSet', 'First you should call FaZend_Image::setDimensions()');
 
         array_unshift($args, $this->_image);
 
