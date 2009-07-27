@@ -64,14 +64,17 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
     }
 
     /**
-    * Skips this page
-    *
-    * @return void
-    */
-    protected function _forwardWithMessage ($msg, $action = 'index', $controller = 'index') {
+     * Redirect to url with flash message
+     *
+     * @param string message Flash message
+     * @param string url Url for redirect.
+     * @return void
+     */    
+    protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
 
-               return $this->_forward($action, $controller, 'default', array('error'=>$msg)); 
-
+        $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
+        $this->_helper->redirector->setGotoSimple($action, $controller, $module, $params);
+        
     }
 
     /**

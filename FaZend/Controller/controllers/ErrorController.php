@@ -49,7 +49,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
         $exception = $exceptions[0];
 
         if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException')
-            return $this->_forwardWithMessage($exception->getMessage());
+            return $this->_redirectFlash($exception->getMessage());
 
         // $errors will be an object set as a parameter of the request object, 
         // type is a property
@@ -61,7 +61,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                 $this->getResponse()->setHttpResponseCode(404); 
                 //$this->view->message = 'Page not found'; 
 
-                return $this->_forwardWithMessage('Error 404: page not found');
+                return $this->_redirectFlash('Error 404: page not found');
 
             default: 
                 // application error 

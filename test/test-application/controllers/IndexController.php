@@ -28,7 +28,11 @@ class IndexController extends FaZend_Controller_Action {
     public function indexAction() {
 
     }
-    
+
+    public function flashAction() {
+        $this->_redirectFlash('Thats work');
+    }    
+
     /**
      * Test htmlTable helper
      *

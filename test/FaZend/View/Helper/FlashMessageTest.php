@@ -16,17 +16,18 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_View_Helper_ErrorMessageTest extends AbstractTestCase {
+class FaZend_View_Helper_FlashMessageTest extends AbstractTestCase {
     
     /**
-    * Test PNG rendering
-    *
-    */
+     * Test helper
+     *
+     */
     public function testHelperWorks () {
 
         $this->dispatch('/page_is_absent_for_sure');
 
-        $this->assertQuery('p[class*="error"]', 'error here: '.$this->getResponse()->getBody());
+        $this->assertRedirect("It wasn't redirect, why?");
+        //$this->assertQuery('p[class*="flash"]', 'error here: '.$this->getResponse()->getBody());
 
     }
 
