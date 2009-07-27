@@ -40,8 +40,8 @@ class FaZend_UiModeller_Mockup_Meta_Link extends FaZend_UiModeller_Mockup_Meta_A
             $txt);
 
         $this->_mockup->getImage()->imageline(
-            FaZend_UiModeller_Mockup::INDENT, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 
-            FaZend_UiModeller_Mockup::INDENT + $bbox[4], $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 
+            FaZend_UiModeller_Mockup::INDENT, $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE + 1, 
+            FaZend_UiModeller_Mockup::INDENT + $bbox[4], $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE + 1, 
             $this->_mockup->getImage()->getColor('mockup.link'));
 
         return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.6;
