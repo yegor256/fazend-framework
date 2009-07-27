@@ -33,7 +33,7 @@ class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_
 
         $txt = $this->_parse($this->value);
 
-        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * min(25, strlen($txt));
+        $width = FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * min(25, strlen($txt) + 3);
 
         // element header
         $this->_mockup->getImage()->imagettftext(FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE, 0, 
