@@ -28,6 +28,22 @@ class FaZend_UiModeller_Mockup_Meta_Link extends FaZend_UiModeller_Mockup_Meta_A
      */
     public function draw($y) {
 
+        $txt = $this->_parse($this->label);
+
+        $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
+
+        $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, 
+            FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
+            $this->_mockup->getImage()->getColor('mockup.link'), 
+            $this->_mockup->getImage()->getFont('mockup.content'), 
+            $txt);
+
+        $this->_mockup->getImage()->imageline(
+            FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE, 
+            FaZend_UiModeller_Mockup::INDENT + $bbox[4], $y + self::FONT_SIZE, 
+            $this->_mockup->getImage()->getColor('mockup.link'));
+
+        return self::FONT_SIZE * 1.6;
 
     }
 
