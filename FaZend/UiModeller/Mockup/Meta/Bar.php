@@ -54,7 +54,7 @@ class FaZend_UiModeller_Mockup_Meta_Bar extends FaZend_UiModeller_Mockup_Meta_Ab
 
         }
 
-        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.6;
+        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 2;
 
 
     }

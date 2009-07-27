@@ -44,7 +44,7 @@ class FaZend_UiModeller_Mockup_Meta_Link extends FaZend_UiModeller_Mockup_Meta_A
             FaZend_UiModeller_Mockup::INDENT + $bbox[4], $y + FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE + 1, 
             $this->_mockup->getImage()->getColor('mockup.link'));
 
-        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 1.6;
+        return FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE * 2;
 
     }
 

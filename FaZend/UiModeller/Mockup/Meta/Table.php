@@ -23,6 +23,8 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
 
     const FONT_SIZE = 12; // font size to use
 
+    const PAGINATOR = 'prev 1 2 3 4 5 6 7 ... next'; // text for paginator
+
     /**
      * Convert to HTML
      *
@@ -78,7 +80,7 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         $html .= '</table></div>';
 
         if($this->paginator) {
-            $html .= '<br/><span style="cursor:pointer;" title="Pages">prev 1 2 3 4 5 6 7 ... next</span>';
+            $html .= '<br/><span style="cursor:pointer;" title="Pages">' . self::PAGINATOR . '</span>';
         }
         
         $html .= '</p>';
@@ -172,6 +174,14 @@ class FaZend_UiModeller_Mockup_Meta_Table extends FaZend_UiModeller_Mockup_Meta_
         $xs[] = end($xs) + $details['widthPixels'];
         foreach ($xs as $x)
             $this->_mockup->getImage()->imageline($x, $top, $x, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
+
+        if($this->paginator) {
+            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_UiModeller_Mockup::INDENT, $y + self::FONT_SIZE * 0.9, 
+                $this->_mockup->getImage()->getColor('mockup.link'), 
+                $this->_mockup->getImage()->getFont('mockup.content'), 
+                self::PAGINATOR);
+            $y += self::FONT_SIZE;
+        }
 
         // return the height of the table 
         return $y - $top + self::FONT_SIZE * 2;
