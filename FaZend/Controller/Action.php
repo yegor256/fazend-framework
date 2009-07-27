@@ -70,11 +70,11 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param string url Url for redirect.
      * @return void
      */    
-    protected function _redirectFlash($message, $url = "") {
+    protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
 
-        $this->_helper->FlashMessenger->setNamespace('Fazend_Messages')->addMessage($message);        
-        $this->_redirect($url);
-       
+        $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
+        $this->_helper->redirector->setGotoSimple($action, $controller, $module, $params);
+        
     }
 
     /**

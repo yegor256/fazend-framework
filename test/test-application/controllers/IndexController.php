@@ -30,7 +30,7 @@ class IndexController extends FaZend_Controller_Action {
     }
 
     public function flashAction() {
-        $this->_redirectFlash("That's work");
+        $this->_redirectFlash('Thats work');
     }    
 
     /**

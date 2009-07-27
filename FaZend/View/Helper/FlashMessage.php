@@ -31,13 +31,13 @@ class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper {
     public function flashMessage() {
 
         $actionHelperFlashMessenger = new Zend_Controller_Action_Helper_FlashMessenger();
-        $flashMessages = $actionHelperFlashMessenger->setNamespace('Fazend_Messages')->getMessages();
+        $flashMessages = $actionHelperFlashMessenger->setNamespace('FaZend_Messages')->getMessages();
 
         if (empty($flashMessages)) {
         	return;
         }
 
-        return "<p class='flash'>" . $flashMessages[0] . "</p>";
+        return '<p class="flash">' . implode(";", $flashMessages) . '</p>';
 
     }
 
