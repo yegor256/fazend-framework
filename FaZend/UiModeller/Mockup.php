@@ -21,8 +21,10 @@
  */
 class FaZend_UiModeller_Mockup {
 
-    const INDENT = 50;
-    const WIDTH = 800;
+    const INDENT = 50; // border indentation (left, right, top and bottom)
+    const WIDTH = 800; // width of the mockup, in pixels
+
+    const TITLE_FONT_SIZE = 9; // font size of the mockup title, small text on top right corner
 
     /**
      * Name of the script, like 'index/settings'
@@ -56,7 +58,7 @@ class FaZend_UiModeller_Mockup {
     }
 
     /**
-     * Build PNG image
+     * Build PNG image and return its content
      *
      * @return string PNG image
      */
@@ -65,14 +67,17 @@ class FaZend_UiModeller_Mockup {
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
+        // title of the mockup to draw on top right corner
         $title = $this->_script . '.phtml';
 
-        $bbox = imagettfbbox(9, 0, $this->getImage()->getFont('mockup.title'), $title);
-        $this->getImage()->imagettftext(9, 0, $width-$bbox[4] - 3, -$bbox[5], 
+        // calculate the width of the text
+        $bbox = imagettfbbox(self::TITLE_FONT_SIZE, 0, $this->getImage()->getFont('mockup.title'), $title);
+        $this->getImage()->imagettftext(self::TITLE_FONT_SIZE, 0, $width-$bbox[4] - 3, -$bbox[5], 
             $this->getImage()->getColor('mockup.title'), 
             $this->getImage()->getFont('mockup.title'), 
             $title);
 
+        // draw all mockup's elements
         $this->_draw();
 
         // return the PNG content
@@ -88,13 +93,18 @@ class FaZend_UiModeller_Mockup {
      */
     public function html(Zend_View $view) {
         
+        // save View to the class, for further use
         $this->_view = $view;
         
+        // put all elements in HTML format to the page
         $html = '';
         foreach ($this->_getMetas() as $meta) {
-            $html .= $meta->html($view);
+            $html .= $meta->html();
         }
+
+        // return the HTML
         return $html;
+
     }
 
     /**
@@ -159,13 +169,15 @@ class FaZend_UiModeller_Mockup {
      */
     protected function _draw() {
 
+        // start from top
         $y = self::INDENT;
+
+        // put all of them to the PNG, top-down
         foreach ($this->_getMetas() as $meta) {
-
             $y += $meta->draw($y);
-
         }
 
+        // return the height of the image
         return $y;
 
     }
@@ -217,14 +229,16 @@ class FaZend_UiModeller_Mockup {
     /**
      * Calculate the size of the image
      *
-     * @return array
+     * @return array Dimensions of the image (width, height)
      */
     protected function _getDimensions() {
 
+        // the image should NOT draw anything, just calculate the parameter
         $this->getImage()->disableDrawing();
         $height = $this->_draw();
         $this->getImage()->enableDrawing();
 
+        // return the array of WIDTH and HEIGHT
         return array(self::WIDTH, self::INDENT + $height);
 
     }
