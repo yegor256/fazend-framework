@@ -275,7 +275,7 @@ class FaZend_Deployer {
     protected function _sqlInfo($sql) {
 
         $sql = preg_replace(array(
-            '/--.*?\n/', // kill comments
+            '/\-\-.*?\n/', // kill comments
             '/[\n\t\r]/', // no special chars
             '/\s+/', // compress spaces
             '/`/', // remove backticks
