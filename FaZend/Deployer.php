@@ -287,7 +287,7 @@ class FaZend_Deployer {
         // sanity check
         if (!preg_match('/^create (?:table|view)?/i', $sql))
             FaZend_Exception::raise('FaZend_Deployer_WrongFormat', 
-                "Every SQL file should start with 'create table' or 'create view', we get this: " . cutLongLine($sql, 50),
+                "Every SQL file should start with 'create table' or 'create view', we get this: '" . cutLongLine($sql, 50) . "'",
                 self::EXCEPTION_CLASS);
 
         // this is view, we just drop it and create new
@@ -364,9 +364,9 @@ class FaZend_Deployer {
     protected function _clearSql($file) {
 
         return preg_replace(array(
-            '/\n\-\-.*?\n/',
+            '/\-\-.*/',
             '/[\n\r\t]/'
-        ), '', "\n".file_get_contents($file));
+        ), '', "\n" . file_get_contents($file));
 
     }
 
