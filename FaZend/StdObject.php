@@ -15,9 +15,30 @@
  */
 
 /**
- * Simple class
+ * Simple class with nice methods
+ *
+ * @package FaZend
  */
 class FaZend_StdObject {
+
+    /**
+     * Simple static creator
+     *
+     * @return FaZend_StdObject
+     */
+    public static function create() {
+        return new FaZend_StdObject();
+    }
+
+    /**
+     * Set the value of some property
+     *
+     * @return FaZend_StdObject
+     */
+    public function set($property, $value) {
+        $this->$property = $value;
+        return $this;    
+    }
 
     /**
      * Get the property which is not set yet
@@ -29,4 +50,5 @@ class FaZend_StdObject {
             return false;
         return $this->$property;    
     }
+
 }
