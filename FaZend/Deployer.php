@@ -119,9 +119,9 @@ class FaZend_Deployer {
 
                 // this table already exists?
                 if (in_array(strtolower($table), $tables)) {
-                    $this->_update($table, file_get_contents($dir . '/' . $file));
+                    $this->_update($table, $this->_clearSql($dir . '/' . $file));
                 } else {
-                    $this->_create($table, file_get_contents($dir . '/' . $file));
+                    $this->_create($table, $this->_clearSql($dir . '/' . $file));
                 }
 
             }
@@ -353,6 +353,21 @@ class FaZend_Deployer {
      */
     protected function _db() {
         return Zend_Db_Table::getDefaultAdapter();
+    }
+
+    /**
+     * Clears SQL out of comments
+     *
+     * @param string Name of the SQL file
+     * @return string
+     */
+    protected function _clearSql($file) {
+
+        return preg_replace(array(
+            '/\n\-\-.*?\n/',
+            '/[\n\r\t]/'
+        ), '', "\n".file_get_contents($file));
+
     }
 
 }
