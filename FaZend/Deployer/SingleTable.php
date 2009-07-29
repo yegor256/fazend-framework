@@ -244,6 +244,9 @@ class FaZend_Deployer_SingleTable {
         $x = (($x2 - $x1 <= 0) ? -1 : 0.3);
         $y = (($y2 - $y1 <= 0) ? 1.4 : -0.2);
 
+        if (abs(($y2 - $y1)/($x2 - $x1)) < 1)
+            $x = (($x2 - $x1 <= 0) ? 1 : -1);
+
         $bbox = imagettfbbox(FaZend_Deployer_MapTable::COMMENT_SIZE, 0, $this->_getImage()->getFont('table.column'), $mark);
 
         $this->_getImage()->imagettftext(FaZend_Deployer_MapTable::COMMENT_SIZE, 0, 
