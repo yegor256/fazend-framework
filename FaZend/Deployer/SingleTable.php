@@ -22,8 +22,8 @@
 class FaZend_Deployer_SingleTable {
 
     const PADDING = 30; // white space width around the table
-    const ENTITY_PADDING = 10;
-    const ENTITIES_WIDTH = 400;
+    const ENTITY_PADDING = 8;
+    const ENTITIES_WIDTH = 300;
 
     const MAX_COMMENT_LENGTH = 100; // maximum length of one comment line
 
