@@ -27,6 +27,20 @@ div.wrapper {
     position: relative;
 }
 
+/* normal links and link-free hrefs */
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+    background-color: inherit;
+    border-bottom: 1px dotted <?=FaZend_Image::getCssColor('mockup.link')?>;
+}
+    
+    a:hover {
+        color: white;
+        background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+    }
+
 /* header above the page */
 div.header {
     position: relative;
@@ -86,20 +100,6 @@ div.page {
         border: 1px solid <?=FaZend_Image::getCssColor('mockup.input.border')?>;
         background:<?=FaZend_Image::getCssColor('mockup.input')?>;
     }
-
-    /* normal links and link-free hrefs */
-    div.page a {
-        text-decoration: none;
-        cursor: pointer;
-        color: <?=FaZend_Image::getCssColor('mockup.link')?>;
-        background-color: inherit;
-        border-bottom: 1px dotted <?=FaZend_Image::getCssColor('mockup.link')?>;
-    }
-        
-        div.page a:hover {
-            color: white;
-            background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
-        }
 
     div.page th {
         text-align: left;

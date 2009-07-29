@@ -15,7 +15,10 @@
         </div>
 
         <div class="link">
-            <a href="<?=$this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>">PNG</a>
+            <a href="<?=$this->url(array(), 'dbmap', true)?>" 
+                title="Full map of database tables, in PNG format">DB</a> |
+            <a href="<?=$this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>" 
+                title="View this mock-up as image (PNG)">PNG</a>
         </div>
     </div>
 
