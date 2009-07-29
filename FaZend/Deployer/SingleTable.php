@@ -284,7 +284,7 @@ class FaZend_Deployer_SingleTable {
                 ->set('name', $column['COLUMN_NAME'])
                 ->set('out', false)
                 ->set('composition', !empty($column['FK_COMPOSITION']))
-                ->set('leafText', !empty($column['UNIQUE']) ? '1' : '0..*')
+                ->set('leafText', !empty($column['UNIQUE']) ? '1' : '*')
                 ->set('centerText', empty($column['NULL']) ? '1' : '0..1');
 
         }
@@ -305,8 +305,8 @@ class FaZend_Deployer_SingleTable {
                     ->set('name', $table)
                     ->set('out', true)
                     ->set('composition', !empty($column['FK_COMPOSITION']))
-                    ->set('centerText', !empty($column['UNIQUE']) ? '1' : '0..*')
-                    ->set('leafText', '1');
+                    ->set('centerText', empty($column['NULL']) ? '1' : '0..1')
+                    ->set('leafText', '*');
 
             }
 
