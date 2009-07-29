@@ -21,6 +21,12 @@
  */
 class FaZend_Deployer_Map {
 
+    const PADDING = 30; // white space width around the tables
+
+    const CIRCLE_MODE_LIMIT = 6; // maximum amount of tables to show in circle
+
+    const COLUMNS = 5; // max columns in spreadsheet mode
+
     /**
      * List of tables
      *
@@ -42,49 +48,22 @@ class FaZend_Deployer_Map {
      */
     public function png() {
 
-        // get the size of the image
-        list($width, $height) = $this->_getDimensions();
-
-        // intitial coordinates
-        $angle = 180; // start with left position
-        $radius = $width * 0.25;
-
         $tables = $this->_getTables();
+        
+        if (count($tables) < self::CIRCLE_MODE_LIMIT) {
 
-        if (count($tables)) {
+            $this->_drawCircle($tables);
 
-            // change angle and radius, but the clock-order circle
-            $angleDelta = 360/count($tables);
-            $radiusDelta = ($width * 0.05) / count($tables);
-
-            // put all tables onto it
-            // going by a clock-rolling spiral
-            foreach ($tables as $table) {
-
-                // right part of the image should be moved right, a bit
-                if (cos(deg2rad($angle)) > 0)
-                    $scaleX = 1.5; 
-                else 
-                    $scaleX = 1;
-
-                // calculate coordinates
-                $x = round($width * 0.3 + $radius * cos(deg2rad($angle)) * $scaleX);
-                $y = round($height * 0.3 + $radius * sin(deg2rad($angle)) * $height/$width);
-
-                // draw one table
-                $table->draw($x, $y);
-
-                $angle += $angleDelta;
-                $radius += $radiusDelta;
-
-            }
-
-        } else {
+        } elseif (count($tables) == 0) {
 
             // one system message instead of a picture
             $this->_getImage()->imagettftext(12, 0, 0, 15, 
                 $this->_getImage()->getColor('error'), $this->_getImage()->getFont('table.title'), 
                 'No tables found');
+
+        } else {
+
+            $this->_drawSpreadsheet($tables);
 
         }
 
@@ -94,11 +73,83 @@ class FaZend_Deployer_Map {
     }
 
     /**
+     * Draw tables in spreadsheet mode
+     *
+     * @param FaZend_Deployer_MapTable[]
+     * @return void
+     */
+    protected function _drawSpreadsheet($tables) {
+
+        // allocate them in a spreadsheet mode
+        $rowHeight = 0;
+        $counter = 0;
+        $y = self::PADDING;
+        foreach ($tables as $table) {
+
+            // calculate coordinates
+            $x = round(self::PADDING + fmod($counter, self::COLUMNS) * FaZend_Deployer_MapTable::WIDTH);
+
+            if (fmod($counter, self::COLUMNS) == 0) {
+                $y += $rowHeight;
+                $rowHeight = 0;
+            }
+
+            // draw one table
+            $table->draw($x, $y);
+
+            $rowHeight = max($rowHeight, $table->height);
+
+            $counter++;
+
+        }
+
+    }
+
+    /**
+     * Draw tables in a circle mode
+     *
+     * @param FaZend_Deployer_MapTable[]
+     * @return void
+     */
+    protected function _drawCircle($tables) {
+
+        // get the size of the image
+        list($width, $height) = $this->_getDimensions();
+
+        // intitial coordinates
+        $angle = 180; // start with left position
+        $centerX = self::PADDING + ($width - self::PADDING*2 - FaZend_Deployer_MapTable::WIDTH)/2;
+        $centerY = self::PADDING + 0.7 * ($height - self::PADDING*2)/2;
+        $radius = $centerX - self::PADDING - 10;
+
+        // change angle and radius, but the clock-order circle
+        $angleDelta = 360/count($tables);
+        $radiusDelta = 0; //($width * 0.05) / count($tables);
+
+        // put all tables onto it
+        // going by a clock-rolling spiral
+        foreach ($tables as $table) {
+
+            // calculate coordinates
+            $x = round($centerX + $radius * cos(deg2rad($angle)));
+            $y = round($centerY + $radius * sin(deg2rad($angle)) * $height/$width);
+
+            // draw one table
+            $table->draw($x, $y);
+
+            $angle += $angleDelta;
+            $radius += $radiusDelta;
+
+        }
+
+    }
+
+    /**
      * Get the image
      *
      * @return FaZend_Image
      */
-    public function _getImage() {
+    protected function _getImage() {
 
         if (!isset($this->_image)) {
             
@@ -120,7 +171,7 @@ class FaZend_Deployer_Map {
      *
      * @return FaZend_Deployer_MapTable[]
      */
-    public function _getTables() {
+    protected function _getTables() {
 
         if (isset($this->_tables))
             return $this->_tables;
@@ -142,16 +193,38 @@ class FaZend_Deployer_Map {
      *
      * @return array
      */
-    public function _getDimensions() {
+    protected function _getDimensions() {
 
         $tables = $this->_getTables();
-
         $total = count($tables);
 
-        $biggest = array_pop($tables);
+        if ($total < self::CIRCLE_MODE_LIMIT) {
 
-        return array(round(200 + sqrt($total) * 250), 
-            round(200 + sqrt($total) * 110) + $biggest->size * 40);
+            $biggest = array_pop($tables);
+            return array(
+                round(self::PADDING*2 + $total * FaZend_Deployer_MapTable::WIDTH * 0.6), // width
+                round(self::PADDING*2 + $biggest->height * 3) // height
+            ); 
+
+        } else {
+
+            $height = 0;
+            $counter = 0;
+            foreach ($tables as $table) {
+                if (fmod($counter, self::COLUMNS) == self::COLUMNS - 1)
+                    $height += $table->height;
+                $counter++;
+            }        
+            if (fmod($counter, self::COLUMNS) != 0)
+                $height += $table->height;
+
+            return array(
+                round(FaZend_Deployer_MapTable::WIDTH * self::COLUMNS + 2 * self::PADDING), // width
+                round($height + 2 * self::PADDING) // height
+            );
+             
+        }
+
 
     }
 

@@ -21,6 +21,12 @@
  */
 class FaZend_Deployer_MapTable {
 
+    const WIDTH = 200; // maximum width of one table, in pixels
+
+    const TITLE_SIZE = 13; // table title font size
+    const COLUMN_SIZE = 10; // column text font size
+    const COMMENT_SIZE = 9; // comment font size
+
     /**
      * Image where thie table belongs
      *
@@ -62,46 +68,61 @@ class FaZend_Deployer_MapTable {
         if ($name === 'size')
             return count($this->_getInfo());
 
+        if ($name === 'height')
+            return $this->_getHeight();
+
     }
 
     /**
      * Put the table onto the map
      *
-     * @return void
+     * @param int Horizontal axis of top left corner
+     * @param int Vertical axis of top left corner
+     * @return int Height in pixels
      */
     public function draw($x, $y) {
 
-        $this->_image->imagettftext(13, 0, $x, $y, $this->_image->getColor('table.title'), $this->_image->getFont('table.title'), $this->_name);
-        $y += 3;
+        $top = $y;
+        $y += self::TITLE_SIZE;
 
-        $this->_image->imageline($x, $y, $x+strlen($this->_name)*10, $y, $this->_image->getColor('table.title'));
+        // table title
+        $this->_image->imagettftext(self::TITLE_SIZE, 0, $x, $y, 
+            $this->_image->getColor('table.title'), $this->_image->getFont('table.title'), $this->_name);
 
-        $line = 1;
+        $bbox = imagettfbbox(self::TITLE_SIZE, 0, $this->_image->getFont('table.title'), $this->_name);
+
+        $this->_image->imageline($x, $y+1, $x+$bbox[4]+10, $y+1, $this->_image->getColor('table.title'));
+
+        $y += 3 + self::TITLE_SIZE;
+
         foreach ($this->_getInfo() as $column) {
       
             $matches = array();
             preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
-            $this->_image->imagettftext(10, 0, $x, $y + $line * 12, 
+            $this->_image->imagettftext(self::COLUMN_SIZE, 0, $x, $y, 
                 $this->_image->getColor('table.column'), 
                 $this->_image->getFont('table.column'), 
                 $column['COLUMN_NAME'] . ': ' . str_replace(' ', '', $matches[1]));
+
+            $y += self::COLUMN_SIZE+2;
 
             if (!empty($column['COMMENT'])) {
                 $comments = explode("\n", wordwrap(cutLongLine($column['COMMENT'], 80), 30, "\n", true));
 
                 foreach ($comments as $comment) {
-                    $line++;
-
-                    $this->_image->imagettftext(9, 0, $x+10, $y + $line * 12 - 1, 
+                    $this->_image->imagettftext(self::COMMENT_SIZE, 0, $x+10, $y, 
                         $this->_image->getColor('table.comment'), 
                         $this->_image->getFont('table.comment'), 
                         $comment);
+                    $y += self::COMMENT_SIZE+2;
                 }
+                $y += 2;
             }
 
-            $line++;
         }
+
+        return $y - $top;
 
     }
 
@@ -115,6 +136,22 @@ class FaZend_Deployer_MapTable {
         if (!isset($this->_info))
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
+
+    }
+
+    /**
+     * Height of the table, in pixels
+     *
+     * @return int
+     */
+    public function _getHeight() {
+        
+        // the image should NOT draw anything, just calculate the parameter
+        $this->_image->disableDrawing();
+        $height = $this->draw(0, 0);
+        $this->_image->enableDrawing();
+
+        return $height;
 
     }
 
