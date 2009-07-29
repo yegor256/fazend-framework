@@ -74,6 +74,21 @@ class FaZend_Deployer_MapTable {
     }
 
     /**
+     * Format one column title
+     *
+     * @param array Column details
+     * @return string Text
+     */
+    public static function formatColumnTitle($column) {
+
+        $matches = array();
+        preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
+
+        return $column['COLUMN_NAME'] . ': ' . str_replace(' ', '', $matches[1]) .
+            (!empty($column['FK']) ? ', FK(' . $column['FK_TABLE'] . '.' . $column['FK_COLUMN'] . ')' : false);
+    }
+
+    /**
      * Put the table onto the map
      *
      * @param int Horizontal axis of top left corner
@@ -97,13 +112,10 @@ class FaZend_Deployer_MapTable {
 
         foreach ($this->_getInfo() as $column) {
       
-            $matches = array();
-            preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
-
             $this->_image->imagettftext(self::COLUMN_SIZE, 0, $x, $y, 
                 $this->_image->getColor('table.column'), 
                 $this->_image->getFont('table.column'), 
-                $column['COLUMN_NAME'] . ': ' . str_replace(' ', '', $matches[1]));
+                self::formatColumnTitle($column));
 
             $y += self::COLUMN_SIZE+2;
 
