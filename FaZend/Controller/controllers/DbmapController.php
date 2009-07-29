@@ -28,10 +28,25 @@ class Fazend_DbmapController extends FaZend_Controller_Action {
      */
     public function indexAction() {
 
-        $deployer = FaZend_Deployer::getInstance();
-
+        // create new map builder
         $map = new FaZend_Deployer_Map();
 
+        // return PNG
+        $this->_returnPNG($map->png());
+
+    }
+
+    /**
+     * Show one table in PNG file
+     *
+     * @return void
+     */
+    public function tableAction() {
+
+        // create single table builder
+        $map = new FaZend_Deployer_SingleTable($this->_getParam('name'));
+
+        // return PNG
         $this->_returnPNG($map->png());
 
     }

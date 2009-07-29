@@ -15,7 +15,7 @@
  */
 
 /**
- * Deploy Db schema
+ * DB schema visual modeller
  *
  * @package FaZend 
  */
