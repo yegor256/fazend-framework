@@ -198,11 +198,15 @@ class FaZend_Deployer_SingleTable {
         $center = $this->_locations[$this->_name];
         $leaf = $this->_locations[$entity->name];
 
-        list($centerX, $centerY) = self::_calculateBorder($leaf->x + $leaf->width/2, $leaf->y + $leaf->height/2, 
-            $center->x, $center->y, $center->width, $center->height);
+        list($centerX, $centerY) = self::_calculateBorder(
+            $center->x + $center->width/2, $center->y + $center->height/2, 
+            $leaf->x + $leaf->width/2, $leaf->y + $leaf->height/2,
+            $center->width, $center->height);
 
-        list($leafX, $leafY) = self::_calculateBorder($center->x + $center->width/2, $center->y + $center->height/2, 
-            $leaf->x, $leaf->y, $leaf->width, $leaf->height);
+        list($leafX, $leafY) = self::_calculateBorder(
+            $leaf->x + $leaf->width/2, $leaf->y + $leaf->height/2, 
+            $center->x + $center->width/2, $center->y + $center->height/2, 
+            $leaf->width, $leaf->height);
 
         $this->_getImage()->imageline($centerX, $centerY,
             $leafX, $leafY, 
@@ -237,8 +241,8 @@ class FaZend_Deployer_SingleTable {
      */
     public function _putMark($x1, $y1, $x2, $y2, $mark) {
 
-        $x = (($x2 - $x1 < 0) ? -1 : 0.3);
-        $y = (($y2 - $y1 < 0) ? 1.4 : -0.2);
+        $x = (($x2 - $x1 <= 0) ? -1 : 0.3);
+        $y = (($y2 - $y1 <= 0) ? 1.4 : -0.2);
 
         $bbox = imagettfbbox(FaZend_Deployer_MapTable::COMMENT_SIZE, 0, $this->_getImage()->getFont('table.column'), $mark);
 
@@ -412,15 +416,8 @@ class FaZend_Deployer_SingleTable {
         $height = $height/2;
         $width = $width/2;
 
-        if ($x1 < $x2)
-            $signX = 1;
-        else
-            $signX = -1;    
-
-        if ($y1 < $y2)
-            $signY = 1;
-        else
-            $signY = -1;    
+        $signX = ($x1 < $x2) ? 1 : -1;
+        $signY = ($y1 < $y2) ? 1 : -1;
 
         if ($dY/$dX < $height/$width) {
             $x = $width * $signX;
