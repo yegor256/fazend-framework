@@ -340,7 +340,9 @@ class FaZend_Deployer {
                 'COLUMN_NAME' => $matches[1][$id],
                 'DATA_TYPE' => $matches[2][$id],
                 'COMMENT' => $matches[3][$id],
+                'NULL' => !preg_match('/not\snull/i', $matches[2][$id]),
             );
+                
         }
 
         return $info;
