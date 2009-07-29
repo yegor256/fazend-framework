@@ -304,12 +304,36 @@ class FaZend_Deployer {
         $info = array();
         foreach ($matches[0] as $id=>$column) {
 
-            // skip primary key
-            if (preg_match('/^(primary\skey|constraint|unique\skey)\s/i', $column))
-                continue;
+            $key = array();
 
-            // other special mnemos
-            if (preg_match('/^(index|unique|foreign\skey)\s?\(/i', $column))
+            // primary key
+            if (preg_match('/^primary\skey\s?\(\s?([^\,]*?)\s?\)/i', $column, $key)) {
+                $info[$key[1]]['PRIMARY'] = 1;
+                $info[$key[1]]['PRIMARY_POSITION'] = 1;
+                $info[$key[1]]['IDENTITY'] = 1;
+                continue;
+            }
+
+            // process foreign keys
+            if (preg_match('/^(?:constraint\s.*?\s)?foreign\skey\s\(\s?(.*?)\s?\)\sreferences\s(.*?)\s\(\s?(.*?)\s?\)\s(.*)/i', $column, $key)) {
+                $info[$key[1]]['FK'] = 1;
+                $info[$key[1]]['FK_TABLE'] = trim($key[2]);
+                $info[$key[1]]['FK_COLUMN'] = trim($key[3]);
+
+                if (strpos(strtolower($key[4]), 'on delete cascade') !== false)
+                    $info[$key[1]]['FK_COMPOSITION'] = true;
+                    
+                continue;
+            }
+
+            // unique's
+            if (preg_match('/^(?:unique|unique key)\s?\(\s?([^\,]*?)\s?\)/i', $column, $key)) {
+                $info[$key[1]]['UNIQUE'] = 1;
+                continue;
+            }
+
+            // other special mnemos, if not parsed above - skip them
+            if (preg_match('/^(index|primary\skey|constraint|foreign\skey|unique|unique\skey)\s?\(/i', $column))
                 continue;
 
             $info[$matches[1][$id]] = array(
