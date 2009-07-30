@@ -352,7 +352,7 @@ class FaZend_Deployer_SingleTable {
 
         $width = 0;
         foreach ($info as $column)
-            $width = max($width, strlen($column['COMMENT']), strlen($column['COLUMN_NAME'] . ': ' . $column['DATA_TYPE']));
+            $width = max($width, strlen($column['COMMENT']), strlen(FaZend_Deployer_MapTable::formatColumnTitle($column)));
 
         return array(
             self::PADDING * 2 + $width * FaZend_Deployer_MapTable::COLUMN_SIZE * 0.6 + self::ENTITIES_WIDTH, // width

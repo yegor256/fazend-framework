@@ -131,7 +131,7 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
                     break;
 
                 case 's':
-                    $args[] = $this->_loremIpsum($matches[1][$id]);
+                    $args[] = FaZend_View_Helper_LoremIpsum::getLoremIpsum($matches[1][$id]);
                     break;
 
                 case 'f':
@@ -166,35 +166,4 @@ abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModell
             $label. '</a>';
     }
 
-    /**
-     * List of stupid texts
-     *
-     * @var string[]
-     */
-    private $_loremIpsumSlices = array(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        'Nunc convallis nulla id eros interdum aliquam',
-        'Nullam in elementum enim',
-        'Nam adipiscing hendrerit enim a gravida',
-        'Proin ligula tellus, sagittis vitae malesuada vel, dignissim cursus tellus',
-        'Vivamus aliquam rhoncus dolor quis imperdiet',
-        'Ut sit amet dui vel ligula auctor eleifend',
-        'Cras mauris nisl, porta ac vulputate at, adipiscing nec erat.');
-
-    /**
-     * Lorem ipsum
-     *
-     * @return string
-     */
-    private function _loremIpsum($length = false) {
-
-        shuffle($this->_loremIpsumSlices);
-
-        if (!$length)
-            $length = 500;
-
-        return cutLongLine(trim(implode('. ', $this->_loremIpsumSlices)), $length);
-
-    }
-                        
 }
