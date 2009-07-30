@@ -102,6 +102,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
+     * Set helper for a given column
+     *
+     * @param string Column name, case sensitive
+     * @param string Name of the view helper to apply
+     * @return HtmlTable
+     */
+    public function setParserHelper($column, $helper) {
+        $this->_column($column)->helper = $helper;
+        return $this;
+    }
+
+    /**
      * Hide one column
      *
      * @param string Column name, case sensitive
@@ -258,6 +270,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if ($this->_column($title)->parser) {
                     $parser = $this->_column($title)->parser;
                     $value = $parser($value, $rowOriginal);
+                }    
+
+                // parse the value of this TD with helper
+                if ($this->_column($title)->helper) {
+                    $parser = $this->_column($title)->helper;
+                    $value = $this->view->$helper($value, $rowOriginal);
                 }    
 
                 // attach link to the TD
