@@ -171,7 +171,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         }
 
-        if ($form->isErrors())
+        if ($form->pwd->hasErrors() || $form->email->hasErrors())
             $form->pwd->addError("<a href='" . $this->view->url(array('action'=>'remind'), 'user', true) . "'>remind password</a>");
 
     }    
