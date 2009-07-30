@@ -116,7 +116,7 @@ class FaZend_Deployer_SingleTable {
         $entities = $this->_findEntities();
 
         // intitial coordinates
-        $angle = 37; 
+        $angle = 45; 
         $centerX = $x + self::ENTITIES_WIDTH/2;
         $centerY = $y + self::ENTITIES_WIDTH/2;
         $radius = $centerX - $x;

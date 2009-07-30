@@ -53,73 +53,87 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     private $_noDataMessage = 'no data';
     
     /**
-    * Show the table
-    *
-    * @return string HTML
-    */
+     * Show the table
+     *
+     * @return string HTML
+     */
     public function htmlTable() {
         return $this;
     }
 
     /**
-    * Show the table
-    *
-    * @return string HTML
-    */
+     * Show the table
+     *
+     * @return string HTML
+     */
     public function __toString() {
+        
         try {
-            return $this->_render();
+            $html = $this->_render();
         } catch (Exception $e) {
-            return 'Exception: '.$e->getMessage();
-        }    
+            $html = 'Exception: ' . $e->getMessage();
+        }
+
+        return $html;
+            
     }
 
     /**
-    * Set the paginator
-    *
-    * @return HtmlTable
-    */
+     * Set the paginator with the data
+     *
+     * @param Zend_Paginator Data holder to render
+     * @return HtmlTable
+     */
     public function setPaginator(Zend_Paginator $paginator) {
         $this->_paginator = $paginator;
         return $this;
     }
 
     /**
-    * Set the paginator
-    *
-    * @return HtmlTable
-    */
-    public function setParser($column, $func) {
-        $this->_column($column)->parser = $func;
+     * Set parser for a given column
+     *
+     * @param string Column name, case sensitive
+     * @param callback Function to be called with each row
+     * @return HtmlTable
+     */
+    public function setParser($column, $callback) {
+        $this->_column($column)->parser = $callback;
         return $this;
     }
 
     /**
-    * Hide one column
-    *
-    * @return HtmlTable
-    */
+     * Hide one column
+     *
+     * @param string Column name, case sensitive
+     * @return HtmlTable
+     */
     public function hideColumn($column) {
         $this->_column($column)->hidden = true;
         return $this;
     }
 
     /**
-    * Append option to column, instead of 'options' column
-    *
-    * @return HtmlTable
-    */
+     * Append option to column, instead of 'options' column
+     *
+     * @param string Option name, case sensitive
+     * @param string Column name, case sensitive
+     * @return HtmlTable
+     */
     public function appendOptionToColumn($option, $column) {
         $this->_option($option)->toColumn = $column;
         return $this;
     }
 
     /**
-    * Add option
-    *
-    * @return HtmlTable
-    */
-    public function addOption($title, $httpVar, $column, $urlParams) {
+     * Add option
+     *
+     * @param string Option name, case sensitive
+     * @param string Http variable to be used in links, in params
+     * @param string Source of data for the Http variable, column name
+     * @param array Array of parameters for url()
+     * @return HtmlTable
+     */
+    public function addOption($title, $httpVar, $column, array $urlParams) {
         $this->_option($title)->title = $title;
         $this->_option($title)->httpVar = $httpVar;
         $this->_option($title)->column = $column;
@@ -128,65 +142,73 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
-    * Conditional skip of the option
-    *
-    * @return HtmlTable
-    */
-    public function skipOption($title, $func) {
-        $this->_option($title)->skip = $func;
+     * Conditional skip of the option
+     *
+     * @param string Option name, case sensitive
+     * @param callback Function to be called to understand when the option should be skipped
+     * @return HtmlTable
+     */
+    public function skipOption($title, $callback) {
+        $this->_option($title)->skip = $callback;
         return $this;
     }
 
     /**
-    * Add column style
-    *
-    * @return HtmlTable
-    */
+     * Add column style
+     *
+     * @param string Column name, case sensitive
+     * @param string CSS style
+     * @return HtmlTable
+     */
     public function addColumnStyle($column, $style) {
         $this->_column($column)->style = $style;
         return $this;
     }
 
     /**
-    * Set column title
-    *
-    * @return HtmlTable
-    */
+     * Set column title
+     *
+     * @param string Column name, case sensitive
+     * @param string Column title to be displayed
+     * @return HtmlTable
+     */
     public function setColumnTitle($column, $title) {
         $this->_column($column)->title = $title;
         return $this;
     }
 
     /**
-    * Allow raw HTML output in the column
-    *
-    * @return HtmlTable
-    */
+     * Allow raw HTML output in the column
+     *
+     * @param string Column name, case sensitive
+     * @return HtmlTable
+     */
     public function allowRawHtml($column) {
         $this->_column($column)->rawHtml = true;
         return $this;
     }
 
     /**
-    * Set message to show if no data
-    *
-    * @return HtmlTable
-    */
+     * Set message to show if no data
+     *
+     * @param string Text message to show when the paginator has no data
+     * @return HtmlTable
+     */
     public function setNoDataMessage($msg) {
         $this->_noDataMessage = $msg;
         return $this;
     }
 
     /**
-    * Add column link
-    *
-    * @param string Name of the column to attach to
-    * @param string HTTP variable to pass to the link
-    * @param string What column value to use for this HTTP var
-    * @param array Other URL params
-    * @return HtmlTable
-    */
-    public function addColumnLink($title, $httpVar, $column, $urlParams) {
+     * Add column link
+     *
+     * @param string Name of the column to attach to
+     * @param string HTTP variable to pass to the link
+     * @param string What column value to use for this HTTP var
+     * @param array Other URL params
+     * @return HtmlTable
+     */
+    public function addColumnLink($title, $httpVar, $column, array $urlParams) {
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
@@ -196,11 +218,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
-    * Render the table
-    *
-    * @return HtmlTable
-    */
+     * Render the table
+     *
+     * @return string HTML table
+     */
     protected function _render() {
+
+        // if no data in the paginator
         if (!count($this->_paginator))
             return $this->_noDataMessage;
 
@@ -217,7 +241,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').
                 "' onmouseover='this.className=\"highlight\"' onmouseout='this.className=\"".
-                (fmod (count($resultTRs), 2) ? 'even' : 'odd')."\"'>";
+                (fmod(count($resultTRs), 2) ? 'even' : 'odd')."\"'>";
 
             $tds = array();    
             foreach ($row as $title=>$value) {
@@ -301,22 +325,24 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
-    * Get a column object 
-    *
-    * @return StdObj
-    */
-    private function _column($column) {
+     * Get a column object 
+     *
+     * @param string Column name
+     * @return StdObj
+     */
+    protected function _column($column) {
         if (!isset($this->_columns[$column]))
             $this->_columns[$column] = new FaZend_StdObject();
         return $this->_columns[$column];
     }
 
     /**
-    * Get a column object 
-    *
-    * @return StdObj
-    */
-    private function _option($option) {
+     * Get a column object 
+     *
+     * @param string Option name
+     * @return StdObj
+     */
+    protected function _option($option) {
         if (!isset($this->_options[$option]))
             $this->_options[$option] = new FaZend_StdObject();
         return $this->_options[$option];
