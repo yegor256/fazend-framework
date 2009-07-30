@@ -73,7 +73,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
     protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
 
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
-        $this->_helper->redirector->setGotoSimple($action, $controller, $module, $params);
+        $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
         
     }
 
