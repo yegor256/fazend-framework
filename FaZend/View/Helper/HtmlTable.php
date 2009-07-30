@@ -274,7 +274,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
                 // parse the value of this TD with helper
                 if ($this->_column($title)->helper) {
-                    $parser = $this->_column($title)->helper;
+                    $helper = $this->_column($title)->helper;
                     $value = $this->getView()->$helper($value, $rowOriginal);
                 }    
 
