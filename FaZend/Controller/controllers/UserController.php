@@ -53,6 +53,8 @@ class Fazend_UserController extends FaZend_Controller_Action {
             $this->view->form = $e->getMessage();
             return;
         }
+
+        // if not yet filled - wait for it
         if (!$form->isFilled())
             return;
 
@@ -68,10 +70,14 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }    
 
         try {
+            
             $user = FaZend_User::register($form->email->getValue(), $form->password->getValue(), $data);
+
         } catch (Zend_Db_Statement_Exception $e) {
+
             $form->email->addError("user already registered, try another email ({$e->getMessage()})");
             return;
+
         }    
 
         // login the found user
@@ -109,22 +115,14 @@ class Fazend_UserController extends FaZend_Controller_Action {
         // send password by email    
         FaZend_Email::create('RemindPassword.tmpl')
             ->set('toEmail', $user->email)
-            ->set('toName', $user->nickname)
+            ->set('toName', $user->email)
             ->set('password', $user->password)
             ->send();
 
-        $this->_forward('reminded');    
+        $this->_redirectFlash('password sent by email', 'remind');    
 
     }
         
-    /**
-     * Remind password - done
-     *
-     * @return void
-     */
-    public function remindedAction() {
-    }
-
     /**
      * Log out current user and forward to the index/index
      *
@@ -133,7 +131,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function logoutAction() {
 
         if (!FaZend_User::isLoggedIn())
-            return $this->_redirectFlash('not logged in yet');
+            return $this->_redirectFlash('not logged in yet', 'index', 'index');
 
         FaZend_User::getCurrentUser()->logOut();
 
@@ -150,10 +148,12 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function loginAction() {
 
         $form = FaZend_Form::create('Login', $this->view);
+
         if (!$form->isFilled())
             return;
 
         try {
+
             $user = FaZend_User::findByEmail($form->email->getValue());
 
             if (!$user->isGoodPassword($form->pwd->getValue())) {
@@ -166,8 +166,13 @@ class Fazend_UserController extends FaZend_Controller_Action {
             }
 
         } catch (FaZend_User_NotFoundException $e) {
+
             $form->email->addError('user not found');
+
         }
+
+        if ($form->isErrors())
+            $form->pwd->addError("<a href='" . $this->view->url(array('action'=>'remind'), 'user', true) . "'>remind password</a>");
 
     }    
 
