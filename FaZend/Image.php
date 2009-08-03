@@ -31,6 +31,8 @@ class FaZend_Image {
     const BRAND_GRAY      = '6D6F71'; // gray
     const BRAND_LIGHTGRAY = 'BCBEC0'; // light gray
 
+    const BRAND_RED = 'EE0000'; // just red
+
     /**
      * Enable drawing
      *
