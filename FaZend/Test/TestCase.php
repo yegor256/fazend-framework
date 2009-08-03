@@ -56,6 +56,14 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
         // bootstrap the application
         include 'FaZend/Application/index.php';
 
+        // objects in 'test/Mocks' directory
+        Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
+
+        set_include_path(implode(PATH_SEPARATOR, array(
+            realpath(APPLICATION_PATH . '/../../test'),
+            get_include_path(),
+        )));
+
     }    
 
     /**

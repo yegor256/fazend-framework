@@ -1,0 +1,79 @@
+
+/* all elements */
+* {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+/* global html element */
+body {
+    font-family: Verdana;
+    font-style: normal;
+    font-size: 11px;
+    line-height: 1.9em;
+    color: <?=FaZend_Image::getCssColor('mockup.content')?>;
+    background-color: white;
+    margin: 5px;
+}
+
+/* normal links and link-free hrefs */
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+    background-color: inherit;
+    border-bottom: 1px dotted <?=FaZend_Image::getCssColor('mockup.link')?>;
+}
+
+    /* links with mouse moved over */    
+    a:hover {
+        color: white;
+        background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+    }
+
+/* toplevel headers */
+h1 {
+    font-weight: normal;
+    font-size: <?=FaZend_UiModeller_Mockup_Meta_Title::FONT_SIZE?>px;
+    margin-bottom: 1em;
+    color: <?=FaZend_Image::getCssColor('mockup.content.title')?>;
+}
+
+/* paragraphs */
+p {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-size: <?=FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE?>px; 
+    color: <?=FaZend_Image::getCssColor('mockup.content')?>;
+}
+
+/* control elements */
+input, 
+textarea, 
+select {
+    padding: 2px;
+    font-family: Verdana;
+    color: <?=FaZend_Image::getCssColor('mockup.input.text')?>;
+    border: 1px solid <?=FaZend_Image::getCssColor('mockup.input.border')?>;
+    background:<?=FaZend_Image::getCssColor('mockup.input')?>;
+}
+
+/* table configuration */
+td, 
+th {
+    text-align: left;
+    vertical-align: top;
+    padding: 2px;
+    margin: 1px;
+    background: white;
+    font-size: <?=FaZend_UiModeller_Mockup_Meta_Table::FONT_SIZE?>px;
+}
+
+/* headers */
+th {
+    background-color: <?=FaZend_Image::getCssColor('mockup.table.header.background')?>;
+    color: <?=FaZend_Image::getCssColor('mockup.table.header')?>;
+    font-weight: normal;
+}
+

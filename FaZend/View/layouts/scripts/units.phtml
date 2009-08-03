@@ -1,9 +1,16 @@
 <?
+
 $this->headMeta()
     ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
 
 $this->includeCSS('fazend.css');
-$this->includeCSS('ui.css');
+$this->includeCSS('units.css');
+
+$this->includeJQuery();
+$this->includeJS('units.js');
+$this->includeJS('jquery.js');
+
+$this->headTitle('units');
 
 ?><?= $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
@@ -15,7 +22,9 @@ $this->includeCSS('ui.css');
 </head> 
 <body>
 
-    <?=$this->layout()->content?>
+    <div class="wrapper">
+        <?=$this->layout()->content?>
+    </div>
 
     <?=$this->headScript() ?>
 </body>

@@ -1,24 +1,4 @@
 
-* {
-    padding: 0px;
-    margin: 0px;
-}
-
-body {
-    font-family: Verdana;
-    font-style: normal;
-    font-size: 11px;
-    line-height: 1.9em;
-
-    color: <?=FaZend_Image::getCssColor('mockup.content')?>;
-    background-color: white;
-    margin: 5px;
-}
-
-img {
-    border: none;
-}
-
 /* global wrapper */
 div.wrapper {
     width: <?=FaZend_UiModeller_Mockup::WIDTH?>px;
@@ -26,20 +6,6 @@ div.wrapper {
     margin: 10px auto 20px auto;
     position: relative;
 }
-
-/* normal links and link-free hrefs */
-a {
-    text-decoration: none;
-    cursor: pointer;
-    color: <?=FaZend_Image::getCssColor('mockup.link')?>;
-    background-color: inherit;
-    border-bottom: 1px dotted <?=FaZend_Image::getCssColor('mockup.link')?>;
-}
-    
-    a:hover {
-        color: white;
-        background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
-    }
 
 /* header above the page */
 div.header {
@@ -76,50 +42,6 @@ div.page {
     position: relative;
     min-height: 400px;
 }
-
-    div.page h1 {
-        font-weight: normal;
-        font-size: <?=FaZend_UiModeller_Mockup_Meta_Title::FONT_SIZE?>px;
-        margin-bottom: 1em;
-        color: <?=FaZend_Image::getCssColor('mockup.content.title')?>;
-    }
-
-    div.page p {
-        padding-top: 1em;
-        padding-bottom: 1em;
-        font-size: <?=FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE?>px; 
-        color: <?=FaZend_Image::getCssColor('mockup.content')?>;
-    }
-
-    div.page input, 
-    div.page textarea, 
-    div.page select {
-        padding: 2px;
-        font-family: Verdana;
-        color: <?=FaZend_Image::getCssColor('mockup.input.text')?>;
-        border: 1px solid <?=FaZend_Image::getCssColor('mockup.input.border')?>;
-        background:<?=FaZend_Image::getCssColor('mockup.input')?>;
-    }
-
-    div.page th {
-        text-align: left;
-    }
-
-        div.page td, 
-        div.page th {
-            text-align: left;
-            vertical-align: top;
-            padding: 2px;
-            margin: 1px;
-            background: white;
-            font-size: <?=FaZend_UiModeller_Mockup_Meta_Table::FONT_SIZE?>px;
-        }
-
-        div.page th {
-            background-color: <?=FaZend_Image::getCssColor('mockup.table.header.background')?>;
-            color: <?=FaZend_Image::getCssColor('mockup.table.header')?>;
-            font-weight: normal;
-        }
 
     /* broken link */
     div.page span.broken {

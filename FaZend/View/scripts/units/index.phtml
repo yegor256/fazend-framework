@@ -1,0 +1,37 @@
+
+<? $latest = ''; ?>
+
+<? foreach ($this->tests as $test): ?>
+
+    <? foreach (($sectors = array_slice(explode('/', $test), 0, -1)) as $id=>$sector): ?>
+
+        <? $title = implode('/', array_slice($sectors, 0, $id+1)); ?>
+
+        <? if (strpos($latest, $title) !== false) continue; ?>
+
+        <span style="margin-left: <?=substr_count($title, '/') * 20?>px;"><?=$sector?></span>
+        <br/>
+
+    <? endforeach; ?>
+
+    <? $md5 = 'x' . md5($test); ?>
+
+    <span class="unit"
+        style="margin-left: <?=substr_count($test, '/') * 20?>px;"
+        id="<?=$md5?>"
+        title="<?=$this->escape($test)?>"
+        onclick="run($('#<?=$md5?>'), $('#log_<?=$md5?>'), '<?=$test?>');"><?=$this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
+        
+    <span class="unitlog" id="log_<?=$md5?>"></span>
+
+    <br/>
+
+    <? $latest = $test; ?>
+
+<? endforeach; ?>
+
+<div class="panel">
+    <pre id="output"></pre>
+    <div id="protocol"></div>
+</div>
+
