@@ -27,7 +27,7 @@ function run(ahref, spanlog, unit) {
 
         success: function(json) {
             
-            $('pre#output').html(json['output']).css('cursor', 'default');
+            $('pre#output').html(json['output']).css('cursor', 'text');
             $('div#protocol').html(json['protocol']);
 
             spanlog.html(json['spanlog']).show();
