@@ -49,6 +49,8 @@ function stop(unit) {
         return;
     }
 
+    runningUnit = false;
+
     // stop running
     $.ajax({
         url: "<?=$this->url(array('action'=>'stop'), 'units', true)?>",
@@ -57,7 +59,6 @@ function stop(unit) {
         dataType: "json",
 
         success: function(json) {
-            runningUnit = false;
         }
     });
             
