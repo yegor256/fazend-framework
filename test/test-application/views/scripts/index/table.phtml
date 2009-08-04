@@ -17,6 +17,9 @@ Table:
 	// allow raw html in the column
 	->allowRawHtml('password')
 
+	// injected column
+	->addColumn('__id', 'id')
+
 	// option
 	->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
 

@@ -39,6 +39,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     private $_columns = array();
 
     /**
+     * List of injected columns
+     *
+     * @var array
+     */
+    private $_injections = array();
+
+    /**
      * List of options defined by set..()
      *
      * @var array
@@ -121,6 +128,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      */
     public function hideColumn($column) {
         $this->_column($column)->hidden = true;
+        return $this;
+    }
+
+    /**
+     * Add new column
+     *
+     * @param string Column name, case sensitive
+     * @param string Column name, case sensitive, which will preceede this new column
+     * @return HtmlTable
+     */
+    public function addColumn($column, $predecessor) {
+        $this->_injections[$column] = $predecessor;
         return $this;
     }
 
@@ -251,6 +270,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             else
                 $row = $rowOriginal;    
 
+            // inject columns
+            foreach ($this->_injections as $injectedColumn=>$predecessor) {
+                $row[$injectedColumn] = $rowOriginal->$injectedColumn;
+            }
+
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').
                 "' onmouseover='this.className=\"highlight\"' onmouseout='this.className=\"".
                 (fmod(count($resultTRs), 2) ? 'even' : 'odd')."\"'>";
@@ -286,7 +310,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 }    
 
                 // append CSS style
-                $tds[$title] = "<td".($this->_column($title)->style ? " style='{$this->_column($title)->style}'" : false).">{$value}";
+                $tds[$title] = '<td' . ($this->_column($title)->style ? " style='{$this->_column($title)->style}'" : false) .
+                    '>' . $value;
             }    
 
             if (count($this->_options)) {
@@ -328,18 +353,20 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             if ($this->_column($title)->title)    
                 $title = $this->_column($title)->title;
 
-            $header .= "<th>".ucwords ($title)."</th>";
+            $header .= '<th>' . ucwords($title) . '</th>';
         }    
 
         if (count($this->_options))
-            $header .= "<th>Options</th>";
+           $header .= '<th>Options</th>';
 
-        $html = "<table>{$header}";
+        $html = '<table>' . $header;
         foreach ($resultTRs as $tr=>$line) {
-            $html .= $line.implode('</td>', array_merge($resultTDs[$tr], isset($options[$tr]) ? array($options[$tr]) : array())).'</td></tr>';
+            $html .= $line . 
+                implode('</td>', array_merge($resultTDs[$tr], isset($options[$tr]) ? array($options[$tr]) : array())) .
+                '</td></tr>';
         }    
 
-        return $html.'</table>';    
+        return $html . '</table>';    
     }
 
     /**
