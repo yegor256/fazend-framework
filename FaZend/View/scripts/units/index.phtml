@@ -22,7 +22,10 @@
         title="<?=$this->escape($test)?>"
         onclick="run($('#<?=$md5?>'), $('#log_<?=$md5?>'), '<?=$test?>');"><?=$this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
         
-    <span class="unitlog" id="log_<?=$md5?>"></span>
+    <span class="unitlog" 
+        id="log_<?=$md5?>"
+        onclick="stop('<?=$test?>');"
+        title="stop it now"></span>
 
     <br/>
 

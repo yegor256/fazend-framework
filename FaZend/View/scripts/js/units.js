@@ -37,6 +37,33 @@ function run(ahref, spanlog, unit) {
 }
 
 /**
+ * Stop current testing
+ *
+ * @param string Unique name of the unit test
+ * @return void
+ */
+function stop(unit) {
+
+    // if some test is running now
+    if (runningUnit !== false) {
+        return;
+    }
+
+    // stop running
+    $.ajax({
+        url: "<?=$this->url(array('action'=>'stop'), 'units', true)?>",
+        type: "POST",
+        data: {name: runningUnit},
+        dataType: "json",
+
+        success: function(json) {
+            runningUnit = false;
+        }
+    });
+            
+}  
+
+/**
  * Executve one unit test
  *
  * @return void

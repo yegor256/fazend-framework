@@ -18,6 +18,7 @@ span.unit {
 span.unitlog {
     color: #<?=FaZend_Image::BRAND_LIGHTGRAY?>;
     display: none;
+    cursor: pointer;
 }
 
     span.unitlog:before {

@@ -246,12 +246,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @return HtmlTable
      */
     public function addColumnLink($title, $httpVar, $column, array $urlParams) {
+        
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
         $link->column = $column;
         $this->_column($title)->link = $link;
         return $this;
+
     }
 
     /**
@@ -314,7 +316,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if ($this->_column($title)->link) {
                     $link = $this->_column($title)->link;
                     $value = "<a href='".$this->getView()->url($link->urlParams + 
-                        array($link->httpVar => $row[$link->column]), 'default', true)."'>{$value}</a>";
+                        array($link->httpVar => $row[$link->column]), 'default', true)."'>" . $value . '</a>';
                 }    
 
                 // append CSS style
@@ -336,7 +338,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     // build the <A HREF> link for this option
                     $optLink = "&#32;<a href='".$this->getView()->url(
                         $option->urlParams + array($option->httpVar => $row[$option->column]), 'default', true).
-                        "'>{$option->title}</a>";
+                        "'>" . $option->title . '</a>';
 
                     // attach this option to the particular column    
                     if ($option->toColumn)    

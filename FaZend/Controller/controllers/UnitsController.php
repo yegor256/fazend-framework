@@ -61,4 +61,15 @@ class Fazend_UnitsController extends FaZend_Controller_Action {
 
     }
 
+    /**
+     * Stop current test
+     *
+     * @return void
+     */
+    public function stopAction() {
+
+        $this->_returnJSON(FaZend_Test_Manager::getInstance()->stop($this->getRequest()->getPost('name')));
+
+    }
+
 }

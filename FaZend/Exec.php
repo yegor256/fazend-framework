@@ -127,6 +127,20 @@ class FaZend_Exec extends FaZend_StdObject {
     }
 
     /**
+     * Stop it
+     *
+     * @return void
+     */
+    public function stop() {
+
+        if (!$this->isRunning())
+            return;
+
+        self::_stop(self::_uniqueId($this->_name));
+
+    }
+
+    /**
      * Calculate unique ID of the task by its name
      *
      * @param string Name of the task, unique!
@@ -243,6 +257,20 @@ class FaZend_Exec extends FaZend_StdObject {
         chdir($current);
 
     }
+
+    /**
+     * Stop the script
+     *
+     * @param string ID of the task
+     * @return void
+     */
+    protected static function _stop($id) {
+
+        $pid = self::_pid($id);
+
+        shell_exec('kill -9 ' . $pid);
+
+    }    
 
     /**
      * Clear files

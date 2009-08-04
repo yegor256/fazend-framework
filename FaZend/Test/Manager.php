@@ -99,6 +99,23 @@ class FaZend_Test_Manager {
     }
 
     /**
+     * Stop one single test 
+     *
+     * @param string Name of the unit test file
+     * @return array
+     */
+    public function stop($name) {
+
+        // if it's not running yet - start it now
+        $exec = $this->_initializeExec($name);
+
+        $exec->stop();
+
+        return true;
+
+    }    
+
+    /**
      * Initialize exec
      *
      * @param string Name of the unit test file
