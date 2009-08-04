@@ -139,6 +139,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @return HtmlTable
      */
     public function addColumn($column, $predecessor) {
+
+        if ($column == $predecessor) {
+            FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_IllegalParameter', 
+                'Column cannot precede itself');
+        }
+
         $this->_injections[$column] = $predecessor;
         return $this;
     }
@@ -272,6 +278,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
             // inject columns
             foreach ($this->_injections as $injectedColumn=>$predecessor) {
+                if (!is_object($rowOriginal))
+                    break;
                 $row[$injectedColumn] = $rowOriginal->$injectedColumn;
             }
 
