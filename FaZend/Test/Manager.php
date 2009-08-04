@@ -119,7 +119,7 @@ class FaZend_Test_Manager {
             '<?php define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
         
         // phpUnit cmd line
-        $cmd = 'cd ' . escapeshellarg($this->_location) . '/..;' .
+        $cmd = 'cd ' . escapeshellarg(realpath($this->_location . '/..')) . ';' .
             ' phpunit --verbose --stop-on-failure' . 
             ' -d "include_path=' . ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library') . '"' . 
             ' --log-xml ' . escapeshellarg($exec->log) .
