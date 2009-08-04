@@ -86,6 +86,20 @@ class FaZend_Exec extends FaZend_StdObject {
     }
 
     /**
+     * Get process id
+     *
+     * @return int
+     */
+    public function getPid() {
+
+        if (!$this->isRunning())
+            return false;
+
+        return self::_pid(self::_uniqueId($this->_name));
+
+    }
+
+    /**
      * Is it still running?
      *
      * @return boolean
@@ -187,6 +201,19 @@ class FaZend_Exec extends FaZend_StdObject {
         self::_clear($id);
 
         return 'No output yet...';
+
+    }
+
+    /**
+     * Get process ID
+     *
+     * @param string ID of the task
+     * @return void
+     */
+    protected static function _pid($id) {
+        
+        $pidFile = self::_fileName($id, self::PID_SUFFIX);
+        return file_get_contents($pidFile);
 
     }
 
