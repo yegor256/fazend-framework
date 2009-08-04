@@ -119,8 +119,8 @@ class FaZend_Test_Manager {
             '<?php define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
         
         // phpUnit cmd line
-        $cmd = 'cd ' . escapeshellarg(realpath($this->_location . '/..')) . ';' .
-            ' phpunit --verbose --stop-on-failure' . 
+        $cmd =
+            'phpunit --verbose --stop-on-failure' . 
             ' -d "include_path=' . ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library') . '"' . 
             ' --log-xml ' . escapeshellarg($exec->log) .
             ' --bootstrap ' . escapeshellarg($exec->bootstrap) .
@@ -129,6 +129,7 @@ class FaZend_Test_Manager {
             ' test/' . escapeshellarg($exec->getName());
 
         $exec->setCmd($cmd);
+        $exec->setDir(realpath($this->_location . '/..'));
 
         return $exec;
 

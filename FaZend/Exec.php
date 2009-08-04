@@ -32,6 +32,13 @@ class FaZend_Exec extends FaZend_StdObject {
     protected $_cmd;
 
     /**
+     * Directory to work 
+     *
+     * @var string
+     */
+    protected $_dir;
+
+    /**
      * Unique name of it
      *
      * @var string
@@ -61,56 +68,6 @@ class FaZend_Exec extends FaZend_StdObject {
     public static function create($name) {
 
         return new FaZend_Exec($name);
-
-    }
-
-    /**
-     * Save cmd
-     *
-     * @param string Cmd for shell
-     * @return string
-     */
-    public function setCmd($cmd) {
-
-        $this->_cmd = $cmd;
-        return $this;
-
-    }
-
-    /**
-     * Returns cmd
-     *
-     * @return string Cmd for shell
-     * @return string
-     */
-    public function getCmd() {
-
-        return $this->_cmd;
-
-    }
-
-    /**
-     * Save name
-     *
-     * @param string Name
-     * @return string
-     */
-    public function setName($name) {
-
-        $this->_name = $name;
-        return $this;
-
-    }
-
-    /**
-     * Returns name
-     *
-     * @return string Name
-     * @return string
-     */
-    public function getName() {
-
-        return $this->_name;
 
     }
 
@@ -149,7 +106,7 @@ class FaZend_Exec extends FaZend_StdObject {
         if ($this->isRunning())
             return self::_output(self::_uniqueId($this->_name));
 
-        self::_execute(self::_uniqueId($this->_name), $this->_cmd);
+        self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
 
         return self::_output(self::_uniqueId($this->_name));
 
@@ -240,7 +197,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string shell command
      * @return void
      */
-    protected static function _execute($id, $cmd) {
+    protected static function _execute($id, $cmd, $dir) {
         
         $logFile = self::_fileName($id, self::LOG_SUFFIX);
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
@@ -250,10 +207,13 @@ class FaZend_Exec extends FaZend_StdObject {
 
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
+        $current = getcwd();
+        chdir($dir);
         shell_exec('nohup ' . 
             escapeshellcmd($cmd) . ' >> ' . 
             escapeshellarg($logFile) . ' 2>&1 & echo $! > ' . 
             escapeshellarg($pidFile));
+        chdir($current);
 
     }
 

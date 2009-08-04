@@ -51,4 +51,31 @@ class FaZend_StdObject {
         return $this->$property;    
     }
 
+    /**
+     * Get the property which is protected
+     *
+     * @return value|false
+     */
+    public function __call($method, $args) {
+
+        $matches = array();
+        if (!preg_match('/^(get|set)(.+)$/', $method, $matches))
+            FaZend_Exception::raise('FaZend_StdObject_MissedMethod', "Method '{$method}' is not defined in " . get_class($this));
+
+        $property = $matches[2];
+        $property[0] = strtolower($property[0]);
+        $property = '_' . $property;
+
+        if (($matches[1] == 'get') && (property_exists($this, $property)))
+            return $this->$property;
+
+        if (($matches[1] == 'set') && (property_exists($this, $property))) {
+            $this->$property = $args[0];
+            return;
+        }
+
+        FaZend_Exception::raise('FaZend_StdObject_MissedProperty', "Property '{$property}' is not defined in " . get_class($this));
+
+    }
+
 }
