@@ -1,6 +1,5 @@
 
 div.wrapper {
-    margin-top: 50px;
     line-height: 1.6em;
     font-size: 1.7em;
 }
@@ -42,10 +41,12 @@ div.panel {
         line-height: 1em;
         padding: 5px;
         font-size: 0.8em;
-        cursor: text;
     }
 
-    div.panel div#protocol {
+    div.panel pre#protocol {
+        font-size: 0.8em;
+        color: #<?=FaZend_Image::BRAND_GRAY?>;
+        line-height: 1em;
     }
 
 

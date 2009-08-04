@@ -1,11 +1,24 @@
+var runningAhref = false;
+var runningSpanlog = false;
+var runningUnit = false;
+
 /**
- * Executve one unit test
+ * Executve one unit test, called from index.html
  *
  * @param $ Element, the caller 
  * @param string Unique name of the unit test
  * @return void
  */
 function run(ahref, spanlog, unit) {
+  
+    // if some test is running now
+//    if (runningUnit !== false) {
+//        return;
+//    }
+
+    runningAhref = ahref;
+    runningSpanlog = spanlog;
+    runningUnit = unit;
 
     // clear log field
     spanlog.hide();
@@ -15,29 +28,61 @@ function run(ahref, spanlog, unit) {
 
     // set temporary message
     $('#report').html('waiting...');
-    $('div#protocol').empty();
-    $('pre#output').empty().css('cursor', 'wait');
+    $('#protocol').empty();
+    $('#output').empty().css('cursor', 'wait');
+
+    _runRoutine();
+    
+}
+
+/**
+ * Executve one unit test
+ *
+ * @return void
+ */
+function _runRoutine() {
+
+    // sanity check
+//    if (runningUnit === false) {
+//        return;
+//    }
 
     // get unit test results
     $.ajax({
         url: "<?=$this->url(array('action'=>'run'), 'units', true)?>",
         type: "POST",
-        data: {name: unit},
+        data: {name: runningUnit},
         dataType: "json",
 
         success: function(json) {
             
-            $('pre#output').html(json['output']).css('cursor', 'text');
-            $('div#protocol').html(json['protocol']);
+            $('#output').html(json['output']);
+            $('#protocol').html(json['protocol']);
 
-            spanlog.html(json['spanlog']).show();
+            runningSpanlog.html(json['spanlog']).show();
 
-            // set cursor back to normal
-            ahref.css('cursor', 'pointer');
+            // if the testing is finished
+            if (json['finished'] === true) {
+    
+                $('#output').css('cursor', 'default');
+    
+                // set cursor back to normal
+                runningAhref.css('cursor', 'pointer');
+
+                // allow new tests to start
+                runningUnit = false;
+
+            } else {
+
+                // call again in 0.5 seconds
+                setTimeout("_runRoutine()", 500);
+
+            }
 
         }
                
     });
 
 }	
+
 

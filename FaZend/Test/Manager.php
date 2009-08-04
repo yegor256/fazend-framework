@@ -76,42 +76,97 @@ class FaZend_Test_Manager {
      */
     public function run($name) {
         
-        $started = microtime(true);
+        // if it's not running yet - start it now
+        $exec = $this->_initializeExec($name);
 
-        $bootstrap = tempnam(TEMP_PATH, 'fzunits');
-        $testdox = tempnam(TEMP_PATH, 'fzunits');
-        $metrics = tempnam(TEMP_PATH, 'fzunits');
-        $log = tempnam(TEMP_PATH, 'fzunits');
+        // execute it and get the log
+        $output = $exec->execute();
+
+        // fill the resulting array
+        $result = array(
+            'output' => $exec->getCmd() . "\n" . $output,
+            'tests' => array(),
+        );
+        // grab all other available results
+        $this->_grabResult($exec, $result);
+                                
+        // if it's finished - indicate it
+        if (!$exec->isRunning())
+            $this->_deinitializeExec($exec, $result);
+
+        return $result;
+        
+    }
+
+    /**
+     * Initialize exec
+     *
+     * @param string Name of the unit test file
+     * @return FaZend_Exec
+     */
+    public function _initializeExec($name) {
+
+        // create Exec (or link to the existing one)
+        $exec = FaZend_Exec::create($name);
+
+        $exec->bootstrap = TEMP_PATH . '/fzunits.php';
+        $exec->testdox = TEMP_PATH . '/fzunits.testdox';
+        $exec->metrics = TEMP_PATH . '/fzunits.metrics';
+        $exec->log = TEMP_PATH . '/fzunits.xml';
 
         // we pass ENV to the testing environment
-        file_put_contents($bootstrap, 
+        file_put_contents($exec->bootstrap, 
             '<?php define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
         
         // phpUnit cmd line
-        $cmd = 'phpunit --verbose --stop-on-failure' . 
+        $cmd = 'cd ' . escapeshellarg($this->_location) . '/..;' .
+            ' phpunit --verbose --stop-on-failure' . 
             ' -d "include_path=' . ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library') . '"' . 
-            ' --log-xml ' . $log .
-            ' --bootstrap ' . $bootstrap .
-            ' --testdox-text ' . $testdox .
-            (extension_loaded('xdebug') ? ' --log-metrics ' . $metrics : false) .
-            ' test/' . $name;
+            ' --log-xml ' . escapeshellarg($exec->log) .
+            ' --bootstrap ' . escapeshellarg($exec->bootstrap) .
+            ' --testdox-text ' . escapeshellarg($exec->testdox) .
+            (extension_loaded('xdebug') ? ' --log-metrics ' . escapeshellarg($exec->metrics) : false) .
+            ' test/' . escapeshellarg($exec->getName());
 
-        // don't limit in time
-        set_time_limit(0);
-        chdir($this->_location . '/..');
-        $output = shell_exec($cmd);
-        unlink($bootstrap);
+        $exec->setCmd($cmd);
 
-        $result = array(
-            'output' => $cmd . "\n" . $output,
-            'testdox' => file_get_contents($testdox),
-            'tests' => array(),
-        );
+        return $exec;
 
-        if (file_exists($log) && file_get_contents($log)) {
+    }
+    
+    /**
+     * De-Initialize exec
+     *
+     * @param FaZend_Exec
+     * @param array Resulting info for JSON
+     * @return void
+     */
+    public function _deinitializeExec(FaZend_Exec $exec, array &$result) {
+
+        @unlink($exec->bootstrap);
+        @unlink($exec->log);
+        @unlink($exec->testdox);
+        @unlink($exec->metrics);
+        
+        $result['finished'] = true;
+
+    }
+
+    /**
+     * Grab results
+     *
+     * @param FaZend_Exec
+     * @param array Resulting info for JSON
+     * @return array
+     */
+    public function _grabResult(FaZend_Exec $exec, array &$result) {
+
+        $result['testdox'] = file_exists($exec->testdox) ? file_get_contents($exec->testdox) : 'started...';
+
+        if (file_exists($exec->log) && file_get_contents($exec->log)) {
 
             // process XML report from phpUnit
-            $xml = simplexml_load_file($log);
+            $xml = simplexml_load_file($exec->log);
             foreach ($xml->testsuite->children() as $tc) {
                 $result['tests'][] = array(
                     'name' => (string)$tc->attributes()->name,
@@ -128,15 +183,10 @@ class FaZend_Test_Manager {
                 'time' => (float)$xml->testsuite->attributes()->time,
             );
 
-            unlink($log);
-
         }
 
-        unlink($testdox);
-        unlink($metrics);
-        
         // show small report
-        $result['spanlog'] = sprintf('%0.2fsec', microtime(true) - $started);
+        $result['spanlog'] = sprintf('%0.2fsec', $exec->getDuration());
 
         // if it's a failure - red it
         if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
@@ -144,8 +194,8 @@ class FaZend_Test_Manager {
 
         $result['protocol'] = $result['testdox'];
 
-        return $result;
-        
+        $result['finished'] = false;
+
     }
 
     /**
