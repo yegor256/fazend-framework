@@ -81,7 +81,7 @@ class FaZend_Exec extends FaZend_StdObject {
         if (!$this->isRunning())
             return false;
 
-        return time() - filemtime(self::_fileName($id, self::PID_SUFFIX));
+        return time() - @filemtime(self::_fileName($id, self::PID_SUFFIX));
 
     }
 
