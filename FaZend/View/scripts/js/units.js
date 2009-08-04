@@ -27,6 +27,7 @@ function run(ahref, spanlog, unit) {
     ahref.css('cursor', 'wait');
 
     // set temporary message
+    runningSpanlog.html('started...').show();
     $('#report').html('waiting...');
     $('#protocol').empty();
     $('#output').empty().css('cursor', 'wait');
@@ -58,8 +59,7 @@ function _runRoutine() {
             
             $('#output').html(json['output']);
             $('#protocol').html(json['protocol']);
-
-            runningSpanlog.html(json['spanlog']).show();
+            runningSpanlog.html(json['spanlog']);
 
             // if the testing is finished
             if (json['finished'] === true) {
