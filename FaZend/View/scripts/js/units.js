@@ -89,7 +89,7 @@ function _runRoutine() {
             runningSpanlog.html(json['spanlog']);
 
             // if the testing is finished
-            if (json['finished'] === true) {
+            if ((json['finished'] === true) || (runningUnit === false)) {
     
                 $('#output').css('cursor', 'default');
     
