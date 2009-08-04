@@ -12,9 +12,9 @@ var runningUnit = false;
 function run(ahref, spanlog, unit) {
   
     // if some test is running now
-//    if (runningUnit !== false) {
-//        return;
-//    }
+    if (runningUnit !== false) {
+        return;
+    }
 
     runningAhref = ahref;
     runningSpanlog = spanlog;
@@ -43,9 +43,9 @@ function run(ahref, spanlog, unit) {
 function _runRoutine() {
 
     // sanity check
-//    if (runningUnit === false) {
-//        return;
-//    }
+    if (runningUnit === false) {
+        return;
+    }
 
     // get unit test results
     $.ajax({

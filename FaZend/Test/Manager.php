@@ -126,7 +126,7 @@ class FaZend_Test_Manager {
             ' --bootstrap ' . escapeshellarg($exec->bootstrap) .
             ' --testdox-text ' . escapeshellarg($exec->testdox) .
             (extension_loaded('xdebug') ? ' --log-metrics ' . escapeshellarg($exec->metrics) : false) .
-            ' test/' . escapeshellarg($exec->getName());
+            ' ' . escapeshellarg('test/' . $exec->getName());
 
         $exec->setCmd($cmd);
         $exec->setDir(realpath($this->_location . '/..'));

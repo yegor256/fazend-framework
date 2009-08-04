@@ -210,7 +210,7 @@ class FaZend_Exec extends FaZend_StdObject {
         $current = getcwd();
         chdir($dir);
         shell_exec('nohup ' . 
-            escapeshellcmd($cmd) . ' >> ' . 
+            $cmd . ' >> ' . 
             escapeshellarg($logFile) . ' 2>&1 & echo $! > ' . 
             escapeshellarg($pidFile));
         chdir($current);
