@@ -45,7 +45,7 @@ function run(ahref, spanlog, unit) {
 function stop(unit) {
 
     // if some test is running now
-    if (runningUnit !== false) {
+    if (runningUnit === false) {
         return;
     }
 
