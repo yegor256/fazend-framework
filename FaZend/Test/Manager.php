@@ -91,7 +91,7 @@ class FaZend_Test_Manager {
         $this->_grabResult($exec, $result);
                                 
         // if it's finished - indicate it
-        if (!$exec->isRunning())
+        if ($result['finished'] == true)
             $this->_deinitializeExec($exec, $result);
 
         return $result;
@@ -149,8 +149,6 @@ class FaZend_Test_Manager {
         @unlink($exec->testdox);
         @unlink($exec->metrics);
         
-        $result['finished'] = true;
-
     }
 
     /**
@@ -163,6 +161,8 @@ class FaZend_Test_Manager {
     public function _grabResult(FaZend_Exec $exec, array &$result) {
 
         $result['testdox'] = file_exists($exec->testdox) ? file_get_contents($exec->testdox) : 'started...';
+
+        $result['finished'] = false;
 
         if (file_exists($exec->log) && file_get_contents($exec->log)) {
 
@@ -184,18 +184,18 @@ class FaZend_Test_Manager {
                 'time' => (float)$xml->testsuite->attributes()->time,
             );
 
+            $result['finished'] = true;
+
         }
 
         // show small report
-        $result['spanlog'] = sprintf('%0.2fsec', $exec->getDuration());
+        $result['spanlog'] = sprintf('%dsec', $exec->getDuration());
 
         // if it's a failure - red it
         if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
             $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
 
         $result['protocol'] = $result['testdox'];
-
-        $result['finished'] = false;
 
     }
 
