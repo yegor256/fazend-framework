@@ -307,7 +307,7 @@ class FaZend_Deployer {
             $key = array();
 
             // primary key
-            if (preg_match('/^primary\skey\s?\(\s?([^\,]*?)\s?\)/i', $column, $key)) {
+            if (preg_match('/^primary\skey\s?.*?\(\s?([^\,]*?)\s?\)/i', $column, $key)) {
                 $info[$key[1]]['PRIMARY'] = 1;
                 $info[$key[1]]['PRIMARY_POSITION'] = 1;
                 $info[$key[1]]['IDENTITY'] = 1;
@@ -333,7 +333,7 @@ class FaZend_Deployer {
             }
 
             // other special mnemos, if not parsed above - skip them
-            if (preg_match('/^(index|primary\skey|constraint|foreign\skey|unique|unique\skey)\s?\(/i', $column))
+            if (preg_match('/^(index|key|primary\skey|constraint|foreign\skey|unique|unique\skey)\s?\(/i', $column))
                 continue;
 
             $info[$matches[1][$id]] = array(
