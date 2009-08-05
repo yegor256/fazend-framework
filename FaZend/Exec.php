@@ -196,8 +196,9 @@ class FaZend_Exec extends FaZend_StdObject {
 
         // if the process is NOT found by this ID
         if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
-            self::_clear($id);
-            return false;
+            // we shall remove only PID file and work with log
+            // next time we will remove log as well
+            self::_clear($id, true);
         }
 
         return self::$_running[$id] = $pid;
@@ -210,9 +211,11 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string ID of the task
      * @return boolean
      */
-    protected static function _clear($id) {
+    protected static function _clear($id, $pidOnly = false) {
 
-        @unlink(self::_fileName($id, self::LOG_SUFFIX));
+        if (!$pidOnly)
+            @unlink(self::_fileName($id, self::LOG_SUFFIX));
+
         @unlink(self::_fileName($id, self::PID_SUFFIX));
 
     }
