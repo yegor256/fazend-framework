@@ -1,3 +1,4 @@
+
 var runningAhref = false;
 var runningSpanlog = false;
 var runningUnit = false;
@@ -92,7 +93,7 @@ function _runRoutine() {
             // if the testing is finished
             if ((json['finished'] === true) || (runningUnit === false)) {
     
-                $('#output').css('cursor', 'default');
+                $('#output').css('cursor', 'text');
     
                 // set cursor back to normal
                 runningAhref.css('cursor', 'pointer');

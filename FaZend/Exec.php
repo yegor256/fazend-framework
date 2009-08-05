@@ -25,6 +25,13 @@ class FaZend_Exec extends FaZend_StdObject {
     const PID_SUFFIX = 'pid';
 
     /**
+     * Static cache of running PID's
+     *
+     * @var int[]
+     */
+    protected static $_running = array();
+
+    /**
      * Shell command
      *
      * @var string
@@ -66,15 +73,13 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return FaZend_Exec
      */
     public static function create($name) {
-
         return new FaZend_Exec($name);
-
     }
 
     /**
      * Duration in seconds
      *
-     * @return float
+     * @return int Seconds
      */
     public function getDuration() {
 
@@ -147,7 +152,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     protected static function _uniqueId($name) {
-        return md5($name);
+        return md5(FaZend_Properties::get()->name . $name);
     }
 
     /**
@@ -169,8 +174,10 @@ class FaZend_Exec extends FaZend_StdObject {
      */
     protected static function _isRunning($id) {
         
+        if (isset(self::$_running[$id]))
+            return true;
+        
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
-        $logFile = self::_fileName($id, self::LOG_SUFFIX);
 
         // if no file - there is no process
         if (!file_exists($pidFile)) {
@@ -193,29 +200,31 @@ class FaZend_Exec extends FaZend_StdObject {
             return false;
         }
 
-        return true;
+        return self::$_running[$id] = $pid;
 
     }
 
     /**
-     * Get output log
+     * Clear files
      *
      * @param string ID of the task
      * @return boolean
      */
-    protected static function _output($id) {
+    protected static function _clear($id) {
+
+        @unlink(self::_fileName($id, self::LOG_SUFFIX));
+        @unlink(self::_fileName($id, self::PID_SUFFIX));
+
+    }
         
-        $logFile = self::_fileName($id, self::LOG_SUFFIX);
-        $pidFile = self::_fileName($id, self::PID_SUFFIX);
-
-        if (file_exists($logFile)) {
-            return file_get_contents($logFile);
-        }
-
-        self::_clear($id);
-
-        return 'No output yet...';
-
+    /**
+     * Get output log
+     *
+     * @param string ID of the task
+     * @return boolean|string Output of the EXEC or false
+     */
+    protected static function _output($id) {
+        return @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
     }
 
     /**
@@ -225,9 +234,11 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _pid($id) {
-        
-        $pidFile = self::_fileName($id, self::PID_SUFFIX);
-        return file_get_contents($pidFile);
+
+        if (!self::_isRunning($id))
+            return false;
+
+        return self::$_running[$id];
 
     }
 
@@ -240,21 +251,21 @@ class FaZend_Exec extends FaZend_StdObject {
      */
     protected static function _execute($id, $cmd, $dir) {
         
-        $logFile = self::_fileName($id, self::LOG_SUFFIX);
-        $pidFile = self::_fileName($id, self::PID_SUFFIX);
-
-        //if (is_writable($logFile))
-        //    @file_put_contents($logFile, '> ' . preg_replace('/--password\s\".*?\"/', '--password ***', $cmd) . "\n\n");
-
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
         $current = getcwd();
         chdir($dir);
+
+        $pidFile = self::_fileName($id, self::PID_SUFFIX);
+
         shell_exec('nohup ' . 
             $cmd . ' >> ' . 
-            escapeshellarg($logFile) . ' 2>&1 & echo $! > ' . 
+            escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1 & echo $! > ' . 
             escapeshellarg($pidFile));
+
         chdir($current);
+
+        self::$_running[$id] = (int)@file_get_contents($pidFile);
 
     }
 
@@ -265,28 +276,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _stop($id) {
-
-        $pid = self::_pid($id);
-
-        shell_exec('kill -9 ' . $pid);
-
+        shell_exec('kill -9 ' . self::_pid($id));
     }    
-
-    /**
-     * Clear files
-     *
-     * @param string ID of the task
-     * @return boolean
-     */
-    protected static function _clear($id) {
-
-        $logFile = self::_fileName($id, self::LOG_SUFFIX);
-        $pidFile = self::_fileName($id, self::PID_SUFFIX);
-
-        @unlink($pidFile);
-        @unlink($logFile);
-
-    }
-        
 
 }

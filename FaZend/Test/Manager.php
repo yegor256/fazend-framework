@@ -206,7 +206,8 @@ class FaZend_Test_Manager {
         }
 
         // show small report
-        $result['spanlog'] = sprintf('%dsec', $exec->getDuration()) . ' (' . sprintf('%d', $exec->getPid()) . ')';
+        $result['spanlog'] = sprintf('%dsec', $exec->getDuration()) . 
+            ($exec->getPid() ? ' (' . sprintf('%d', $exec->getPid()) . ')' : false);
 
         // if it's a failure - red it
         if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
