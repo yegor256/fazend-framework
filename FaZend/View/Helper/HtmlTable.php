@@ -296,10 +296,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if ($this->_column($title)->hidden)
                     continue;
 
-                // strip HTML tags    
-                if (!$this->_column($title)->rawHtml)
-                    $value = htmlspecialchars($value);
-
                 // parse the value of this TD    
                 if ($this->_column($title)->parser) {
                     $parser = $this->_column($title)->parser;
@@ -311,6 +307,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     $helper = $this->_column($title)->helper;
                     $value = $this->getView()->$helper($value);
                 }    
+
+                // strip HTML tags    
+                if (!$this->_column($title)->rawHtml)
+                    $value = htmlspecialchars($value);
 
                 // attach link to the TD
                 if ($this->_column($title)->link) {
