@@ -57,7 +57,18 @@ class Fazend_UnitsController extends FaZend_Controller_Action {
      */
     public function runAction() {
 
-        $this->_returnJSON(FaZend_Test_Manager::getInstance()->run($this->getRequest()->getPost('name')));
+        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->run());
+
+    }
+
+    /**
+     * Get result of the "running" test
+     *
+     * @return void
+     */
+    public function routineAction() {
+
+        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->result());
 
     }
 
@@ -68,7 +79,7 @@ class Fazend_UnitsController extends FaZend_Controller_Action {
      */
     public function stopAction() {
 
-        $this->_returnJSON(FaZend_Test_Manager::getInstance()->stop($this->getRequest()->getPost('name')));
+        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->stop());
 
     }
 

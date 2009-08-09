@@ -78,4 +78,38 @@ class FaZend_StdObject {
 
     }
 
+    /**
+     * Serialize all local data into array
+     *
+     * @return string
+     */
+    protected function _serialize() {
+
+        $properties = array();
+
+        $reflector = new ReflectionClass(get_class($this));
+        foreach ($reflector->getProperties() as $prop) {
+            $name = $prop->getName();
+            $properties[$name] = $this->$name;
+        }
+
+        return serialize($properties);
+
+    }
+
+    /**
+     * UnSerialize all local data from string array
+     *
+     * @param string Serialized array
+     * @return void
+     */
+    protected function _unserialize($str) {
+
+        $properties = unserialize($str);
+        foreach ($properties as $name=>$value) {
+            $this->$name = $value;
+        }
+
+    }
+
 }

@@ -23,6 +23,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
     const LOG_SUFFIX = 'log';
     const PID_SUFFIX = 'pid';
+    const DATA_SUFFIX = 'data';
 
     /**
      * Static cache of running PID's
@@ -63,6 +64,12 @@ class FaZend_Exec extends FaZend_StdObject {
 
         $this->_name = $name;
         $this->_cmd = $cmd;
+
+        // load configuation data, if they exist
+        $dataFile = self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX);
+        if (file_exists($dataFile)) {
+            $this->_unserialize(@file_get_contents($dataFile));
+        }
 
     }
 
@@ -125,10 +132,26 @@ class FaZend_Exec extends FaZend_StdObject {
         if ($this->isRunning())
             return self::_output(self::_uniqueId($this->_name));
 
+        // serialize and save all local variables
+        if (!@file_put_contents(self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX), 
+            $this->_serialize())) {
+            FaZend_Exception::raise('FaZend_Exec_DataSaveFailure', 
+                "Failed to save local data before execution");
+        }
+
         self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
 
         return self::_output(self::_uniqueId($this->_name));
 
+    }
+
+    /**
+     * Get output
+     *
+     * @return string
+     */
+    public function output() {
+        return self::_output(self::_uniqueId($this->_name));
     }
 
     /**

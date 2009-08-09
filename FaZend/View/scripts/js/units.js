@@ -4,6 +4,42 @@ var runningSpanlog = false;
 var runningUnit = false;
 
 /**
+ * Update information on-screen from JSON
+ *
+ * @return void
+ */
+var _refreshScreen = function(json) {
+            
+    // sanity check
+    if (json === null) {
+        return;
+    }
+    
+    $('#output').html(json['output']);
+    $('#protocol').html(json['protocol']);
+    runningSpanlog.html(json['spanlog']);
+
+    // if the testing is finished
+    if ((json['finished'] === true) || (runningUnit === false)) {
+
+        $('#output').css('cursor', 'text');
+
+        // set cursor back to normal
+        runningAhref.css('cursor', 'pointer');
+
+        // allow new tests to start
+        runningUnit = false;
+
+    } else {
+
+        // call again in 0.5 seconds
+        setTimeout("_runRoutine()", 500);
+
+    }
+
+}
+
+/**
  * Executve one unit test, called from index.html
  *
  * @param $ Element, the caller 
@@ -33,7 +69,14 @@ function run(ahref, spanlog, unit) {
     $('#protocol').empty();
     $('#output').empty().css('cursor', 'wait');
 
-    _runRoutine();
+    // stop running
+    $.ajax({
+        url: "<?=$this->url(array('action'=>'run'), 'units', true)?>",
+        type: "POST",
+        data: {name: runningUnit},
+        dataType: "json",
+        success: _refreshScreen,
+    });
     
 }
 
@@ -57,10 +100,7 @@ function stop(unit) {
         url: "<?=$this->url(array('action'=>'stop'), 'units', true)?>",
         type: "POST",
         data: {name: runningUnit},
-        dataType: "json",
-
-        success: function(json) {
-        }
+        dataType: "json"
     });
             
 }  
@@ -79,39 +119,14 @@ function _runRoutine() {
 
     // get unit test results
     $.ajax({
-        url: "<?=$this->url(array('action'=>'run'), 'units', true)?>",
+        url: "<?=$this->url(array('action'=>'routine'), 'units', true)?>",
         type: "POST",
         data: {name: runningUnit},
         dataType: "json",
-
-        success: function(json) {
-            
-            $('#output').html(json['output']);
-            $('#protocol').html(json['protocol']);
-            runningSpanlog.html(json['spanlog']);
-
-            // if the testing is finished
-            if ((json['finished'] === true) || (runningUnit === false)) {
-    
-                $('#output').css('cursor', 'text');
-    
-                // set cursor back to normal
-                runningAhref.css('cursor', 'pointer');
-
-                // allow new tests to start
-                runningUnit = false;
-
-            } else {
-
-                // call again in 0.5 seconds
-                setTimeout("_runRoutine()", 500);
-
-            }
-
-        }
-               
+        success: _refreshScreen,
     });
 
 }	
+
 
 
