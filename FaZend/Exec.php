@@ -25,6 +25,8 @@ class FaZend_Exec extends FaZend_StdObject {
     const PID_SUFFIX = 'pid';
     const DATA_SUFFIX = 'data';
 
+    const WIN_FAKE_PID = 9999;
+
     /**
      * Static cache of running PID's
      *
@@ -93,7 +95,12 @@ class FaZend_Exec extends FaZend_StdObject {
         if (!$this->isRunning())
             return false;
 
-        return time() - @filemtime(self::_fileName(self::_uniqueId($this->_name), self::PID_SUFFIX));
+        $pidFile = self::_fileName(self::_uniqueId($this->_name), self::PID_SUFFIX);
+
+        if (!file_exists($pidFile))
+            return false;
+
+        return time() - @filemtime($pidFile);
 
     }
 
@@ -117,9 +124,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return boolean
      */
     public function isRunning() {
-
         return self::_isRunning(self::_uniqueId($this->_name));
-
     }
 
     /**
@@ -131,7 +136,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         if ($this->isRunning())
             return self::_output(self::_uniqueId($this->_name));
-
+                                
         // serialize and save all local variables
         if (!@file_put_contents(self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX), 
             $this->_serialize())) {
@@ -236,8 +241,10 @@ class FaZend_Exec extends FaZend_StdObject {
      */
     protected static function _clear($id, $pidOnly = false) {
 
-        if (!$pidOnly)
+        if (!$pidOnly) {
             @unlink(self::_fileName($id, self::LOG_SUFFIX));
+            @unlink(self::_fileName($id, self::DATA_SUFFIX));
+        }
 
         @unlink(self::_fileName($id, self::PID_SUFFIX));
 
@@ -284,11 +291,16 @@ class FaZend_Exec extends FaZend_StdObject {
 
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
 
-        shell_exec('nohup ' . 
-            $cmd . ' >> ' . 
-            escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1 & echo $! > ' . 
-            escapeshellarg($pidFile));
+        if (!stristr(PHP_OS, 'win')) {
+            $shell = 'nohup ' . $cmd . ' >> ' . 
+                escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1 & echo $! > ' . 
+                escapeshellarg($pidFile);
+        } else {
+            $shell = $cmd . ' >> ' . escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1';
+            file_put_contents($pidFile, (string)self::WIN_FAKE_PID);
+        }
 
+        shell_exec($shell);
         chdir($current);
 
         self::$_running[$id] = (int)@file_get_contents($pidFile);
@@ -302,6 +314,9 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _stop($id) {
+        if (stristr(PHP_OS, 'win'))
+            return;
+
         shell_exec('kill -9 ' . self::_pid($id));
     }    
 

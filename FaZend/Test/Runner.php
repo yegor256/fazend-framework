@@ -98,7 +98,7 @@ class FaZend_Test_Runner {
         // if it's finished - indicate it
         if (!$this->_exec->isRunning()) {
             $result['finished'] = true;
-            $this->_deinitializeExec($result);
+            $this->_deinitializeExec();
         } else {
             $result['finished'] = false;
         }
@@ -142,10 +142,9 @@ class FaZend_Test_Runner {
      * De-Initialize exec
      *
      * @param FaZend_Exec
-     * @param array Resulting info for JSON
      * @return void
      */
-    public function _deinitializeExec(array &$result) {
+    public function _deinitializeExec() {
 
         @unlink($this->_exec->bootstrap);
         @unlink($this->_exec->log);
@@ -163,8 +162,8 @@ class FaZend_Test_Runner {
      */
     public function _grabResult(array &$result) {
 
-        $result['testdox'] = file_exists($this->_exec->testdox) ? 
-            file_get_contents($this->_exec->testdox) : 'just started...';
+        $result['testdox'] = (file_exists($this->_exec->testdox) ? 
+            @file_get_contents($this->_exec->testdox) : 'just started (' . $this->_name . ')');
 
         if (file_exists($this->_exec->log) && file_get_contents($this->_exec->log)) {
 
@@ -189,12 +188,17 @@ class FaZend_Test_Runner {
         }
 
         // show small report
-        $result['spanlog'] = sprintf('%dsec', $this->_exec->getDuration()) . 
-            ($this->_exec->getPid() ? ' (' . sprintf('%d', $this->_exec->getPid()) . ')' : false);
+        if ($this->_exec->getDuration()) {
+            $result['spanlog'] = sprintf('%dsec', $this->_exec->getDuration()) . 
+                ($this->_exec->getPid() ? ' (' . sprintf('%d', $this->_exec->getPid()) . ')' : false);
+            
+            // if it's a failure - red it
+            if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
+                $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
 
-        // if it's a failure - red it
-        if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
-            $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
+        } else {
+            $result['spanlog'] = false;
+        }
 
         $result['protocol'] = $result['testdox'];
 

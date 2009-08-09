@@ -17,15 +17,16 @@ var _refreshScreen = function(json) {
     
     $('#output').html(json['output']);
     $('#protocol').html(json['protocol']);
-    runningSpanlog.html(json['spanlog']);
+    
+    if (json['spanlog']) {
+        runningSpanlog.html(json['spanlog']);
+    }
 
     // if the testing is finished
     if ((json['finished'] === true) || (runningUnit === false)) {
 
-        $('#output').css('cursor', 'text');
-
-        // set cursor back to normal
-        runningAhref.css('cursor', 'pointer');
+        // make CSS changes
+        _cssFinished();
 
         // allow new tests to start
         runningUnit = false;
@@ -57,17 +58,8 @@ function run(ahref, spanlog, unit) {
     runningSpanlog = spanlog;
     runningUnit = unit;
 
-    // clear log field
-    spanlog.hide();
-
-    // set waiting status to mouse-cursor on this span
-    ahref.css('cursor', 'wait');
-
-    // set temporary message
-    runningSpanlog.html('started...').show();
-    $('#report').html('waiting...');
-    $('#protocol').empty();
-    $('#output').empty().css('cursor', 'wait');
+    // make CSS changes
+    _cssStarted();
 
     // stop running
     $.ajax({
@@ -93,13 +85,17 @@ function stop(unit) {
         return;
     }
 
+    // make CSS changes
+    _cssFinished();
+
+    unit = runningUnit;
     runningUnit = false;
 
     // stop running
     $.ajax({
         url: "<?=$this->url(array('action'=>'stop'), 'units', true)?>",
         type: "POST",
-        data: {name: runningUnit},
+        data: {name: unit},
         dataType: "json"
     });
             
@@ -128,5 +124,37 @@ function _runRoutine() {
 
 }	
 
+/**
+ * CSS changes when test is just started
+ *
+ * @return void
+ */
+function _cssStarted() {
+
+    // set waiting status to mouse-cursor on this span
+    runningAhref.css('cursor', 'wait');
+
+    // set temporary message
+    runningSpanlog.html('started...').show();
+
+    $('#report').html('waiting...');
+    $('#protocol').empty();
+    $('#output').empty().css('cursor', 'wait');
+
+}
+
+/**
+ * CSS changes when test is finished
+ *
+ * @return void
+ */
+function _cssFinished() {
+
+    $('#output').css('cursor', 'text');
+
+    // set cursor back to normal
+    runningAhref.css('cursor', 'pointer');
+
+}
 
 

@@ -59,8 +59,10 @@ class FaZend_StdObject {
     public function __call($method, $args) {
 
         $matches = array();
-        if (!preg_match('/^(get|set)(.+)$/', $method, $matches))
-            FaZend_Exception::raise('FaZend_StdObject_MissedMethod', "Method '{$method}' is not defined in " . get_class($this));
+        if (!preg_match('/^(get|set)(.+)$/', $method, $matches)) {
+            FaZend_Exception::raise('FaZend_StdObject_MissedMethod', 
+                "Method '{$method}' is not defined in " . get_class($this));
+        }
 
         $property = $matches[2];
         $property[0] = strtolower($property[0]);
@@ -74,7 +76,8 @@ class FaZend_StdObject {
             return;
         }
 
-        FaZend_Exception::raise('FaZend_StdObject_MissedProperty', "Property '{$property}' is not defined in " . get_class($this));
+        FaZend_Exception::raise('FaZend_StdObject_MissedProperty', 
+            "Property '{$property}' is not defined in " . get_class($this));
 
     }
 
@@ -87,10 +90,8 @@ class FaZend_StdObject {
 
         $properties = array();
 
-        $reflector = new ReflectionClass(get_class($this));
-        foreach ($reflector->getProperties() as $prop) {
-            $name = $prop->getName();
-            $properties[$name] = $this->$name;
+        foreach ($this as $name=>$value) {
+            $properties[$name] = $value;
         }
 
         return serialize($properties);
