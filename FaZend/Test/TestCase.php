@@ -29,6 +29,13 @@ require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
     /**
+     * List of variables
+     *
+     * @var array
+     */
+    protected static $_variables = array();
+
+    /**
      * Setup test
      *
      * @return void
@@ -80,4 +87,27 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
     }
     
+    /**
+     * Save local variables
+     *
+     * @param string Name of the variable
+     * @param string Value of the variable
+     * @return void
+     */
+    public function __set($name, $value) {
+        self::$_variables[$name] = $value;
+    }
+
+    /**
+     * Load local variables
+     *
+     * @param string Name of the variable
+     * @return string
+     */
+    public function __get($name) {
+        if (isset(self::$_variables[$name]))
+            return self::$_variables[$name];
+        return parent::__get($name);
+    }
+
 }
