@@ -41,11 +41,9 @@ div.panel {
         font-family: Courier;
         line-height: 1em;
         padding: 5px;
-        font-size: 0.8em;
     }
 
     div.panel pre#protocol {
-        font-size: 0.8em;
         color: #<?=FaZend_Image::BRAND_GRAY?>;
         line-height: 1em;
     }
