@@ -1,0 +1,37 @@
+<?
+$this->headMeta()
+    ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
+
+$this->includeCSS('fazend.css');
+
+?><?= $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>  
+    <?=$this->headTitle()?>
+    <?=$this->headMeta()?>
+    <?=$this->headLink()?>
+    <?=$this->headStyle()?>
+</head> 
+<body>
+
+    <div class="hdr">
+        <a href="<?=$this->url(array('action'=>'index', 'id'=>'index/index'), 'ui', true, false)?>">UI Modeller</a> |
+        <a href="<?=$this->url(array('action'=>'index'), 'units', true, false)?>">Unit Tests</a> |
+        <a href="<?=$this->url(array(), 'dbmap', true, false)?>">DB Mapper</a> |
+        <a href="<?=$this->url(array(), 'adm', true, false)?>">Admin Area</a>
+
+        <?=WEBSITE_URL?>
+    </div>
+    
+    <div class="content">
+        <?=$this->layout()->content?>
+    </div>
+
+    <div class="btm">
+        (c) <?=FaZend_Properties::get()->name?>/FaZend, 
+        rev.<?=FaZend_Revision::get()?>, <?=$this->pageLoadTime()?>
+    </div>
+
+    <?=$this->headScript() ?>
+</body>
+</html>

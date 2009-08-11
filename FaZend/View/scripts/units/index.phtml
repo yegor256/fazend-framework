@@ -1,37 +1,49 @@
+<?
+    $this->includeCSS('units.css');
 
-<? $latest = ''; ?>
+    $this->includeJQuery();
+    $this->includeJS('units.js');
 
-<? foreach ($this->tests as $test): ?>
+    $this->headTitle('units');
+?>
 
-    <? foreach (($sectors = array_slice(explode('/', $test), 0, -1)) as $id=>$sector): ?>
+<div class="wrapper">
 
-        <? $title = implode('/', array_slice($sectors, 0, $id+1)); ?>
+    <? $latest = ''; ?>
 
-        <? if (strpos($latest, $title) !== false) continue; ?>
+    <? foreach ($this->tests as $test): ?>
 
-        <span style="margin-left: <?=substr_count($title, '/') * 20?>px;"><?=$sector?></span>
+        <? foreach (($sectors = array_slice(explode('/', $test), 0, -1)) as $id=>$sector): ?>
+
+            <? $title = implode('/', array_slice($sectors, 0, $id+1)); ?>
+
+            <? if (strpos($latest, $title) !== false) continue; ?>
+
+            <span style="margin-left: <?=substr_count($title, '/') * 20?>px;"><?=$sector?></span>
+            <br/>
+
+        <? endforeach; ?>
+
+        <? $md5 = 'x' . md5($test); ?>
+
+        <span class="unit"
+            style="margin-left: <?=substr_count($test, '/') * 20?>px;"
+            id="<?=$md5?>"
+            title="<?=$this->escape($test)?>"
+            onclick="run($('#<?=$md5?>'), $('#log_<?=$md5?>'), '<?=$test?>');"><?=$this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
+            
+        <span class="unitlog" 
+            id="log_<?=$md5?>"
+            onclick="stop('<?=$test?>');"
+            title="stop it now"></span>
+
         <br/>
+
+        <? $latest = $test; ?>
 
     <? endforeach; ?>
 
-    <? $md5 = 'x' . md5($test); ?>
-
-    <span class="unit"
-        style="margin-left: <?=substr_count($test, '/') * 20?>px;"
-        id="<?=$md5?>"
-        title="<?=$this->escape($test)?>"
-        onclick="run($('#<?=$md5?>'), $('#log_<?=$md5?>'), '<?=$test?>');"><?=$this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
-        
-    <span class="unitlog" 
-        id="log_<?=$md5?>"
-        onclick="stop('<?=$test?>');"
-        title="stop it now"></span>
-
-    <br/>
-
-    <? $latest = $test; ?>
-
-<? endforeach; ?>
+</div>
 
 <div class="panel">
     <pre id="output"></pre>

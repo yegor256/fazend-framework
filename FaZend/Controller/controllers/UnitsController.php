@@ -19,7 +19,7 @@
  *
  *
  */
-class Fazend_UnitsController extends FaZend_Controller_Action {
+class Fazend_UnitsController extends FaZend_Controller_Panel {
 
     /**
      * Sanity check before dispatching
@@ -32,10 +32,7 @@ class Fazend_UnitsController extends FaZend_Controller_Action {
         if (APPLICATION_ENV == 'production')
             $this->_redirectFlash('Units controller is not allowed in production environment', 'index', 'index');
         
-        // layout reconfigure to fazend
-        $layout = Zend_Layout::getMvcInstance();
-        $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
-        $layout->setLayout('units');
+        parent::preDispatch();
 
     }
 

@@ -14,7 +14,7 @@ body {
     line-height: 1.9em;
     color: <?=FaZend_Image::getCssColor('mockup.content')?>;
     background-color: white;
-    margin: 5px;
+    margin: 20px;
 }
 
 /* normal links and link-free hrefs */
@@ -77,3 +77,42 @@ th {
     font-weight: normal;
 }
 
+/* screen-wide header */
+div.hdr {
+    height: 40px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: #<?=FaZend_Image::BRAND_BLUE3?>;
+    color: white;
+    z-index: 100;
+    padding: 10px 0 0 150px;
+    font-size: 1.7em;
+}
+    
+    div.hdr a {
+        text-decoration: none;
+        color: white;
+        border-bottom: 1px dotted white;
+    }
+
+        div.hdr a:hover {
+            color: #<?=FaZend_Image::BRAND_BLUE1?>;
+            background: white;
+        }
+
+
+/* main content holder/wrapper */
+div.content {
+    margin-top: 70px;
+}
+
+div.btm {
+    border-top: 1px solid #<?=FaZend_Image::BRAND_GRAY?>;
+    text-align: left;
+    font-size: 0.8em;
+    color: #<?=FaZend_Image::BRAND_GRAY?>;
+    display: inline-block;
+    margin-top: 50px;
+}

@@ -19,7 +19,22 @@
  *
  *
  */
-class Fazend_DbmapController extends FaZend_Controller_Action {
+class Fazend_DbmapController extends FaZend_Controller_Panel {
+
+    /**
+     * Sanity check before dispatching
+     *
+     * @return void
+     */
+    public function preDispatch() {
+        
+        // sanity check
+        if (APPLICATION_ENV == 'production')
+            $this->_redirectFlash('DBMAP controller is not allowed in production environment', 'index', 'index');
+        
+        parent::preDispatch();
+
+    }
 
     /**
      * Show the map in PNG file

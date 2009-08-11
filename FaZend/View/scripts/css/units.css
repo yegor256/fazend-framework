@@ -2,7 +2,6 @@
 div.wrapper {
     line-height: 1.6em;
     font-size: 1.7em;
-    margin-top: 50px;
 }
 
 span.unit {
@@ -28,7 +27,7 @@ span.unitlog {
 div.panel {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: 70px;
 }
 
     div.panel pre#output {

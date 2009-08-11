@@ -10,7 +10,7 @@ div.wrapper {
 /* header above the page */
 div.header {
     position: relative;
-    height: 100px;
+    height: 40px;
 }
 
     /* active actor */
@@ -125,8 +125,3 @@ div.page {
                 content: "]";
             }
 
-div.logo {
-    text-align: right;
-    font-size: 0.8em;
-    color: #<?=FaZend_Image::BRAND_GRAY?>;
-}

@@ -1,6 +1,7 @@
 
 <?
     $this->headTitle($this->script);
+    $this->includeCSS('ui.css');
 ?>
 
 <div class="wrapper">
@@ -15,8 +16,6 @@
         </div>
 
         <div class="link">
-            <a href="<?=$this->url(array(), 'dbmap', true)?>" 
-                title="Full map of database tables, in PNG format">DB</a> |
             <a href="<?=$this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>" 
                 title="View this mock-up as image (PNG)">PNG</a>
         </div>
@@ -35,10 +34,6 @@
         </div>
 
         <?=$this->page?>
-    </div>
-
-    <div class="logo">
-        (c) FaZend.com, rev.<?=FaZend_Revision::get()?>, <?=$this->pageLoadTime()?>
     </div>
 
 </div>

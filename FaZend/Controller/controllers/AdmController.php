@@ -21,53 +21,21 @@ require_once 'FaZend/Controller/Action.php';
  *
  *
  */
-class Fazend_AdmController extends FaZend_Controller_Action {
+class Fazend_AdmController extends FaZend_Controller_Panel {
 
     /**
-     * Block access
+     * Get action name
      *
-     * @see http://framework.zend.com/manual/en/zend.auth.adapter.http.html
      * @return void
      */
     public function preDispatch() {
 
         $this->view->action = $this->getRequest()->getActionName();    
 
-        if (APPLICATION_ENV == 'testing')
-            return;
-
-        $resolver = new FaZend_Auth_Adapter_Http_Resolver_Admins();
-        $resolver->setScheme('basic');    
-
-        // all this will work ONLY if PHP is installed as Apache Module
-        // @see: http://www.php.net/features.http-auth
-        if (FaZend_User::isLoggedIn() && $resolver->resolve(FaZend_User::getCurrentUser()->email, 'adm'))
-            return;
-
-        $adapter = new Zend_Auth_Adapter_Http(array(
-            'accept_schemes' => 'basic',
-            'realm' => 'adm'));
-
-        $adapter->setBasicResolver($resolver);
-        $adapter->setRequest($this->getRequest());
-        $adapter->setResponse($this->getResponse());
-
-        $result = $adapter->authenticate();
-        if (!$result->isValid()) {
-            return $this->_redirectFlash('authorization failed (code #' . abs($result->getCode()). '): ' . 
-                implode('; ', $result->getMessages()));
-        }    
+        parent::preDispatch();
 
     }
         
-    /**
-     * 
-     *
-     * @return void
-     */
-    public function postDispatch() {
-    }
-
     /**
      * Front page
      *

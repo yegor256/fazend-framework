@@ -19,19 +19,20 @@
  *
  *
  */
-class Fazend_UiController extends FaZend_Controller_Action {
+class Fazend_UiController extends FaZend_Controller_Panel {
 
     /**
-     * Show the entire map of the system
+     * Sanity check before dispatching
      *
      * @return void
      */
     public function preDispatch() {
         
-        // layout reconfigure to fazend
-        $layout = Zend_Layout::getMvcInstance();
-        $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
-        $layout->setLayout('ui');
+        // sanity check
+        if (APPLICATION_ENV == 'production')
+            $this->_redirectFlash('UI controller is not allowed in production environment', 'index', 'index');
+        
+        parent::preDispatch();
 
     }
 
