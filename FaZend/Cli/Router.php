@@ -76,9 +76,9 @@ class FaZend_Cli_Router {
      * @param array Associative array of options to pass
      * @return int Exit code
      */
-    public function call($name, $options = false) {
+    public function call($name, array $options = null) {
 
-        if (!$options)
+        if (is_null($options))
             $options = self::_getCliOptions();
 
         $cliPath = APPLICATION_PATH . '/cli/' . $name . '.php';

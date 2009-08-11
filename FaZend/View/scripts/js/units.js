@@ -150,7 +150,7 @@ function _cssStarted() {
  */
 function _cssFinished() {
 
-    $('#output').css('cursor', 'text');
+    $('#output').css('cursor', 'default');
 
     // set cursor back to normal
     runningAhref.css('cursor', 'pointer');
