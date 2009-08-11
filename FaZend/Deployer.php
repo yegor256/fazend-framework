@@ -291,7 +291,7 @@ class FaZend_Deployer {
                 self::EXCEPTION_CLASS);
 
         // this is view, we just drop it and create new
-        if (preg_match('/^create view/i', $sql))
+        if (preg_match('/^create\s(?:or\sreplace\s)?view/i', $sql))
             FaZend_Exception::raise('FaZend_Deployer_NotTableButView');
 
         // cut out the text between starting and ending brackets
