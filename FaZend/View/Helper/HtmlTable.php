@@ -306,7 +306,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if ($this->_column($title)->helper) {
                     $helper = $this->_column($title)->helper;
                     $value = $this->getView()->$helper($value);
-                }    
+                }
+
+                // sanity check
+                if (!is_string($value))
+                    $value = (string)$value;
 
                 // strip HTML tags    
                 if (!$this->_column($title)->rawHtml)
