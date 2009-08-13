@@ -89,6 +89,10 @@ class FaZend_Form extends Zend_Form {
             }
         }
 
+        // nothing clicked?
+        if (!$submit === false)
+            return false;
+
         // validate all fields
         if (!$this->isValid($request->getPost() + $this->getValues()))
             return false;
