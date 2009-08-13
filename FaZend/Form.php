@@ -93,7 +93,7 @@ class FaZend_Form extends Zend_Form {
         }
 
         // whether this particular form was submitted    
-        if ($submit->getLabel() != $request->getPost($submit->getLabel()))
+        if ($submit->getLabel() != $request->getPost($submit->getName()))
             return false;
 
         // validate all fields
