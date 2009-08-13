@@ -76,14 +76,24 @@ class FaZend_Form extends Zend_Form {
         if (!$request->isPost())
             return false;
 
+        // find SUBMIT element
+        $submit = false;
+        foreach ($this->getElements() as $element) {
+            if ($element instanceof Zend_Form_Element_Submit) {
+                $submit = $element;
+                break;
+            }
+        }
+
         // if there is NO element with name 'submit', the form should
         // not be used in FaZend
-        if (!$this->submit)
+        if (!$submit) {
             FaZend_Exception::raise('FaZend_Form_SubmitAbsentException',
-                'Form submit button element should have a name "submit"');
+                'Form does not have SUBMIT element');
+        }
 
         // whether this particular form was submitted    
-        if ($this->submit->getLabel() != $request->getPost('submit'))    
+        if ($submit->getLabel() != $request->getPost($submit->getLabel()))
             return false;
 
         // validate all fields
