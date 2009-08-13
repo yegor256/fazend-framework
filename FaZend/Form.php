@@ -83,7 +83,7 @@ class FaZend_Form extends Zend_Form {
                 continue;
 
             // whether this particular form was submitted by this button?
-            if ($element->getLabel() != $request->getPost($element->getName())) {
+            if ($element->getLabel() == $request->getPost($element->getName())) {
                 $submit = $element;
                 break;
             }
