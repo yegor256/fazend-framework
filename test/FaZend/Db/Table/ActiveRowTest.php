@@ -95,6 +95,9 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchAll();
 
+        $list = FaZend_Db_Table_ActiveRow_car::retrieve()
+            ->fetchPairs();
+
     }
 
     public function testTableWithoutPrimaryKeyWorks () {

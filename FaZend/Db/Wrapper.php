@@ -153,7 +153,7 @@ class FaZend_Db_Wrapper {
     public function fetchRow() {
 
         // get row with fetchRow from the select we have
-        $row = call_user_func(array($this->table(), 'fetchRow'), $this->select());
+        $row = $this->table()->fetchRow($this->select());
 
         // if we should keep silence - just return what we got
         if ($this->getSilenceIfEmpty() && !$row)
@@ -190,7 +190,7 @@ class FaZend_Db_Wrapper {
      * @return array
      */
     public function fetchPairs() {
-        return $this->table()->fetchPairs($this->select());
+        return $this->table()->getAdapter()->fetchPairs($this->select());
     }
 
     /**
