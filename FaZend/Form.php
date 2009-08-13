@@ -89,13 +89,6 @@ class FaZend_Form extends Zend_Form {
             }
         }
 
-        // if there is NO element with name 'submit', the form should
-        // not be used in FaZend
-        if (!$submit) {
-            FaZend_Exception::raise('FaZend_Form_SubmitAbsentException',
-                'Form does not have SUBMIT element');
-        }
-
         // validate all fields
         if (!$this->isValid($request->getPost() + $this->getValues()))
             return false;

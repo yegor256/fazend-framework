@@ -39,7 +39,8 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
         eval(
         "class $class extends FaZend_Db_Table_ActiveRow {
             public function __construct(\$id = false) {
-                \$this->_table = FaZend_Db_ActiveTable::createTableClass('{$name}');
+                \$this->_table = FaZend_Db_ActiveTable::createTableClass(
+                    isset(\$this->_table) ? \$this->_table : '{$name}');
                 parent::__construct(\$id);
             }    
 
