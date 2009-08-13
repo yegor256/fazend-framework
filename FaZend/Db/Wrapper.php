@@ -181,9 +181,16 @@ class FaZend_Db_Wrapper {
      * @return FaZend_Db_RowsetWrapper
      */
     public function fetchAll() {
-
         return new FaZend_Db_RowsetWrapper($this->table(), $this->select());
+    }
 
+    /**
+     * Fetch pairs
+     *
+     * @return array
+     */
+    public function fetchPairs() {
+        return $this->table()->fetchPairs($this->select());
     }
 
     /**
