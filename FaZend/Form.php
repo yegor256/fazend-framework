@@ -90,7 +90,7 @@ class FaZend_Form extends Zend_Form {
         }
 
         // nothing clicked?
-        if (!$submit === false)
+        if ($submit === false)
             return false;
 
         // validate all fields
