@@ -31,14 +31,34 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
     private static $_auth;
 
     /**
+     * Login status
+     *
+     * @var boolean
+     */
+    private static $_loggedIn;
+
+    /**
      * User is logged in?
      *
      * @return boolean
      */
     public static function isLoggedIn () {
 
-        return self::_auth()->hasIdentity();
+        if (isset(self::$_loggedIn))
+            return self::$_loggedIn;
 
+        // try to analyze the situation in session
+        if (!self::_auth()->hasIdentity()) {
+            $loggedIn = false;
+        } else {
+            try {
+                FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
+                $loggedIn = true;
+            } catch (FaZend_User_NotFoundException $e) {
+                $loggedIn = false;
+            }
+        }
+        return self::$_loggedIn = $loggedIn;
     }
 
     /**
@@ -78,6 +98,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
         $data = $authAdapter->getResultRowObject(); 
         self::_auth()->getStorage()->write($data);
 
+        // forget previous status
+        self::$_loggedIn = true;
+
     }
 
     /**
@@ -86,6 +109,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * @return void
      */
     public function logOut () {
+
+        // forget previous status
+        self::$_loggedIn = false;
 
         self::_auth()->clearIdentity();
 
