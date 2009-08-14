@@ -291,7 +291,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     $row[$injectedColumn] = $rowOriginal->$injectedColumn;
                 else
                     FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_IllegalColumn',
-                        "Column $injectedColumn is not found in the row");
+                        "Column '$injectedColumn' is not found in the row: " . get_class($rowOriginal));
             }
 
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').
