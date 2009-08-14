@@ -276,13 +276,22 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             if (!is_array($rowOriginal))
                 $row = $rowOriginal->toArray();
             else
-                $row = $rowOriginal;    
+                $row = $rowOriginal;
 
             // inject columns
             foreach ($this->_injections as $injectedColumn=>$predecessor) {
+                // sanity check
                 if (!is_object($rowOriginal))
                     break;
-                $row[$injectedColumn] = $rowOriginal->$injectedColumn;
+                
+                // if it's a method - call it
+                if (method_exists($rowOriginal, $injectedColumn))
+                    $row[$injectedColumn] = $rowOriginal->$injectedColumn();
+                elseif (property_exists($rowOriginal, $injectedColumn))
+                    $row[$injectedColumn] = $rowOriginal->$injectedColumn;
+                else
+                    FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_IllegalColumn',
+                        "Column $injectedColumn is not found in the row");
             }
 
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').

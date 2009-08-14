@@ -40,21 +40,8 @@ class IndexController extends FaZend_Controller_Action {
      */
     public function tableAction() {
 
-        $array = array(
-            array(
-                'id' => 123,
-                'email' => 'test@fazend.com',
-                'password' => 'test'
-            ),
-            array(
-                'id' => 124,
-                'email' => 'test@fazend.com',
-                'password' => 'test'
-            ),
-        );
-
-        $paginator = Zend_Paginator::factory($array);
-        $this->view->paginator = $paginator;
+        FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
+        
     }
 
     /**

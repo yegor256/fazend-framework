@@ -17,8 +17,23 @@
 // ORM auto-mapping classes
 class Model_Owner extends FaZend_Db_Table_ActiveRow_owner {
 
+    public static function retrieveAll() {
+        return self::retrieve()
+            ->setRowClass('Model_Owner')
+            ->fetchAll();
+    }
+
     function isMe() {
         return true;
+    }
+
+    function getDetails() {
+        $details = new Model_Owner_Details();
+
+        return $details
+            ->set('name', $this->name)
+            ->set('id', $this->__id)
+            ->set('balance', rand(100, 999));
     }
 
 }
