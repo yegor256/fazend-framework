@@ -48,14 +48,18 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
             return self::$_loggedIn;
 
         // try to analyze the situation in session
-        if (!self::_auth()->hasIdentity()) {
-            $loggedIn = false;
-        } else {
+        $loggedIn = false;
+        if (self::_auth()->hasIdentity()) {
             try {
-                FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
+                $user = FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
+                // sanity check
+                if ($user->password != self::_auth()->getIdentity()->password)
+                    FaZend_Exception::raise('FaZend_User_InvalidPassword');
+ 
+                // yes, we're here!
                 $loggedIn = true;
             } catch (FaZend_User_NotFoundException $e) {
-                $loggedIn = false;
+            } catch (FaZend_User_InvalidPassword $e) {
             }
         }
         return self::$_loggedIn = $loggedIn;
