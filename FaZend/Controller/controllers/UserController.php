@@ -133,7 +133,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         if (!FaZend_User::isLoggedIn())
             return $this->_redirectFlash('not logged in yet', 'index', 'index');
 
-        FaZend_User::getCurrentUser()->logOut();
+        FaZend_User::logOut();
 
         // forward to the index action in index controller
         $this->_redirect('/');

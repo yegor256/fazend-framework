@@ -18,6 +18,11 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_UserTest extends AbstractTestCase {
     
+    public function tearDown() {
+        FaZend_User::logOut();
+        parent::tearDown();
+    }
+
     public function testSimpleScenarioWorks () {
 
         if (FaZend_User::isLoggedIn()) {

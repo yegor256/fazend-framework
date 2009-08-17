@@ -14,16 +14,13 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
+// sample class for htmlTable testing
+class Model_Owner_Details extends FaZend_StdObject {
 
-class FaZend_View_Helper_LoremIpsumTest extends AbstractTestCase {
-    
-    public function testLoremIpsumHelperWorks () {
-
-        $this->dispatch('/index/loremipsum');
-
-        $this->assertQuery('p', "Error in HTML: " . $this->getResponse()->getBody());
-
+    public function __toString() {
+        return "name: " . $this->name;
     }
 
 }
+
+

@@ -1,6 +1,6 @@
 Table:
 
-<?=$this->htmlTable()
+<?=$this->htmlTable('test1')
 
 	// hide column - don't show it
 	->hideColumn('id')
@@ -39,3 +39,7 @@ Table:
 	->setPaginator($this->paginator)
 
 ?>
+
+<?=$this->htmlTable('test2')
+    ->setPaginator($this->paginator)?>
+

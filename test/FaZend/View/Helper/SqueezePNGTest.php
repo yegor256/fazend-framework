@@ -27,6 +27,8 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase {
         // this page contains html with squeze
         $this->dispatch('/index/squeeze');
 
+        $this->assertNotEquals(false, (bool)$this->getResponse()->getBody(), "Empty HTML instead of page with PNG, why?");
+
         $this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
 
     }

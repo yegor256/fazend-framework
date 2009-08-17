@@ -29,43 +29,60 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @var Zend_Paginator
      */
-    private $_paginator;
+    protected $_paginator;
     
     /**
      * List of columns defined by set..()
      *
      * @var array
      */
-    private $_columns = array();
+    protected $_columns = array();
 
     /**
      * List of injected columns
      *
      * @var array
      */
-    private $_injections = array();
+    protected $_injections = array();
 
     /**
      * List of options defined by set..()
      *
      * @var array
      */
-    private $_options = array();
+    protected $_options = array();
 
     /**
      * Message to show if no data
      *
      * @var strint
      */
-    private $_noDataMessage = 'no data';
-    
+    protected $_noDataMessage = 'no data';
+
+    /**
+     * Instances of this class, in case we nee many tables in one page
+     *
+     * @var FaZend_View_Helper_HtmlTable[]
+     */
+    protected static $_instances = array();
+
     /**
      * Show the table
      *
      * @return string HTML
      */
-    public function htmlTable() {
-        return $this;
+    public function htmlTable($name = null) {
+
+        // no name means no multi-instance - short and fast scenario
+        if (is_null($name))
+            return $this;
+
+        // initialize this particular table
+        if (!isset(self::$_instances[$name]))
+            self::$_instances[$name] = new FaZend_View_Helper_HtmlTable();
+
+        return self::$_instances[$name];
+
     }
 
     /**

@@ -1,6 +1,4 @@
 <?
-$this->doctype('XHTML1_STRICT');
-
 $this->headMeta()
 	->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
 
@@ -9,27 +7,27 @@ $this->stripCSS('global.css');
 ?><?= $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-<?=$this->headTitle()?>
-<?=$this->headMeta()?>
-<?=$this->headLink()?>
-<?=$this->headStyle()?>
+    <?=$this->headTitle()?>
+    <?=$this->headMeta()?>
+    <?=$this->headLink()?>
+    <?=$this->headStyle()?>
 </head> 
 <body>
 
-<div style='width: auto; padding: 30px;'>
+    <div style='width: auto; padding: 30px;'>
 
-<?=$this->flashMessage()?>
+        <?=$this->flashMessage()?>
 
-<a href='<?=$this->url(array('controller'=>'index', 'action'=>'index'), 'default', true)?>' 
-	style="border: 0; <?=$this->squeezePNG('logo.png')?>"></a>
+        <a href='<?=$this->url(array('controller'=>'index', 'action'=>'index'), 'default', true)?>'
+                style="<?=$this->squeezePNG('logo.png')?>"></a>
 
-<?=$this->action('login', 'user', 'fazend')?>
+        <?=$this->action('login', 'user', 'fazend')?>
 
-<?=$this->layout()->content?>
+        <?=$this->layout()->content?>
 
-</div>
+    </div>
 
-<?=$this->googleAnalytics()?>
+    <?=$this->googleAnalytics()?>
+    <?=$this->headScript() ?>
 </body>
-<?=$this->headScript() ?>
 </html>

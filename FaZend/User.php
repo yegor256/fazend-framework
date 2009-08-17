@@ -62,6 +62,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
             } catch (FaZend_User_InvalidPassword $e) {
             }
         }
+        
         return self::$_loggedIn = $loggedIn;
     }
 
@@ -76,7 +77,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
         if (!self::isLoggedIn())
             FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'user is not logged in');
 
-        return FaZend_User::findByEmail(self::_auth()->getIdentity()->email);    
+        return FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
     }
 
     /**
@@ -112,7 +113,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      *
      * @return void
      */
-    public function logOut () {
+    public static function logOut () {
 
         // forget previous status
         self::$_loggedIn = false;

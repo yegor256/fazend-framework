@@ -50,23 +50,27 @@ class FaZend_Exception extends Exception {
      *
      * @param string Exception class name, will be created or loaded
      * @param string Parent class
-     * @return boolean
+     * @return void
      */
     public static function _declareClass($class, $parent = 'Exception') {
 
         if (class_exists($class, false))
-            return true;
+            return;
             
-        // try to load if, maybe it exists
+        // try to load it, maybe it exists
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->suppressNotFoundWarnings(true);
 
         // no, it doesn't exist - so we create it!
         if (@$autoloader->autoload($class))
-            return true;
+            return;
                 
         // declare the parent
         self::_declareClass($parent, 'Exception');
+
+        // sanity check, in case they are equal
+        if ($class == $parent)
+            return;
 
         // dynamically declare this class
         eval("class {$class} extends {$parent} {};");    

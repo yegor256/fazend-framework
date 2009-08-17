@@ -30,7 +30,7 @@ class IndexController extends FaZend_Controller_Action {
     }
 
     public function flashAction() {
-        $this->_redirectFlash('Thats work');
+        $this->_redirectFlash('That works');
     }    
 
     /**
@@ -41,7 +41,7 @@ class IndexController extends FaZend_Controller_Action {
     public function tableAction() {
 
         FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
-        
+
     }
 
     /**
@@ -61,6 +61,15 @@ class IndexController extends FaZend_Controller_Action {
     public function headscriptAction() {
 
     }
-    
+
+    /**
+     * LoremIpsumTest
+     *
+     * @return void
+     */
+    public function loremipsumAction() {
+
+    }
+
 
 }

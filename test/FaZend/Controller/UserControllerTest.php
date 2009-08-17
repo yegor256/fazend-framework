@@ -25,20 +25,21 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
             "insert into user values (null, 'good@fazend.com', 'good')");
 
     }
-    
-    public function testLoginFormIsVisible () {
-        if (FaZend_User::isLoggedIn()) {
-            FaZend_User::getCurrentUser()->logOut();
-        }    
 
-        $this->dispatch('/');
+    public function tearDown() {
+        FaZend_User::logOut();
+        parent::tearDown();
+    }
+
+    public function testLoginFormIsVisible () {
+        FaZend_User::logOut();
+
+        $this->dispatch('/index');
         $this->assertQuery('input#email', "Error in HTML: ".$this->getResponse()->getBody());
     }
 
     public function testWrongLoginIsProcessed () {
-        if (FaZend_User::isLoggedIn()) {
-            FaZend_User::getCurrentUser()->logOut();
-        }    
+        FaZend_User::logOut();
 
         $this->request->setPost(array(
             'email' => 'wrong@fazend.com',
@@ -52,9 +53,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
     }
 
     public function testWrongPasswordIsProcessed () {
-        if (FaZend_User::isLoggedIn()) {
-            FaZend_User::getCurrentUser()->logOut();
-        }    
+        FaZend_User::logOut();
 
         $this->request->setPost(array(
             'email' => 'good@fazend.com',
@@ -68,9 +67,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
     }
 
     public function testCorrectLoginIsProcessed () {
-        if (FaZend_User::isLoggedIn()) {
-            FaZend_User::getCurrentUser()->logOut();
-        }    
+        FaZend_User::logOut();
 
         $this->request->setPost(array(
             'email' => 'good@fazend.com',
@@ -92,9 +89,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
     }
 
     public function testDoubleLogoutWorks () {
-        if (FaZend_User::isLoggedIn()) {
-            FaZend_User::getCurrentUser()->logOut();
-        }    
+        FaZend_User::logOut();
 
         $this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
         $this->assertEquals(false, FaZend_User::isLoggedIn());
