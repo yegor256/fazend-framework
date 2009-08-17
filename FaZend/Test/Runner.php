@@ -133,6 +133,15 @@ class FaZend_Test_Runner {
             (extension_loaded('xdebug') ? ' --log-metrics ' . escapeshellarg($this->_exec->metrics) : false) .
             ' ' . escapeshellarg('test/' . $this->_name);
 
+        // workaround for Mac OS X
+        // PATH variable, as well as other variables should be defined
+        // in /System/Libraries/LaunchDaemons/org.apache.httpd.plist file
+        // using the key LSEnvironment
+        // however, this key doesn't work in Leopard 10.5
+        // @link http://www.nabble.com/The-mysterious-SHAuthorizationRight-key-td14115115.html
+        if (!isset($_ENV['PATH']))
+            $cmd = 'export PATH=/usr/local/bin; ' . $cmd;
+
         $this->_exec->setCmd($cmd);
         $this->_exec->setDir(realpath(FaZend_Test_Manager::getInstance()->getLocation() . '/..'));
 
