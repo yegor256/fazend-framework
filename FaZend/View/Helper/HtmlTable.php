@@ -79,7 +79,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
         // initialize this particular table
         if (!isset(self::$_instances[$name]))
-            self::$_instances[$name] = new FaZend_View_Helper_HtmlTable();
+            self::$_instances[$name] = clone $this;
 
         return self::$_instances[$name];
 
