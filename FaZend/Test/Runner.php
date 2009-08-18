@@ -131,7 +131,8 @@ class FaZend_Test_Runner {
             ' --bootstrap ' . escapeshellarg($this->_exec->bootstrap) .
             ' --testdox-text ' . escapeshellarg($this->_exec->testdox) .
             (extension_loaded('xdebug') ? ' --log-metrics ' . escapeshellarg($this->_exec->metrics) : false) .
-            ' ' . escapeshellarg('test/' . $this->_name);
+            ' ' . escapeshellarg('test/' . $this->_name) .
+            ' 2>&1';
 
         // workaround for Mac OS X
         // PATH variable, as well as other variables should be defined
