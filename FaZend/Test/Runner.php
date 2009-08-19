@@ -205,6 +205,9 @@ class FaZend_Test_Runner {
             // if it's a failure - red it
             if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
                 $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
+            // if success - green it
+            elseif (!$result['suite']['failures'] && !$result['suite']['errors'])
+                $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_GREEN . '">' . $result['spanlog'] . '</span>';
 
         } else {
             $result['spanlog'] = false;
