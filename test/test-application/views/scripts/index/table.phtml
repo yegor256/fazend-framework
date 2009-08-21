@@ -2,44 +2,49 @@ Table:
 
 <?=$this->htmlTable('test1')
 
-	// hide column - don't show it
-	->hideColumn('id')
+    // hide column - don't show it
+    ->hideColumn('id')
 
-	// change the title of the column
-	->setColumnTitle('email', 'User Email')
+    // change the title of the column
+    ->setColumnTitle('email', 'User Email')
 
-	// parse the value of the column
-	->setParser('password', create_function('$value', 'return "***";'))
+    // parse the value of the column
+    ->setParser('password', create_function('$value', 'return "***";'))
 
-	// change style
-	->addColumnStyle('email', "width: 450px;")
+    // change style
+    ->addColumnStyle('email', "width: 450px;")
 
-	// allow raw html in the column
-	->allowRawHtml('password')
+    // ask table to calculate summ of this column
+    ->calculateSum('id')
 
-	// injected column
-	->addColumn('getDetails', 'id')
+    // allow raw html in the column
+    ->allowRawHtml('password')
 
-	// option
-	->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
+    // injected column
+    ->addColumn('getDetails', 'id')
 
-	// conditional skip of the option
-	->skipOption('approve', create_function('$row', 'return true;'))
-	
-	// conditional skip of the option
-	->appendOptionToColumn('approve', 'email')
-	
-	// option
-	->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
+    // option
+    ->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
 
-	// set message if no data
-	->setNoDataMessage('works?')
+    // conditional skip of the option
+    ->skipOption('approve', create_function('$row', 'return true;'))
 
-	// data source
-	->setPaginator($this->paginator)
+    // conditional skip of the option
+    ->appendOptionToColumn('approve', 'email')
+
+    // option
+    ->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
+
+    // set message if no data
+    ->setNoDataMessage('works?')
+
+    // data source
+    ->setPaginator($this->paginator)
 
 ?>
 
 <?=$this->htmlTable('test2')
     ->setPaginator($this->paginator)?>
+
+Summary of ID column: <?=$this->htmlTable('test1')->getSum('id')?>
 

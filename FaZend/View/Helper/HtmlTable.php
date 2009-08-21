@@ -149,6 +149,27 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
+     * Ask this helper to calculate sum of this column
+     *
+     * @param string Column name, case sensitive
+     * @return HtmlTable
+     */
+    public function calculateSum($column) {
+        $this->_column($column)->sum = true;
+        return $this;
+    }
+
+    /**
+     * Returns calculated sum for this column
+     *
+     * @param string Column name, case sensitive
+     * @return HtmlTable
+     */
+    public function getSum($column) {
+        return $this->_column($column)->sumValue;
+    }
+
+    /**
      * Add new column
      *
      * @param string Column name, case sensitive
@@ -314,6 +335,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
             $tds = array();    
             foreach ($row as $title=>$value) {
+
+                // summarize column values
+                if ($this->_column($title)->sum)
+                    $this->_column($title)->sumValue += $value;
 
                 // skip this column if required
                 if ($this->_column($title)->hidden)
