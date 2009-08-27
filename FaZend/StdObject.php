@@ -43,12 +43,24 @@ class FaZend_StdObject {
     /**
      * Get the property which is not set yet
      *
+     * If you want to transfer calls like $this->name to functions like
+     * $this->_getName() you should just declare such method and that's it.
+     *
      * @return value|false
      */
     public function __get($property) {
+
+        // try this method, if it exists
+        if (!property_exists($this, $property) && method_exists($this, $methodName = '_get' . ucfirst($property)))
+            return call_user_func(array($this, $methodName));
+
+        // if the property is not set - return FALSE
         if (!isset($this->$property))
             return false;
-        return $this->$property;    
+
+        // otherwise - return property
+        return $this->$property;
+        
     }
 
     /**
