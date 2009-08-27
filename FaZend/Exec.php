@@ -291,7 +291,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
 
-        if (!stristr(PHP_OS, 'win')) {
+        if (self::_isWindows()) {
             $shell = 'nohup ' . $cmd . ' >> ' . 
                 escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1 & echo $! > ' . 
                 escapeshellarg($pidFile);
@@ -318,6 +318,15 @@ class FaZend_Exec extends FaZend_StdObject {
             return;
 
         shell_exec('kill -9 ' . self::_pid($id));
-    }    
+    }
+
+    /**
+     * Is it windows OS?
+     *
+     * @return boolean
+     */
+    protected static function _isWindows() {
+        return stristr(PHP_OS, 'win') !== false;
+    }
 
 }
