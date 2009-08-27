@@ -141,7 +141,7 @@ class FaZend_Test_Runner {
         // however, this key doesn't work in Leopard 10.5
         // @link http://www.nabble.com/The-mysterious-SHAuthorizationRight-key-td14115115.html
         if (!isset($_ENV['PATH']))
-            $cmd = '/usr/local/bin' . $cmd;
+            $cmd = '/usr/local/bin/' . $cmd;
 
         $this->_exec->setCmd($cmd);
         $this->_exec->setDir(realpath(FaZend_Test_Manager::getInstance()->getLocation() . '/..'));
