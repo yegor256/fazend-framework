@@ -205,4 +205,25 @@ class FaZend_Db_Wrapper {
 
     }
 
+    /**
+     * Show SELECT string and die
+     *
+     * You can use it like this:
+     *
+     * <code>
+     * return self::retrieve()
+     *     ->where('user = ?', $user)
+     *     ->setRowClass('Model_Car')
+     * //    ->debug()
+     *     ->fetchAll();
+     * </code>
+     *
+     * When you un-comment the line with debug(), you will get SELECT string
+     * to the output.
+     *
+     * @return void
+     */
+    public function debug() {
+        bug($this->select()->__toString());
+    }
 }
