@@ -121,6 +121,21 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     }
 
     /**
+     * Row actually exists in the database?
+     *
+     * @return boolean
+     */
+    public function exists() {
+        try {
+            // make sure the class has live data from DB
+            $this->_loadLiveData();
+            return true;
+        } catch (FaZend_Db_Table_NotFoundException $e) {
+            return false;
+        }
+    }
+
+    /**
      * Before any call we have to be sure that live data are available
      *
      * @param string Name of the method being called

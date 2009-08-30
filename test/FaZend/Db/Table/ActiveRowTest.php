@@ -28,6 +28,8 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
         $owner = new Model_Owner(132);
 
+        $this->assertEquals(true, $owner->exists());
+
         $product = new Model_Product();
         $product->text = 'just test';
         $product->owner = $owner;
