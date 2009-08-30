@@ -123,9 +123,19 @@ class FaZend_Email {
      */
     public function send ($force = false) {
 
+        $mailer = $this->_getFilledMailer();
+
         if (self::$_config->send || $force)
             // send it out
-            $this->_getFilledMailer()->send();
+            $mailer->send();
+        else
+            FaZend_Log::info(
+                "Email sending skipped:\n" 
+                . "\tFrom: " . $mailer->getFrom() . "\n"
+                . "\tTo: " . implode('; ', $mailer->getRecipients()) . "\n"
+                . "\tSubject: " . $mailer->getSubject() . "\n"
+                . "\tMessage (from new line):\n" . $mailer->getBodyText(true)
+            );
 
         return $this;
 
@@ -150,6 +160,9 @@ class FaZend_Email {
      * @return Zend_Mail
      */
     protected function _getFilledMailer() {
+
+        if (isset($this->_mailer))
+            return $this->_mailer;
 
         // this class will send email
         $mail = $this->_createZendMailer();

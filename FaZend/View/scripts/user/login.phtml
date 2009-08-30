@@ -1,19 +1,19 @@
 
 <? if (!FaZend_User::isLoggedIn()): ?>
 
-	<a href="#_self" onclick="document.getElementById('lf').style.display = 'block'; document.getElementById('lf').loginEmail.focus(); return false;">login</a> |
+    <a href="#_self" onclick="document.getElementById('lf').style.display = 'block'; document.getElementById('lf').loginEmail.focus(); return false;">login</a> |
 
-        <a href="<?=$this->url(array('action'=>'register'), 'user', true)?>">create account</a>
+    <a href="<?=$this->url(array('action'=>'register'), 'user', true)?>">create account</a>
 
-	<div id="lf" <?=(($this->form->email->getValue() || $this->form->pwd->getValue()) ? false : ' style="display: none;"')?>>
-		<?=$this->form?>
-	</div>
+    <div id="lf" <?=(($this->form->email->getValue() || $this->form->pwd->getValue()) ? false : ' style="display: none;"')?>>
+            <?=$this->form?>
+    </div>
 
 <? else: ?>
 
-	<?=$this->escape(FaZend_User::getCurrentUser()->email)?><br/>
+    <?=$this->escape(FaZend_User::getCurrentUser()->email)?><br/>
 
-	<a href="<?=$this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>">settings</a> | 
-       	<a href="<?=$this->url(array('action'=>'logout'), 'user', true)?>">logout</a>
+    <a href="<?=$this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>">settings</a> |
+    <a href="<?=$this->url(array('action'=>'logout'), 'user', true)?>">logout</a>
 
 <? endif; ?>

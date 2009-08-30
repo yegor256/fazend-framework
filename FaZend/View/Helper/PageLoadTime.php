@@ -66,6 +66,15 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
 
          }
 
+         // add information from system log
+         if ((APPLICATION_ENV == 'development') && !FaZend_Log_Writer_Debug::isEmpty()) {
+
+             $log = FaZend_Log_Writer_Debug::getLog();
+
+             $html .= "&#32;<span style='cursor:pointer;' onclick='$(\"#syslog\").toggle();'>syslog</span>".
+                 "<pre id='syslog' style='display:none;'>{$log}</p>";
+         }
+
          return $html;
 
      }

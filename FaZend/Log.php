@@ -74,7 +74,7 @@ class FaZend_Log {
             if (APPLICATION_ENV === 'production')
                 self::$_logger = FaZend_Log_ErrorLog::getInstance();
             else
-                self::$_logger = new Zend_Log(new Zend_Log_Writer_Stream('php://stdout'));
+                self::$_logger = new Zend_Log(new FaZend_Log_Writer_Debug());
         }
 
         return call_user_func_array(array(self::$_logger, $method), $args);
