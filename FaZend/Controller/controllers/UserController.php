@@ -149,6 +149,12 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         $form = FaZend_Form::create('Login', $this->view);
 
+        $pwdLabel = $form->pwd->getLabel();
+        $remindUrl = $this->view->url(array('action'=>'remind'), 'user', true);
+
+        $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}'>?</a>)");
+
+        $form->pwd->getDecorator('label')->setOption('escape', false);
         if (!$form->isFilled())
             return;
 
@@ -172,9 +178,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }
 
         if ($form->pwd->hasErrors() || $form->email->hasErrors()) {
-            $form->pwd->setLabel($form->pwd->getLabel() . 
-                "&#32;<a href='" . $this->view->url(array('action'=>'remind'), 'user', true) . "'>remind password</a>");
-            $form->pwd->getDecorator('label')->setOption('escape', false);
+            $form->pwd->setLabel($pwdLabel . "&#32;<a href='{$remindUrl}'>remind password</a>");
         }
 
     }    
