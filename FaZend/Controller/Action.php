@@ -66,8 +66,14 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
     /**
      * Redirect to url with flash message
      *
+     * Forwards current dispatching cycle to the new location, adding
+     * flash message to the session.
+     *
      * @param string message Flash message
-     * @param string url Url for redirect.
+     * @param string Action name
+     * @param string|null Controller name
+     * @param string|null Module name
+     * @param array List of parameters (associative array)
      * @return void
      */    
     protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
