@@ -24,6 +24,15 @@ require_once 'FaZend/Controller/Action.php';
 class Fazend_ErrorController extends FaZend_Controller_Action { 
 
     /**
+     * Not found action
+     *
+     * @return void
+     */
+    public function notfoundAction() {
+        $this->_forward('index', 'index', 'default');
+    }
+
+    /**
      * errorAction() is the action that will be called by the "ErrorHandler" 
      * plugin.  When an error/exception has been encountered
      * in a ZF MVC application (assuming the ErrorHandler has not been disabled
@@ -61,7 +70,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                 $this->getResponse()->setHttpResponseCode(404); 
                 //$this->view->message = 'Page not found'; 
 
-                return $this->_redirectFlash('Error 404: page not found', 'index', 'index');
+                return $this->_redirectFlash('Error 404: page not found', 'notfound');
 
             default: 
                 // application error 
