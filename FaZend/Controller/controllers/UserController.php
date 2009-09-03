@@ -178,7 +178,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }
 
         if ($form->pwd->hasErrors() || $form->email->hasErrors()) {
-            $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}'>remind password</a>)");
+            $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}'>remind?</a>)");
         }
 
     }    
