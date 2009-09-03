@@ -122,7 +122,7 @@ function _runRoutine() {
         success: _refreshScreen,
     });
 
-}	
+}    
 
 /**
  * CSS changes when test is just started

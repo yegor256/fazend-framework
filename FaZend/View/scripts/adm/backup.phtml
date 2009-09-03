@@ -3,7 +3,7 @@
 <h1>Backup</h1>
 
 <p>Latest backup done: <tt><?=date('m/d/y h:i:s', $this->backup->getLatestRunTime())?></tt> 
-	(<a href="<?=$this->url(array('clear'=>true))?>">clear semaphore</a>)</p>
+    (<a href="<?=$this->url(array('clear'=>true))?>">clear semaphore</a>)</p>
 
 <pre><?=$this->backup->getLatestLog()?></pre>
 
@@ -11,7 +11,7 @@
 
 <ul>
 <? foreach ($this->files as $file): ?>
-	<li><?=$file['name']?>: <?=$file['size']?> bytes, <?=date('m/d/y h:i', $file['mtime'])?></li>
+    <li><?=$file['name']?>: <?=$file['size']?> bytes, <?=date('m/d/y h:i', $file['mtime'])?></li>
 <? endforeach; ?>
 </ul>
 

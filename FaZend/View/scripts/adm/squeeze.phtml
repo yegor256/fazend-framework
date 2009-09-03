@@ -3,10 +3,10 @@
 <h1>SqueezePNG files</h1>
 
 <p>
-	Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
-	Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
-	Url: <tt><?=$this->squeezePNG()->url()?></tt>
-</p>	
+    Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
+    Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
+    Url: <tt><?=$this->squeezePNG()->url()?></tt>
+</p>    
 
 <img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
 
@@ -14,23 +14,23 @@
 
 <? if (isset($map['images'])): ?>
 
-	<p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
+    <p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
 
-	<ul>
-	<? $totalSize = 0; ?>
-	<? foreach ($map['images'] as $id=>$img): ?>
-		<? $totalSize += ($size = filesize($id));?>
+    <ul>
+    <? $totalSize = 0; ?>
+    <? foreach ($map['images'] as $id=>$img): ?>
+        <? $totalSize += ($size = filesize($id));?>
 
-		<li>
-			<?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>, <?=$size?>bytes
-		</li>	
+        <li>
+            <?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>, <?=$size?>bytes
+        </li>    
 
-	<? endforeach; ?>
-	</ul>
+    <? endforeach; ?>
+    </ul>
 
-	<p>Total size: <?=$totalSize?>bytes</p>
+    <p>Total size: <?=$totalSize?>bytes</p>
 
-<? endif; ?>	
+<? endif; ?>    
 
 <p><a href="#" onclick="document.getElementById('pre').style.display = 'block';">show content of the map file</a></p>
 

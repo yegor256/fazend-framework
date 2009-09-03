@@ -21,29 +21,29 @@
 <project name="example" basedir="." default="main">
 
         <!-- get properties from file -->
-	<property file="./build.properties" />
+    <property file="./build.properties" />
 
-	<!-- Main Target -->
-	<target name="main" depends="lint, dbdeploy, test, deploy" />
+    <!-- Main Target -->
+    <target name="main" depends="lint, dbdeploy, test, deploy" />
 
-	<!-- Check all PHP files for syntax -->
-	<target name="lint">
-		<phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="lint" haltonfailure="true" />
-	</target>
-		
-	<!-- Deploy changes to test DB and prepare SQL script for changes on production server -->
-	<target name="dbdeploy">
-		<phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="dbdeploy" haltonfailure="true" />
-	</target>
+    <!-- Check all PHP files for syntax -->
+    <target name="lint">
+        <phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="lint" haltonfailure="true" />
+    </target>
+        
+    <!-- Deploy changes to test DB and prepare SQL script for changes on production server -->
+    <target name="dbdeploy">
+        <phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="dbdeploy" haltonfailure="true" />
+    </target>
 
-	<!-- Run all unit tests (from /test folder) -->
-	<target name="test">
-		<phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="test" haltonfailure="true" />
-	</target>
+    <!-- Run all unit tests (from /test folder) -->
+    <target name="test">
+        <phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="test" haltonfailure="true" />
+    </target>
 
-	<!-- Upload the product to the production server -->
-	<target name="deploy">
-		<phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="deploy" haltonfailure="true" />
-	</target>
+    <!-- Upload the product to the production server -->
+    <target name="deploy">
+        <phing phingfile="${project.basedir}/src/library/FaZend/Application/Phing/build.xml" inheritRefs="true" target="deploy" haltonfailure="true" />
+    </target>
 
 </project>

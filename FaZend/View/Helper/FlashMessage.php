@@ -34,7 +34,7 @@ class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper {
         $flashMessages = $actionHelperFlashMessenger->setNamespace('FaZend_Messages')->getMessages();
 
         if (empty($flashMessages)) {
-        	return;
+            return;
         }
 
         return '<p class="flash">' . implode(";", $flashMessages) . '</p>';

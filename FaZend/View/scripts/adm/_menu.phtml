@@ -1,19 +1,19 @@
 <? $this->headTitle('adm: ' . $this->action) ?>
 
 <p>
-	<? foreach(scandir(FAZEND_PATH . '/View/scripts/adm') as $file): ?>
+    <? foreach(scandir(FAZEND_PATH . '/View/scripts/adm') as $file): ?>
 
-		<? if (($file == 'index.phtml') || ($file[0] == '_')) continue; ?>
-		
-		<? $matches = array(); if (!preg_match('/^(.*)\.phtml$/', $file, $matches)) continue; ?>
-		
-		<? if (isset($notFirst)): ?>
-			|
-		<? else: ?>
-			<? $notFirst = true ?>
-		<? endif; ?>
+        <? if (($file == 'index.phtml') || ($file[0] == '_')) continue; ?>
+        
+        <? $matches = array(); if (!preg_match('/^(.*)\.phtml$/', $file, $matches)) continue; ?>
+        
+        <? if (isset($notFirst)): ?>
+            |
+        <? else: ?>
+            <? $notFirst = true ?>
+        <? endif; ?>
 
-		<?=($matches[1] == $this->action ? '[' : false)?><a href="<?=$this->url(array('action'=>$matches[1]), 'adm', true)?>"><?=$matches[1]?></a><?=($matches[1] == $this->action ? ']' : false)?>
+        <?=($matches[1] == $this->action ? '[' : false)?><a href="<?=$this->url(array('action'=>$matches[1]), 'adm', true)?>"><?=$matches[1]?></a><?=($matches[1] == $this->action ? ']' : false)?>
 
-	<? endforeach; ?>
-</p>	
+    <? endforeach; ?>
+</p>    

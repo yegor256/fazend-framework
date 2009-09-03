@@ -17,6 +17,9 @@
 /**
  * Navigation map
  *
+ * Builds navigation map with ACL properties for User Interface
+ * mock ups
+ *
  * @package UiModeller
  */
 class FaZend_UiModeller_Navigation {
@@ -217,9 +220,7 @@ class FaZend_UiModeller_Navigation {
      * @return void
      */
     protected function _setActiveScript($script) {
-
         $this->_container->findOneBy('resource', $script)->active = true;
-
     }
 
     /**
@@ -247,6 +248,5 @@ class FaZend_UiModeller_Navigation {
         return $actor;
 
     }
-
 
 }

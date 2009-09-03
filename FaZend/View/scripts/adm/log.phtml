@@ -3,6 +3,6 @@
 <h1>error_log on server</h1>
 
 <p>Location: <tt><?=$this->filePath?></tt> (<?=file_exists($this->filePath) ? filesize($this->filePath) . 'bytes' : 'no file'?>, 
-	<a href="<?=$this->url(array('clear'=>true))?>">clear log</a>)</p>
+    <a href="<?=$this->url(array('clear'=>true))?>">clear log</a>)</p>
 
 <pre><?=$this->log?></pre>

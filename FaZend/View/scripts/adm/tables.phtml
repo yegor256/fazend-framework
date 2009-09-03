@@ -3,32 +3,32 @@
 <h1>Content of DB tables<?=$this->table ? ' [' . $this->table . ']' : false?></h1>
 
 <p>table: <select onChange="window.location = '<?=$this->url(array('action'=>'tables', 'table'=>''), 'adm', true)?>/' + this.options[this.selectedIndex].text;">
-	<? foreach ($this->tables as $table): ?>
+    <? foreach ($this->tables as $table): ?>
 
-		<option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
+        <option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
 
-	<? endforeach; ?>
+    <? endforeach; ?>
 </select><?=$this->table ? '&nbsp;' . count($this->retrieve->fetchAll()) . ' total' : false?></p>
 
 <? if ($this->table): ?>
 
-	<? 
-	try {
-		
-		$customScript = 'adm/' . strtolower($this->table) . '.phtml';
-		echo $this->render($customScript);
+    <? 
+    try {
+        
+        $customScript = 'adm/' . strtolower($this->table) . '.phtml';
+        echo $this->render($customScript);
 
-	} catch (Zend_View_Exception $e) {
-	?>
+    } catch (Zend_View_Exception $e) {
+    ?>
 
-		<p style="color: red;">If you want to customize this view, 
-		just create [<tt><?=$customScript?></tt>] file in your view scripts directory.</p>
+        <p style="color: red;">If you want to customize this view, 
+        just create [<tt><?=$customScript?></tt>] file in your view scripts directory.</p>
 
-	<? } ?>
+    <? } ?>
 
-	<?=$this->htmlTable()
-		->setPaginator($this->paginator)?>
+    <?=$this->htmlTable()
+        ->setPaginator($this->paginator)?>
 
-	<p><?=$this->paginator?></p>
+    <p><?=$this->paginator?></p>
 
 <? endif; ?>
