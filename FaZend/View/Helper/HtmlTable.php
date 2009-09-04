@@ -233,11 +233,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array Array of parameters for url()
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addOption($title, $httpVar, $column, array $urlParams) {
+    public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default') {
         $this->_option($title)->title = $title;
         $this->_option($title)->httpVar = $httpVar;
         $this->_option($title)->column = $column;
         $this->_option($title)->urlParams = $urlParams;
+        $this->_option($title)->route = $route;
         return $this;
     }
 
@@ -306,14 +307,17 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string HTTP variable to pass to the link
      * @param string What column value to use for this HTTP var
      * @param array Other URL params
+     * @param string Route to use in URL
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addColumnLink($title, $httpVar, $column, array $urlParams) {
+    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default') {
         
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
         $link->column = $column;
+        $link->route = $route;
+
         $this->_column($title)->link = $link;
         return $this;
 
@@ -342,6 +346,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 $row = $rowOriginal;
 
             // inject columns
+            // predecessor is ignored so far
+            // @todo implement it properly
             foreach ($this->_injections as $injectedColumn=>$predecessor) {
                 // sanity check
                 if (!is_object($rowOriginal))
@@ -393,7 +399,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if ($this->_column($title)->link) {
                     $link = $this->_column($title)->link;
                     $value = "<a href='".$this->getView()->url($link->urlParams + 
-                        array($link->httpVar => $row[$link->column]), 'default', true)."'>" . $value . '</a>';
+                        array($link->httpVar => $row[$link->column]), $link->route, true)."'>" . $value . '</a>';
                 }    
 
                 // append CSS style
@@ -414,7 +420,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
                     // build the <A HREF> link for this option
                     $optLink = "&#32;<a href='".$this->getView()->url(
-                        $option->urlParams + array($option->httpVar => $row[$option->column]), 'default', true).
+                        $option->urlParams + array($option->httpVar => $row[$option->column]), $option->route, true).
                         "'>" . $option->title . '</a>';
 
                     // attach this option to the particular column    
