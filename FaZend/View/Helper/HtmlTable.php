@@ -235,7 +235,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @return FaZend_View_Helper_HtmlTable
      */
     public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default') {
-        $this->_column($title)->link = $this->_makeLink($httpVar, $column, $urlParams, $route);
+        $this->_column($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route);
         return $this;
     }
 
@@ -250,7 +250,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      */
     public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default') {
         $this->_option($title)->title = $title;
-        $this->_option($title)->link = $this->_makeLink($httpVar, $column, $urlParams, $route);
+        $this->_option($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route);
         return $this;
     }
 
@@ -494,12 +494,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     /**
      * Create new LINK object to save into option or into column
      *
+     * @param string Unique name of this link (link name or column name)
      * @param string Name of HTTP parameter
      * @param string Column name to be used as param
      * @param array Associative array of params
      * @param string Name of route
      */
-    protected function _makeLink($httpVar, $column, $urlParams, $route) {
+    protected function _makeLink($name, $httpVar, $column, $urlParams, $route) {
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
@@ -523,9 +524,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         foreach ($params as &$param) {
             if (is_callable($param)) {
                 if (is_array($param))
-                    $param = call_user_func_array($param, array('row'=>$row));
+                    $param = call_user_func_array($param, array('name'=>$link->name, 'row'=>$row));
                 else
-                    $param = $param($row);
+                    $param = $param($link->name, $row);
             }
         }
 
