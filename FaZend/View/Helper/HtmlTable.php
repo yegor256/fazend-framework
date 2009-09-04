@@ -60,6 +60,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     protected $_noDataMessage = 'no data';
 
     /**
+     * Columns to show, if undefined = show all columns
+     *
+     * @var string[]
+     */
+    protected $_columnsToShow;
+
+    /**
      * Instances of this class, in case we nee many tables in one page
      *
      * @var FaZend_View_Helper_HtmlTable[]
@@ -88,6 +95,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     /**
      * Show the table
      *
+     * Convert all internal data into string (HTML) and return it
+     *
      * @return string HTML
      */
     public function __toString() {
@@ -105,8 +114,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     /**
      * Set the paginator with the data
      *
+     * Saves data source into helper, to be rendered. Without this
+     * method the helper won't display anything
+     *
      * @param Zend_Paginator Data holder to render
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function setPaginator(Zend_Paginator $paginator) {
         $this->_paginator = $paginator;
@@ -118,7 +130,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Column name, case sensitive
      * @param callback Function to be called with each row
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function setParser($column, $callback) {
         $this->_column($column)->parser = $callback;
@@ -130,7 +142,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Column name, case sensitive
      * @param string Name of the view helper to apply
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function setParserHelper($column, $helper) {
         $this->_column($column)->helper = $helper;
@@ -141,7 +153,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * Hide one column
      *
      * @param string Column name, case sensitive
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function hideColumn($column) {
         $this->_column($column)->hidden = true;
@@ -152,7 +164,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * Ask this helper to calculate sum of this column
      *
      * @param string Column name, case sensitive
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function calculateSum($column) {
         $this->_column($column)->sum = true;
@@ -163,7 +175,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * Returns calculated sum for this column
      *
      * @param string Column name, case sensitive
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function getSum($column) {
         return $this->_column($column)->sumValue;
@@ -174,7 +186,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Column name, case sensitive
      * @param string Column name, case sensitive, which will preceede this new column
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function addColumn($column, $predecessor) {
 
@@ -188,11 +200,24 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
+     * Indicate a list of columns that should be visible
+     *
+     * This method could be used instead of hideColumn()
+     *
+     * @param array List of columns to show
+     * @return FaZend_View_Helper_HtmlTable
+     */
+    public function showColumns(array $columns) {
+        $this->_columnsToShow = $columns;
+        return $this;
+    }
+
+    /**
      * Append option to column, instead of 'options' column
      *
      * @param string Option name, case sensitive
      * @param string Column name, case sensitive
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function appendOptionToColumn($option, $column) {
         $this->_option($option)->toColumn = $column;
@@ -206,7 +231,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Http variable to be used in links, in params
      * @param string Source of data for the Http variable, column name
      * @param array Array of parameters for url()
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function addOption($title, $httpVar, $column, array $urlParams) {
         $this->_option($title)->title = $title;
@@ -221,7 +246,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Option name, case sensitive
      * @param callback Function to be called to understand when the option should be skipped
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function skipOption($title, $callback) {
         $this->_option($title)->skip = $callback;
@@ -233,7 +258,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Column name, case sensitive
      * @param string CSS style
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function addColumnStyle($column, $style) {
         $this->_column($column)->style = $style;
@@ -245,7 +270,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param string Column name, case sensitive
      * @param string Column title to be displayed
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function setColumnTitle($column, $title) {
         $this->_column($column)->title = $title;
@@ -256,7 +281,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * Allow raw HTML output in the column
      *
      * @param string Column name, case sensitive
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function allowRawHtml($column) {
         $this->_column($column)->rawHtml = true;
@@ -267,7 +292,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * Set message to show if no data
      *
      * @param string Text message to show when the paginator has no data
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function setNoDataMessage($msg) {
         $this->_noDataMessage = $msg;
@@ -281,7 +306,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string HTTP variable to pass to the link
      * @param string What column value to use for this HTTP var
      * @param array Other URL params
-     * @return HtmlTable
+     * @return FaZend_View_Helper_HtmlTable
      */
     public function addColumnLink($title, $httpVar, $column, array $urlParams) {
         
@@ -339,6 +364,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 // summarize column values
                 if ($this->_column($title)->sum)
                     $this->_column($title)->sumValue += $value;
+
+                // maybe we should show only some particular columns
+                if ($this->_columnsToShow) {
+                    if (!in_array($title, $this->_columnsToShow))
+                        continue;
+                }
 
                 // skip this column if required
                 if ($this->_column($title)->hidden)
