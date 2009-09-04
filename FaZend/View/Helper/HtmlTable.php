@@ -344,9 +344,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 
                 // if it's a method - call it
                 if (method_exists($rowOriginal, $injectedColumn))
-                    $row[$injectedColumn] = $rowOriginal->$injectedColumn();
+                    $this->_inject($row, $injectedColumn, $predecessor, $rowOriginal->$injectedColumn());
                 else
-                    $row[$injectedColumn] = $rowOriginal->$injectedColumn;
+                    $this->_inject($row, $injectedColumn, $predecessor, $rowOriginal->$injectedColumn);
             }
 
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').
@@ -538,6 +538,32 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             $params += array($link->httpVar => $row[$link->column]);
 
         return "<a href='".$this->getView()->url($params, $link->route, $link->reset, $link->encode)."'>" . $title . '</a>';
+    }
+
+    /**
+     * Inject one column into a row
+     *
+     * @param array Row to manage
+     * @param string Name of column to be inserted
+     * @param string Name of predecessor
+     * @param string The value to be insterted
+     * @return void
+     */
+    protected function _inject(array &$row, $column, $predecessor, $value) {
+        $result = array();
+
+        if (!$predecessor)
+            $result = array_merge(array($column=>$value), $row);
+        else {
+            while (current($row)) {
+                $result[key($row)] = current($row);
+                if (current($row) == $predecessor)
+                    $result[$column] = $value;
+                next($row);
+            }
+        }
+
+        $row = $result;
     }
 
 }
