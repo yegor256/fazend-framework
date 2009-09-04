@@ -33,6 +33,9 @@ Table:
     ->appendOptionToColumn('approve', 'email')
 
     // option
+    ->addOption('test', null, null, array('id'=>create_function('$row', 'return "test";')), 'default')
+
+    // option
     ->addColumnLink('approve', 'id', 'email', array('controller'=>'index', 'action'=>'index'))
 
     // set message if no data

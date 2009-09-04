@@ -519,6 +519,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     protected function _resolveLink(FaZend_StdObject $link, $title, array $row) {
         $params = $link->urlParams;
 
+        // you can specify params as callbacks
+        foreach ($params as &$param) {
+            if (is_callable($param))
+                $param = $param($row);
+        }
+
         // if this process is required - do it
         if ($link->httpVar)
             $params += array($link->httpVar => $row[$link->column]);
