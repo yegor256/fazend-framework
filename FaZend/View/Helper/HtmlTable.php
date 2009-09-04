@@ -234,8 +234,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Route to use in URL
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default') {
-        $this->_column($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route);
+    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default', $reset = false, $encode = true) {
+        $this->_column($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route, $reset, $encode);
         return $this;
     }
 
@@ -248,9 +248,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array Array of parameters for url()
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default') {
+    public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default', $reset = false, $encode = true) {
         $this->_option($title)->title = $title;
-        $this->_option($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route);
+        $this->_option($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route, $reset, $encode);
         return $this;
     }
 
@@ -500,13 +500,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array Associative array of params
      * @param string Name of route
      */
-    protected function _makeLink($name, $httpVar, $column, $urlParams, $route) {
+    protected function _makeLink($name, $httpVar, $column, $urlParams, $route, $reset, $encode) {
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
         $link->column = $column;
         $link->route = $route;
         $link->name = $name;
+        $link->reset = $reset;
+        $link->encode = $encode;
         return $link;
     }
 
@@ -535,7 +537,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         if ($link->httpVar)
             $params += array($link->httpVar => $row[$link->column]);
 
-        return "<a href='".$this->getView()->url($params, $link->route, true)."'>" . $title . '</a>';
+        return "<a href='".$this->getView()->url($params, $link->route, $link->reset, $link->encode)."'>" . $title . '</a>';
     }
 
 }
