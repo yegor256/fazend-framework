@@ -366,13 +366,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     $this->_column($title)->sumValue += $value;
 
                 // maybe we should show only some particular columns
-                if ($this->_columnsToShow) {
-                    if (!in_array($title, $this->_columnsToShow))
-                        continue;
-                }
-
-                // skip this column if required
-                if ($this->_column($title)->hidden)
+                if (!$this->_isVisible($title))
                     continue;
 
                 // parse the value of this TD    
@@ -438,8 +432,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         // build the header using the last ROW information
         $header = '';
         foreach ($row as $title=>$value) {
-            // skip the column
-            if ($this->_column($title)->hidden)
+            if (!$this->_isVisible($title))
                 continue;
 
             // rename the column
@@ -484,6 +477,28 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         if (!isset($this->_options[$option]))
             $this->_options[$option] = new FaZend_StdObject();
         return $this->_options[$option];
+    }
+
+    /**
+     * This column is visible?
+     *
+     * @param string Column name
+     * @return boolean
+     */
+    protected function _isVisible($column) {
+
+        // maybe we should show only some particular columns
+        if ($this->_columnsToShow) {
+            if (!in_array($column, $this->_columnsToShow))
+                return false;
+        }
+
+        // skip the column
+        if ($this->_column($column)->hidden)
+            return false;
+
+        return true;
+
     }
 
 }
