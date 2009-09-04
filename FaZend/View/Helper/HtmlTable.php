@@ -521,8 +521,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
         // you can specify params as callbacks
         foreach ($params as &$param) {
-            if (is_callable($param))
-                $param = $param($row);
+            if (is_callable($param)) {
+                if (is_array($param))
+                    $param = call_user_func_array($param, array('row'=>$row));
+                else
+                    $param = $param($row);
+            }
         }
 
         // if this process is required - do it
