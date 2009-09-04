@@ -557,7 +557,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         else {
             while (current($row)) {
                 $result[key($row)] = current($row);
-                if (current($row) == $predecessor)
+                if (key($row) == $predecessor)
                     $result[$column] = $value;
                 next($row);
             }
