@@ -517,8 +517,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @return string HTML
      */
     protected function _resolveLink(FaZend_StdObject $link, $title, array $row) {
-        return "<a href='".$this->getView()->url($link->urlParams +
-            array($link->httpVar => $row[$link->column]), $link->route, true)."'>" . $title . '</a>';
+        $params = $link->urlParams;
+
+        // if this process is required - do it
+        if ($link->httpVar)
+            $params += array($link->httpVar => $row[$link->column]);
+
+        return "<a href='".$this->getView()->url($params, $link->route, true)."'>" . $title . '</a>';
     }
 
 }
