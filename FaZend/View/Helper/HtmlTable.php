@@ -225,6 +225,21 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     }
 
     /**
+     * Add column link
+     *
+     * @param string Name of the column to attach to
+     * @param string HTTP variable to pass to the link
+     * @param string What column value to use for this HTTP var
+     * @param array Other URL params
+     * @param string Route to use in URL
+     * @return FaZend_View_Helper_HtmlTable
+     */
+    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default') {
+        $this->_column($title)->link = $this->_makeLink($httpVar, $column, $urlParams, $route);
+        return $this;
+    }
+
+    /**
      * Add option
      *
      * @param string Option name, case sensitive
@@ -235,10 +250,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      */
     public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default') {
         $this->_option($title)->title = $title;
-        $this->_option($title)->httpVar = $httpVar;
-        $this->_option($title)->column = $column;
-        $this->_option($title)->urlParams = $urlParams;
-        $this->_option($title)->route = $route;
+        $this->_option($title)->link = $this->_makeLink($httpVar, $column, $urlParams, $route);
         return $this;
     }
 
@@ -298,29 +310,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
     public function setNoDataMessage($msg) {
         $this->_noDataMessage = $msg;
         return $this;
-    }
-
-    /**
-     * Add column link
-     *
-     * @param string Name of the column to attach to
-     * @param string HTTP variable to pass to the link
-     * @param string What column value to use for this HTTP var
-     * @param array Other URL params
-     * @param string Route to use in URL
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default') {
-        
-        $link = new FaZend_StdObject();
-        $link->httpVar = $httpVar;
-        $link->urlParams = $urlParams;
-        $link->column = $column;
-        $link->route = $route;
-
-        $this->_column($title)->link = $link;
-        return $this;
-
     }
 
     /**
@@ -396,11 +385,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     $value = htmlspecialchars($value);
 
                 // attach link to the TD
-                if ($this->_column($title)->link) {
-                    $link = $this->_column($title)->link;
-                    $value = "<a href='".$this->getView()->url($link->urlParams + 
-                        array($link->httpVar => $row[$link->column]), $link->route, true)."'>" . $value . '</a>';
-                }    
+                if ($this->_column($title)->link)
+                    $value = $this->_resolveLink($this->_column($title)->link, $value, $row);
 
                 // append CSS style
                 $tds[$title] = '<td' . ($this->_column($title)->style ? " style='{$this->_column($title)->style}'" : false) .
@@ -419,9 +405,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     }    
 
                     // build the <A HREF> link for this option
-                    $optLink = "&#32;<a href='".$this->getView()->url(
-                        $option->urlParams + array($option->httpVar => $row[$option->column]), $option->route, true).
-                        "'>" . $option->title . '</a>';
+                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $row);
 
                     // attach this option to the particular column    
                     if ($option->toColumn)    
@@ -505,6 +489,36 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
         return true;
 
+    }
+
+    /**
+     * Create new LINK object to save into option or into column
+     *
+     * @param string Name of HTTP parameter
+     * @param string Column name to be used as param
+     * @param array Associative array of params
+     * @param string Name of route
+     */
+    protected function _makeLink($httpVar, $column, $urlParams, $route) {
+        $link = new FaZend_StdObject();
+        $link->httpVar = $httpVar;
+        $link->urlParams = $urlParams;
+        $link->column = $column;
+        $link->route = $route;
+        return $link;
+    }
+
+    /**
+     * Resolve link object into HTML link
+     *
+     * @param FaZend_StdObject Link object
+     * @param string Text to show, previously escaped, if necessary
+     * @param array Row data
+     * @return string HTML
+     */
+    protected function _resolveLink(FaZend_StdObject $link, $title, array $row) {
+        return "<a href='".$this->getView()->url($link->urlParams +
+            array($link->httpVar => $row[$link->column]), $link->route, true)."'>" . $title . '</a>';
     }
 
 }
