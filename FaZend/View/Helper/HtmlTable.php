@@ -506,6 +506,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         $link->urlParams = $urlParams;
         $link->column = $column;
         $link->route = $route;
+        $link->name = $name;
         return $link;
     }
 
