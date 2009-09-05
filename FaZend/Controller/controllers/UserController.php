@@ -42,7 +42,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function registerAction() {
 
         if (FaZend_User::isLoggedIn())
-            return $this->_redirectFlash('already logged in');
+            return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
         // if the RegisterAccount.ini file is missed
         // we should not raise the exception, but indicate about it
@@ -75,7 +75,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         } catch (Zend_Db_Statement_Exception $e) {
 
-            $form->email->addError("user already registered, try another email ({$e->getMessage()})");
+            $form->email->addError("The user is already registered, try another email ({$e->getMessage()})");
             return;
 
         }    
@@ -99,7 +99,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function remindAction() {
 
         if (FaZend_User::isLoggedIn()) 
-            return $this->_redirectFlash('already logged in');
+            return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
         $form = FaZend_Form::create('RemindPassword', $this->view);
         if (!$form->isFilled())
@@ -108,7 +108,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         try {
             $user = FaZend_User::findByEmail($form->email->getValue());
         } catch (FaZend_User_NotFoundException $e) {
-            $form->email->addError('user not found');
+            $form->email->addError('The user is not found');
             return;
         }
 
@@ -119,7 +119,10 @@ class Fazend_UserController extends FaZend_Controller_Action {
             ->set('password', $user->password)
             ->send();
 
-        $this->_redirectFlash('password sent by email', 'remind');    
+        if (method_exists($this, 'remindedAction'))
+            $this->_helper->redirector->gotoSimple('reminded');
+
+        $this->_redirectFlash('Password was sent by email', 'remind');
 
     }
         
@@ -131,7 +134,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
     public function logoutAction() {
 
         if (!FaZend_User::isLoggedIn())
-            return $this->_redirectFlash('not logged in yet', 'index', 'index');
+            return $this->_redirectFlash('You are not logged in yet', 'notfound', 'error');
 
         FaZend_User::logOut();
 
@@ -163,7 +166,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
             $user = FaZend_User::findByEmail($form->email->getValue());
 
             if (!$user->isGoodPassword($form->pwd->getValue())) {
-                $form->pwd->addError('incorrect password');
+                $form->pwd->addError('Incorrect password, try again');
             } else {
                 $user->logIn();
                 $this->view->form = false;
@@ -173,7 +176,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         } catch (FaZend_User_NotFoundException $e) {
 
-            $form->email->addError('user not found');
+            $form->email->addError('The user is not found');
 
         }
 
