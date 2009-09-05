@@ -29,6 +29,9 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
      * @return void
      */
     public function notfoundAction() {
+        // 404 error -- controller or action not found
+        $this->getResponse()->setHttpResponseCode(404);
+
         $this->_forward('index', 'index', 'default');
     }
 
@@ -65,10 +68,6 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
         switch ($errors->type) { 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER: 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION: 
-
-                // 404 error -- controller or action not found 
-                $this->getResponse()->setHttpResponseCode(404); 
-                //$this->view->message = 'Page not found'; 
 
                 return $this->_redirectFlash('Error 404: page not found', 'notfound');
 
