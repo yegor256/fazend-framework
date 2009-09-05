@@ -30,7 +30,7 @@ class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper {
      */
     public function includeCSS($script) {
 
-        $this->getView()->headLink()->appendStylesheet($this->getView()->url(array('css'=>$script), 'css', true));
+        $this->getView()->headLink()->appendStylesheet($this->getView()->url(array('css'=>$script), 'css', true, false));
 
     }
 
