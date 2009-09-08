@@ -52,8 +52,7 @@ class FaZend_Log_ErrorLog extends Zend_Log {
                 FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile', 
                     'error_log is not set in php.ini');
 
-            self::$_instance = new FaZend_Log_ErrorLog(new Zend_Log_Writer_Stream($file));
-            self::$_instance->_file = $file;
+            self::$_instance = new FaZend_Log_ErrorLog(new Zend_Log_Writer_Stream($file), $file);
 
         }
 
@@ -67,8 +66,10 @@ class FaZend_Log_ErrorLog extends Zend_Log {
      * @param Zend_Log_Writer_Abstract|null Default writer
      * @return void
      */
-    public function __construct(Zend_Log_Writer_Abstract $writer = null) {
+    public function __construct(Zend_Log_Writer_Abstract $writer = null, $file = null) {
         parent::__construct($writer);
+
+        $this->_file = $file;
 
         $this->_cutFile();
     }
