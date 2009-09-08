@@ -104,6 +104,9 @@ class FaZend_Log_ErrorLog extends Zend_Log {
         if (filesize($this->_file) < self::MAX_LENGTH)
             return;
 
+        if (!is_writable($this->_file))
+            return;
+
         if (FaZend_Properties::get()->errors->email) {
             // email the content to the admin
             FaZend_Email::create('fazendForwardLog.tmpl')
