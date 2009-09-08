@@ -104,20 +104,28 @@ class FaZend_Log_ErrorLog extends Zend_Log {
         if (filesize($this->_file) < self::MAX_LENGTH)
             return;
 
+        // if the file is not writable - skip the process
         if (!is_writable($this->_file))
             return;
 
-        if (FaZend_Properties::get()->errors->email) {
-            // email the content to the admin
-            FaZend_Email::create('fazendForwardLog.tmpl')
-                ->set('toEmail', FaZend_Properties::get()->errors->email)
-                ->set('toName', 'Admin of ' . WEBSITE_URL)
-                ->set('log', file_get_contents($this->_file))
-                ->send();
-        }
+        // if not email configured - skip it
+        $email = FaZend_Properties::get()->errors->email;
+        if (!$email)
+            return;
+
+        // get the content of the file
+        $content = @file_get_contents($this->_file);
+
+        // email the content to the admin
+        FaZend_Email::create('fazendForwardLog.tmpl')
+            ->set('toEmail', $email)
+            ->set('toName', 'Admin of ' . WEBSITE_URL)
+            ->set('log', $content)
+            ->send();
 
         // refresh the file
-        file_put_contents($this->_file, 'file content sent by email to admin');
+        @file_put_contents($this->_file, date('m/d/Y h:i') . ": file content (" . strlen($content) .
+            " bytes) sent by email ({$email}) to admin\n");
 
     }
 
