@@ -62,6 +62,18 @@ class FaZend_Log_ErrorLog extends Zend_Log {
     }
 
     /**
+     * Class constructor.  Create a new logger
+     *
+     * @param Zend_Log_Writer_Abstract|null Default writer
+     * @return void
+     */
+    public function __construct(Zend_Log_Writer_Abstract $writer = null) {
+        parent::__construct($writer);
+
+        $this->_cutFile();
+    }
+
+    /**
      * Log a message at a priority
      *
      * @param  string   $message   Message to log
@@ -73,13 +85,24 @@ class FaZend_Log_ErrorLog extends Zend_Log {
 
         parent::log($message, $priority);
 
+        $this->_cutFile();
+
+    }
+
+    /**
+     * Cut the log file, if necessary
+     *
+     * @return void
+     */
+    protected function _cutFile() {
+
         if (APPLICATION_ENV !== 'production')
             return;
 
         // if it's still small, skip the rest
         if (filesize($this->_file) < self::MAX_LENGTH)
             return;
-        
+
         if (FaZend_Properties::get()->errors->email) {
             // email the content to the admin
             FaZend_Email::create('fazendForwardLog.tmpl')
