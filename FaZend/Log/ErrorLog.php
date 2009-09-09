@@ -52,7 +52,13 @@ class FaZend_Log_ErrorLog extends Zend_Log {
                 FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile', 
                     'error_log is not set in php.ini');
 
-            self::$_instance = new FaZend_Log_ErrorLog(new Zend_Log_Writer_Stream($file), $file);
+            // if we can't write to project log file, let's write to syslog
+            if (!is_writable($file))
+                $writer = new Zend_Log_Writer_Syslog();
+            else
+                $writer = new Zend_Log_Writer_Stream($file);
+
+            self::$_instance = new FaZend_Log_ErrorLog($writer, $file);
 
         }
 
