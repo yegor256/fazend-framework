@@ -48,9 +48,13 @@ class FaZend_Log_ErrorLog extends Zend_Log {
 
             $file = ini_get('error_log');
 
-            if (!$file)
-                FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile', 
-                    'error_log is not set in php.ini');
+            if (!$file) {
+                if (APPLICATION_ENV === 'production')
+                    FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile',
+                        'error_log is not set in php.ini');
+                else
+                    $file = 'php://stdout';
+            }
 
             // if we can't write to project log file, let's write to syslog
             if (!is_writable($file))
