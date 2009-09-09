@@ -3,9 +3,16 @@ subject: error_log from <?=WEBSITE_URL?>.
 --
 ATTN: <?=$this->toName?>,
 
-The size of error_log file is too big now and that's why you receive its
-content by email. The file itself was removed from the production server.
-Please, review the list of errors from the list below and try to 
-fix them ASAP.
+The size of 'error_log' file is too big now:
+
+file: <?=$this->file?>
+
+size: <?=strlen($this->log)?> bytes
+server: <?=$_SERVER['REMOTE_ADDR']?>
+
+
+That's why you receive its content by email. The file itself
+was removed from the production server. Please, review the
+list of errors from the list below and try to fix them ASAP:
 
 <?=$this->log?>

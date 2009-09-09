@@ -149,6 +149,7 @@ class FaZend_Log_ErrorLog extends Zend_Log {
             ->set('toEmail', $email)
             ->set('toName', 'Admin of ' . WEBSITE_URL)
             ->set('log', $content)
+            ->set('file', $this->_file)
             ->send();
 
         // refresh the file
@@ -158,7 +159,7 @@ class FaZend_Log_ErrorLog extends Zend_Log {
         if (@ftruncate($handle, 0) === false)
             return;
         @fwrite($handle, date('m/d/Y h:i') . ": file content (" . strlen($content) .
-            " bytes) sent by email ({$email}) to admin\n");
+            " bytes) sent by email ({$email}) to admin.\n\n");
         @fclose($handle);
 
     }
