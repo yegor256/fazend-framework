@@ -150,6 +150,7 @@ class FaZend_Log_ErrorLog extends Zend_Log {
             ->set('toName', 'Admin of ' . WEBSITE_URL)
             ->set('log', $content)
             ->set('file', $this->_file)
+            ->set('maximum', self::MAX_LENGTH)
             ->send();
 
         // refresh the file
