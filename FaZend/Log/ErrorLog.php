@@ -33,6 +33,8 @@ class FaZend_Log_ErrorLog extends Zend_Log {
     /**
      * Error_log file name
      *
+     * This variable is initialized from constructor.
+     *
      * @var string
      */
     protected $_file;
@@ -40,38 +42,54 @@ class FaZend_Log_ErrorLog extends Zend_Log {
     /**
      * Get the instance of the log
      *
-     * @return value|false
+     * Creates and returns an instance of system error log. The method
+     * will understand the environment and will configure the logging
+     * object properly.
+     *
+     * You should define error_log in your php.ini file, or in app.ini
+     * give this line:
+     *
+     * <code>
+     * phpSettings.error_log = APPLICATION_PATH "/../../my.log"
+     * </code>
+     *
+     * @return FaZend_Log_ErrorLog
      */
     public static function getInstance() {
 
-        if (!isset(self::$_instance)) {
+        // singleton pattern, the instance is created only once
+        if (isset(self::$_instance))
+            return self::$_instance;
 
-            $file = ini_get('error_log');
+        // we try to get the file name from php.ini
+        $file = ini_get('error_log');
 
-            if (!$file) {
-                if (APPLICATION_ENV === 'production')
-                    FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile',
-                        'error_log is not set in php.ini');
-                else
-                    $file = 'php://stdout';
-            }
-
-            // if we can't write to project log file, let's write to syslog
-            if (!is_writable($file))
-                $writer = new Zend_Log_Writer_Syslog();
+        // if it wasn't set...
+        if (!$file) {
+            // and if it's a production mode - we should signal
+            if (APPLICATION_ENV === 'production')
+                FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile',
+                    'error_log is not set in php.ini');
             else
-                $writer = new Zend_Log_Writer_Stream($file);
-
-            self::$_instance = new FaZend_Log_ErrorLog($writer, $file);
-
+                // otherwise drop the output to stdout
+                $file = 'php://stdout';
         }
 
-        return self::$_instance;
+        // if we can't write to project log file, let's write to syslog
+        if (!is_writable($file))
+            $writer = new Zend_Log_Writer_Syslog();
+        else
+            $writer = new Zend_Log_Writer_Stream($file);
+
+        return self::$_instance = new FaZend_Log_ErrorLog($writer, $file);
 
     }
 
     /**
      * Class constructor.  Create a new logger
+     *
+     * Constructs the Zend_Log object and configures it with the
+     * file name of log.
      *
      * @param Zend_Log_Writer_Abstract|null Default writer
      * @return void
