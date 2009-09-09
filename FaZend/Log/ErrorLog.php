@@ -130,8 +130,14 @@ class FaZend_Log_ErrorLog extends Zend_Log {
             ->send();
 
         // refresh the file
-        @file_put_contents($this->_file, date('m/d/Y h:i') . ": file content (" . strlen($content) .
+        $handle = @fopen($this->_file, 'w');
+        if ($handle === false)
+            return;
+        if (@ftruncate($handle, 0) === false)
+            return;
+        @fwrite($handle, date('m/d/Y h:i') . ": file content (" . strlen($content) .
             " bytes) sent by email ({$email}) to admin\n");
+        @fclose($handle);
 
     }
 
