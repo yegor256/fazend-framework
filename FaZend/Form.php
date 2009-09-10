@@ -26,7 +26,11 @@ class FaZend_Form extends Zend_Form {
     /**
      * Create a new form and save it to View
      *
-     * @return string
+     * This method simplifies the process of form building. From .ini files.
+     *
+     * @param string File short name, will be translated to form<Name>.ini
+     * @param ZendView Instance of view, $view->form will be set, if defined
+     * @return FaZend_Form
      */
     public static function create($file, Zend_View $view = null) {
 
@@ -66,7 +70,7 @@ class FaZend_Form extends Zend_Form {
     /**
      * The form was filled properly?
      *
-     * @return string
+     * @return boolean
      */
     public function isFilled() {
 
