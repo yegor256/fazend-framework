@@ -86,7 +86,7 @@ class FaZend_Deployer {
         // remove it
         // we will never come back here again
         if ((@unlink($flagFile) === false) && (APPLICATION_ENV === 'production')) {
-            $this->_log('Failed to remove flag file: ' . $flagFile);
+            FaZend_Log::err('Failed to remove flag file: ' . $flagFile);
             return;
         }
 
@@ -346,16 +346,6 @@ class FaZend_Deployer {
         }
 
         return $info;
-        
-    }
-
-    /**
-     * Internal logger
-     *
-     * @param string Message to log
-     * @return void
-     */
-    protected function _log($msg) {
         
     }
 
