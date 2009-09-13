@@ -87,7 +87,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
         $this->view->form = false;
 
         if (method_exists($this, 'registeredAction'))
-            return $this->_helper->redirector->gotoSimple('registered');
+            $this->_helper->redirector->gotoSimple('registered');
 
     }
         
@@ -120,7 +120,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
             ->send();
 
         if (method_exists($this, 'remindedAction'))
-            return $this->_helper->redirector->gotoSimple('reminded');
+            $this->_helper->redirector->gotoSimple('reminded');
 
         $this->_redirectFlash('Password was sent by email', 'remind');
 
@@ -171,7 +171,7 @@ class Fazend_UserController extends FaZend_Controller_Action {
                 $user->logIn();
                 $this->view->form = false;
                 if (method_exists($this, 'loggedAction'))
-                    return $this->_helper->redirector->gotoSimple('logged');
+                    $this->_helper->redirector->gotoSimple('logged');
             }
 
         } catch (FaZend_User_NotFoundException $e) {
