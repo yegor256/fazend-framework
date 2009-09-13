@@ -33,7 +33,7 @@ class FaZend_Log {
      *
      */
     public static function info($msg) {
-        return self::_callStatic('info', $msg);
+        return self::_callStatic('info', array($msg));
     }
 
     /**
@@ -41,7 +41,7 @@ class FaZend_Log {
      *
      */
     public static function err($msg) {
-        return self::_callStatic('err', $msg);
+        return self::_callStatic('err', array($msg));
     }
 
     /**
@@ -49,7 +49,7 @@ class FaZend_Log {
      *
      */
     public static function warn($msg) {
-        return self::_callStatic('warn', $msg);
+        return self::_callStatic('warn', array($msg));
     }
 
     /**
@@ -68,7 +68,7 @@ class FaZend_Log {
      * @return void
      * @todo in PHP5.3 we should change it to __callStatic()
      */
-    protected static function _callStatic($method, $args) {
+    protected static function _callStatic($method, array $args) {
 
         if (!isset(self::$_logger)) {
             if (APPLICATION_ENV === 'production')
