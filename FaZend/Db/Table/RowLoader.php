@@ -36,7 +36,7 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
         $name = substr(strrchr($class, '_'), 1);
 
         require_once 'FaZend/Db/Table/ActiveRow.php';
-        eval(
+        if (false === eval(
         "class $class extends FaZend_Db_Table_ActiveRow {
             public function __construct(\$id = false) {
                 \$this->_table = FaZend_Db_ActiveTable::createTableClass(
@@ -48,7 +48,9 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
                 \$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
                 return \$wrapper;
             }    
-        };");
+        };"))
+            FaZend_Exception::raise('FaZend_Db_Table_InvalidClass',
+                "Class $class can't be declared, some error in its definition");
 
     }
 
