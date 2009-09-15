@@ -14,6 +14,7 @@
  * @category FaZend
  */
 
+global $startTime;
 $startTime = microtime(true);
 
 // Define path to application directory
