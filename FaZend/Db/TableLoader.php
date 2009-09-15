@@ -26,6 +26,7 @@ class FaZend_Db_TableLoader implements Zend_Loader_Autoloader_Interface {
     /**
      * Load class
      *
+     * @param string Name of the class to create
      * @return FaZend_Db_Table
      */
     public function autoload($class) {
@@ -36,7 +37,7 @@ class FaZend_Db_TableLoader implements Zend_Loader_Autoloader_Interface {
         $name = substr(strrchr($class, '_'), 1);
                            
         require_once 'FaZend/Db/ActiveTable.php';
-        eval(
+        if (false === eval(
         
         "class $class extends FaZend_Db_ActiveTable { 
             public function __construct(array \$params = array()) {
@@ -48,7 +49,9 @@ class FaZend_Db_TableLoader implements Zend_Loader_Autoloader_Interface {
             public static function retrieve(\$param = true) {
                 return new FaZend_Db_Wrapper('{$name}', \$param);
             }    
-        };");
+        };"))
+            FaZend_Exception::raise('FaZend_Db_InvalidClass',
+                "Class $class can't be declared, some error in its definition");
 
     }
 

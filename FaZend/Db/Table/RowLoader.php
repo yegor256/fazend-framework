@@ -26,6 +26,7 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
     /**
      * Load class
      *
+     * @param string Name of the class to create
      * @return FaZend_Db_Table_Row
      */
     public function autoload ($class) {
