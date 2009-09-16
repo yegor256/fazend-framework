@@ -185,16 +185,5 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 
     }
 
-    /**
-     * Initialize system logger
-     *
-     * @return void
-     */
-    protected function _initFazendLogger() {
-        $this->bootstrap('Email');
-        
-        $logger = FaZend_Log_ErrorLog::getInstance();
-    }
-
 }
 

@@ -45,6 +45,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $config = new Zend_Config($options);
         FaZend_Properties::setOptions($config);
 
+        $this->_initLogger($options);
+
         return $config;
     }
 
@@ -94,6 +96,23 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 
         Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
 
+    }
+
+    /**
+     * Initialize logger
+     *
+     * @return void
+     */
+    protected function _initLogger() {
+        $this->_bootstrap->bootstrap('Email');
+
+        // remove all writers
+        FaZend_Log::getInstance()->clean();
+
+        if (APPLICATION_ENV === 'production')
+            FaZend_Log::getInstance()->addWriter('ErrorLog');
+        else
+            FaZend_Log::getInstance()->addWriter('Debug');
     }
 
 }
