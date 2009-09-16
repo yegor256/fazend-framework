@@ -112,7 +112,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if (APPLICATION_ENV === 'production')
             FaZend_Log::getInstance()->addWriter('ErrorLog');
         else
-            FaZend_Log::getInstance()->addWriter('Debug');
+            FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
     }
 
 }

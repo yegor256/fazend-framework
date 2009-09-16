@@ -49,6 +49,15 @@ class FaZend_Log {
     protected $_loggers = array();
 
     /**
+     * Collection of writers
+     *
+     * One writer per one logger.
+     *
+     * @var Zend_Log_Writer_Abstract[]
+     */
+    protected $_writers = array();
+
+    /**
      * Get class instance, Singleton pattern
      *
      * @return FaZend_Log
@@ -74,6 +83,7 @@ class FaZend_Log {
      */
     public function clean() {
         $this->_loggers = array();
+        $this->_writers = array();
         return $this;
     }
 
@@ -81,16 +91,65 @@ class FaZend_Log {
      * Add new writer to the stack
      *
      * @param string|Zend_Log_Writer_Abstract
+     * @param string Name of the writer
      * @return $this
      */
-    public function addWriter($writer) {
+    public function addWriter($writer, $name = null) {
         if (!($writer instanceof Zend_Log_Writer_Abstract)) {
+
+            if (!is_string($writer))
+                FaZend_Exception::raise('FaZend_Log_InvalidWriterName',
+                    "Writer can be an instance of Zend_Log_Writer_Abstract or a string");
+
             $className = 'FaZend_Log_Writer_' . $writer;
             $writer = new $className();
         }
-        $this->_loggers[] = new Zend_Log($writer);
+
+        // create a unique name
+        if (is_null($name)) {
+            $name = get_class($writer) . '1';
+            foreach ($this->_loggers as $id=>$logger) {
+                $matches = array();
+                if (preg_match('/^(' . preg_quote(get_class($writer)) . ')(\d+)$/', $id, $matches))
+                    $name = $matches[1] . ((int)$matches[2] + 1);
+            }
+        }
+
+        $this->_loggers[$name] = new Zend_Log($writer);
+        $this->_writers[$name] = $writer;
 
         return $this;
+    }
+
+    /**
+     * Remove writer from the stack
+     *
+     * @param string Name of the writer
+     * @return $this
+     * @throws FaZend_Log_WriterNotFound
+     */
+    public function removeWriter($name) {
+        if (!isset($this->_loggers[$name]))
+            FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
+
+        unset($this->_loggers[$name]);
+        unset($this->_writers[$name]);
+
+        return $this;
+    }
+
+    /**
+     * Get writer from the stack
+     *
+     * @param string Name of the writer
+     * @return Zend_Log_Writer_Abstract
+     * @throws FaZend_Log_WriterNotFound
+     */
+    public function getWriter($name) {
+        if (!isset($this->_loggers[$name]))
+            FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
+
+        return $this->_writers[$name];
     }
 
     /**
