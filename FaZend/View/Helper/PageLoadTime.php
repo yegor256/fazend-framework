@@ -72,7 +72,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
              $log = FaZend_Log::getInstance()->getWriter('FaZendDebug')->getLog();
 
              $html .= "&#32;<span style='cursor:pointer;' onclick='$(\"#syslog\").toggle();'>syslog</span>".
-                 "<pre id='syslog' style='display:none;'>{$log}</p>";
+                 "<pre id='syslog' style='display:none;'>{$log}</pre>";
          }
 
          return $html;
