@@ -43,7 +43,7 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
      * @return boolean
      */
     public function isEmpty() {
-        return count($this->_events) == 0;
+        return count($this->events) == 0;
     }
 
     /**
@@ -53,7 +53,7 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
      */
     public function getLog() {
         $log = '';
-        foreach ($this->_events as $event)
+        foreach ($this->events as $event)
             $log .= $this->_formatter->format($event) . "\n";
 
         return $log;
