@@ -21,7 +21,7 @@ class FaZend_LogTest extends AbstractTestCase {
     public function testLogWorks () {
 
         FaZend_Log::info('Logging mechanism works properly');
-        $this->assertNotEquals(true, FaZend_Log_Writer_Debug::isEmpty());
+        $this->assertNotEquals(true, FaZend_Log::getInstance()->getWriter('FaZendDebug')->isEmpty());
 
     }
 
