@@ -47,7 +47,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         if (!$stream) {
             // and if it's a production mode - we should signal
             if (APPLICATION_ENV === 'production')
-                FaZend_Exception::raise('FaZend_Log_ErrorLog_NoLogFile',
+                FaZend_Exception::raise('FaZend_Log_Writer_ErrorLog_NoLogFile',
                     'error_log is not set in php.ini');
             else
                 // otherwise drop the output to stdout
