@@ -327,7 +327,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         $resultTDs = array();
         $options = array();
 
-        foreach ($this->_paginator as $rowOriginal) {
+        foreach ($this->_paginator as $key=>$rowOriginal) {
 
             if (!is_array($rowOriginal))
                 $row = $rowOriginal->toArray();
@@ -343,10 +343,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     break;
                 
                 // if it's a method - call it
-                if (method_exists($rowOriginal, $injectedColumn))
-                    $this->_inject($row, $injectedColumn, $predecessor, $rowOriginal->$injectedColumn());
+                if ($injectedColumn == '__key')
+                    $injectedValue = $key;
+                else if (method_exists($rowOriginal, $injectedColumn))
+                    $injectedValue = $rowOriginal->$injectedColumn();
                 else
-                    $this->_inject($row, $injectedColumn, $predecessor, $rowOriginal->$injectedColumn);
+                    $injectedValue = $rowOriginal->$injectedColumn;
+
+                $this->_inject($row, $injectedColumn, $predecessor, $injectedValue);
             }
 
             $resultTRs[] = "<tr class='".(fmod (count($resultTRs), 2) ? 'even' : 'odd').
