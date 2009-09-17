@@ -168,7 +168,7 @@ class FaZend_Email {
         $mail = $this->_createZendMailer();
 
         // we render the template by means of View
-        $view = new Zend_View();
+        $view = clone Zend_Registry::getInstance()->view;
 
         // in this folder all email templates are located
         $view->setScriptPath(self::$_config->folder);
