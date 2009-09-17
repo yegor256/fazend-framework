@@ -148,7 +148,7 @@ class FaZend_Email {
      */
     public function logError() {
 
-        FaZend_Log_ErrorLog::getInstance()->err($this->_getFilledMailer()->getBodyText());
+        FaZend_Log::err($this->_getFilledMailer()->getBodyText());
 
         return $this;
 
