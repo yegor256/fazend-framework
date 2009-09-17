@@ -409,7 +409,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     }    
 
                     // build the <A HREF> link for this option
-                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $row);
+                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $row, $key);
 
                     // attach this option to the particular column    
                     if ($option->toColumn)    
@@ -522,16 +522,20 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param FaZend_StdObject Link object
      * @param string Text to show, previously escaped, if necessary
      * @param array Row data
+     * @param string Key of the row
      * @return string HTML
      */
-    protected function _resolveLink(FaZend_StdObject $link, $title, array $row) {
+    protected function _resolveLink(FaZend_StdObject $link, $title, array $row, $key) {
         $params = $link->urlParams;
 
         // you can specify params as callbacks
         foreach ($params as &$param) {
             if (is_callable($param)) {
                 if (is_array($param))
-                    $param = call_user_func_array($param, array('name'=>$link->name, 'row'=>$row));
+                    $param = call_user_func_array($param, array(
+                        'name'=>$link->name,
+                        'row'=>$row,
+                        'key'=>$key));
                 else
                     $param = $param($link->name, $row);
             }
