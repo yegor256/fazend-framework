@@ -291,7 +291,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
 
-        if (self::_isWindows()) {
+        if (!self::_isWindows()) {
             $shell = $cmd . ' >> ' . 
                 escapeshellarg(self::_fileName($id, self::LOG_SUFFIX)) . ' 2>&1 & echo $! > ' . 
                 escapeshellarg($pidFile);
