@@ -121,7 +121,7 @@ class FaZend_Test_Runner {
 
         // we pass ENV to the testing environment
         file_put_contents($this->_exec->bootstrap, 
-            '<?php define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
+            '<?php defined("APPLICATION_ENV") or define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
         
         // phpUnit cmd line
         $cmd =
