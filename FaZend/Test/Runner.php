@@ -126,7 +126,7 @@ class FaZend_Test_Runner {
         // phpUnit cmd line
         $cmd =
             'phpunit --verbose --stop-on-failure' . 
-            ' -d "include_path=' . ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library') . '"' . 
+            ' -d "include_path=' . escapeshellarg(ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library')) . '"' .
             ' --log-xml ' . escapeshellarg($this->_exec->log) .
             ' --bootstrap ' . escapeshellarg($this->_exec->bootstrap) .
             ' --testdox-text ' . escapeshellarg($this->_exec->testdox) .
