@@ -27,16 +27,22 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 class FaZend_Application_Resource_Email extends Zend_Application_Resource_ResourceAbstract {
 
     /**
-    * Defined by Zend_Application_Resource_Resource
-    *
-    * @return boolean
-    */
+     * Defined by Zend_Application_Resource_Resource
+     *
+     * @return boolean
+     */
     public function init() {
 
+        // get options from INI file
         $options = $this->getOptions();
 
-        FaZend_Email::config(new Zend_Config($options));
+        // make sure view is initialized
+        $this->_bootstrap->bootstrap('view');
+
+        // save configuration into static class
+        FaZend_Email::config(new Zend_Config($options), $this->_bootstrap->getResource('view'));
 
         return true;
+        
     }
 }

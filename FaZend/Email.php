@@ -43,12 +43,15 @@ class FaZend_Email {
     protected $_mailer;
 
     /**
-     * Creates an object of class FaZend_Email, statically
+     * Saves configuration internally
      *
+     * @param Zend_Config Config from .ini file
+     * @param Zend_View View to use for rendering
      * @return FaZend_Email
      */
-    public static function config(Zend_Config $config) {
+    public static function config(Zend_Config $config, Zend_View $view) {
         self::$_config = $config;
+        self::$_config->view = $view;
     }
 
     /**
@@ -168,7 +171,7 @@ class FaZend_Email {
         $mail = $this->_createZendMailer();
 
         // we render the template by means of View
-        $view = clone Zend_Registry::getInstance()->view;
+        $view = self::$_config->view;
 
         // in this folder all email templates are located
         $view->setScriptPath(self::$_config->folder);
