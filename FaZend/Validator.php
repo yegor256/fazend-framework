@@ -77,7 +77,7 @@ class FaZend_Validator {
                     (is_scalar($subject) ? 
                         (is_bool($subject) ? ($subject ? 'TRUE' : 'FALSE') : $subject) : 
                     get_class($subject)) . 
-                ')');
+                ')', 'FaZend_Validator_Failure');
         }
 
         return $this;
