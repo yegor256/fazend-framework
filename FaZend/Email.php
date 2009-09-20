@@ -52,7 +52,7 @@ class FaZend_Email {
     public static function config(Zend_Config $config, Zend_View $view) {
         // to allow further modifications
         self::$_config = new Zend_Config($config->toArray(), true);
-        self::$_config->view = $view;
+        self::$_config->view = clone $view;
     }
 
     /**
