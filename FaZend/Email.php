@@ -50,7 +50,8 @@ class FaZend_Email {
      * @return FaZend_Email
      */
     public static function config(Zend_Config $config, Zend_View $view) {
-        self::$_config = $config;
+        // to allow further modifications
+        self::$_config = new Zend_Config($config->toArray(), true);
         self::$_config->view = $view;
     }
 
@@ -71,26 +72,18 @@ class FaZend_Email {
     public function __construct ($template = false) {
         $this->set('template', $template);
 
-        if (!isset(self::$_config->notifier))
-            FaZend_Exception::raise('FaZend_Email_NoNotifier', "you should define resources.Email.notifier in app.ini (author of notify messages)");
-
-        if (!isset(self::$_config->notifier->email))
-            FaZend_Exception::raise('FaZend_Email_NoEmailInNotifier', "you should define resources.Email.notifier.email in app.ini");
-
-        if (!isset(self::$_config->notifier->name))
-            FaZend_Exception::raise('FaZend_Email_NoNameInNotifier', "you should define resources.Email.notifier.name in app.ini");
+        validate()
+            ->true(isset(self::$_config->notifier), "You should define resources.Email.notifier in app.ini (author of notify messages)")
+            ->true(isset(self::$_config->notifier->email), "You should define resources.Email.notifier.email in app.ini")
+            ->true(isset(self::$_config->notifier->name), "You should define resources.Email.notifier.name in app.ini")
 
         $this->set('fromEmail', self::$_config->notifier->email);
         $this->set('fromName', self::$_config->notifier->name);
 
-        if (!isset(self::$_config->manager))
-            FaZend_Exception::raise('FaZend_Email_NoManager', "you should define resources.Email.manager in app.ini (receiver of system emails)");
-
-        if (!isset(self::$_config->manager->email))
-            FaZend_Exception::raise('FaZend_Email_NoEmailForManager', "you should define resources.Email.manager.email in app.ini");
-
-        if (!isset(self::$_config->manager->name))
-            FaZend_Exception::raise('FaZend_Email_NoNameForManager', "you should define resources.Email.manager.name in app.ini");
+        validate()
+            ->true(isset(self::$_config->manager), "You should define resources.Email.manager in app.ini (receiver of system emails)")
+            ->true(isset(self::$_config->manager->email), "You should define resources.Email.manager.email in app.ini")
+            ->true(isset(self::$_config->manager->name), "You should define resources.Email.manager.name in app.ini");
 
         $this->set('toEmail', self::$_config->manager->email);
         $this->set('toName', self::$_config->manager->name);
