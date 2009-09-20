@@ -76,11 +76,11 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
             return;
 
         // if it's still small, skip the rest
-        if (filesize($file) < self::MAX_LENGTH)
+        if (@filesize($file) < self::MAX_LENGTH)
             return;
 
         // if the file is not writable - skip the process
-        if (!is_writable($file))
+        if (!@is_writable($file))
             return;
 
         // if not email configured - skip it
