@@ -43,7 +43,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 // small simple and nice PHP functions
-require_once 'FaZend/application/functions.php';
+require_once 'FaZend/Application/functions.php';
 
 // Create application, bootstrap, and run
 require_once 'Zend/Application.php';
