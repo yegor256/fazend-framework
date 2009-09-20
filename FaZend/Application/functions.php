@@ -39,4 +39,11 @@ function cutLongLine($line, $length = 100) {
     return substr($line, 0, $length-3) . '...';    
 }
 
-
+/**
+ * Create and return validator
+ *
+ * @return FaZend_Validator
+ */
+function validate() {
+    return FaZend_Validator::factory();
+}

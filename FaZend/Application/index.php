@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+// small simple and nice PHP functions
+require_once realpath(dirname(__FILE__) . '/handler.php');
+
 global $startTime;
 $startTime = microtime(true);
 
@@ -40,7 +43,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 // small simple and nice PHP functions
-require_once 'FaZend/Application/functions.php';
+require_once 'FaZend/application/functions.php';
 
 // Create application, bootstrap, and run
 require_once 'Zend/Application.php';
@@ -80,4 +83,3 @@ if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing') && !defi
         $application->run();
 
 }
-

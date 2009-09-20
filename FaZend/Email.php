@@ -75,7 +75,7 @@ class FaZend_Email {
         validate()
             ->true(isset(self::$_config->notifier), "You should define resources.Email.notifier in app.ini (author of notify messages)")
             ->true(isset(self::$_config->notifier->email), "You should define resources.Email.notifier.email in app.ini")
-            ->true(isset(self::$_config->notifier->name), "You should define resources.Email.notifier.name in app.ini")
+            ->true(isset(self::$_config->notifier->name), "You should define resources.Email.notifier.name in app.ini");
 
         $this->set('fromEmail', self::$_config->notifier->email);
         $this->set('fromName', self::$_config->notifier->name);

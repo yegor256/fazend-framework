@@ -142,7 +142,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param array List of parameters passed
      * @return void|var
      */
-    public function __call($method, $args) {
+    public function __call($method, array $args) {
         // make sure the class has live data from DB
         $this->_loadLiveData();
 

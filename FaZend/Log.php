@@ -62,7 +62,7 @@ class FaZend_Log {
      *
      * @return FaZend_Log
      */
-    public function getInstance() {
+    public static function getInstance() {
         if (is_null(self::$_instance))
             self::$_instance = new FaZend_Log();
         return self::$_instance;
@@ -152,6 +152,18 @@ class FaZend_Log {
         return $this->_writers[$name];
     }
 
+    /**
+     * Get writer from the stack, and kill it there
+     *
+     * @param string Name of the writer
+     * @return Zend_Log_Writer_Abstract
+     */
+    public function getWriterAndRemove($name) {
+        $writer = $this->getWriter($name);
+        $this->removeWriter($name);
+        return $writer;
+    }
+    
     /**
      * info() decorator
      *
