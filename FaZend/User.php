@@ -36,6 +36,22 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * @var boolean
      */
     private static $_loggedIn;
+    
+    /**
+     * Name of the class to use
+     *
+     * @var string
+     */
+    protected static $_rowClass = 'FaZend_User';
+
+    /**
+     * Set class name to use in all static methods
+     *
+     * @return void
+     **/
+    public static function setRowClass($className) {
+        self::$_rowClass = $className;
+    }
 
     /**
      * User is logged in?
@@ -204,7 +220,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 
         return self::retrieve()
             ->where('email = ?', $email)
-            ->setRowClass('FaZend_User')
+            ->setRowClass(self::$_rowClass)
             ->fetchRow();
 
     }
