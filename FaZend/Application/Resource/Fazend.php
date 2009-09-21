@@ -39,15 +39,28 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             throw new Exception("[FaZend.name] should be defined in your app.ini file");
 
         $this->_initTableCache($options);
-
         $this->_initPluginCache($options);
 
         $config = new Zend_Config($options);
         FaZend_Properties::setOptions($config);
 
         $this->_initLogger($options);
+        $this->_initDbAutoloader();
 
         return $config;
+    }
+
+    /**
+     * Initialize autoloader for Db ActiveRow
+     *
+     * @return void
+     */
+    protected function _initDbAutoloader() {
+        
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+        $autoloader->pushAutoloader(new FaZend_Db_Table_RowLoader(), 'FaZend_Db_Table_ActiveRow_');
+        $autoloader->pushAutoloader(new FaZend_Db_TableLoader(), 'FaZend_Db_ActiveTable_');
+
     }
 
     /**
