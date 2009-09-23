@@ -25,6 +25,7 @@
 class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
 
     const MAX_LENGTH = 20000; // maximum length of the log file, in bytes
+    const MAX_AGE_DAYS = 5; // maximum age of the error_log file in days
 
     /**
      * Constructs the writer
@@ -76,7 +77,8 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
             return;
 
         // if it's still small, skip the rest
-        if (@filesize($file) < self::MAX_LENGTH)
+        // and if it's still very small
+        if ((@filesize($file) < self::MAX_LENGTH) && (@filectime($file) > time() - self::MAX_AGE_DAYS * 24 * 60 * 60))
             return;
 
         // if the file is not writable - skip the process
