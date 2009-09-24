@@ -23,37 +23,48 @@ require_once 'phing/Task.php';
 */
 class PingFaZend extends Task {
 
-    private $url;
+    /**
+     * URL to ping
+     *
+     * @var string
+     */
+    protected $_url = false;
 
     /**
-    * Initiator (when the build.xml sees the task)
-    * 
-    * @return void
-    */
-    public function init () {
+     * Initiator (when the build.xml sees the task)
+     * 
+     * @return void
+     */
+    public function init() {
     }
 
     /**
-    * Executes
-    * 
-    * @return void
-    */
-    public function main () {
+     * Executes
+     * 
+     * @return void
+     * @throws BuildException
+     */
+    public function main() {
 
-        $this->Log ("Pinging {$this->url}...");
+        if (!$this->_url) {
+            $this->Log("Nothing to ping, live.home is not specified in properties");
+            return;
+        }
+
+        $this->Log("Pinging {$this->_url}...");
 
         $curl = curl_init();
 
         if (!$curl)
-            throw new BuildException (curl_error($curl));    
+            throw new BuildException(curl_error($curl));    
 
-        curl_setopt ($curl, CURLOPT_URL, $this->url);
+        curl_setopt ($curl, CURLOPT_URL, $this->_url);
         curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt ($curl, CURLOPT_HEADER, 0);
         $response = curl_exec($curl);
 
         if (!$response)
-            throw new BuildException (curl_error($curl));    
+            throw new BuildException(curl_error($curl));    
         
         curl_close($curl);
 
@@ -62,11 +73,13 @@ class PingFaZend extends Task {
     }
 
     /**
-    * Initalizer
-    *
-    * @param $fileName string
-    */
+     * Initalizer
+     *
+     * @param $fileName string
+     * @return void
+     */
     public function seturl($url) {
-        $this->url = $url;
+        $this->_url = $url;
     }
+    
 }
