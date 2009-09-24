@@ -1,0 +1,19 @@
+To install FaZend locally you should add this config to your apache
+httpd.conf file:
+
++++
+<Directory /code/fazend-trunk/test/test-application/public>
+    Options Indexes FollowSymLinks Includes
+    SetEnv APPLICATION_ENV development
+    SetEnv ZEND_PATH /code/zend-trunk
+    Allow from all
+    AllowOverride None
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*) index.php [L]
+    RewriteBase /fz
+</Directory>
+Alias /fz /code/fazend-trunk/test/test-application/public
++++
+
+Also you should checkout Zend Framework to /code/zend-trunk

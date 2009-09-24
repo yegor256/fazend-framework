@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  * Admin controller
  *
- *
+ * @package controllers
  */
 class Fazend_AdmController extends FaZend_Controller_Panel {
 
@@ -44,7 +44,7 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
     public function indexAction() {
 
     }
-        
+    
     /**
      * Show db schema
      *

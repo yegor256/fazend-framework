@@ -15,6 +15,7 @@
  */
 
 require_once 'Zend/Controller/Action.php';
+require_once 'FaZend/Controller/controllers/LoginController.php';
 
 /**
  * Action controller for Panel
@@ -30,38 +31,16 @@ class FaZend_Controller_Panel extends FaZend_Controller_Action {
      * @return void
      */
     public function preDispatch() {
+
+        // no login in testing/development environment
+        if ((APPLICATION_ENV === 'production') && !Fazend_LoginController::isLoggedIn())
+            return $this->_forward('login', 'login', 'fazend');
         
         // layout reconfigure to fazend
         $layout = Zend_Layout::getMvcInstance();
         $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
         $layout->setLayout('panel');
 
-        // no login in testing/development environment
-        if (APPLICATION_ENV !== 'production')
-            return;
-
-        $resolver = new FaZend_Auth_Adapter_Http_Resolver_Admins();
-        $resolver->setScheme('basic');    
-
-        // all this will work ONLY if PHP is installed as Apache Module
-        // @see: http://www.php.net/features.http-auth
-        if (FaZend_User::isLoggedIn() && $resolver->resolve(FaZend_User::getCurrentUser()->email, 'adm'))
-            return;
-
-        $adapter = new Zend_Auth_Adapter_Http(array(
-            'accept_schemes' => 'basic',
-            'realm' => 'adm'));
-
-        $adapter->setBasicResolver($resolver);
-        $adapter->setRequest($this->getRequest());
-        $adapter->setResponse($this->getResponse());
-
-        $result = $adapter->authenticate();
-        if (!$result->isValid()) {
-            return $this->_forward('index', 'index');
-        }    
-
     }
-
-
+    
 }

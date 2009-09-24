@@ -54,9 +54,10 @@ class FaZend_Form extends Zend_Form {
      *
      * We have to add here a path to FaZend decorators
      *
+     * @param Zend_Config Configuration of the form
      * @return string
      */
-    public function setConfig($config) {
+    public function setConfig(Zend_Config $config) {
 
         $this->addPrefixPath('FaZend_Form_Element', 'FaZend/Form/Element/', 'element');
 

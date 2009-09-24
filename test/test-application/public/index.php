@@ -1,8 +1,28 @@
 <?php
+/**
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ */
 
 define('APPLICATION_PATH', realpath('../'));
 define('FAZEND_PATH', realpath('../../../FaZend'));
-
-set_include_path('d:/dev/zend-trunk' . PATH_SEPARATOR . get_include_path());
+    
+$zendPath = dirname(__FILE__) . '/../../../../zend-trunk';
+if (!file_exists($zendPath) || !is_dir($zendPath)) {
+    echo "Installation Error: Zend Framework /trunk should be located here: {$zendPath}";
+    die();
+}
+set_include_path(realpath($zendPath) . PATH_SEPARATOR . get_include_path());
+unset($zendPath);
 
 include '../../../FaZend/Application/index.php';

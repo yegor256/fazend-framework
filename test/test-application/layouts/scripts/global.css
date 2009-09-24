@@ -3,8 +3,23 @@
 	margin: 0px;
 }
 
-
 body {
-        font-family: Verdana;
+    font-family: Verdana;
+    padding: 30px;
+}
+
+div.logo {
+    position: fixed;
+    right: 30px;
+    top: 30px;
+    text-align: right;
+}
+
+    div.logo a.logo {
+        border: none;
+    }
+
+div.wrapper {
+    
 }
 

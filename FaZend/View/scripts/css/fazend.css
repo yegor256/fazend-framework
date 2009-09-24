@@ -77,6 +77,11 @@ th {
     font-weight: normal;
 }
 
+/* all lists */
+ul {
+    margin-left: 30px;
+}
+
 /* screen-wide header */
 div.hdr {
     height: 40px;

@@ -43,7 +43,7 @@
     </target>
 
     <target name="dbdeploy" description="Deploy db changes" >
-            <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
         <property name="deployScript" value="${project.basedir}/src/application/deploy/scripts/deploy.sql" />
 
         <dbdeploy
@@ -62,7 +62,7 @@
     </target>    
             
     <target name="test" description="Run all existing unit-tests" >
-               <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+           <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
             <formatter type="plain" usefile="no" />
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
@@ -79,8 +79,7 @@
     <target name="deploy" description="Copy working files to FTP">
         <svnlastrevision
             workingcopy="${project.basedir}"
-            propertyname="svn.revision" />
-        
+            propertyname="svn.revision" />    
 
         <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 

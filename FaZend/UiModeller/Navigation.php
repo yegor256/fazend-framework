@@ -72,7 +72,7 @@ class FaZend_UiModeller_Navigation {
      *
      * @return FaZend_UiModeller_Navigation
      */
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset(self::$_instance))
             self::$_instance = new FaZend_UiModeller_Navigation();
         return self::$_instance;
