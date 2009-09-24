@@ -31,6 +31,8 @@
 
     <property name="serverDocs" value="/home/continuum/public_html" />
 
+    <target name="main" depends="lint, test, deploy, ping, doc" />
+
     <target name="lint" description="Run syntax check for all classes" >
         <phplint haltonfailure="yes">
             <fileset dir="${project.basedir}/src/application">
