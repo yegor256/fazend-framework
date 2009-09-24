@@ -103,7 +103,12 @@
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
         <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
 
-        <pingFaZend url="${live.home}/__ping/backup" />
+        <if>
+            <isset property="live.home"/>
+            <then>
+                <pingFaZend url="${live.home}/__ping/backup" />
+            </then>
+        </if>
     </target>
 
     <target name="doc" description="Create phpDoc documentation" >
