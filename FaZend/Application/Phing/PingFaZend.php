@@ -51,7 +51,7 @@ class PingFaZend extends Task {
             return;
         }
 
-        $this->Log("Pinging {$this->_url}...");
+        $this->Log("Pinging {$this->url}...");
 
         $curl = curl_init();
 
