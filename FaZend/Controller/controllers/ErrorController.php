@@ -72,9 +72,11 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                 return $this->_redirectFlash('Error 404: page not found', 'notfound');
 
             default: 
+                // generate error code
+                $errorCode = rand(100, 999);
                 // application error 
                 $this->getResponse()->setHttpResponseCode(500); 
-                $this->view->message = 'Internal application error #'.rand (100, 999); 
+                $this->view->message = 'Internal application error #' . $errorCode; 
         } 
 
         // pass the actual exception object to the view
@@ -88,20 +90,22 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
 
         // notify admin by email
         if (FaZend_Properties::get()->errors->email) {
-            $lines = array ();
-            foreach (debug_backtrace () as $line) 
+            $lines = array();
+            foreach (debug_backtrace() as $line) 
                 $lines[] = "{$line['file']} ({$line['line']})";
 
+            $siteName = parse_url(WEBSITE_URL, PHP_URL_HOST);
             // send email to the site admin admin
             FaZend_Email::create('fazendException.tmpl')
                 ->set('toEmail', FaZend_Properties::get()->errors->email)
-                ->set('toName', 'Admin of ' . WEBSITE_URL)
-                ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' internal PHP error, rev.' . FaZend_Revision::get() . ', ' . $_SERVER['REQUEST_URI'])
+                ->set('toName', 'Admin of ' . $siteName)
+                ->set('subject', $siteName . ' internal PHP error, rev.' . FaZend_Revision::get() . ', ' . $_SERVER['REQUEST_URI'])
                 ->set('text', 
                     get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
                     implode("\n", $lines) . "\n\n" .
                     print_r($errors->request->getParams(), true) . "\n\n" .
                     $errors->exception->getTraceAsString())
+                ->set('errorCode', $errorCode)
                 ->send()
                 ->logError();
 

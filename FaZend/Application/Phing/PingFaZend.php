@@ -17,10 +17,10 @@
 require_once 'phing/Task.php';
 
 /**
-* This is Phing Task for pinging production server
-*
-* @see http://phing.info/docs/guide/current/chapters/ExtendingPhing.html#WritingTasks
-*/
+ * This is Phing Task for pinging production server
+ *
+ * @see http://phing.info/docs/guide/current/chapters/ExtendingPhing.html#WritingTasks
+ */
 class PingFaZend extends Task {
 
     /**
