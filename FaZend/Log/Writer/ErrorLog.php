@@ -76,6 +76,10 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         if (APPLICATION_ENV !== 'production')
             return;
 
+        // if it's not a regular file - skip the process
+        if (!@is_file($file))
+            return;
+
         // if it's still small, skip the rest
         // and if it's still very small
         if ((@filesize($file) < self::MAX_LENGTH) && (@filectime($file) > time() - self::MAX_AGE_DAYS * 24 * 60 * 60))
