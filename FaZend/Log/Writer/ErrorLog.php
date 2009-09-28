@@ -59,8 +59,11 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         if (!is_writable($stream))
             $stream = 'php://temp';
 
+        // call parent constructor
         parent::__construct($stream);
 
+        // remove extra file content and send it by email to the site
+        // administrator
         $this->_cutFile($stream);
 
     }
@@ -113,7 +116,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         if (@ftruncate($handle, 0) === false)
             return;
         @fwrite($handle, date('m/d/Y h:i') . ": file content (" . strlen($content) .
-            " bytes) sent by email ({$email}) to admin.\n\n");
+            " bytes) was sent by email ({$email}) to admin.\n\n");
         @fclose($handle);
 
     }
