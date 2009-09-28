@@ -34,7 +34,7 @@ class FaZend_Exception extends Exception {
      * @param string Message to be sent inside this class
      * @return boolean
      */
-    public static function raise($class, $message = false, $parent = 'Exception') {
+    public static function raise($class, $message = false, $parent = 'Zend_Exception') {
 
         // exception class should either exist or should
         // be dynamically created
@@ -52,7 +52,7 @@ class FaZend_Exception extends Exception {
      * @param string Parent class
      * @return void
      */
-    public static function _declareClass($class, $parent = 'Exception') {
+    public static function _declareClass($class, $parent = 'Zend_Exception') {
 
         if (class_exists($class, false))
             return;
@@ -66,7 +66,7 @@ class FaZend_Exception extends Exception {
             return;
                 
         // declare the parent
-        self::_declareClass($parent, 'Exception');
+        self::_declareClass($parent, 'Zend_Exception');
 
         // sanity check, in case they are equal
         if ($class == $parent)
