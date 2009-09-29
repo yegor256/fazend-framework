@@ -275,9 +275,11 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         // remove all writers
         FaZend_Log::getInstance()->clean();
 
-        if (APPLICATION_ENV === 'production')
-            FaZend_Log::getInstance()->addWriter('ErrorLog');
-        else
+        // log errors in ALL environments
+        FaZend_Log::getInstance()->addWriter('ErrorLog');
+        
+        // if testing or development - log into memory as well
+        if (APPLICATION_ENV !== 'production')
             FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
     }
 
