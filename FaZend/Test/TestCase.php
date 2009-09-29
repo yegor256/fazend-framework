@@ -20,6 +20,11 @@ defined('APPLICATION_PATH') or define('APPLICATION_PATH', realpath(dirname(__FIL
 defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
 defined('TESTING_RUNNING') or define('TESTING_RUNNING', true);
 
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(APPLICATION_PATH . '/../../test'),
+    get_include_path(),
+)));
+
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 /**
@@ -66,11 +71,6 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
         // objects in 'test/Mocks' directory
         Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
-
-        set_include_path(implode(PATH_SEPARATOR, array(
-            realpath(APPLICATION_PATH . '/../../test'),
-            get_include_path(),
-        )));
 
     }    
 
