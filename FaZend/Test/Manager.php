@@ -92,10 +92,13 @@ class FaZend_Test_Manager extends FaZend_StdObject {
             $matches = array();
             $filePath = $path . '/' . basename($file);
 
-            if (is_dir($file))
+            if (is_dir($file)) {
                 $result = array_merge($result, $this->_getTests($filePath));
-            elseif (preg_match('/\.\/(.*?Test).php$/', $filePath, $matches))
+            } elseif (preg_match('/^(Abstract|\_)/', pathinfo($filePath, PATHINFO_FILENAME))) {
+                continue;
+            } elseif (preg_match('/\.\/(.*?Test).php$/', $filePath, $matches)) {
                 $result[] = $matches[1];
+            }
         }
 
         // reverse sort in order to put directories on top
