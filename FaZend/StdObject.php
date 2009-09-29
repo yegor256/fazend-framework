@@ -85,7 +85,7 @@ class FaZend_StdObject {
 
         if (($matches[1] == 'set') && (property_exists($this, $property))) {
             $this->$property = $args[0];
-            return;
+            return $this;
         }
 
         FaZend_Exception::raise('FaZend_StdObject_MissedProperty', 
