@@ -110,10 +110,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
     }    
 
     /**
-    * Return JSON reply
-    *
-    * @return void
-    */
+     * Return JSON reply
+     *
+     * @return void
+     */
     protected function _returnJSON ($var) {
     
         $this->_helper->layout->disableLayout();
@@ -178,6 +178,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
     
             ->setHeader('Date', $this->_formatHeaderTime(time()))
 
+            ->setHeader('Pragma', '')
+            
             // in 30 days to reload!
             ->setHeader('Expires', $this->_formatHeaderTime($modifiedTime + 60 * 60 * 24 * 30))
             
