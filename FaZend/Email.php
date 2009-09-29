@@ -191,8 +191,10 @@ class FaZend_Email {
         foreach ($this->_variables as $key=>$value)
             $view->assign($key, $value);
 
+        $body = $view->render($template);
+        
         // render the body and kill all \r signs    
-        $body = preg_replace('/[\r\n]+/', "\n", $view->render($template));    
+        //$body = preg_replace('/[\r\n]+/', "\n", $body);    
 
         // parse body for extra variables
         $lines = explode("\n", $body);
