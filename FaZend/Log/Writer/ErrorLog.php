@@ -56,7 +56,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         }
 
         // if we can't write to project log file, let's write to syslog
-        if (!is_writable($stream))
+        if (is_file($stream) && !is_writable($stream))
             $stream = 'php://temp';
 
         // call parent constructor
