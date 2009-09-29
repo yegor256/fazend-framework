@@ -81,7 +81,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string Name of the task, unique!
      * @return FaZend_Exec
      */
-    public static function create($name) {
+    public static function factory($name) {
         return new FaZend_Exec($name);
     }
 

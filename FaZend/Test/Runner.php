@@ -45,7 +45,7 @@ class FaZend_Test_Runner {
         $this->_name = $name;
 
         // create Exec (or link to the existing one)
-        $this->_exec = FaZend_Exec::create($this->_name);
+        $this->_exec = FaZend_Exec::factory($this->_name);
 
     }
 
