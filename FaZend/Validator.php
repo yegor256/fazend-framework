@@ -124,12 +124,23 @@ final class FaZend_Validator {
             $message = array_pop($args);
 
         try {
+            
+            // try to validate it through validator
             if (!$validator->isValid($subject))
                 FaZend_Exception::raise('Zend_Validate_Exception');
+            
+            // return for fluent interface
             return $this;
+            
         } catch (Zend_Validate_Exception $e) {
-            FaZend_Exception::raise($class . '_ValidatorFailure', isset($message) ? $message : $e->getMessage(), 
-                'FaZend_Validator_Failure');
+            
+            if (!isset($message)) {
+                $message = implode('; ', array_merge(
+                    $e->getMessage() ? array($e->getMessage()) : array(),
+                    $validator->getMessages()));
+            }
+                
+            FaZend_Exception::raise($class . '_ValidatorFailure', $message, 'FaZend_Validator_Failure');
         }
         
     }

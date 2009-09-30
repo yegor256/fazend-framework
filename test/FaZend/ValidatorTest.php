@@ -40,15 +40,34 @@ class FaZend_ValidatorTest extends AbstractTestCase {
             ->regex('test', '/^\w+$/', 'Regular expression is correct')
             ->instanceOf(new FaZend_StdObject(), 'FaZend_StdObject');
             
+        $step = 6;
         // negative case
-        try {
-            validate()
-                ->true(false, 'it is ok');
-            $this->fail('Exception should be raised');
-        } catch (FaZend_Validator_Failure $e) {
-            // it's fine
-        }
+        do {
+            try {
+                switch ($step) { 
+                    case 0:
+                        validate()->regex('try', '/^\d+/');
+                    case 1:
+                        validate()->true(false, 'it is ok');
+                    case 2:
+                        validate()->false(true);
+                    case 3:
+                        validate()->startWith('works', 'oops');
+                    case 4:
+                        validate()->true(false, 'it is ok');
+                    case 5:
+                        validate()->regex('try', 'invalid regular expression');
+                    default:
+                        FaZend_Exception::raise('FaZend_Validator_Failure');
+                        break;
+                }
+                $this->fail('Exception should be raised, step: ' . $step);
+            } catch (FaZend_Validator_Failure $e) {
+                FaZend_Log::info($e->getMessage());
+            }
+            
+        } while ($step--);
 
     }
-
+    
 }
