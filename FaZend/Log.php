@@ -171,7 +171,7 @@ class FaZend_Log {
      * @return void
      */
     public static function info($msg) {
-        return self::getInstance()->_log('info', array($msg));
+        return self::getInstance()->_log('info', $msg);
     }
 
     /**
@@ -181,7 +181,7 @@ class FaZend_Log {
      * @return void
      */
     public static function err($msg) {
-        return self::getInstance()->_log('err', array($msg));
+        return self::getInstance()->_log('err', $msg);
     }
 
     /**
@@ -191,7 +191,7 @@ class FaZend_Log {
      * @return void
      */
     public static function warn($msg) {
-        return self::getInstance()->_log('warn', array($msg));
+        return self::getInstance()->_log('warn', $msg);
     }
 
     /**
@@ -206,13 +206,13 @@ class FaZend_Log {
      * </code>
      *
      * @param string Name of the method called
-     * @param array Associated array of params passed
+     * @param string Message to log
      * @return void
      * @todo in PHP5.3 we should change it to __callStatic()
      */
-    protected function _log($method, array $args) {
+    protected function _log($method, $message) {
         foreach ($this->_loggers as $logger)
-            call_user_func_array(array($logger, $method), $args);
+            call_user_func_array(array($logger, $method), array((string)$message));
     }
 
 }
