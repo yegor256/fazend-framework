@@ -85,7 +85,11 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @return boolean
      */
     public function isValid($value) {
-        switch ($this->_type) {
+        switch (strtolower($this->_type)) {
+            
+            case 'array':
+                $ok = is_array($value);
+                break;
             
             case 'string':
             case 'str':
