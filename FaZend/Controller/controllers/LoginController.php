@@ -57,7 +57,7 @@ class Fazend_LoginController extends FaZend_Controller_Action {
             return;
         }
         
-        return $this->_helper->redirector->gotoSimple('index', 'units', 'fazend');
+        return $this->_helper->redirector->gotoSimple('index', 'adm', 'fazend');
 
     }
 
