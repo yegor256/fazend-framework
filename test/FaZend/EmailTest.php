@@ -18,16 +18,9 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_EmailTest extends AbstractTestCase {
     
-    public function setUp () {
-
-        parent::setUp();
-
-        require_once 'stubMailer.php';
-    }
-
     public function testEmailsAreRenderedAndSent () {
 
-        $mailer = new stubMailer();
+        $mailer = new Model_Email_StubMailer();
         Zend_Mail::setDefaultTransport($mailer);
 
         $email = FaZend_Email::create('test.tmpl')
@@ -37,7 +30,7 @@ class FaZend_EmailTest extends AbstractTestCase {
 
         $email->send();
         $email->send(true);
-
+        
         $this->assertNotEquals(false, $mailer->body, "Empty email generated, why?");
 
     }

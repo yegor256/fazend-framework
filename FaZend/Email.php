@@ -193,25 +193,18 @@ class FaZend_Email {
 
         $body = $view->render($template);
         
-        // render the body and kill all \r signs    
-        //$body = preg_replace('/[\r\n]+/', "\n", $body);    
-
         // parse body for extra variables
         $lines = explode("\n", $body);
         foreach ($lines as $id=>$line) {
+            $matches = array();
             // format is simple: "variable: value"    
-            if (strpos ($line, ':')) {
-                list($key, $value) = explode (':', $line);    
-                $value = trim($value);
-                $key = trim($key);
-
-                $this->set($key, $value);
+            if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
+                $this->set($matches[1], $matches[2]);
             }    
 
             // empty line stops parsing
             if ($line == '--')
                 break;
-
         }    
 
         $body = trim(implode("\n", array_slice ($lines, $id+1)), " \n\r");
