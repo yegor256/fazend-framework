@@ -95,12 +95,15 @@ class Fazend_LoginController extends FaZend_Controller_Action {
             // calculate the number of users in the file
             $count++;
                 
+            // if this is not the required email (another user)
             if ($matches[1] != $email) 
                 continue;
                     
+            // wrong password?
             if ($matches[2] != md5($password))
                 FaZend_Exception::raise('LoginException', "Wrong password (" . str_repeat('*', strlen($password)) . "), try again");
 
+            // everything is fine, we should log him in
             self::_session()->user = $email;
             return true;
         }
