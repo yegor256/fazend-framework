@@ -92,11 +92,10 @@
         
         <!-- build system access file -->
         <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt">
-        <exec command="php index.php Access --project=${phing.project.name}"
-            returnProperty="access.file.content"
+        <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
             dir="/home/continuum/continuumFacade/public"
+            escape="false"
             checkreturn="true" />
-        <echo msg="${access.file.content}" file="${access.file}" />
         <echo msg="Access config for /__fz URL saved into ${access.file}" />    
 
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
