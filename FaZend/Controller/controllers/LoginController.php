@@ -40,7 +40,7 @@ class Fazend_LoginController extends FaZend_Controller_Action {
             ->setRequired();
         $form->addElement($email);
         
-        $pwd = new Zend_Form_Element_Text('password');
+        $pwd = new Zend_Form_Element_Password('password');
         $pwd->setLabel('Password:')
             ->setRequired();
         $form->addElement($pwd);
