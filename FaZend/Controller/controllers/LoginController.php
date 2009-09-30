@@ -85,18 +85,27 @@ class Fazend_LoginController extends FaZend_Controller_Action {
         if (!@file_exists($accessFile))
             FaZend_Exception::raise('LoginException', "Access control file is absent, refer to admin");
      
-        foreach (@file($accessFile) as $line) {
-            if (strpos($line, $email . ':') === 0) {
-                $exp = explode(':', $line);
-                if ($exp[1] != md5($password))
-                    FaZend_Exception::raise('LoginException', "Wrong password, try again");
+        $count = 0;
+        $lines = @file($accessFile);
+        foreach ($lines as $line) {
+            $matches = array();
+            if (!preg_match('/^(.*?):(.*)$/', $line, $matches))
+                continue;
+                
+            // calculate the number of users in the file
+            $count++;
+                
+            if ($matches[1] != $email) 
+                continue;
+                    
+            if ($matches[2] != md5($password))
+                FaZend_Exception::raise('LoginException', "Wrong password, try again");
 
-                self::_session()->user = $email;
-                return true;
-            }
+            self::_session()->user = $email;
+            return true;
         }
 
-        FaZend_Exception::raise('LoginException', "Such email is not found in the ACL");
+        FaZend_Exception::raise('LoginException', "The email is not found in ACL ($count)");
     }
 
     /**
