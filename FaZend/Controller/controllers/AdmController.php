@@ -59,14 +59,19 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
         $sql = '';
         foreach ($tables as $table) {
 
-                  $row = $adapter->fetchRow("show create table {$table}");
+            try {
+                $row = $adapter->fetchRow("show create table {$table}");
 
-                  if (isset($row['Create Table']))
-                      $sql .= $row['Create Table'];
-            elseif (isset($row['Create View']))
-                      $sql .= $row['Create View'];
-            else
-                $sql .= "error in {$table}";
+                if (isset($row['Create Table']))
+                    $sql .= $row['Create Table'];
+                elseif (isset($row['Create View']))
+                    $sql .= $row['Create View'];
+                else
+                    $sql .= "error in {$table}";
+
+            } catch (Exception $e) {
+                $sql .= "Failed to retrieve information about '{$table}'";
+            }
 
             $sql .= "\n\n";    
 
