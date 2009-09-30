@@ -62,6 +62,14 @@ class Fazend_LoginController extends FaZend_Controller_Action {
     }
 
     /**
+     * Restrict access to certain areas
+     *
+     * @return void
+     */
+    public function restrictAction() {
+    }
+
+    /**
      * The admin is logged in?
      *
      * @return boolean

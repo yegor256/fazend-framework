@@ -30,7 +30,7 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
         
         // sanity check
         if (APPLICATION_ENV == 'production')
-            $this->_redirectFlash('Units controller is not allowed in production environment', 'index', 'index');
+            $this->_redirectFlash('Units controller is not allowed in production environment', 'restrict', 'login');
         
         parent::preDispatch();
 

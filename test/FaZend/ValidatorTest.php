@@ -35,6 +35,8 @@ class FaZend_ValidatorTest extends AbstractTestCase {
             ->true(true, 'works')
             ->false(false)
             ->type('test', 'string')
+            ->startWith('works good?', 'works')
+            ->notStartWith('works', '_')
             ->regex('test', '/^\w+$/', 'Regular expression is correct')
             ->instanceOf(new FaZend_StdObject(), 'FaZend_StdObject');
             
