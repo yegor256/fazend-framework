@@ -155,9 +155,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         // configure global routes for all
         $router = new Zend_Controller_Router_Rewrite();
 
-        // load standard routes, later customer will change them (two lines below)
-        $router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
-
+        // routes for custom application operations
         $appRoutes = new Zend_Config_Ini(FAZEND_PATH . '/Application/app-routes.ini', 'global', true);
 
         // specific customizable controllers
@@ -175,6 +173,9 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if (file_exists(APPLICATION_PATH . '/config/routes.ini')) {
             $router->addConfig(new Zend_Config_Ini(APPLICATION_PATH . '/config/routes.ini', APPLICATION_ENV), 'routes');
         }
+
+        // load standard system routes
+        $router->addConfig(new Zend_Config_Ini(FAZEND_PATH . '/Application/routes.ini', 'global'), 'routes');
 
         $front->setRouter($router);
 
