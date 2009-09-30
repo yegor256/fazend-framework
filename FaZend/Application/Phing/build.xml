@@ -91,7 +91,7 @@
         <echo msg="Uploading revision: ${svn.revision}" />    
         
         <!-- build system access file -->
-        <exec command="/home/continuum/continuumFacade/public/index.php Access --project=${project.name}"
+        <exec command="/home/continuum/continuumFacade/public/index.php Access --project=${phing.project.name}"
             returnProperty="access.file"
             checkreturn="true" />
         <echo msg="${access.file}" file="${project.basedir}/src/application/deploy/access.txt" />
