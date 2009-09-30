@@ -89,6 +89,12 @@
         <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/flag.txt" />
             
         <echo msg="Uploading revision: ${svn.revision}" />    
+        
+        <!-- build system access file -->
+        <exec command="/home/continuum/continuumFacade/public/index.php Access --project=${project.name}"
+            returnProperty="access.file"
+            checkreturn="true" />
+        <echo msg="${access.file}" file="${project.basedir}/src/application/deploy/access.txt" />
 
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
         <uploadByFTP server="${ftp.server}"
