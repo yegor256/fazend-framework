@@ -70,7 +70,7 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
                     $sql .= "error in {$table}";
 
             } catch (Exception $e) {
-                $sql .= "Failed to retrieve information about '{$table}'";
+                $sql .= "Failed to retrieve information about '{$table}': " . $e->getMessage();
             }
 
             $sql .= "\n\n";    
