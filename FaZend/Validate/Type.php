@@ -53,7 +53,7 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @return void
      */
     public function __construct($type) {
-        $this->settype($type);
+        $this->setType($type);
     }
 
     /**
@@ -61,7 +61,7 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      *
      * @return string
      */
-    public function gettype() {
+    public function getType() {
         return $this->_type;
     }
 
@@ -71,7 +71,7 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @param  string The type
      * @return Zend_Validate_Regex Provides a fluent interface
      */
-    public function settype($type) {
+    public function setType($type) {
         $this->_type = (string) $type;
         return $this;
     }
