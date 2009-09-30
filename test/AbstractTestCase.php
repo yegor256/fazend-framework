@@ -24,6 +24,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 // these settings are specific for the testing environment in FaZend
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
+define('ZEND_PATH', realpath(dirname(__FILE__) . '/../../zend-trunk/Zend'));
 
 // we inherit from Zend Test Case
 require_once 'FaZend/Test/TestCase.php';

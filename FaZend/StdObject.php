@@ -17,6 +17,8 @@
 /**
  * Simple class with nice methods
  *
+ * You should use this class as a parent class for your classes.
+ *
  * @package FaZend
  */
 class FaZend_StdObject {

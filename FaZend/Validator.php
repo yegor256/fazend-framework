@@ -31,7 +31,7 @@
  *
  * @package FaZend
  */
-class FaZend_Validator {
+final class FaZend_Validator {
 
     /**
      * Simple instance, to avoid multiple instances
@@ -39,6 +39,13 @@ class FaZend_Validator {
      * @var FaZend_Validator
      */
     protected static $_instance = null;
+    
+    /**
+     * Plugin loader
+     *
+     * @var Zend_Loader_PluginLoader
+     */
+    protected $_loader;
     
     /**
      * Creates simple validator and returns it
@@ -52,6 +59,18 @@ class FaZend_Validator {
     }
 
     /**
+     * Construct validator class
+     *
+     * @return void
+     **/
+    public final function __construct() {
+        $this->_loader = new Zend_Loader_PluginLoader(array(
+            'Zend_Validate' => ZEND_PATH . '/Validate',
+            'FaZend_Validate' => FAZEND_PATH . '/Validate',
+            ));
+    }
+
+    /**
      * Call decorator
      *
      * @param string Name of the method
@@ -59,28 +78,60 @@ class FaZend_Validator {
      * @return value
      */
     public function __call($method, array $args) {
-        // first param is subject
+        // not enough params provided?
+        if (!count($args)) {
+            FaZend_Exception::raise('Zend_Validate_Exception', 
+                "At least one param required for $method validator");
+        }
+        
+        // first param is subject to validate
         $subject = array_shift($args);
 
-        $class = 'FaZend_Validator_' . ucfirst($method);
-        $validator = new $class($subject);
+        // load this validator
+        $class = $this->_loader->load(ucfirst($method));
+        
+        // understand what is required by its constructor
+        $rc = new ReflectionClass($class);
+        $rm = $rc->getConstructor();
+        
+        // this class requires params in construct?
+        if ($rm)
+            $params = $rm->getNumberOfParameters();
+        else
+            $params = 0;
+        
+        // not enough params provided?
+        if (count($args) < $params) {
+            FaZend_Exception::raise('Zend_Validate_Exception', 
+                "Validator $class requires $params parameters, only " . count($args) . ' provided');
+        }
+        
+        // too many? including the message (last param)
+        if (count($args) > $params + 1) {
+            FaZend_Exception::raise('Zend_Validate_Exception', 
+                "Validator $class requires just $params parameters, while " . count($args) . ' provided, what for?');
+        }
+        
+        // initialize validator with dynamic list of params
+        $call = '$validator = new $class(';
+        for ($i=0; $i<$params; $i++)
+            $call .= ($i > 0 ? ', ' : false) . "\$args[{$i}]";
+        $call .= ');';
+        eval($call);
 
         // last param is message
-        if (count($args))
+        if (count($args) == $params + 1)
             $message = array_pop($args);
-        else
-            $message = $validator->defaultMessage;
 
-        if (!call_user_func_array(array($validator, 'validate'), $args)) {
-            FaZend_Exception::raise($class . '_Failure', $message . 
-                ' (' . 
-                    (is_scalar($subject) ? 
-                        (is_bool($subject) ? ($subject ? 'TRUE' : 'FALSE') : $subject) : 
-                    get_class($subject)) . 
-                ')', 'FaZend_Validator_Failure');
+        try {
+            if (!$validator->isValid($subject))
+                FaZend_Exception::raise('Zend_Validate_Exception');
+            return $this;
+        } catch (Zend_Validate_Exception $e) {
+            FaZend_Exception::raise($class . '_ValidatorFailure', isset($message) ? $message : $e->getMessage(), 
+                'FaZend_Validator_Failure');
         }
-
-        return $this;
+        
     }
 
 }

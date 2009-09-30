@@ -32,6 +32,10 @@ defined('TEMP_PATH')
 defined('FAZEND_PATH')
     || define('FAZEND_PATH', realpath(APPLICATION_PATH . '/../library/FaZend'));
 
+// Define path to Zend
+defined('ZEND_PATH')
+    || define('ZEND_PATH', realpath(APPLICATION_PATH . '/../library/Zend'));
+
 // Define application environment
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
