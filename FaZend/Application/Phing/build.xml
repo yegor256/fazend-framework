@@ -64,7 +64,7 @@
     </target>    
             
     <target name="test" description="Run all existing unit-tests" >
-           <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+            <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
             <formatter type="plain" usefile="no" />
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
@@ -91,11 +91,13 @@
         <echo msg="Uploading revision: ${svn.revision}" />    
         
         <!-- build system access file -->
+        <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt">
         <exec command="php index.php Access --project=${phing.project.name}"
-            returnProperty="access.file"
+            returnProperty="access.file.content"
             dir="/home/continuum/continuumFacade/public"
             checkreturn="true" />
-        <echo msg="${access.file}" file="${project.basedir}/src/application/deploy/access.txt" />
+        <echo msg="${access.file.content}" file="${access.file}" />
+        <echo msg="Access config for /__fz URL saved into ${access.file}" />    
 
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
         <uploadByFTP server="${ftp.server}"
