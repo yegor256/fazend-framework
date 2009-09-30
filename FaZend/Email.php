@@ -143,11 +143,8 @@ class FaZend_Email {
      * @return FaZend_Email
      */
     public function logError() {
-
-        FaZend_Log::err($this->_getFilledMailer()->getBodyText());
-
+        FaZend_Log::err((string)$this->_getFilledMailer()->getBodyText());
         return $this;
-
     }
 
     /**
