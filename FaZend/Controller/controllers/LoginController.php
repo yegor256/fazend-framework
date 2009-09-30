@@ -89,7 +89,7 @@ class Fazend_LoginController extends FaZend_Controller_Action {
         $lines = @file($accessFile);
         foreach ($lines as $line) {
             $matches = array();
-            if (!preg_match('/^(.*?):(.*)$/', $line, $matches))
+            if (!preg_match('/^([@\.\-\w\d]+):([\w\d]+)$/', $line, $matches))
                 continue;
                 
             // calculate the number of users in the file
@@ -99,7 +99,7 @@ class Fazend_LoginController extends FaZend_Controller_Action {
                 continue;
                     
             if ($matches[2] != md5($password))
-                FaZend_Exception::raise('LoginException', "Wrong password, try again");
+                FaZend_Exception::raise('LoginException', "Wrong password (" . str_repeat('*', strlen($password)) . "), try again");
 
             self::_session()->user = $email;
             return true;
