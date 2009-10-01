@@ -192,7 +192,7 @@ class FaZend_Email {
         $body = $view->render($template);
         
         // replace old-styled new lines with \n
-        $body = str_replace("\r", "\n", $body);
+        $body = preg_replace("/\r\n|\n\r|\r/", "\n", $body);
         
         // parse body for extra variables
         $lines = explode("\n", $body);
