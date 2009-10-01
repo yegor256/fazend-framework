@@ -336,8 +336,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 if (method_exists($rowOriginal, 'toArray'))
                     $row = $rowOriginal->toArray();
                 else
-                    FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_NonConvertableObject',
-                        "Method toArray() is not defined in the object, row: #" . $key);
+                    $row = array();
             } else {
                 $row = array('column'=>$rowOriginal);
             }
