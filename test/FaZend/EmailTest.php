@@ -30,7 +30,7 @@ class FaZend_EmailTest extends AbstractTestCase {
 
         $email->send();
         $email->send(true);
-        
+
         $this->assertNotEquals(false, $mailer->body, "Empty email generated, why?");
 
     }

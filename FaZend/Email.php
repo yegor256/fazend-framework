@@ -53,6 +53,7 @@ class FaZend_Email {
         // to allow further modifications
         self::$_config = new Zend_Config($config->toArray(), true);
         self::$_config->view = clone $view;
+        self::$_config->view->setFilter(null);        
     }
 
     /**
