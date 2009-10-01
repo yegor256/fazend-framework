@@ -329,10 +329,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
         foreach ($this->_paginator as $key=>$rowOriginal) {
 
-            if (!is_array($rowOriginal))
-                $row = $rowOriginal->toArray();
-            else
+            // prepare one row for rendering
+            if (is_array($rowOriginal)) {
                 $row = $rowOriginal;
+            } elseif (is_object($rowOriginal)) {
+                if (method_exists($rowOriginal, 'toArray'))
+                    $row = $rowOriginal->toArray();
+                else
+                    FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_NonConvertableObject',
+                        "Method toArray() is not defined in the object, row: #" . $key);
+            } else {
+                $row = array('column'=>$rowOriginal);
+            }
 
             // inject columns
             // predecessor is ignored so far
