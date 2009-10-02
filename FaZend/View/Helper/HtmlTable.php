@@ -342,8 +342,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             }
 
             // inject columns
-            // predecessor is ignored so far
-            // @todo implement it properly
             foreach ($this->_injections as $injectedColumn=>$predecessor) {
                 // sanity check
                 if (!is_object($rowOriginal))
@@ -352,7 +350,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 // if it's a method - call it
                 if ($injectedColumn == '__key')
                     $injectedValue = $key;
-                else if (method_exists($rowOriginal, $injectedColumn))
+                elseif (method_exists($rowOriginal, $injectedColumn))
                     $injectedValue = $rowOriginal->$injectedColumn();
                 else
                     $injectedValue = $rowOriginal->$injectedColumn;
@@ -570,11 +568,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         if (!$predecessor)
             $result = array_merge(array($column=>$value), $row);
         else {
-            while (current($row)) {
-                $result[key($row)] = current($row);
-                if (key($row) == $predecessor)
+            foreach ($row as $key=>$val) {
+                $result[$key] = $val;
+                if ($key == $predecessor)
                     $result[$column] = $value;
-                next($row);
             }
         }
 
