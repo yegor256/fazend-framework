@@ -583,7 +583,11 @@ class FaZend_Backup {
         if (isset($this->_s3))
             return $this->_s3;
         
-        return $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);    
+        $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);    
+        // workaround for this defect: ZF-7990
+        // http://framework.zend.com/issues/browse/ZF-7990
+        Zend_Service_Amazon_S3::getHttpClient()->setUri('http://google.com');
+        return $this->_s3;
     }
 
 }
