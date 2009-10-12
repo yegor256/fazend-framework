@@ -17,7 +17,8 @@
 /**
  * User Interface Modeller
  *
- *
+ * @category FaZend
+ * @package controllers
  */
 class Fazend_UiController extends FaZend_Controller_Panel {
 

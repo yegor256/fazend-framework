@@ -17,6 +17,7 @@ $this->includeCSS('fazend.css');
     <div class="hdr">
         <? if (APPLICATION_ENV !== 'production'): ?>
             <a href="<?=$this->url(array('action'=>'index', 'id'=>'index/index'), 'ui', true, false)?>">UI Modeller</a> &middot;
+            <a href="<?=$this->url(array(), 'analysis', true, false)?>">Analysis Model</a> &middot;
             <a href="<?=$this->url(array('action'=>'index'), 'units', true, false)?>">Unit Tests</a> &middot;
             <a href="<?=$this->url(array(), 'dbmap', true, false)?>">DB Mapper</a> &middot;
         <? endif; ?>

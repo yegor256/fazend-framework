@@ -19,7 +19,7 @@ require_once 'FaZend/Cli/Interface.php';
 /**
  * Class for a CLI executor
  *
- * @package FaZend 
+ * @package Cli
  */
 abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
 

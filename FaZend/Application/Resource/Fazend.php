@@ -137,8 +137,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $front = $this->_bootstrap->getResource('frontController');
         $dirs = $front->getControllerDirectory();
 
-        if (!file_exists($dirs['default']))
-            $front->setControllerDirectory(FAZEND_PATH . 'Controller/controllers/default', 'default');
+        // if (!file_exists($dirs['default']))
+            // $front->setControllerDirectory(FAZEND_PATH . 'Controller/controllers/default', 'default');
 
     }        
 

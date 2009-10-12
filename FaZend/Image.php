@@ -34,6 +34,9 @@ class FaZend_Image {
     const BRAND_RED = 'EE0000'; // just red
     const BRAND_GREEN = '00EE00'; // just green
 
+    const UML_FILL = 'FFFFCC'; // fill UML elements
+    const UML_BORDER = '9A0033'; // border of UML elements
+
     /**
      * Enable drawing
      *

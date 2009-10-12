@@ -15,12 +15,12 @@
  */
 
 /**
-* Bootstraper
-*
-* This file could be omitted
-*
-* @package application
-*/
+ * Bootstraper
+ *
+ * This file could be omitted
+ *
+ * @package application
+ */
 class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap { 
 
     public function _initDbData() {

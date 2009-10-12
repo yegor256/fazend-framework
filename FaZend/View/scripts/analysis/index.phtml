@@ -1,0 +1,56 @@
+
+<?
+    $this->headTitle('analysis model');
+    $this->includeCSS('ui.css');
+    $this->includeCSS('analysis.css');
+?>
+
+<div class="wrapper">
+
+    <div class="header">
+        <div class="path">
+            <? $sectors = explode(FaZend_AnalysisModeller_Diagram::SEPARATOR, $this->diagram->getName()); ?>
+            <? foreach (array_slice($sectors, 0, -1) as $i=>$sector): ?><a
+                href="<?=$this->url(array('diagram'=>
+                implode(FaZend_AnalysisModeller_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
+                FaZend_AnalysisModeller_Diagram::SEPARATOR . 
+                $sectors[count($sectors)-1]), 'analysis')?>"><?=$sector?></a><?=FaZend_AnalysisModeller_Diagram::SEPARATOR?><? endforeach; ?><?=$sectors[count($sectors)-1]?>
+        </div>
+    </div>
+
+    <div class="page">
+        
+        <div class="types">
+            <? foreach (FaZend_AnalysisModeller_Diagram::getTypes() as $type): ?>
+                <div class="type">
+                    <img src="<?=$this->viewFile('analysis/types/' . $type . '.png')?>" />
+                    <br/>
+                    <? if ($this->diagram->getType() == $type): ?>
+                        <b><?=$type?></b>
+                    <? else: ?>
+                        <a href="<?=$this->url(array('diagram'=>$this->diagram->getAnotherType($type)), 'analysis')?>"
+                            ><?=$type?></a>
+                    <? endif; ?>
+                </div>
+            <? endforeach; ?>
+        </div>
+        
+        <div class="components"><ul>
+            <? foreach ($this->diagram->getComponentsToShow() as $component): ?>    
+                <li><a href="<?=$this->url(array('diagram'=>$component->getDiagramName($this->diagram->getType())), 'analysis')?>"
+                    ><?=$component->getName()?></a></li>
+            <? endforeach; ?>
+        </ul></div>
+
+        <object 
+            style="overflow: auto;"
+            data="<?=$this->url(array('action'=>'svg', 'diagram'=>$this->diagram->getName()), 'analysis')?>"
+            width="<?=FaZend_AnalysisModeller_Diagram::WIDTH?>" 
+            height="<?=FaZend_AnalysisModeller_Diagram::HEIGHT?>" 
+            type="image/svg+xml" 
+            />
+            
+    </div>
+
+</div>
+

@@ -69,6 +69,8 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
          // add information from system log
          if ((APPLICATION_ENV == 'development') && !FaZend_Log::getInstance()->getWriter('FaZendDebug')->isEmpty()) {
 
+             // jQuery is necessary
+             $this->getView()->includeJQuery();
              $log = FaZend_Log::getInstance()->getWriter('FaZendDebug')->getLog();
 
              $html .= "&#32;<span style='cursor:pointer;color:red;' " . 

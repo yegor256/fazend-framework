@@ -1,0 +1,47 @@
+/**
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ */
+
+/* list of all diagram types */
+div.page div.types {
+    position: absolute;
+    top: 0px;
+    left: -210px;
+    width: 200px;
+    line-height: 1.4em;
+    text-align: right;
+}
+
+    div.page div.types div.type {
+        margin-bottom: 18px; 
+        text-align: right;
+    }
+
+/* list of all components */
+div.page div.components {
+    position: absolute;
+    top: 0px;
+    right: -160px;
+    line-height: 1.4em;
+    width: 150px;
+}
+
+    div.page div.components ul {
+        margin-left: 0px !important;
+    }
+
+    div.page div.components li {
+        list-style: none;
+    }
+
