@@ -70,8 +70,10 @@ class FaZend_AnalysisModeller_Component_System extends FaZend_AnalysisModeller_C
     protected function _init() {
         
         $dirs = array(
-            APPLICATION_PATH,
-            FAZEND_PATH);
+            APPLICATION_PATH);
+        
+        // uncomment this line if you're developing AnalysisModeller
+        // $dirs[] = FAZEND_PATH;
             
         foreach ($dirs as $dir) {
             foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
