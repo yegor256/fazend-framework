@@ -219,4 +219,23 @@ abstract class FaZend_AnalysisModeller_Component_Abstract extends ArrayIterator 
         return '...' . strrchr($text, '_');
     }
     
+    /**
+     * Relocate me in the tree
+     *
+     * @return void
+     **/
+    protected function _relocate(Reflector $reflector) {
+
+        $doc = $reflector->getDocblock();
+        if (false !== $doc->getTag('category'))
+            $this->_moveTo($this->_parent->make('category', trim($doc->getTag('category')->getDescription(), "\r\t\n ")));
+            
+        if (false !== $doc->getTag('package'))
+            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('package')->getDescription(), "\r\t\n ")));
+
+        if (false !== $doc->getTag('subpackage'))
+            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
+        
+    }
+    
 }

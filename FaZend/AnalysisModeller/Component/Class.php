@@ -32,13 +32,9 @@ class FaZend_AnalysisModeller_Component_Class extends FaZend_AnalysisModeller_Co
         assert($reflector instanceof Zend_Reflection_Class);
         $this->_name = $reflector->getName();
 
-        $doc = $reflector->getDocblock();
-        if (false !== $doc->getTag('package'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('package')->getDescription(), "\r\t\n ")));
-
-        if (false !== $doc->getTag('subpackage'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
-            
+        // change my location
+        $this->_relocate($reflector);
+                    
         foreach ($reflector->getMethods() as $method)
             $this->factory('method', null, $method);
     }

@@ -34,19 +34,11 @@ class FaZend_AnalysisModeller_Component_File_PhpFile extends FaZend_AnalysisMode
         // get the name of the file
         $this->_name = pathinfo($reflector->getFileName(), PATHINFO_BASENAME);
         
-        // change parent location
-        $doc = $reflector->getDocblock();
-         
         $this->_moveTo(FaZend_AnalysisModeller_Component_System::getInstance());
-        if (false !== $doc->getTag('category'))
-            $this->_moveTo($this->_parent->make('category', trim($doc->getTag('category')->getDescription(), "\r\t\n ")));
-            
-        if (false !== $doc->getTag('package'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('package')->getDescription(), "\r\t\n ")));
 
-        if (false !== $doc->getTag('subpackage'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
-            
+        // change my location
+        $this->_relocate($reflector);
+        
         // add all daughter classes to this location
         foreach ($reflector->getClasses() as $class)
             $this->_parent->factory('class', null, $class);
