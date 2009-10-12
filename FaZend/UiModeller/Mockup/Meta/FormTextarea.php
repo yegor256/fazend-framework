@@ -17,7 +17,8 @@
 /**
  * Form textarea
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_FormTextarea extends FaZend_UiModeller_Mockup_Meta_FormElement {
 

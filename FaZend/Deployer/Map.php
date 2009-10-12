@@ -17,7 +17,7 @@
 /**
  * DB schema visual modeller
  *
- * @package FaZend 
+ * @package Deployer
  */
 class FaZend_Deployer_Map {
 

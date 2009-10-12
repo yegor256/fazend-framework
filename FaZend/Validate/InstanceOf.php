@@ -17,7 +17,7 @@
 /**
  * Object is instance of some class/interface
  *
- * @package FaZend
+ * @package Validate
  */
 class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
 

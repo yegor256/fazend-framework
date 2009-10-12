@@ -17,7 +17,6 @@
 /**
  * User Interface Modeller
  *
- * @category FaZend
  * @package controllers
  */
 class Fazend_AnalysisController extends FaZend_Controller_Panel {

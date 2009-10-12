@@ -17,8 +17,8 @@
 /**
  * Category
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 class FaZend_AnalysisModeller_Component_Category extends FaZend_AnalysisModeller_Component_Package {
 

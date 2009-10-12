@@ -17,7 +17,8 @@
 /**
  * Form element
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 abstract class FaZend_UiModeller_Mockup_Meta_FormElement extends FaZend_UiModeller_Mockup_Meta_Abstract {
 

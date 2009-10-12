@@ -17,7 +17,7 @@
 /**
  * String starts with something
  *
- * @package FaZend
+ * @package Validate
  */
 class FaZend_Validate_StartWith extends Zend_Validate_Abstract {
 

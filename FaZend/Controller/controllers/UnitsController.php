@@ -17,7 +17,7 @@
 /**
  * Test organizer
  *
- *
+ * @package controllers
  */
 class Fazend_UnitsController extends FaZend_Controller_Panel {
 

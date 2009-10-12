@@ -17,7 +17,7 @@
 /**
  * Deploy Db schema
  *
- * @package FaZend 
+ * @package Deployer
  */
 class FaZend_Deployer {
 

@@ -17,7 +17,8 @@
 /**
  * Show interval between now and the given date
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_DateInterval {
 

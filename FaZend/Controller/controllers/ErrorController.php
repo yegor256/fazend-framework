@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  * default ErrorController
  *
- *
+ * @package controllers
  */ 
 class Fazend_ErrorController extends FaZend_Controller_Action { 
 

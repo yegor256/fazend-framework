@@ -17,7 +17,8 @@
 /**
  * Cut the line to a required length
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_LongLine {
 

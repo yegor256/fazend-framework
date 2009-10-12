@@ -17,7 +17,7 @@
 /**
  * Get SVN revision
  *
- * @package FaZend 
+ * @package Revision
  */
 class FaZend_Revision {
 

@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  * SqueezePNG delivery
  * 
- *
+ * @package controllers
  */
 class Fazend_SqueezeController extends FaZend_Controller_Action {
 

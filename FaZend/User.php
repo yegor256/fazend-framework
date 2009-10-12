@@ -19,7 +19,7 @@
  *
  * It is assumed that there is a Table in the DB: user (id, email, password)
  *
- * @package Model
+ * @package User
  */
 class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
 

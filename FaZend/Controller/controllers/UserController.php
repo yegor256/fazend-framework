@@ -31,6 +31,7 @@ require_once 'FaZend/Controller/Action.php';
  *   RegisterAccount
  *   RemindPassword
  *
+ * @package controllers
  */
 class Fazend_UserController extends FaZend_Controller_Action {
 

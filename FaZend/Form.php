@@ -19,7 +19,7 @@ require_once 'Zend/Form.php';
 /**
  * Form, in a more convenient way to manage
  *
- * @package FaZend 
+ * @package Form 
  */
 class FaZend_Form extends Zend_Form {
 

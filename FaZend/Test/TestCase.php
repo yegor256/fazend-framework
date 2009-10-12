@@ -30,7 +30,7 @@ require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 /**
  * Test case
  *
- * @category FaZend
+ * @package Test
  */
 class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 

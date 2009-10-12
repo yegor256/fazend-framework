@@ -17,7 +17,6 @@
 /**
  * Components access point
  *
- * @category FaZend
  * @package AnalysisModeller
  */
 class FaZend_AnalysisModeller_Component {

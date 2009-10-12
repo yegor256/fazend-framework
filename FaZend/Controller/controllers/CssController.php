@@ -19,6 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  *
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
+ * @package controllers
  */
 class Fazend_CssController extends FaZend_Controller_Action {
 

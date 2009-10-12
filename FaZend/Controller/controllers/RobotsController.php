@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  * Robots.txt
  * 
- * @package Controllers
+ * @package controllers
  */
 class Fazend_RobotsController extends FaZend_Controller_Action {
 

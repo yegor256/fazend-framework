@@ -30,7 +30,7 @@
  *
  * In the example above the message will be sent to both writers.
  *
- * @package FaZend
+ * @package Log
  */
 class FaZend_Log {
 

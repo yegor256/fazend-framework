@@ -17,7 +17,8 @@
 /**
  * Mockup meta element
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 interface FaZend_UiModeller_Mockup_Meta_Interface {
 

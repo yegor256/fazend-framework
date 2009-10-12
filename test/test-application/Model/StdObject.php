@@ -14,6 +14,12 @@
  * @category FaZend
  */
 
+/**
+ * 
+ *
+ * @package application
+ * @subpackage Model
+ */
 class Model_StdObject extends FaZend_StdObject {
 
     protected function _getName() {

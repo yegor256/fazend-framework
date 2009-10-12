@@ -19,9 +19,8 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 /**
  * Resource for initializing FaZend_Deployer
  *
- * @uses       Zend_Application_Resource_Base
- * @category   FaZend
- * @package    FaZend_Application
+ * @uses Zend_Application_Resource_Base
+ * @package Application
  * @subpackage Resource
  */
 class FaZend_Application_Resource_Deployer extends Zend_Application_Resource_ResourceAbstract {

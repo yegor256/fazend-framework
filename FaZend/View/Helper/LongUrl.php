@@ -17,7 +17,8 @@
 /**
  * Generates URL that includes http:// prefix
  *
- * @package helpers
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_LongUrl extends FaZend_View_Helper {
 

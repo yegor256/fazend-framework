@@ -17,9 +17,8 @@
 /**
  * One diagram, style 'part-of'
  *
- * @category FaZend
- * @package FaZend_AnalysisModeller
- * @subpackage FaZend_AnalysisModeller_Diagram
+ * @package AnalysisModeller
+ * @subpackage Diagram
  */
 class FaZend_AnalysisModeller_Diagram_Partof extends FaZend_AnalysisModeller_Diagram_Abstract {
 

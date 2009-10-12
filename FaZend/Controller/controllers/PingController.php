@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  * Foreign ping interface
  * 
- *
+ * @package controllers
  */
 class Fazend_PingController extends FaZend_Controller_Action {
 

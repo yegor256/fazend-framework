@@ -17,7 +17,7 @@
 /**
  * Interface for a CLI executor
  *
- * @package FaZend 
+ * @package Cli
  */
 interface FaZend_Cli_Interface {
 

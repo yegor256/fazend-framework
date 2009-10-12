@@ -19,7 +19,8 @@ require_once 'FaZend/Controller/controllers/UserController.php';
 /**
  * User functions (login, logout, register, etc)
  * 
- * @see Fazend controller
+ * @package application
+ * @subpackage controllers
  */
 class UserController extends Fazend_UserController {
 

@@ -17,8 +17,8 @@
 /**
  * Method in class
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 class FaZend_AnalysisModeller_Component_Method extends FaZend_AnalysisModeller_Component_Abstract {
 

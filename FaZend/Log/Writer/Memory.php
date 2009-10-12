@@ -17,7 +17,7 @@
 /**
  * Memory logger
  *
- * @package FaZend_Log
+ * @package Log
  */
 class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
 

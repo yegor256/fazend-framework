@@ -17,7 +17,7 @@
 /**
  * One simple validator for TRUE value
  *
- * @package FaZend
+ * @package Validate
  */
 class FaZend_Validate_True extends Zend_Validate_Abstract {
 

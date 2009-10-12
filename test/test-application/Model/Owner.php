@@ -14,7 +14,13 @@
  * @category FaZend
  */
 
-// ORM auto-mapping classes
+/**
+ * ORM auto-mapping classes
+ * 
+ *
+ * @package application
+ * @subpackage Model
+ */
 class Model_Owner extends FaZend_Db_Table_ActiveRow_owner {
 
     public static function retrieveAll() {

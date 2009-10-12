@@ -19,7 +19,7 @@ require_once 'Zend/Paginator.php';
 /**
  * Paginator
  *
- * @package FaZend 
+ * @package Paginator 
  */
 class FaZend_Paginator extends Zend_Paginator {
 

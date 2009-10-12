@@ -17,10 +17,11 @@
 require_once 'Zend/Application/Bootstrap/Bootstrap.php';
 
 /**
-* Bootstrap
-*
-* @package FaZend_Application
-*/
+ * Bootstrap
+ *
+ * @package Application
+ * @subpackage Bootstrap
+ */
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 }

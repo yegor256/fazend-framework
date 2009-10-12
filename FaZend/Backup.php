@@ -17,7 +17,7 @@
 /**
  * Backup database and files and send them to amazon or to FTP server
  *
- * @package FaZend 
+ * @package Backup 
  */
 class FaZend_Backup {
 

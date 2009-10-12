@@ -20,6 +20,7 @@ require_once 'Zend/Db/Table.php';
  * Simple table
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
+ * @package Db
  */
 abstract class FaZend_Db_ActiveTable extends Zend_Db_Table {
 

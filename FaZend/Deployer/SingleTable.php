@@ -17,7 +17,7 @@
 /**
  * One single table visual drawer
  *
- * @package FaZend 
+ * @package Deployer
  */
 class FaZend_Deployer_SingleTable {
 

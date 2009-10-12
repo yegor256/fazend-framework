@@ -17,7 +17,6 @@
 /**
  * Diagram access point
  *
- * @category FaZend
  * @package AnalysisModeller
  */
 class FaZend_AnalysisModeller_Diagram {

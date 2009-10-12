@@ -18,6 +18,7 @@
  * Wrapper for fetchAll method
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
+ * @package Db
  */
 class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAccess {
 

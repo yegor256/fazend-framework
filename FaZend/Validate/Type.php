@@ -17,7 +17,7 @@
 /**
  * Object is of some type
  *
- * @package FaZend
+ * @package Validate
  */
 class FaZend_Validate_Type extends Zend_Validate_Abstract {
 

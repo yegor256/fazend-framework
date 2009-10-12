@@ -17,7 +17,7 @@
 /**
  * Simplified interface for exception throwing
  *
- * @package Model
+ * @package Exception
  */
 class FaZend_Exception extends Exception {
 

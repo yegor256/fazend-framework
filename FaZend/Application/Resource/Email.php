@@ -19,9 +19,8 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 /**
  * Resource for initializing FaZend_Email
  *
- * @uses       Zend_Application_Resource_Base
- * @category   FaZend
- * @package    FaZend_Application
+ * @uses Zend_Application_Resource_Base
+ * @package Application
  * @subpackage Resource
  */
 class FaZend_Application_Resource_Email extends Zend_Application_Resource_ResourceAbstract {

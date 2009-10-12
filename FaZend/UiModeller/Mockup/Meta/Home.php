@@ -17,7 +17,8 @@
 /**
  * Mark this page as a home page of the actor
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_Home extends FaZend_UiModeller_Mockup_Meta_Abstract {
 

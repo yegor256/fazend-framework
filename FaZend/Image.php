@@ -17,7 +17,7 @@
 /**
  * Image creator
  *
- * @package FaZend
+ * @package Image
  */
 class FaZend_Image {
 

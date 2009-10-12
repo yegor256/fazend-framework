@@ -17,7 +17,7 @@
 /**
  * Map of the database
  *
- *
+ * @package controllers
  */
 class Fazend_DbmapController extends FaZend_Controller_Panel {
 

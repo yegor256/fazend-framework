@@ -20,6 +20,8 @@ require_once 'phing/Task.php';
  * This is Phing Task for pinging production server
  *
  * @see http://phing.info/docs/guide/current/chapters/ExtendingPhing.html#WritingTasks
+ * @package Application
+ * @subpackage Phing
  */
 class PingFaZend extends Task {
 

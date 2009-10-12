@@ -17,8 +17,8 @@
 /**
  * One component (class, package, category, subcategory, method, etc.)
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 abstract class FaZend_AnalysisModeller_Component_Abstract extends ArrayIterator {
 

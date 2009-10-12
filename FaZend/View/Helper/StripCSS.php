@@ -19,7 +19,8 @@ require_once 'FaZend/View/Helper.php';
 /**
  * Compress and minify CSS text and return it
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
 

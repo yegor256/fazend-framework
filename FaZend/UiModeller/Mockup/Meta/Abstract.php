@@ -17,7 +17,8 @@
 /**
  * Mockup meta element
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 abstract class FaZend_UiModeller_Mockup_Meta_Abstract implements FaZend_UiModeller_Mockup_Meta_Interface {
 

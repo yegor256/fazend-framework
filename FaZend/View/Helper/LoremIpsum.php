@@ -17,7 +17,8 @@
 /**
  * Produce a random string
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_LoremIpsum {
 

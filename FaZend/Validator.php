@@ -29,7 +29,7 @@
  * }
  * </code>
  *
- * @package FaZend
+ * @package Validator
  */
 final class FaZend_Validator {
 

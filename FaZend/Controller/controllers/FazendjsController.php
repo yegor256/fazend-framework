@@ -19,7 +19,7 @@ require_once 'FaZend/Controller/Action.php';
 /**
  *
  * 
- *
+ * @package controllers
  */
 class Fazend_FazendjsController extends FaZend_Controller_Action {
 

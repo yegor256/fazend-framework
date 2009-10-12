@@ -19,7 +19,8 @@ require_once 'FaZend/View/Helper.php';
 /**
  * Show the time in seconds of the page loading
  *
- * @package FaZend
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
 

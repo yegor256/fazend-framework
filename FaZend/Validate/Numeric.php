@@ -17,7 +17,7 @@
 /**
  * One simple validator for numeric values
  *
- * @package FaZend
+ * @package Validate
  */
 class FaZend_Validate_Numeric extends Zend_Validate_Abstract {
 

@@ -17,7 +17,7 @@
 /**
  * Runner of a single unit test
  *
- * @package FaZend 
+ * @package Test
  */
 class FaZend_Test_Runner {
 

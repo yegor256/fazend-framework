@@ -17,7 +17,8 @@
 /**
  * Sample calculator
  *
- * @package test
+ * @package application
+ * @subpackage Model
  */
 class Model_SampleCalculator {
     

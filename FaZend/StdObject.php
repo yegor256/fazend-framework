@@ -19,7 +19,7 @@
  *
  * You should use this class as a parent class for your classes.
  *
- * @package FaZend
+ * @package StdObject
  */
 class FaZend_StdObject {
 

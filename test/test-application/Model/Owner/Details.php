@@ -14,7 +14,13 @@
  * @category FaZend
  */
 
-// sample class for htmlTable testing
+/**
+ * sample class for htmlTable testing
+ * 
+ *
+ * @package application
+ * @subpackage Model
+ */
 class Model_Owner_Details extends FaZend_StdObject {
 
     public function __toString() {

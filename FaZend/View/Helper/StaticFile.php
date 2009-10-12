@@ -18,6 +18,8 @@
  * Simplified link for a static file
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_StaticFile {
 

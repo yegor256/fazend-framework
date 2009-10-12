@@ -17,8 +17,8 @@
 /**
  * System component, central
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 class FaZend_AnalysisModeller_Component_Class extends FaZend_AnalysisModeller_Component_Abstract {
 

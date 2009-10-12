@@ -17,7 +17,7 @@
 /**
  * Version of FaZend
  *
- * @package FaZend
+ * @package Version
  */
 class FaZend_Version {
 

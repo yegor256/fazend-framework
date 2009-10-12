@@ -17,7 +17,8 @@
 /**
  * Cache in mysql MEMORY table
  *
- * @package FaZend 
+ * @package Cache
+ * @subpackage Backend
  */
 class FaZend_Cache_Backend_MysqlMemory extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface {
 

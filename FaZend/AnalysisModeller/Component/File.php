@@ -17,8 +17,8 @@
 /**
  * Just one file
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 abstract class FaZend_AnalysisModeller_Component_File extends FaZend_AnalysisModeller_Component_Abstract {
 

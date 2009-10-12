@@ -17,7 +17,7 @@
 /**
  * Send email using template
  *
- * @package FaZend 
+ * @package Email 
  */
 class FaZend_Email {
 

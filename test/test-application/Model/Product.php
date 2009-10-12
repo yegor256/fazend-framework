@@ -14,6 +14,12 @@
  * @category FaZend
  */
 
+/**
+ * 
+ *
+ * @package application
+ * @subpackage Model
+ */
 class Model_Product extends FaZend_Db_Table_ActiveRow_product {
 }
 

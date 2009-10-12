@@ -17,7 +17,7 @@
 /**
  * One shell task
  *
- * @package Model
+ * @package Exec
  */
 class FaZend_Exec extends FaZend_StdObject {
 

@@ -19,7 +19,8 @@ require_once 'FaZend/View/Helper.php';
 /**
  * Dynamic DIV object on the page, downloadable automatically or by a user click
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_AjaxCall extends FaZend_View_Helper {
 

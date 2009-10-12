@@ -17,7 +17,8 @@
 /**
  * Mockup meta element, page title
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_Title extends FaZend_UiModeller_Mockup_Meta_Abstract {
 

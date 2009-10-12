@@ -19,7 +19,8 @@ require_once 'FaZend/View/Helper.php';
 /**
  * Flash message to show in layout/scripts/layout.phtml
  *
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper {
 

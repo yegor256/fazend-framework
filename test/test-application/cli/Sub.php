@@ -15,10 +15,11 @@
  */
 
 /**
-* CLI Os version detector
-*
-*
-*/
+ * CLI Os version detector
+ *
+ * @package application
+ * @subpackage Cli
+ */
 class Sub extends FaZend_Cli_Abstract {
 
     /**

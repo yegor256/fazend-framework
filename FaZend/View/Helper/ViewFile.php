@@ -17,8 +17,8 @@
 /**
  * Link to a static file, in "views/files" directory
  *
- * @package FaZend_View
- * @subpackage FaZend_View_Helper
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_ViewFile extends FaZend_View_Helper {
 

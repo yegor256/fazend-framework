@@ -20,7 +20,8 @@ require_once 'FaZend/View/Helper.php';
  * Includes JQuery into the list of scripts to load
  * 
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper {
 

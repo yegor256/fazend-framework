@@ -19,7 +19,8 @@
  *
  * Dispatcher of all pages/actions
  *
- * @package testApplication
+ * @package application
+ * @subpackage controllers
  */
 class IndexController extends FaZend_Controller_Action {
 

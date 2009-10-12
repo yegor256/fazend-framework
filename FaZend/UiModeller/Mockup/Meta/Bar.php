@@ -17,7 +17,8 @@
 /**
  * Mockup meta element, list of links
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_Bar extends FaZend_UiModeller_Mockup_Meta_Abstract {
 

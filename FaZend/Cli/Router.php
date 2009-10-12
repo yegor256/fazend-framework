@@ -18,7 +18,7 @@
  * Router of CLI (command line interface) calls
  *
  * @see http://code.google.com/p/fazend/wiki/FaZend_Cli
- * @package Cli 
+ * @package Cli
  */
 class FaZend_Cli_Router {
 

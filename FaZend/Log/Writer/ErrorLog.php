@@ -20,7 +20,7 @@
  * Writes messages to error_log and send this file to admin, if it's
  * too long or too old.
  *
- * @package FaZend_Log
+ * @package Log
  */
 class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
 

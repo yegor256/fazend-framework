@@ -17,7 +17,7 @@
 /**
  * One table on the map
  *
- * @package FaZend 
+ * @package Deployer
  */
 class FaZend_Deployer_MapTable {
 

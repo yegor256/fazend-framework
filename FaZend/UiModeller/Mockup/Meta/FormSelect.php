@@ -20,7 +20,8 @@
  * - header: title to show
  * - value: list of values into the list
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_FormSelect extends FaZend_UiModeller_Mockup_Meta_FormElement {
 

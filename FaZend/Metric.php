@@ -57,7 +57,7 @@
  * Second call of the method is optional and will be done only if the value
  * is not stored yet in the database.
  *
- * @package Model
+ * @package Metric
  */
 class FaZend_Metric {
 

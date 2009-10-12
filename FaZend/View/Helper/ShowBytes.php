@@ -18,7 +18,8 @@
  * Show size in bytes/Mb/Kb/Tb/etc.
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_ShowBytes {
 

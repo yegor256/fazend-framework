@@ -17,6 +17,11 @@
 if (defined('APPLICATION_ENV') && APPLICATION_ENV !== 'production')
     set_error_handler(array('FaZendErrorHandler', 'handle'));
 
+/**
+ * Error handler class
+ *
+ * @package Application
+ */
 class FaZendErrorHandler {
     
     /**

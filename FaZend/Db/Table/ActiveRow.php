@@ -20,6 +20,7 @@ require_once 'Zend/Db/Table/Row.php';
  * One row
  *
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
+ * @package Db
  */
 abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 

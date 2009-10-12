@@ -20,6 +20,7 @@ require_once 'Zend/Loader/Autoloader/Interface.php';
  * Loader of active row classes
  *
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
+ * @package Db
  */
 class FaZend_Db_TableLoader implements Zend_Loader_Autoloader_Interface {
 

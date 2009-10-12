@@ -17,8 +17,8 @@
 /**
  * One abstract diagram
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Diagram
  */
 abstract class FaZend_AnalysisModeller_Diagram_Abstract {
 

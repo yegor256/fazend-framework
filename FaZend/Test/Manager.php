@@ -17,7 +17,7 @@
 /**
  * Manager of unit tests
  *
- * @package FaZend 
+ * @package Test
  */
 class FaZend_Test_Manager extends FaZend_StdObject {
 

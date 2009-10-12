@@ -22,7 +22,8 @@ require_once 'FaZend/View/Helper/HeadScript.php';
  * It is packing together inline scripts into one single <SCRIPT> block
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
- * @package FaZend 
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 

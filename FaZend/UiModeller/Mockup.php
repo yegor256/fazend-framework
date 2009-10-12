@@ -17,7 +17,7 @@
 /**
  * One-page mockup builder
  *
- * @package FaZend 
+ * @package UiModeller
  */
 class FaZend_UiModeller_Mockup {
 

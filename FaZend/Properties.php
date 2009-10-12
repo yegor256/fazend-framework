@@ -18,6 +18,7 @@
  * Properties of FaZend
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
+ * @package Properties
  */
 class FaZend_Properties {
 

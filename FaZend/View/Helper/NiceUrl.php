@@ -18,8 +18,8 @@
  * Converts string to nice URL string
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
- * @package FaZend_View
- * @subpackage FaZend_View_Helper
+ * @package View
+ * @subpackage Helper
  */
 class FaZend_View_Helper_NiceUrl {
 

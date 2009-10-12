@@ -17,8 +17,8 @@
 /**
  * Just source code file, in PHP
  *
- * @category FaZend
  * @package AnalysisModeller
+ * @subpackage Component
  */
 class FaZend_AnalysisModeller_Component_File_PhpFile extends FaZend_AnalysisModeller_Component_File {
 

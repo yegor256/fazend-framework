@@ -19,8 +19,8 @@ require_once 'Zend/Filter/Interface.php';
 /**
  * CSS compression
  *
- * @category   FaZend
- * @package    FaZend_View_Filter
+ * @package View
+ * @subpackage Filter
  */
 class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
 

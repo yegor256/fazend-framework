@@ -26,6 +26,7 @@
  * </code>
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
+ * @package Db
  */
 class FaZend_Db_Wrapper {
 

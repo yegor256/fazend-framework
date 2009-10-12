@@ -17,10 +17,12 @@
 require_once 'phing/Task.php';
 
 /**
-* This is Phing Task for uploading all files to FTP
-*
-* @see http://phing.info/docs/guide/current/chapters/ExtendingPhing.html#WritingTasks
-*/
+ * This is Phing Task for uploading all files to FTP
+ *
+ * @see http://phing.info/docs/guide/current/chapters/ExtendingPhing.html#WritingTasks
+ * @package Application
+ * @subpackage Phing
+ */
 class UploadByFTP extends Task {
 
     // these directories/files won't be uploaded

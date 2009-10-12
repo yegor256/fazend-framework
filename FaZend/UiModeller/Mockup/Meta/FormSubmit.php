@@ -17,7 +17,8 @@
 /**
  * Form text
  *
- * @package FaZend 
+ * @package UiModeller
+ * @subpackage Mockup
  */
 class FaZend_UiModeller_Mockup_Meta_FormSubmit extends FaZend_UiModeller_Mockup_Meta_FormElement {
 
