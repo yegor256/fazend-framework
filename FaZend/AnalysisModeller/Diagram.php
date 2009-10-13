@@ -49,8 +49,8 @@ class FaZend_AnalysisModeller_Diagram {
      */
     public static function getTypes() {
         $list = array();
-        foreach (new FilesystemIterator(dirname(__FILE__) . '/Diagram') as $file) {
-            $type = $file->getBasename('.php');
+        foreach (glob(dirname(__FILE__) . '/Diagram/*.php') as $file) {
+            $type = pathinfo($file, PATHINFO_FILENAME);
             if ($type == 'Abstract')
                 continue;
             if (!preg_match('/^\w+$/', $type))
