@@ -396,7 +396,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
                 // attach link to the TD
                 if ($this->_column($title)->link)
-                    $value = $this->_resolveLink($this->_column($title)->link, $value, $row, $key);
+                    $value = $this->_resolveLink($this->_column($title)->link, $value, $rowOriginal, $key);
 
                 // append CSS style
                 $tds[$title] = '<td' . ($this->_column($title)->style ? " style='{$this->_column($title)->style}'" : false) .
