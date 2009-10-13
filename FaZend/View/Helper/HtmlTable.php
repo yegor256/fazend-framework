@@ -415,7 +415,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                     }    
 
                     // build the <A HREF> link for this option
-                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $row, $key);
+                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $rowOriginal, $key);
 
                     // attach this option to the particular column    
                     if ($option->toColumn)    
