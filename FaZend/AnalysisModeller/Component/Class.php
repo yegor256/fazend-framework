@@ -44,52 +44,59 @@ class FaZend_AnalysisModeller_Component_Class extends FaZend_AnalysisModeller_Co
      *
      * @param Zend_View View to render
      * @param string Type of diagram to draw
-     * @param integer X-coordinate
-     * @param integer Y-coordinate
+     * @param integer X-coordinate of the center
+     * @param integer Y-coordinate of the center
      * @return string
      */
     public function svg(Zend_View $view, $type, $x, $y) {
         $title = $this->_cutTitle($this->getName());
         $font = FaZend_AnalysisModeller_Component::FONT_SIZE;
         $line = FaZend_AnalysisModeller_Component::STROKE_WIDTH;
+        
+        // width and height of the image
         $width = $this->_textWidth($title) * $font;
+        $height = $font * 4;
+        
+        // left top corner coordinate
+        $cornerX = $x - $width/2;
+        $cornerY = $y - $height/2;
         
         return 
         
-        $this->_makeSvg('rect', array(
-            'x' => $x,
-            'y' => $y,
+        self::makeSvg('rect', array(
+            'x' => $cornerX,
+            'y' => $cornerY,
             'width' => $width,
-            'height' => $font * 4,
+            'height' => $height,
             'fill' => '#' . FaZend_Image::UML_FILL,
             'stroke' => '#' . FaZend_Image::UML_BORDER,
             'stroke-width' => $line)) .
             
-        $this->_makeSvg('line', array(
-            'x1' => $x,
-            'y1' => $y + $font * 2.5,
-            'x2' => $x + $width,
-            'y2' => $y + $font * 2.5,
+        self::makeSvg('line', array(
+            'x1' => $cornerX,
+            'y1' => $cornerY + $font * 2.5,
+            'x2' => $cornerX + $width,
+            'y2' => $cornerY + $font * 2.5,
             'stroke' => '#' . FaZend_Image::UML_BORDER,
             'stroke-width' => $line)) .
 
-        $this->_makeSvg('line', array(
-            'x1' => $x,
-            'y1' => $y + $font * 3,
-            'x2' => $x + $width,
-            'y2' => $y + $font * 3,
+        self::makeSvg('line', array(
+            'x1' => $cornerX,
+            'y1' => $cornerY + $font * 3,
+            'x2' => $cornerX + $width,
+            'y2' => $cornerY + $font * 3,
             'stroke' => '#' . FaZend_Image::UML_BORDER,
             'stroke-width' => $line)) .
 
-        $this->_makeSvg('a', array(
+        self::makeSvg('a', array(
             'target' => '_parent',
             'xlink:href' => $view->url(array(
                 'action' => 'index', 
                 'diagram' => $this->getDiagramName($type)), 'analysis'),
             'xlink:title' => $this->getFullName()),
-            $this->_makeSvg('text', array(
-                'x' => $x + $font,
-                'y' => $y + $font * 2,
+            self::makeSvg('text', array(
+                'x' => $cornerX + $font,
+                'y' => $cornerY + $font * 2,
                 'class' => 'text',
                 'font-family' => 'Verdana',
                 'font-size' => $font), $title));

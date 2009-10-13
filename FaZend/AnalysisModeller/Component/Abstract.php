@@ -141,6 +141,21 @@ abstract class FaZend_AnalysisModeller_Component_Abstract extends ArrayIterator 
     }
 
     /**
+     * Create svg text
+     *
+     * @param string Name of the node in SVG
+     * @param array List of attributes, associative array
+     * @param string Content of the node
+     * @return string SVG node
+     **/
+    public static function makeSvg($name, array $options = array(), $content = null) {
+        $svg = "\n<" . $name . ' ';
+        foreach ($options as $key=>$value)
+            $svg .= $key . '="' . $value . '" ';
+        return $svg . '>' . $content . '</' . $name . ">\n";
+    }
+
+    /**
      * Build SVG of the component and returns it
      *
      * @param Zend_View View to render
@@ -150,18 +165,6 @@ abstract class FaZend_AnalysisModeller_Component_Abstract extends ArrayIterator 
      * @return string
      */
     abstract public function svg(Zend_View $view, $type, $x, $y);
-
-    /**
-     * Create svg text
-     *
-     * @return string
-     **/
-    protected function _makeSvg($name, array $options = array(), $content = null) {
-        $svg = "\n<" . $name . ' ';
-        foreach ($options as $key=>$value)
-            $svg .= $key . '="' . $value . '" ';
-        return $svg . '>' . $content . '</' . $name . ">\n";
-    }
 
     /**
      * Move component to a new destination

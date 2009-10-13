@@ -35,38 +35,44 @@ class FaZend_AnalysisModeller_Component_Package extends FaZend_AnalysisModeller_
         $title = $this->_cutTitle($this->getName());
         $font = FaZend_AnalysisModeller_Component::FONT_SIZE;
         $line = FaZend_AnalysisModeller_Component::STROKE_WIDTH;
+        
+        // width and height of the image
         $width = $this->_textWidth($title) * $font;
         $height = $font * 4;
         
+        // left top corner coordinate
+        $cornerX = $x - $width/2;
+        $cornerY = $y - $height/2;
+        
         return 
         
-        $this->_makeSvg('rect', array(
-            'x' => $x,
-            'y' => $y,
+        self::makeSvg('rect', array(
+            'x' => $cornerX,
+            'y' => $cornerY,
             'width' => $width,
             'height' => $height,
             'fill' => '#' . FaZend_Image::UML_FILL,
             'stroke' => '#' . FaZend_Image::UML_BORDER,
             'stroke-width' => $line)) .
             
-        $this->_makeSvg('rect', array(
-            'x' => $x,
-            'y' => $y - $font,
+        self::makeSvg('rect', array(
+            'x' => $cornerX,
+            'y' => $cornerY - $font,
             'width' => $font * 3,
             'height' => $font,
             'fill' => '#' . FaZend_Image::UML_FILL,
             'stroke' => '#' . FaZend_Image::UML_BORDER,
             'stroke-width' => $line)) .
 
-        $this->_makeSvg('a', array(
+        self::makeSvg('a', array(
             'target' => '_parent',
             'xlink:href' => $view->url(array(
                 'action' => 'index', 
                 'diagram' => $this->getDiagramName($type)), 'analysis'),
             'xlink:title' => $this->getFullName()),
-            $this->_makeSvg('text', array(
-                'x' => $x + $font,
-                'y' => $y + $font * 2,
+            self::makeSvg('text', array(
+                'x' => $cornerX + $font,
+                'y' => $cornerY + $font * 2,
                 'class' => 'text',
                 'font-family' => 'Verdana',
                 'font-size' => $font), $title));

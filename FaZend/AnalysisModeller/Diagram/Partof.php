@@ -50,26 +50,37 @@ class FaZend_AnalysisModeller_Diagram_Partof extends FaZend_AnalysisModeller_Dia
         $centerY = 25;
         $maxToShow = 8;
         
-        // put central element to the center
-        $svg .= $this->_component->svg($view, 'partof', $centerX, $centerY - 10);
-        
         $components = $this->getComponentsToShow();
         
-        if (!count($components))
-            return $svg;
+        if (count($components)) {
+            $delta = 180/min(count($components), $maxToShow);
+            $angle = 270 + 90/min(count($components), $maxToShow);
+            $radius = 60;
+            $total = 0;
         
-        $delta = 180/min(count($components), $maxToShow);
-        $angle = 270 + 90/min(count($components), $maxToShow);
-        $radius = 60;
-        $total = 0;
-        while (count($components) && ($total < $maxToShow)) {
-            $component = array_shift($components);
-            $x = $centerX + $radius * sin(deg2rad($angle));
-            $y = $centerY + $radius * cos(deg2rad($angle));
-            $svg .= $component->svg($view, 'partof', $x, $y);
-            $angle += $delta;
-            $total++;
+            while (count($components) && ($total < $maxToShow)) {
+                $component = array_shift($components);
+                $x = $centerX + $radius * sin(deg2rad($angle));
+                $y = $centerY + $radius * cos(deg2rad($angle));
+                
+                $svg .= FaZend_AnalysisModeller_Component_Abstract::makeSvg('line', array(
+                    'x1' => $centerX,
+                    'y1' => $centerY,
+                    'x2' => $x,
+                    'y2' => $y,
+                    'stroke' => '#' . FaZend_Image::UML_BORDER,
+                    'stroke-width' => FaZend_AnalysisModeller_Component::STROKE_WIDTH,
+                    ));
+                
+                $svg .= $component->svg($view, 'partof', $x, $y);
+                $angle += $delta;
+                $total++;
+            }
         }
+
+        // put central element to the center
+        $svg .= $this->_component->svg($view, 'partof', $centerX, $centerY);
+        
         return $svg;
     }
 
