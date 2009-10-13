@@ -527,11 +527,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @param FaZend_StdObject Link object
      * @param string Text to show, previously escaped, if necessary
-     * @param array Row data
+     * @param array|object Row data
      * @param string Key of the row
      * @return string HTML
      */
-    protected function _resolveLink(FaZend_StdObject $link, $title, array $row, $key) {
+    protected function _resolveLink(FaZend_StdObject $link, $title, $row, $key) {
         $params = $link->urlParams;
 
         // you can specify params as callbacks
