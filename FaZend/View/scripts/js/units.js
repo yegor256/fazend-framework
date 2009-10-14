@@ -15,7 +15,11 @@ var _refreshScreen = function(json) {
         return;
     }
     
-    $('#output').html(json['output']);
+    if (json['output'])
+        $('#output').html(json['output']);
+    else
+        $('#output').html(json);
+        
     $('#protocol').html(json['protocol']);
     
     if (json['spanlog']) {
