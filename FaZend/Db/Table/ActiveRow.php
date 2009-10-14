@@ -160,7 +160,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         // you should not access ID field directly!
         if (strtolower($name) == 'id')
-            trigger_error("ID should not be directly accesses", E_USER_WARNING);
+            trigger_error("ID should not be directly accesses in " . get_class($this), E_USER_WARNING);
 
         // system field
         if (strtolower($name) == '__id')
