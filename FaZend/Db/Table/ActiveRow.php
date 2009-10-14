@@ -237,9 +237,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
             // without explicit notification of the RowClass. In such a case
             // we can't create an exception with class FaZend_Db_Table_tablename_NotFoundException
             // because we will end up in new table automatic creation by the table loader
-            FaZend_Exception::raise(preg_match('/^FaZend_/', get_class($this)) ? 'FaZend_Db_Table_NotFoundException' : get_class($this) . '_NotFoundException', 
-                get_class($this) . " not found (ID: {$this->_preliminaryKey})",
-                'FaZend_Db_Table_NotFoundException');
+            FaZend_Exception::raise(
+                preg_match('/^FaZend_/', get_class($this)) ? 
+                    'FaZend_Db_Table_NotFoundException' : 
+                    get_class($this) . '_NotFoundException', // exception class name
+                get_class($this) . " not found (ID: {$this->_preliminaryKey})", // description of the exception
+                'FaZend_Db_Table_NotFoundException'  // parent class of the exception
+                );
 
         // if we found something  fill the data inside this class
         // and stop on it
