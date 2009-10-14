@@ -17,7 +17,7 @@
 require_once 'Zend/Db/Table/Row.php';
 
 /**
- * One row
+ * One row, ActiveRow pattern
  *
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  * @package Db
@@ -44,6 +44,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * Create new row or load the existing one
      *
+     * @param integer|false ID of the row to retrieve, otherwise creates NEW row
      * @return FaZend_Db_Table_Row
      */
     public function __construct($id = false) {
@@ -194,6 +195,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     /**
      * Set sub-objects by ID 
      *
+     * @param string Name of the property
+     * @param mixed Value of the property to set
      * @return void
      */
     public function __set($name, $value) {
@@ -254,7 +257,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param string Name of the column
      * @return boolean
      */
-    public function _isForeignKey($table, $column) {
+    protected function _isForeignKey($table, $column) {
         
         // if the array of ALL tables in the db is NOT already defined
         // we should grab it from the DB by SQL request
