@@ -9,16 +9,12 @@ var runningUnit = false;
  * @return void
  */
 var _refreshScreen = function(json) {
-            
     // sanity check
     if (json === null) {
         return;
     }
     
-    if (json['output'])
-        $('#output').html(json['output']);
-    else
-        $('#output').html(json);
+    $('#output').html(json['output']);
         
     $('#protocol').html(json['protocol']);
     
@@ -72,6 +68,10 @@ function run(ahref, spanlog, unit) {
         data: {name: runningUnit},
         dataType: "json",
         success: _refreshScreen,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#output').html(XMLHttpRequest.responseText);            
+            alert('Error in AJAX: ' + textStatus + ', error thrown: ' + errorThrown);
+        }
     });
     
 }
