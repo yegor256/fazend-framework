@@ -114,7 +114,7 @@
         <if>
             <isset property="live.home"/>
             <then>
-                <pingFaZend url="${live.home}/__ping/backup" />
+                <pingFaZend url="${live.home}/__fz/ping/backup" />
             </then>
         </if>
     </target>
