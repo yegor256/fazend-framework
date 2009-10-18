@@ -549,7 +549,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
 
         // if this process is required - do it
         if ($link->httpVar)
-            $params += array($link->httpVar => $row[$link->column]);
+            $params += array($link->httpVar => (is_object($row) ? $row->{$link->column} : $row[$link->column]));
 
         return "<a href='".$this->getView()->url($params, $link->route, $link->reset, $link->encode)."'>" . $title . '</a>';
     }
