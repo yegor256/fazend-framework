@@ -103,7 +103,7 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
                 
             case 'bool':
             case 'boolean':
-                $ok = is_boolean($value);
+                $ok = is_bool($value);
                 break;
         }
         
