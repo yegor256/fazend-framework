@@ -1,28 +1,26 @@
 <?
-$this->doctype(Zend_View_Helper_Doctype::XHTML1_STRICT);
+    $this->headMeta()
+        ->appendHttpEquiv('expires', 'Wed, 26 Feb 1997 08:21:57 GMT')
+        ->appendHttpEquiv('pragma', 'no-cache')
+        ->appendHttpEquiv('Cache-Control', 'no-cache')
+        ->appendName('keywords', '')
+        ->appendName('description', '');
 
-$this->headMeta()
-    ->appendHttpEquiv('expires', 'Wed, 26 Feb 1997 08:21:57 GMT')
-    ->appendHttpEquiv('pragma', 'no-cache')
-    ->appendHttpEquiv('Cache-Control', 'no-cache')
-    ->appendName('keywords', '')
-    ->appendName('description', '');
-
-$this->stripCSS('global.css');
+    $this->includeCSS('global.css');
 
 ?><?=$this->doctype()?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-<?=$this->headTitle()?>
-<?=$this->headMeta()?>
-<?=$this->headLink()?>
-<?=$this->headStyle()?>
+    <?=$this->headTitle()?>
+    <?=$this->headMeta()?>
+    <?=$this->headLink()?>
+    <?=$this->headStyle()?>
 </head> 
 <body>
 
-<div>
-<?= $this->layout()->content ?>
-</div>
+    <div>
+    <?= $this->layout()->content ?>
+    </div>
 
 </body>
 </html>

@@ -1,3 +1,9 @@
+#AuthUserFile .htpasswd
+#AuthGroupFile /dev/null
+#AuthName "project protected files"
+#AuthType Basic
+#require valid-user
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
