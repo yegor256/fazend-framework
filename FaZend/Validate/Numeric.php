@@ -33,7 +33,8 @@ class FaZend_Validate_Numeric extends Zend_Validate_Abstract {
     /**
      * Defined by Zend_Validate_Interface
      *
-     * Returns true if and only if $value is true
+     * Returns true if and only if $value is a numeric value. This is analoguos for
+     * a direct call to is_numeric().
      *
      * @param  string $value
      * @return boolean

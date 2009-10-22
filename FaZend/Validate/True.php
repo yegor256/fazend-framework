@@ -33,7 +33,7 @@ class FaZend_Validate_True extends Zend_Validate_Abstract {
     /**
      * Defined by Zend_Validate_Interface
      *
-     * Returns true if and only if $value is true
+     * Returns true if and only if $value is TRUE
      *
      * @param  string $value
      * @return boolean

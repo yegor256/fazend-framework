@@ -77,7 +77,8 @@ class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
     /**
      * Defined by Zend_Validate_Interface
      *
-     * Returns true if and only if $value is instance of some class
+     * Returns true if and only if $value NOT starts with this predefined prefix. For example
+     * 'abcTest' will return FALSE with notStartWith($value, 'abc').
      *
      * @param  string $value
      * @return boolean

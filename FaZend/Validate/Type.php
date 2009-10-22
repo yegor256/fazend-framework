@@ -79,9 +79,16 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
     /**
      * Defined by Zend_Validate_Interface
      *
-     * Returns true if and only if $value is instance of some class
+     * Returns true if and only if $value is of some type. For example:
      *
-     * @param  string $value
+     * <code>
+     * validate()
+     *    ->type($value1, 'string') // make sure that $value1 is of type STRING
+     *    ->type($value2, 'int') // make sure $value2 is INTEGER
+     *    ->type($value3, 'bool'); // make sure that it's BOOLEAN
+     * <code>
+     *
+     * @param mixed $value
      * @return boolean
      */
     public function isValid($value) {

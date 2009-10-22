@@ -77,7 +77,8 @@ class FaZend_Validate_StartWith extends Zend_Validate_Abstract {
     /**
      * Defined by Zend_Validate_Interface
      *
-     * Returns true if and only if $value is instance of some class
+     * Returns true if and only if $value starts with some prefix, pre-defined. For example,
+     * startWith('abcTest', 'cde') will return FALSE.
      *
      * @param  string $value
      * @return boolean
