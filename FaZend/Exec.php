@@ -54,6 +54,13 @@ class FaZend_Exec extends FaZend_StdObject {
      * @var string
      */
     protected $_name;
+    
+    /**
+     * Shall we show details in log?
+     *
+     * @var boolean
+     */
+    protected $_detailed = false;
 
     /**
      * Construct it
@@ -166,7 +173,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function output() {
-        return self::_output(self::_uniqueId($this->_name));
+        return 
+        ($this->_detailed ? "Name '{$this->_name}', ID: '" . self::_uniqueId($this->_name) . 
+            "'\ncmd: {$this->_cmd}\n" : false) . 
+        self::_output(self::_uniqueId($this->_name));
     }
 
     /**
@@ -181,6 +191,16 @@ class FaZend_Exec extends FaZend_StdObject {
 
         self::_stop(self::_uniqueId($this->_name));
 
+    }
+    
+    /**
+     * Set log to be detailed
+     *
+     * @return void
+     **/
+    public function setDetailed() {
+        $this->_detailed = true;
+        return $this;
     }
 
     /**
@@ -267,7 +287,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return boolean|string Output of the EXEC or false
      */
     protected static function _output($id) {
-        return @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
+        return 
+        @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
     }
 
     /**
