@@ -283,12 +283,14 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string shell command
      * @return void
      */
-    protected static function _execute($id, $cmd, $dir) {
+    protected static function _execute($id, $cmd, $dir = null) {
         
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
-        $current = getcwd();
-        chdir($dir);
+        if (!is_null($dir)) {
+            $current = getcwd();
+            chdir($dir);
+        }
 
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
 
@@ -301,8 +303,12 @@ class FaZend_Exec extends FaZend_StdObject {
             file_put_contents($pidFile, (string)self::WIN_FAKE_PID);
         }
 
+        // execute it!
         shell_exec($shell);
-        chdir($current);
+
+        if (!is_null($dir)) {
+            chdir($current);
+        }
 
         self::$_running[$id] = (int)@file_get_contents($pidFile);
 
