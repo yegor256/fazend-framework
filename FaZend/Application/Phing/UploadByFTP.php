@@ -131,18 +131,18 @@ class UploadByFTP extends Task {
         if ($this->ftp === false)
             throw new BuildException("Failed to connect to ftp ({$this->_server})");    
 
-        $this->Log("Logged in successfully to {$this->_server}");    
+        $this->Log("Logged in successfully to '{$this->_server}'");    
 
         if (@ftp_login($this->ftp, $this->_userName, $this->_password) === false)
             throw new BuildException("Failed to login to ftp ({$this->_server})");    
 
-        $this->Log("Connected successfully to FTP as {$this->_userName}");    
+        $this->Log("Connected successfully to FTP as '{$this->_userName}'");    
 
         if (@ftp_pasv($this->ftp, true) === false)
             throw new BuildException("Failed to turn PASV mode ON");    
 
         if (@ftp_chdir($this->ftp, $this->_destDir) === false)
-            throw new BuildException("Failed to go to {$this->_destDir}");    
+            throw new BuildException("Failed to go to '{$this->_destDir}'");    
 
         $this->Log("Current directory in FTP: ".ftp_pwd($this->ftp));    
 
@@ -205,10 +205,10 @@ class UploadByFTP extends Task {
                 // this directory doesn't exist yet on the server, we should create it
                 if (@ftp_chdir($this->ftp, $entry) === false) {
                     if (@ftp_mkdir($this->ftp, $entry) === false)
-                        throw new BuildException("Failed to create dir '$entry' in ".ftp_pwd($this->ftp));    
+                        throw new BuildException("Failed to create dir '{$entry}' in ".ftp_pwd($this->ftp));    
 
                     if (@ftp_chdir($this->ftp, $entry) === false)    
-                        throw new BuildException("Failed to chdir to '$entry' in ".ftp_pwd($this->ftp));    
+                        throw new BuildException("Failed to chdir to '{$entry}' in ".ftp_pwd($this->ftp));    
     
                     $this->Log("Created directory $entry");    
                 }
@@ -216,7 +216,7 @@ class UploadByFTP extends Task {
                 $uploaded += $this->_uploadFiles($fileName);
 
                 if (@ftp_cdup($this->ftp) === false)    
-                    throw new BuildException("Failed to cdup from '$entry' in ".ftp_pwd($this->ftp));    
+                    throw new BuildException("Failed to cdup from '{$entry}' in ".ftp_pwd($this->ftp));    
     
             } else {
 
@@ -227,7 +227,7 @@ class UploadByFTP extends Task {
                 if (in_array($entry, $ftpList)) {
                     $lastModified = @ftp_mdtm($this->ftp, $entry);
                     if ($lastModified === -1)
-                        throw new BuildException("Failed to get file modification time from ftp_mdtm('$entry')");    
+                        throw new BuildException("Failed to get file modification time from ftp_mdtm('{$entry}')");    
 
                     // if the server version is younger than the local - we skip this file    
                     // only if the sizes are similar
@@ -235,7 +235,7 @@ class UploadByFTP extends Task {
 
                         $currentSize = @ftp_size($this->ftp, $entry);
                         if ($currentSize === -1)
-                            throw new BuildException("Failed to get size from ftp_size('$entry')");    
+                            throw new BuildException("Failed to get size from ftp_size('{$entry}')");    
 
                         // if the files are of the same size, don't upload again
                         if ($currentSize == filesize($compressedFile))
@@ -245,10 +245,10 @@ class UploadByFTP extends Task {
                 }    
 
                 if (@ftp_put($this->ftp, $entry, $compressedFile, FTP_BINARY) === false)    
-                    throw new BuildException("Failed to upload '$fileName' (".filesize($fileName)." bytes)");    
+                    throw new BuildException("Failed to upload '{$fileName}' (" . filesize($fileName) . ' bytes)');    
 
                 $uploaded++;
-                $this->Log("Uploaded $fileName (".filesize($fileName)." bytes)");    
+                $this->Log("Uploaded '{$fileName}' (" . filesize($fileName) . ' bytes)');    
             }    
 
         }
