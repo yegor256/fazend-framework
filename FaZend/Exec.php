@@ -87,6 +87,15 @@ class FaZend_Exec extends FaZend_StdObject {
     }
 
     /**
+     * Get output
+     *
+     * @return string
+     */
+    public function __toString() {
+        return $this->output();
+    }
+
+    /**
      * Duration in seconds
      *
      * @return int Seconds
