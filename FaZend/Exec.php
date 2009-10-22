@@ -92,7 +92,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function __toString() {
-        return $this->output();
+        return (string)$this->output();
     }
 
     /**
