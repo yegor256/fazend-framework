@@ -120,7 +120,8 @@ class FaZend_Deployer_Map {
         $angle = 180; // start with left position
         $centerX = self::PADDING + ($width - self::PADDING*2 - FaZend_Deployer_MapTable::WIDTH)/2;
         $centerY = self::PADDING + 0.7 * ($height - self::PADDING*2)/2;
-        $radius = $centerX - self::PADDING - 10;
+        $radiusX = $centerX - self::PADDING - 10;
+        $radiusY = $centerY - self::PADDING - 10;
 
         // change angle and radius, but the clock-order circle
         $angleDelta = 360/count($tables);
@@ -131,8 +132,8 @@ class FaZend_Deployer_Map {
         foreach ($tables as $table) {
 
             // calculate coordinates
-            $x = round($centerX + $radius * cos(deg2rad($angle)));
-            $y = round($centerY + $radius * sin(deg2rad($angle)) * $height/$width);
+            $x = round($centerX + $radiusX * cos(deg2rad($angle)));
+            $y = round($centerY + $radiusY * sin(deg2rad($angle)) * $height/$width);
 
             // draw one table
             $table->draw($x, $y);
@@ -202,7 +203,7 @@ class FaZend_Deployer_Map {
 
             $biggest = array_pop($tables);
             return array(
-                round(self::PADDING*2 + $total * FaZend_Deployer_MapTable::WIDTH * 0.6), // width
+                round(self::PADDING*2 + $total * FaZend_Deployer_MapTable::WIDTH * 1), // width
                 round(self::PADDING*2 + $biggest->height * 3) // height
             ); 
 
