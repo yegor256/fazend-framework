@@ -173,10 +173,26 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function output() {
+        $output = self::_output(self::_uniqueId($this->_name));
+        
+        if (!$this->_detailed)
+            return $output;
+
+        $files = '';
+        foreach (array(self::PID_SUFFIX, self::DATA_SUFFIX, self::LOG_SUFFIX) as $suffix) {
+            $fileName = self::_fileName(self::_uniqueId($this->_name), $suffix);
+            $files .= 
+                "{$suffix}: '{$fileName}': " . 
+                (file_exists($fileName) ? filesize($fileName) . 'bytes, ' . FaZend_Date::make(filemtime($fileName)) : 'no file') .
+                "\n";
+        }
+        
         return 
-        ($this->_detailed ? "Name '{$this->_name}', ID: '" . self::_uniqueId($this->_name) . 
-            "'\ncmd: {$this->_cmd}\n" : false) . 
-        self::_output(self::_uniqueId($this->_name));
+        "Name '{$this->_name}', ID: '" . self::_uniqueId($this->_name) . "'\n" .
+        "Cmd: {$this->_cmd}\n" . 
+        $files . "\n" .
+        
+        ($output ? $output : 'NO OUTPUT');
     }
 
     /**
