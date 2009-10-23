@@ -30,4 +30,16 @@ class FaZend_Date {
         return new FaZend_Date($time);
     }
 
+    /**
+     * Current date is between these two dates (including them!)?
+     *
+     * @param Zend_Date|mixed Start date
+     * @param Zend_Date|mixed End date
+     * @return boolean
+     **/
+    public function isBetween($start, $end) {
+        return (($this->isEarlier($end) || $this->equals($end)) && 
+            ($this->isLater($start) || $this->equals($start)));
+    }
+
 }

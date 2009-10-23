@@ -19,7 +19,7 @@ require_once 'AbstractTestCase.php';
 /**
  * Metric tester
  *
- * @package test
+ * @package tests
  */
 class FaZend_MetricTest extends AbstractTestCase {
 

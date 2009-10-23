@@ -16,6 +16,11 @@
 
 require_once 'AbstractTestCase.php';
 
+/**
+ * Test case
+ *
+ * @package tests
+ */
 class FaZend_StdObjectTest extends AbstractTestCase {
     
     public function testSmartGetterWorks () {

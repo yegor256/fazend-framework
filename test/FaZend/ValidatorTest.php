@@ -19,7 +19,7 @@ require_once 'AbstractTestCase.php';
 /**
  * Test the validator mechanism
  *
- * @package test
+ * @package tests
  */
 class FaZend_ValidatorTest extends AbstractTestCase {
 
