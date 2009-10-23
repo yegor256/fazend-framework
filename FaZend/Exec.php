@@ -152,7 +152,7 @@ class FaZend_Exec extends FaZend_StdObject {
     public function execute() {
 
         if ($this->isRunning())
-            return self::_output(self::_uniqueId($this->_name));
+            return $this->output();
                                 
         // serialize and save all local variables
         if (!@file_put_contents(self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX), 
@@ -163,7 +163,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
 
-        return self::_output(self::_uniqueId($this->_name));
+        return $this->output();
 
     }
 
