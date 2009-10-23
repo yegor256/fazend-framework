@@ -97,9 +97,6 @@ class FaZend_Deployer_MapTable {
      */
     public function draw($x, $y) {
 
-        validate()
-            ->true(extension_loaded('FreeType'), 'FreeType extension is not loaded');
-
         $top = $y;
         $y += self::TITLE_SIZE;
 
