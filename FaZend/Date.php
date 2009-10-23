@@ -19,7 +19,7 @@
  *
  * @package Date
  */
-class FaZend_Date {
+class FaZend_Date extends Zend_Date {
 
     /**
      * Create Zend_Date object on-fly
