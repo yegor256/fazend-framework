@@ -26,7 +26,7 @@ class FaZend_Date {
      *
      * @return FaZend_Date
      **/
-    public static function factory($time) {
+    public static function make($time) {
         return new FaZend_Date($time);
     }
 
