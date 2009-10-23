@@ -31,9 +31,6 @@ class FaZend_UiModeller_Mockup_Meta_Text extends FaZend_UiModeller_Mockup_Meta_A
      */
     public function draw($y) {
 
-        validate()
-            ->true(extension_loaded('freetype'), 'FreeType extension is not loaded');
-
         $txt = $this->_parse($this->label);
 
         $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
