@@ -49,7 +49,7 @@ a {
 /* toplevel headers */
 h1 {
     font-weight: normal;
-    font-size: <?=FaZend_UiModeller_Mockup_Meta_Title::FONT_SIZE?>px;
+    font-size: <?=FaZend_Pan_Ui_Meta_Title::FONT_SIZE?>px;
     margin-bottom: 1em;
     color: <?=FaZend_Image::getCssColor('mockup.content.title')?>;
 }
@@ -58,7 +58,7 @@ h1 {
 p {
     padding-top: 1em;
     padding-bottom: 1em;
-    font-size: <?=FaZend_UiModeller_Mockup_Meta_Text::FONT_SIZE?>px; 
+    font-size: <?=FaZend_Pan_Ui_Meta_Text::FONT_SIZE?>px; 
     color: <?=FaZend_Image::getCssColor('mockup.content')?>;
 }
 
@@ -81,7 +81,7 @@ th {
     padding: 2px;
     margin: 1px;
     background: white;
-    font-size: <?=FaZend_UiModeller_Mockup_Meta_Table::FONT_SIZE?>px;
+    font-size: <?=FaZend_Pan_Ui_Meta_Table::FONT_SIZE?>px;
 }
 
 /* headers */

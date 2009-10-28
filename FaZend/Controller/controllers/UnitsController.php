@@ -43,7 +43,7 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      */
     public function indexAction() {
 
-        $this->view->tests = FaZend_Test_Manager::getInstance()->getTests();
+        $this->view->tests = FaZend_Pan_Tests_Manager::getInstance()->getTests();
 
     }
 
@@ -54,7 +54,7 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      */
     public function runAction() {
 
-        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->run());
+        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->run());
 
     }
 
@@ -65,7 +65,7 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      */
     public function routineAction() {
 
-        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->result());
+        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->result());
 
     }
 
@@ -76,7 +76,7 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      */
     public function stopAction() {
 
-        $this->_returnJSON(FaZend_Test_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->stop());
+        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->stop());
 
     }
 

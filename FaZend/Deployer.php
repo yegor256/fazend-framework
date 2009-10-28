@@ -15,16 +15,17 @@
  */
 
 /**
- * Deploy Db schema
+ * Deploy Db schema to the server (MySQL supported for now only)
  *
  * @package Deployer
+ * @todo Refactor in order to support other DB servers
  */
 class FaZend_Deployer {
 
     const EXCEPTION_CLASS = 'FaZend_Deployer_Exception';
 
     /**
-     * Instance of the class
+     * Instance of the class, singleton pattern
      *
      * @var FaZend_Deployer
      */

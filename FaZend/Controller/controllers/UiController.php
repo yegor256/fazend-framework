@@ -46,25 +46,25 @@ class Fazend_UiController extends FaZend_Controller_Panel {
         if ($this->_hasParam('id'))
             $script = $this->_getParam('id');
         else
-            $script = FaZend_UiModeller_Navigation::DEFAULT_SCRIPT;
+            $script = FaZend_Pan_Ui_Navigation::DEFAULT_SCRIPT;
 
         // pass it to View
         $this->view->script = $script;
 
         // build the mockup
-        $mockup = new FaZend_UiModeller_Mockup($script);
+        $mockup = new FaZend_Pan_Ui_Mockup($script);
         $this->view->page = $mockup->html($this->view);
 
         // get current actor from user session
         $this->view->actor = $actor = $this->_getActor($mockup);
 
         // search and build the whole MAP of the project
-        $this->view->navigation()->setContainer(FaZend_UiModeller_Navigation::getInstance()->discover($script))
-            ->setAcl(FaZend_UiModeller_Navigation::getInstance()->getAcl())
+        $this->view->navigation()->setContainer(FaZend_Pan_Ui_Navigation::getInstance()->discover($script))
+            ->setAcl(FaZend_Pan_Ui_Navigation::getInstance()->getAcl())
             ->setRole($actor);
 
         $this->view->actors = '<ul>';
-        foreach (FaZend_UiModeller_Navigation::getInstance()->getActors() as $a) {
+        foreach (FaZend_Pan_Ui_Navigation::getInstance()->getActors() as $a) {
 
             // this actor is NOT active
             if ($a != $actor) {
@@ -86,7 +86,7 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      */
     public function mockupAction() {
 
-        $mockup = new FaZend_UiModeller_Mockup($this->_getParam('id'));
+        $mockup = new FaZend_Pan_Ui_Mockup($this->_getParam('id'));
 
         $this->_returnPNG($mockup->png());
 
@@ -105,19 +105,19 @@ class Fazend_UiController extends FaZend_Controller_Panel {
         $this->_setParam('id', $script);
 
         // maybe new actor can't access this page?
-        if (!FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $script)) {
+        if (!FaZend_Pan_Ui_Navigation::getInstance()->getAcl()->isAllowed($actor, $script)) {
 
             // we will try to find another script
             $script = false;
 
             // first we try to find HOME, and then any other page
             $pages = array_merge(
-                FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('class', 'home'),
-                FaZend_UiModeller_Navigation::getInstance()->discover()->findAllBy('type', 'action'));
+                FaZend_Pan_Ui_Navigation::getInstance()->discover()->findAllBy('class', 'home'),
+                FaZend_Pan_Ui_Navigation::getInstance()->discover()->findAllBy('type', 'action'));
 
             // go through the list of pages trying to find one that is allowed for the given actor
             foreach ($pages as $page) {
-                if (FaZend_UiModeller_Navigation::getInstance()->getAcl()->isAllowed($actor, $page->resource)) {
+                if (FaZend_Pan_Ui_Navigation::getInstance()->getAcl()->isAllowed($actor, $page->resource)) {
                     $script = $page->resource;
                     break;
                 }
@@ -138,21 +138,21 @@ class Fazend_UiController extends FaZend_Controller_Panel {
     /**
      * Get current actor, taking into account mockup
      *
-     * @param FaZend_UiModeller_Mockup
+     * @param FaZend_Pan_Ui_Mockup
      * @return string
      */
-    protected function _getActor(FaZend_UiModeller_Mockup $mockup) {
+    protected function _getActor(FaZend_Pan_Ui_Mockup $mockup) {
         $actor = $this->_getNamespace()->actor;
         if (!$actor)
-            $actor = FaZend_UiModeller_Navigation::ANONYMOUS;
+            $actor = FaZend_Pan_Ui_Navigation::ANONYMOUS;
 
         // maybe we should switch the actor?
         $availableActors = $mockup->getActors();
-        if (!in_array($actor, $availableActors) && ($actor != FaZend_UiModeller_Navigation::ANONYMOUS)) {
+        if (!in_array($actor, $availableActors) && ($actor != FaZend_Pan_Ui_Navigation::ANONYMOUS)) {
 
             // maybe the list is empty and we should toggle to anonymous?
             if (!count($availableActors))
-                $actor = FaZend_UiModeller_Navigation::ANONYMOUS;
+                $actor = FaZend_Pan_Ui_Navigation::ANONYMOUS;
             else
                 $actor = $availableActors[array_rand($availableActors)];
 

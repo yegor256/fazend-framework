@@ -15,12 +15,12 @@
  */
 
 /**
- * User Interface Modeller
+ * XML RPC facade for Pan_* methods and classes
  *
  * @package Pan
- * @subpackage Analysis
+ * @subpackage Rpc
  */
-class Fazend_AnalysisController extends FaZend_Controller_Panel {
+class Fazend_RpcController extends FaZend_Controller_Panel {
 
     /**
      * Sanity check before dispatching
@@ -28,13 +28,11 @@ class Fazend_AnalysisController extends FaZend_Controller_Panel {
      * @return void
      */
     public function preDispatch() {
-        
         // sanity check
         if (APPLICATION_ENV == 'production')
-            $this->_redirectFlash('Analysis controller is not allowed in production environment', 'restrict', 'login');
+            $this->_redirectFlash('XML RPC controller is not allowed in production environment', 'restrict', 'login');
         
         parent::preDispatch();
-
     }
 
     /**
@@ -43,28 +41,15 @@ class Fazend_AnalysisController extends FaZend_Controller_Panel {
      * @return void
      */
     public function indexAction() {
-        
-        $diagram = $this->view->diagram = FaZend_Pan_Analysis_Diagram::factory($this->_getParam('diagram'));
-
-    }
-    
-    /**
-     * Show the diagram in SVG/XML format
-     *
-     * @return void
-     */
-    public function svgAction() {
-
-        $diagram = FaZend_Pan_Analysis_Diagram::factory($this->_getParam('diagram'));
-        
         $this->_helper->layout->disableLayout();
-        $this->view->setFilter(null);
+        $this->_helper->viewRenderer->setNoRender();
 
-        $this->getResponse()
-            ->setHeader('Content-type', 'text/xml');
-            
-        $this->view->svg = $diagram->svg($this->view);
-
+        $server = new Zend_ZmlRpc_Server();
+        $server->setClass('FaZend_Pan_Database_Facade', 'database');
+        $server->setClass('FaZend_Pan_Ui_Facade', 'ui');
+        $server->setClass('FaZend_Pan_Analysis_Facade', 'analysis');
+        $server->setClass('FaZend_Pan_Tests_Facade', 'tests');
+        echo $server->handle();
     }
-    
+        
 }

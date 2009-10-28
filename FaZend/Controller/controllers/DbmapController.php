@@ -17,7 +17,8 @@
 /**
  * Map of the database
  *
- * @package controllers
+ * @package Pan
+ * @subpackage Database
  */
 class Fazend_DbmapController extends FaZend_Controller_Panel {
 
@@ -44,7 +45,7 @@ class Fazend_DbmapController extends FaZend_Controller_Panel {
     public function indexAction() {
 
         // create new map builder
-        $map = new FaZend_Deployer_Map();
+        $map = new FaZend_Pan_Database_Map();
 
         // return PNG
         $this->_returnPNG($map->png());
@@ -59,7 +60,7 @@ class Fazend_DbmapController extends FaZend_Controller_Panel {
     public function tableAction() {
 
         // create single table builder
-        $map = new FaZend_Deployer_SingleTable($this->_getParam('name'));
+        $map = new FaZend_Pan_Database_SingleTable($this->_getParam('name'));
 
         // return PNG
         $this->_returnPNG($map->png());

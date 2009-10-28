@@ -15,7 +15,7 @@
 
 /* global wrapper */
 div.wrapper {
-    width: <?=FaZend_UiModeller_Mockup::WIDTH?>px;
+    width: <?=FaZend_Pan_Ui_Mockup::WIDTH?>px;
     clear: both;
     margin: 10px auto 20px auto;
     position: relative;
@@ -52,7 +52,7 @@ div.header {
 /* global wrapper */
 div.page {
     border: 1px solid <?=FaZend_Image::getCssColor('border')?>;
-    padding: <?=FaZend_UiModeller_Mockup::INDENT?>px;
+    padding: <?=FaZend_Pan_Ui_Mockup::INDENT?>px;
     position: relative;
     min-height: 400px;
 }

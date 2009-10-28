@@ -9,19 +9,20 @@
 
     <div class="header">
         <div class="path">
-            <? $sectors = explode(FaZend_AnalysisModeller_Diagram::SEPARATOR, $this->diagram->getName()); ?>
+            <? $sectors = explode(FaZend_Pan_Analysis_Diagram::SEPARATOR, $this->diagram->getName()); ?>
             <? foreach (array_slice($sectors, 0, -1) as $i=>$sector): ?><a
                 href="<?=$this->url(array('diagram'=>
-                implode(FaZend_AnalysisModeller_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
-                FaZend_AnalysisModeller_Diagram::SEPARATOR . 
-                $sectors[count($sectors)-1]), 'analysis')?>"><?=$sector?></a><?=FaZend_AnalysisModeller_Diagram::SEPARATOR?><? endforeach; ?><?=$sectors[count($sectors)-1]?>
+                implode(FaZend_Pan_Analysis_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
+                FaZend_Pan_Analysis_Diagram::SEPARATOR . 
+                $sectors[count($sectors)-1]), 'analysis')?>"><?=$sector?></a
+                ><?=FaZend_Pan_Analysis_Diagram::SEPARATOR?><? endforeach; ?><?=$sectors[count($sectors)-1]?>
         </div>
     </div>
 
     <div class="page">
         
         <div class="types">
-            <? foreach (FaZend_AnalysisModeller_Diagram::getTypes() as $type): ?>
+            <? foreach (FaZend_Pan_Analysis_Diagram::getTypes() as $type): ?>
                 <div class="type">
                     <img src="<?=$this->viewFile('analysis/types/' . $type . '.png')?>" />
                     <br/>
@@ -45,8 +46,8 @@
         <object 
             style="overflow: auto;"
             data="<?=$this->url(array('action'=>'svg', 'diagram'=>$this->diagram->getName()), 'analysis')?>"
-            width="<?=FaZend_AnalysisModeller_Diagram::WIDTH?>" 
-            height="<?=FaZend_AnalysisModeller_Diagram::HEIGHT?>" 
+            width="<?=FaZend_Pan_Analysis_Diagram::WIDTH?>" 
+            height="<?=FaZend_Pan_Analysis_Diagram::HEIGHT?>" 
             type="image/svg+xml" 
             />
             

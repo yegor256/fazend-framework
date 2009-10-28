@@ -41,12 +41,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return string
      */
     protected function _getParam ($name, $default = null) {
-
         if (!$this->_hasParam($name))
             FaZend_Exception::raise('FaZend_Controller_Action_ParamNotFoundException', "$name is not specified");
 
         return parent::_getParam($name, $default);    
-
     }
 
     /**
@@ -55,12 +53,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return string|false
      */
     protected function _getParamOrFalse ($name) {
-
         if (!$this->_hasParam($name))
             return false;
 
         return parent::_getParam($name);    
-
     }
 
     /**
@@ -77,10 +73,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */    
     protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
-
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
         $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
-        
     }
 
     /**
@@ -94,7 +88,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */
     protected function _returnPNG($png, $dynamic = true) {
-    
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -106,7 +99,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
             ->setHeader('Content-Type', 'image/png')
             ->setHeader('Content-Length', strlen($png))
             ->setBody($png);
-
     }    
 
     /**

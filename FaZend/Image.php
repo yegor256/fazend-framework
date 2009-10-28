@@ -107,10 +107,9 @@ class FaZend_Image {
      * Call forward to GD library
      *
      * @return void
-     * @throw FaZend_Image_NoDimensionsSet
+     * @throws FaZend_Image_NoDimensionsSet
      */
     public function __call($method, $args) {
-
         if (!$this->_enabled)
             return;
 
@@ -119,23 +118,20 @@ class FaZend_Image {
             FaZend_Exception::raise('FaZend_Image_NoDimensionsSet', 'First you should call FaZend_Image::setDimensions()');
 
         array_unshift($args, $this->_image);
-
+        
         return call_user_func_array($method, $args);
-
     }
 
     /**
      * Build PNG image
      *
-     * @var string
+     * @var string Binary PNG
      */
     public function png() {
-
         // return the PNG content
         ob_start();
         imagepng($this->_image);
         return ob_get_clean();
-
     }
 
     /**
@@ -144,31 +140,31 @@ class FaZend_Image {
      * @var string[]
      */
     private static $_colors = array(
-            'background' => 'ffffff', // white
-            'border' => self::BRAND_LIGHTGRAY, // light gray
-            'error' => 'ff0000', // red
+        'background' => 'ffffff', // white
+        'border' => self::BRAND_LIGHTGRAY, // light gray
+        'error' => 'ff0000', // red
 
-            'table.title' => self::BRAND_BLUE3, // blue
-            'table.column' => self::BRAND_GRAY, // gray
-            'table.comment' => self::BRAND_LIGHTGRAY, // light gray
+        'table.title' => self::BRAND_BLUE3, // blue
+        'table.column' => self::BRAND_GRAY, // gray
+        'table.comment' => self::BRAND_LIGHTGRAY, // light gray
 
-            'mockup.title' => self::BRAND_LIGHTGRAY, // name of the mockup script
-            'mockup.content' => '333333', // texts in mockups
-            'mockup.content.title' => '333333', // titles of pages in mockups
+        'mockup.title' => self::BRAND_LIGHTGRAY, // name of the mockup script
+        'mockup.content' => '333333', // texts in mockups
+        'mockup.content.title' => '333333', // titles of pages in mockups
 
-            'mockup.link' => self::BRAND_BLUE3, // AHREF links
+        'mockup.link' => self::BRAND_BLUE3, // AHREF links
 
-            'mockup.button' => 'dddddd', // background of buttons
-            'mockup.button.border' => self::BRAND_LIGHTGRAY, // borders of buttons
+        'mockup.button' => 'dddddd', // background of buttons
+        'mockup.button.border' => self::BRAND_LIGHTGRAY, // borders of buttons
 
-            'mockup.input' => 'ffffff', // background of inputs
-            'mockup.input.border' => self::BRAND_GRAY, // borders of inputs
-            'mockup.input.text' => self::BRAND_BLUE1, // texts in input fields
+        'mockup.input' => 'ffffff', // background of inputs
+        'mockup.input.border' => self::BRAND_GRAY, // borders of inputs
+        'mockup.input.text' => self::BRAND_BLUE1, // texts in input fields
 
-            'mockup.table.grid' => self::BRAND_LIGHTGRAY, // grids
-            'mockup.table.header' => 'ffffff',
-            'mockup.table.header.background' => self::BRAND_BLUE3,
-        );
+        'mockup.table.grid' => self::BRAND_LIGHTGRAY, // grids
+        'mockup.table.header' => 'ffffff',
+        'mockup.table.header.background' => self::BRAND_BLUE3,
+    );
 
     /**
      * Get the color code for CSS
@@ -177,12 +173,9 @@ class FaZend_Image {
      * @return string
      */
     public static function getCssColor($mnemo) {
-     
         if (!isset(self::$_colors[$mnemo]))
             $mnemo = 'error';
-            	
         return '#' . self::$_colors[$mnemo];
-
     }
 
     /**
@@ -192,14 +185,11 @@ class FaZend_Image {
      * @return int
      */
     public function getColor($mnemo) {
-
         $color = self::getCssColor($mnemo);
-
         return $this->imagecolorallocate( 
             hexdec('0x' . $color{1} . $color{2}), 
             hexdec('0x' . $color{3} . $color{4}), 
             hexdec('0x' . $color{5} . $color{6}));
-
     }
 
     /**
@@ -207,11 +197,43 @@ class FaZend_Image {
      *
      * @param string Mnemo code of the font
      * @var string
+     * @todo Implement it properly
      */
-    public function getFont($mnemo) {
-
+    public static function getFont($mnemo) {
         return FAZEND_PATH . '/Image/fonts/arial.ttf';
-
+    }
+    
+    /**
+     * Get width and height of the text message
+     *
+     * @return array (width, height)
+     **/
+    public static function getTextDimensions($text, $fontSize = 10, $fontMnemo = 'default') {
+        if (method_exists('imagettfbbox')) {
+            $bbox = imagettfbbox($fontSize, 0, self::getFont($fontMnemo), $text);
+            return array(abs($bbox[4]), abs($bbox[5]));
+        }
+        
+        $width = 0;
+        foreach (str_split($text) as $letter) {
+            switch ($letter) {
+                case 'l':
+                case 'i':
+                case 't':
+                    $width += 0.7;
+                    break;
+                case 'm':
+                case 'M':
+                    $width += 1.7;
+                    break;
+                default: 
+                    $width++;
+                    break;
+            }
+            if ($letter >= 'A' && $letter <= 'Z')
+                $width += 0.4;
+        }
+        return array($width * $fontSize, $fontSize);
     }
 
 }
