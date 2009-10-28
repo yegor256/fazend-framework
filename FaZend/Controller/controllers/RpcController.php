@@ -44,7 +44,7 @@ class Fazend_RpcController extends FaZend_Controller_Panel {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $server = new Zend_ZmlRpc_Server();
+        $server = new Zend_XmlRpc_Server();
         $server->setClass('FaZend_Pan_Database_Facade', 'database');
         $server->setClass('FaZend_Pan_Ui_Facade', 'ui');
         $server->setClass('FaZend_Pan_Analysis_Facade', 'analysis');
