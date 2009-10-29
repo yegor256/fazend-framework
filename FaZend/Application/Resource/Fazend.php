@@ -283,4 +283,30 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
     }
 
+    /**
+     * Configure session properly
+     *
+     * @return void
+     **/
+    protected function _initSessionOptions() {
+        $this->_bootstrap->bootstrap('session');
+        
+        $options = Zend_Session::getOptions();
+        $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
+        
+        // create this directory if necessary
+        if (!file_exists($dir))
+            @mkdir($dir);
+            
+        // is it available for writing?
+        if (file_exists($dir) && is_dir($dir) && is_writable($dir)) {
+            $options['save_path'] = $dir;
+            Zend_Session::setOptions($options);
+        } else
+            trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
+        
+        // make session alive by COOKIE information
+        Zend_Session::rememberMe();
+    }
+
 }
