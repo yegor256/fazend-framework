@@ -16,11 +16,11 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_UiModeller_MockupTest extends AbstractTestCase {
+class FaZend_Pan_Ui_MockupTest extends AbstractTestCase {
     
     public function testMockupCreationWorks () {
 
-        $mockup = new FaZend_UiModeller_Mockup('index/mockup');
+        $mockup = new FaZend_Pan_Ui_Mockup('index/mockup');
 
         $this->assertNotEquals(false, $mockup->png());
 
