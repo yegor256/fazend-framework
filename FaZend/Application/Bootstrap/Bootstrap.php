@@ -30,8 +30,8 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
      * @return void
      **/
     protected function _initSessionRemembering() {
-        // $this->boostrap('session');
-        // Zend_Session::rememberMe();
+        $this->bootstrap('session');
+        Zend_Session::rememberMe();
     }
 
 }
