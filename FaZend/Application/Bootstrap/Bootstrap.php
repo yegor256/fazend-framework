@@ -24,5 +24,15 @@ require_once 'Zend/Application/Bootstrap/Bootstrap.php';
  */
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
+    /**
+     * Call remember me
+     *
+     * @return void
+     **/
+    protected function _initSessionRemembering() {
+        $this->_boostrap('session');
+        Zend_Session::rememberMe();
+    }
+
 }
 
