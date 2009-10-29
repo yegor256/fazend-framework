@@ -51,6 +51,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $this->_initPluginCache();
         $this->_initLogger();
         $this->_initDbAutoloader();
+        $this->_initSessionOptions();
 
         return $config;
     }
@@ -291,7 +292,6 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     protected function _initSessionOptions() {
         $this->_bootstrap->bootstrap('session');
         
-        $options = Zend_Session::getOptions();
         $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
         
         // create this directory if necessary
@@ -300,7 +300,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             
         // is it available for writing?
         if (file_exists($dir) && is_dir($dir) && is_writable($dir)) {
-            $options['save_path'] = $dir;
+            $options = array('save_path'=>$dir);
             Zend_Session::setOptions($options);
         } else
             trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
