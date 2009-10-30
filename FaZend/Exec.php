@@ -94,7 +94,7 @@ class FaZend_Exec extends FaZend_StdObject {
     }
 
     /**
-     * Get output
+     * Get output of currently running task, if it's running
      *
      * @return string
      */
@@ -173,14 +173,15 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function output() {
-        $output = self::_output(self::_uniqueId($this->_name));
+        $id = self::_uniqueId($this->_name);
+        $output = self::_output($id);
         
         if (!$this->_detailed)
             return $output;
 
         $files = '';
         foreach (array(self::PID_SUFFIX, self::DATA_SUFFIX, self::LOG_SUFFIX) as $suffix) {
-            $fileName = self::_fileName(self::_uniqueId($this->_name), $suffix);
+            $fileName = self::_fileName($id, $suffix);
             $files .= 
                 "{$suffix}: '{$fileName}': " . 
                 (file_exists($fileName) ? filesize($fileName) . 'bytes, ' . FaZend_Date::make(filemtime($fileName)) : 'no file') .
@@ -188,7 +189,8 @@ class FaZend_Exec extends FaZend_StdObject {
         }
         
         return 
-        "Name '{$this->_name}', ID: '" . self::_uniqueId($this->_name) . "'\n" .
+        "Name '{$this->_name}', ID: '{$id}'\n" .
+        "Process ID: " . self::_pid($id) . "\n" .
         "Cmd: {$this->_cmd}\n" . 
         $files . "\n" .
         
@@ -297,14 +299,13 @@ class FaZend_Exec extends FaZend_StdObject {
     }
         
     /**
-     * Get output log
+     * Get output log, from log file for the currently running task
      *
      * @param string ID of the task
      * @return boolean|string Output of the EXEC or false
      */
     protected static function _output($id) {
-        return 
-        @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
+        return @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
     }
 
     /**
@@ -314,12 +315,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _pid($id) {
-
         if (!self::_isRunning($id))
             return false;
 
         return self::$_running[$id];
-
     }
 
     /**
