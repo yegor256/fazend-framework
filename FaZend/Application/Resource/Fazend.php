@@ -298,6 +298,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if (Zend_Session::$_unitTestEnabled)
             return;
 
+        // if in testing mode - ignore this
+        if (defined('CLI_ENVIRONMENT'))
+            return;
+
         $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
         
         // create this directory if necessary
