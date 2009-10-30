@@ -298,8 +298,6 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if (Zend_Session::$_unitTestEnabled)
             return;
 
-        $this->_bootstrap->bootstrap('session');
-        
         $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
         
         // create this directory if necessary
