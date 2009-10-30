@@ -290,6 +290,9 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      * @return void
      **/
     protected function _initSessionOptions() {
+        if (!$this->_bootstrap->hasPluginResource('session'))
+            return;
+
         $this->_bootstrap->bootstrap('session');
         
         $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
