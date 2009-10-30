@@ -290,7 +290,12 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      * @return void
      **/
     protected function _initSessionOptions() {
+        // if there is NO session - ignore
         if (!$this->_bootstrap->hasPluginResource('session'))
+            return;
+            
+        // if in testing mode - ignore this
+        if (Zend_Session::$_unitTestEnabled)
             return;
 
         $this->_bootstrap->bootstrap('session');
