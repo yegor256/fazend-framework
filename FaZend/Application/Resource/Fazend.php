@@ -42,6 +42,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $config = new Zend_Config($options);
         FaZend_Properties::setOptions($config);
 
+        $this->_initSessionOptions();
         $this->_initFrontControllerOptions();        
         $this->_initViewOptions();
         $this->_initBlindFaZend();
@@ -51,9 +52,43 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $this->_initPluginCache();
         $this->_initLogger();
         $this->_initDbAutoloader();
-        $this->_initSessionOptions();
 
         return $config;
+    }
+
+    /**
+     * Configure session properly
+     *
+     * @return void
+     **/
+    protected function _initSessionOptions() {
+        // if there is NO session - ignore
+        if (!$this->_bootstrap->hasPluginResource('session'))
+            return;
+            
+        // if in testing mode - ignore this
+        if (Zend_Session::$_unitTestEnabled)
+            return;
+
+        // if in testing mode - ignore this
+        if (defined('CLI_ENVIRONMENT'))
+            return;
+
+        $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
+        
+        // create this directory if necessary
+        if (!file_exists($dir))
+            @mkdir($dir);
+            
+        // is it available for writing?
+        if (file_exists($dir) && is_dir($dir) && is_writable($dir)) {
+            $options = array('save_path'=>$dir);
+            Zend_Session::setOptions($options);
+        } else
+            trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
+        
+        // make session alive by COOKIE information
+        Zend_Session::rememberMe();
     }
 
     /**
@@ -282,41 +317,6 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         // if testing or development - log into memory as well
         if (APPLICATION_ENV !== 'production')
             FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
-    }
-
-    /**
-     * Configure session properly
-     *
-     * @return void
-     **/
-    protected function _initSessionOptions() {
-        // if there is NO session - ignore
-        if (!$this->_bootstrap->hasPluginResource('session'))
-            return;
-            
-        // if in testing mode - ignore this
-        if (Zend_Session::$_unitTestEnabled)
-            return;
-
-        // if in testing mode - ignore this
-        if (defined('CLI_ENVIRONMENT'))
-            return;
-
-        $dir = TEMP_PATH . '/' . FaZend_Properties::get()->name . '-sessions';
-        
-        // create this directory if necessary
-        if (!file_exists($dir))
-            @mkdir($dir);
-            
-        // is it available for writing?
-        if (file_exists($dir) && is_dir($dir) && is_writable($dir)) {
-            $options = array('save_path'=>$dir);
-            Zend_Session::setOptions($options);
-        } else
-            trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
-        
-        // make session alive by COOKIE information
-        Zend_Session::rememberMe();
     }
 
 }
