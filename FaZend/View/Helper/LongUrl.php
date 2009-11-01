@@ -31,9 +31,7 @@ class FaZend_View_Helper_LongUrl extends FaZend_View_Helper {
      * @return string Url for the link href attribute.
      */
     public function longUrl(array $urlOptions = array(), $name = null, $reset = false, $encode = true) {
-
-        return WEBSITE_URL . $this->getView()->url($urlOptions, $name, $reset, $encode);
-
+        return $this->getView()->serverUrl() . $this->getView()->url($urlOptions, $name, $reset, $encode);
     }
 
 }
