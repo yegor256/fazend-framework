@@ -15,23 +15,20 @@
  */
 
 /**
- * Get SVN revision
+ * Get SVN revision number for the product
  *
  * @package Revision
  */
 class FaZend_Revision {
 
     /**
-     * Cut long line
+     * Get the number of SVN revision of the code
      *
      * @return string
      */
-    public static function get () {
-
-        $revFile = APPLICATION_PATH.'/deploy/subversion/revision.txt';
-
+    public static function get() {
+        $revFile = APPLICATION_PATH . '/deploy/subversion/revision.txt';
         return (file_exists ($revFile) ? file_get_contents ($revFile) : 'local');    
-
     }
 
 }

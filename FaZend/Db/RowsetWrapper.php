@@ -51,10 +51,8 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return void
      */
     public function __construct(Zend_Db_Table $table, Zend_Db_Select $select) {
-
         $this->_table = $table;
         $this->_select = $select;
-
     }
 
     /**
@@ -63,9 +61,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return Zend_Db_Select
      */
     public function select() {
-
         return $this->_select;
-
     }
 
     /**
@@ -74,9 +70,9 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return int
      */
     public function count() {
-
+        // we build a new query, where the original query goes into
+        // a subquery
         return $this->_table->getAdapter()->fetchOne('SELECT COUNT(*) FROM (' . (string)$this->_select . ') AS tbl');
-
     }
 
     /**
@@ -87,12 +83,10 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @return void
      */
     public function __call($name, $args) {
-
         if (!isset($this->_rowset))
             $this->_rowset = $this->_table->fetchAll($this->_select);
 
         return call_user_func_array(array($this->_rowset, $name), $args);
-
     }
 
     /**

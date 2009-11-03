@@ -70,7 +70,6 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected function __construct($name, $cmd = null) {
-
         $this->_name = $name;
         $this->_cmd = $cmd;
 
@@ -79,7 +78,6 @@ class FaZend_Exec extends FaZend_StdObject {
         if (file_exists($dataFile)) {
             $this->_unserialize(@file_get_contents($dataFile));
         }
-
     }
 
     /**
@@ -108,7 +106,6 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return int Seconds
      */
     public function getDuration() {
-
         if (!$this->isRunning())
             return false;
 
@@ -118,7 +115,6 @@ class FaZend_Exec extends FaZend_StdObject {
             return false;
 
         return time() - @filemtime($pidFile);
-
     }
 
     /**
@@ -127,12 +123,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return int
      */
     public function getPid() {
-
         if (!$this->isRunning())
             return false;
 
         return self::_pid(self::_uniqueId($this->_name));
-
     }
 
     /**
@@ -150,7 +144,6 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function execute() {
-
         if ($this->isRunning())
             return $this->output();
                                 
@@ -164,7 +157,6 @@ class FaZend_Exec extends FaZend_StdObject {
         self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
 
         return $this->output();
-
     }
 
     /**
@@ -203,12 +195,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     public function stop() {
-
         if (!$this->isRunning())
             return;
 
         self::_stop(self::_uniqueId($this->_name));
-
     }
     
     /**
@@ -249,7 +239,6 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return boolean
      */
     protected static function _isRunning($id) {
-        
         if (isset(self::$_running[$id]))
             return true;
         
@@ -278,7 +267,6 @@ class FaZend_Exec extends FaZend_StdObject {
         }
 
         return self::$_running[$id] = $pid;
-
     }
 
     /**
@@ -288,14 +276,12 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return boolean
      */
     protected static function _clear($id, $pidOnly = false) {
-
         if (!$pidOnly) {
             @unlink(self::_fileName($id, self::LOG_SUFFIX));
             @unlink(self::_fileName($id, self::DATA_SUFFIX));
         }
 
         @unlink(self::_fileName($id, self::PID_SUFFIX));
-
     }
         
     /**
@@ -329,7 +315,6 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _execute($id, $cmd, $dir = null) {
-        
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
         if (!is_null($dir)) {
@@ -356,7 +341,6 @@ class FaZend_Exec extends FaZend_StdObject {
         }
 
         self::$_running[$id] = (int)@file_get_contents($pidFile);
-
     }
 
     /**
