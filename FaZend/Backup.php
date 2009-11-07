@@ -17,7 +17,13 @@
 /**
  * Backup database and files and send them to amazon or to FTP server
  *
- * @package Backup 
+ * It is executed automatically from PING controller. You should configure
+ * its behavior by means of application/backup.ini file. See an example
+ * in test-application. 
+ *
+ * @package Backup
+ * @todo Logging procedure refactor for FaZend_Log usage 
+ * @todo Zend_Config should be used more effectively, especially for default values
  */
 class FaZend_Backup {
 
@@ -27,15 +33,6 @@ class FaZend_Backup {
      * @var Zend_Log
      */
     protected $_log = array();    
-
-    /**
-     * Setup all necessary variables
-     *
-     * @return void
-     */
-    public function __construct() {
-
-    }
 
     /**
      * Get full log
@@ -85,7 +82,6 @@ class FaZend_Backup {
      * @throws FaZend_Backuper_Exception
      */
     public function execute() {
-
         $this->_log('Backup started, revision: ' . FaZend_Revision::get());
 
         try {
@@ -110,7 +106,7 @@ class FaZend_Backup {
             // archive all files into one ".tar.gz" file
             $this->_backupFiles();
 
-                   // turn ON the semaphore
+            // turn ON the semaphore
             $this->_setSemaphoreTime($this->getLog());
         
         } catch (FaZend_Backup_Exception $e) {
@@ -120,7 +116,6 @@ class FaZend_Backup {
             unlink($this->_getSemaphoreFileName());
 
         }
-
     }
 
     /**
@@ -129,7 +124,6 @@ class FaZend_Backup {
      * @return array 
      */
     public function getS3Files() {
-
         $s3 = $this->_getS3();
 
         $bucket = $this->_getConfig()->S3->bucket;
@@ -143,22 +137,16 @@ class FaZend_Backup {
             return array();
 
         return $objects;    
-
     }
 
     /**
      * Get info about amazon file
      *
+     * @param string Relative file name, in amazon bucket
      * @return array 
      */
     public function getS3FileInfo($file) {
-
-        $s3 = $this->_getS3();
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        return $s3->getInfo($bucket . '/' . $file);    
-
+        return $this->_getS3()->getInfo($this->_getConfig()->S3->bucket . '/' . $file);    
     }
 
     /**
@@ -167,7 +155,7 @@ class FaZend_Backup {
      * @return void
      */
     protected function _backupDatabase() {
-
+        // if we should not backup DB - we skip it
         if (empty($this->_getConfig()->content->db))
             return $this->_log("Since [content.db] is empty, we won't backup database");
 
@@ -206,7 +194,6 @@ class FaZend_Backup {
 
         // kill the file
         unlink($file);
-
     }
 
     /**
@@ -215,7 +202,7 @@ class FaZend_Backup {
      * @return void
      */
     protected function _backupFiles() {
-
+        // if files backup is NOT specified in backup.ini - we skip it
         if (empty($this->_getConfig()->content->files))
             return $this->_log("Since [content.file] is empty, we won't backup files");
 
@@ -243,7 +230,6 @@ class FaZend_Backup {
 
         // send to amazon
         $this->_sendToS3($file, $object);
-
     }
 
     /**
@@ -253,7 +239,6 @@ class FaZend_Backup {
      * @return void
      */
     protected function _encrypt(&$file) {
-
         $fileEnc = $file . '.enc';
 
         $password = $this->_getConfig()->password;
@@ -274,7 +259,6 @@ class FaZend_Backup {
 
         $this->_log($this->_nice($fileEnc) . " renamed");
         rename($fileEnc, $file);
-
     }
 
     /**
@@ -284,7 +268,6 @@ class FaZend_Backup {
      * @return void
      */
     protected function _archive(&$file) {
-
         $cmd = $this->_var('gzip') . " {$file} 2>&1";
         $this->_log($this->_nice($file) . " is sent to gzip");
 
@@ -294,7 +277,6 @@ class FaZend_Backup {
             $this->_log($this->_nice($file) . " was created");
         else
             $this->_log($this->_nice($file) . " creation error: " . $result, true);
-
     }
 
     /**
@@ -304,7 +286,7 @@ class FaZend_Backup {
      * @return void
      */
     protected function _sendToFTP($file, $object) {
-    
+        // if FTP host is not specified in backup.ini - we skip this method
         if (empty($this->_getConfig()->ftp->host))
             return $this->_log("Since [ftp.host] is empty, we won't send files to FTP");
 
@@ -339,16 +321,15 @@ class FaZend_Backup {
 
         // remove expired data files
         $this->_cleanFTP();
-
     }
 
     /**
-     * Clear expired files from amazon
+     * Clear expired files from FTP
      *
      * @return void
      */
     protected function _cleanFTP() {
-
+        // if FTP file removal is NOT required - we skip this method execution
         if (empty($this->_getConfig()->ftp->age))
             return $this->_log("Since [ftp.age] is empty we won't remove old files from FTP");
 
@@ -397,7 +378,6 @@ class FaZend_Backup {
             $this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");    
 
         $this->_log("Disconnected from FTP");    
-
     }
 
     /**
@@ -407,7 +387,6 @@ class FaZend_Backup {
      * @return void
      */
     protected function _sendToS3($file, $object) {
-
         if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret))
             return $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
 
@@ -425,7 +404,6 @@ class FaZend_Backup {
 
         // remove expired data files
         $this->_cleanS3();
-
     }
 
     /**
@@ -434,7 +412,6 @@ class FaZend_Backup {
      * @return void
      */
     protected function _cleanS3() {
-
         if (empty($this->_getConfig()->S3->age))
             return $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
 
@@ -453,7 +430,6 @@ class FaZend_Backup {
                 $this->_log("File $file removed from S3, since it's expired (over {$this->_getConfig()->S3->age} days)");
             }    
         }
-
     }
 
     /**
@@ -462,7 +438,6 @@ class FaZend_Backup {
      * @return Zend_Config
      */
     protected function _getConfig() {
-
         if (isset($this->_config))
             return $this->_config;
 
@@ -473,7 +448,6 @@ class FaZend_Backup {
         
         // load config file
         return $this->_config = new Zend_Config_Ini($file, 'backup', true);
-
     }
 
     /**
@@ -483,12 +457,9 @@ class FaZend_Backup {
      * @throws FaZend_Backup_Exception
      */
     protected function _log($message, $throw = false) {
-
         $this->_log[] = '[' . date('h:i:s') . '] ' . $message;
-
         if ($throw)
             FaZend_Exception::raise('FaZend_Backup_Exception');
-
     }
 
     /**
@@ -497,11 +468,8 @@ class FaZend_Backup {
      * @return string
      */
     protected function _getSemaphoreFileName() {
-
         $this->_log('Semaphore file unique name for ' . WEBSITE_URL);
-
         return TEMP_PATH . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
-
     }
 
     /**
@@ -510,7 +478,6 @@ class FaZend_Backup {
      * @return time
      */
     protected function _getSemaphoreTime() {
-
         $file = $this->_getSemaphoreFileName();
 
         if (!file_exists($file)) {
@@ -521,36 +488,34 @@ class FaZend_Backup {
         $time = filemtime($file);
         $this->_log("Semaphore file $file says that the latest backup was started on " . date('m/d/y h:i:s', $time));
         return $time;
-
     }
 
     /**
      * Say that we just started the backup process
      *
+     * @param string Log to put into the file
      * @return void
      */
     protected function _setSemaphoreTime($log = 'started...') {
-
         $file = $this->_getSemaphoreFileName();
 
+        // save content into semaphore file
         file_put_contents($file, $log);
 
         $this->_log("Semaphore file $file saved (" . strlen($log) . " bytes), backup process is started/finished");
-
     }
 
     /**
      * Show nice filename
      *
+     * @param string Absolute file name
      * @return string
      */
     protected function _nice($file) {
-
         if (!file_exists($file))
             return basename($file) . ' (absent)';
 
         return basename($file) . ' (' . filesize($file). 'bytes)';
-
     }
 
     /**
@@ -559,7 +524,6 @@ class FaZend_Backup {
      * @return string
      */
     protected function _var($name, $default = false) {
-
         if (empty($this->_getConfig()->$name)) {
 
             if (!$default)
@@ -570,7 +534,6 @@ class FaZend_Backup {
         } else {
             return $this->_getConfig()->$name;
         }    
-
     }
 
     /**
@@ -579,7 +542,6 @@ class FaZend_Backup {
      * @return string
      */
     protected function _getS3() {
-
         if (isset($this->_s3))
             return $this->_s3;
         

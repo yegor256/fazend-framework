@@ -1,4 +1,4 @@
-subject: Forward of error_log from <?=$_SERVER['REMOTE_ADDR']?>.
+subject: Forward of error_log from <?=$this->serverUrl()?>.
 --
 ATTN: <?=$this->toName?>,
 
@@ -7,7 +7,7 @@ The size of 'error_log' file is too big now (more than <?=$this->maximum?> bytes
 file: <?=$this->file?>
 
 size: <?=strlen($this->log)?> bytes
-server: <?=$_SERVER['REMOTE_ADDR']?>
+server: <?=$this->serverUrl()?>
 
 
 That's why you receive its content by email. The file itself

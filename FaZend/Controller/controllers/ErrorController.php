@@ -48,7 +48,6 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
      * @return void
      */
     public function errorAction() { 
-
         // Ensure the default view suffix is used so we always return good 
         // content
         $this->_helper->viewRenderer->setViewSuffix('phtml');
@@ -106,9 +105,9 @@ class Fazend_ErrorController extends FaZend_Controller_Action {
                     print_r($errors->request->getParams(), true) . "\n\n" .
                     $errors->exception->getTraceAsString())
                 ->set('errorCode', $errorCode)
-                ->send()
-                ->logError();
-
+                ->send();
+                
+            FaZend_Log::err(get_class($errors->exception) . ': ' . $errors->exception->getMessage());
         }    
     } 
 }

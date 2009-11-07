@@ -70,7 +70,7 @@ class FaZend_Email {
      *
      * @return void
      */
-    public function __construct ($template = false) {
+    public function __construct($template = false) {
         $this->set('template', $template);
 
         validate()
@@ -118,8 +118,7 @@ class FaZend_Email {
      * @param boolean Send it anyway (no matter what)
      * @return FaZend_Email
      */
-    public function send ($force = false) {
-
+    public function send($force = false) {
         $mailer = $this->_getFilledMailer();
 
         if (self::$_config->send || $force)
@@ -135,7 +134,6 @@ class FaZend_Email {
             );
 
         return $this;
-
     }
 
     /**
@@ -154,7 +152,6 @@ class FaZend_Email {
      * @return Zend_Mail
      */
     protected function _getFilledMailer() {
-
         if (isset($this->_mailer))
             return $this->_mailer;
 
@@ -227,7 +224,6 @@ class FaZend_Email {
         $mail->addTo($this->get('toEmail'), $this->get('toName'));
 
         return $mail;
-
     }
 
     /**
@@ -236,12 +232,10 @@ class FaZend_Email {
      * @return Zend_Mail
      */
     protected function _createZendMailer () {
-
         if (!isset($this->_mailer))
             $this->_mailer = new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
 
         return $this->_mailer;
-
     }
 
 }
