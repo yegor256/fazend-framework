@@ -249,6 +249,7 @@ class FaZend_Exec extends FaZend_StdObject {
         if (isset(self::$_running[$id]))
             return true;
         
+        // PID file for this particular task (by ID)
         $pidFile = self::_fileName($id, self::PID_SUFFIX);
 
         // if no file - there is no process
@@ -273,6 +274,7 @@ class FaZend_Exec extends FaZend_StdObject {
             self::_clear($id, true);
         }
 
+        // remember PID for this task in a static array
         return self::$_running[$id] = $pid;
     }
 
@@ -280,6 +282,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * Clear files
      *
      * @param string ID of the task
+     * @param boolean Clear only PID file?
      * @return boolean
      */
     protected static function _clear($id, $pidOnly = false) {
@@ -357,9 +360,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return void
      */
     protected static function _stop($id) {
-        if (stristr(PHP_OS, 'win'))
+        if (self::_isWindows())
             return;
 
+        // stop execution
         shell_exec('kill -9 ' . self::_pid($id));
     }
 
