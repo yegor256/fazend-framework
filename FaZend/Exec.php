@@ -211,10 +211,11 @@ class FaZend_Exec extends FaZend_StdObject {
     /**
      * Set log to be detailed
      *
+     * @param boolean Show details?
      * @return void
      **/
-    public function setDetailed() {
-        $this->_detailed = true;
+    public function setDetailed($detailed = true) {
+        $this->_detailed = $detailed;
         return $this;
     }
 
