@@ -144,18 +144,21 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function execute() {
+        // if the task IS running now - just return it's output
         if ($this->isRunning())
             return $this->output();
                                 
         // serialize and save all local variables
-        if (!@file_put_contents(self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX), 
-            $this->_serialize())) {
+        $dataFile = self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX);
+        if (!@file_put_contents($dataFile, $this->_serialize())) {
             FaZend_Exception::raise('FaZend_Exec_DataSaveFailure', 
-                "Failed to save local data before execution");
+                "Failed to save local data before execution: '{$dataFile}'");
         }
 
+        // execute the task
         self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
 
+        // return output of the task
         return $this->output();
     }
 
@@ -165,9 +168,13 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     public function output() {
+        // calculate unique ID of the task
         $id = self::_uniqueId($this->_name);
+        
+        // get an output of the task
         $output = self::_output($id);
         
+        // if we don't need to return full details of the task - just return output
         if (!$this->_detailed)
             return $output;
 
@@ -186,7 +193,7 @@ class FaZend_Exec extends FaZend_StdObject {
         "Cmd: {$this->_cmd}\n" . 
         $files . "\n" .
         
-        ($output ? $output : 'NO OUTPUT');
+        ($output !== false ? $output : 'NO OUTPUT');
     }
 
     /**
@@ -218,7 +225,7 @@ class FaZend_Exec extends FaZend_StdObject {
      * @return string
      */
     protected static function _uniqueId($name) {
-        return md5(FaZend_Properties::get()->name . $name);
+        return FaZend_Properties::get()->name . '-' . preg_replace('/[^\w\d]/', '-', $name);
     }
 
     /**
