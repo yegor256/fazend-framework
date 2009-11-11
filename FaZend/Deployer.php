@@ -17,6 +17,9 @@
 /**
  * Deploy Db schema to the server (MySQL supported for now only)
  *
+ * You may add your own pathes with .SQL files by means of app.ini in your project.
+ * See application.ini for resources.Deployer.folders parameter.
+ *
  * @package Deployer
  * @todo Refactor in order to support other DB servers
  */
@@ -73,7 +76,6 @@ class FaZend_Deployer {
      * @return void
      */
     public function deploy() {
-
         // if it's turned off
         if (!$this->_options->deploy)
             return;
@@ -91,63 +93,63 @@ class FaZend_Deployer {
             return;
         }
 
-        $dir = $this->_dirName();
-        if (!file_exists($dir) || !is_dir($dir)) {
-            return;
-        }
-
-        // if we can't get a list of tables in DB - we stop
-        if (!method_exists($this->_db(), 'listTables'))
-            return;
-        
-        try {
-
-            // get full list of existing(!) tables in Db
-            $tables = array_map(create_function('$a', 'return strtolower($a);'), $this->_db()->listTables());
-            
-            // get full list of files
-            $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
-
-            // sort in right order
-            usort($files, array($this, '_sorter'));
-
-            // go through all .SQL files
-            foreach ($files as $file) {
-
-                $matches = array();
-                preg_match('/^\d+\s(.*)\.sql$/', $file, $matches);
-                $table = $matches[1];
-
-                // this table already exists?
-                if (in_array(strtolower($table), $tables)) {
-                    $this->_update($table, $this->_clearSql($dir . '/' . $file));
-                } else {
-                    $this->_create($table, $this->_clearSql($dir . '/' . $file));
-                }
-
+        // go through ALL deployment directories
+        foreach ($this->_dirNames() as $dir) {
+            if (!file_exists($dir) || !is_dir($dir)) {
+                return;
             }
 
-        } catch (FaZend_Deployer_Exception $exception) {
+            // if we can't get a list of tables in DB - we stop
+            if (!method_exists($this->_db(), 'listTables'))
+                return;
+        
+            try {
 
-            // if there is no email - show the error
-            if (FaZend_Properties::get()->errors->email) {
+                // get full list of existing(!) tables in Db
+                $tables = array_map(create_function('$a', 'return strtolower($a);'), $this->_db()->listTables());
+            
+                // get full list of files
+                $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
 
-                // send email to the site admin admin
-                FaZend_Email::create('fazendDeployerException.tmpl')
-                    ->set('toEmail', FaZend_Properties::get()->errors->email)
-                    ->set('toName', 'Admin of ' . WEBSITE_URL)
-                    ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' database deployment exception, rev.' . FaZend_Revision::get())
-                    ->set('text', $exception->getMessage())
-                    ->send()
-                    ->logError();
+                // sort in right order
+                usort($files, array($this, '_sorter'));
 
-             }
+                // go through all .SQL files
+                foreach ($files as $file) {
 
-             // throw it to the application
-             throw $exception;
+                    $matches = array();
+                    preg_match('/^\d+\s(.*)\.sql$/', $file, $matches);
+                    $table = $matches[1];
 
-        } 
+                    // this table already exists?
+                    if (in_array(strtolower($table), $tables)) {
+                        $this->_update($table, $this->_clearSql($dir . '/' . $file));
+                    } else {
+                        $this->_create($table, $this->_clearSql($dir . '/' . $file));
+                    }
 
+                }
+
+            } catch (FaZend_Deployer_Exception $exception) {
+
+                // if there is no email - show the error
+                if (FaZend_Properties::get()->errors->email) {
+
+                    // send email to the site admin admin
+                    FaZend_Email::create('fazendDeployerException.tmpl')
+                        ->set('toEmail', FaZend_Properties::get()->errors->email)
+                        ->set('toName', 'Admin of ' . WEBSITE_URL)
+                        ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' database deployment exception, rev.' . FaZend_Revision::get())
+                        ->set('text', $exception->getMessage())
+                        ->send()
+                        ->logError();
+
+                 }
+
+                 // throw it to the application
+                 throw $exception;
+            } 
+        }
     }
 
     /**
@@ -156,25 +158,27 @@ class FaZend_Deployer {
      * @return string[]
      */
     public function getTables() {
-
         $list = array();
 
-        $matches = array();
-        foreach (scandir($this->_dirName()) as $file) {
-            if (!preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
+        foreach ($this->_dirNames() as $dir) {
+            if (!file_exists($dir) || !is_dir($dir))
                 continue;
+            
+            foreach (scandir($dir) as $file) {
+                if (!preg_match('/^\d+\s(.*?)\.sql$/', $file, $matches))
+                    continue;
 
-            try {
-                $this->getTableInfo($matches[1]);
-            } catch (FaZend_Deployer_NotTableButView $e) {
-                continue;
+                try {
+                    $this->getTableInfo($matches[1]);
+                } catch (FaZend_Deployer_NotTableButView $e) {
+                    continue;
+                }
+
+                $list[] = $matches[1];
             }
-
-            $list[] = $matches[1];
         }
-
+        
         return $list;
-
     }
 
     /**
@@ -184,14 +188,15 @@ class FaZend_Deployer {
      * @return array[]
      */
     public function getTableInfo($table) {
-
-        $dir = $this->_dirName();
-        foreach (scandir($dir) as $file)
-            if (preg_match('/^\d+\s' . preg_quote($table) . '\.sql$/i', $file))
-                return $this->_sqlInfo(file_get_contents($dir . '/' . $file));
+        foreach ($this->_dirNames() as $dir) {
+            if (!file_exists($dir) || !is_dir($dir))
+                continue;
+            foreach (scandir($dir) as $file)
+                if (preg_match('/^\d+\s' . preg_quote($table) . '\.sql$/i', $file))
+                    return $this->_sqlInfo(file_get_contents($dir . '/' . $file));
+        }
 
         FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
-
     }
 
     /**
@@ -205,12 +210,12 @@ class FaZend_Deployer {
     }
 
     /**
-     * Location of .SQL files, directory
+     * Location of .SQL files, returns list of directories
      *
-     * @return string
+     * @return array List of directories
      */
-    protected function _dirName() {
-        return $this->_options->folder;
+    protected function _dirNames() {
+        return $this->_options->folders;
     }
 
     /**
@@ -230,9 +235,7 @@ class FaZend_Deployer {
      * @return void
      */
     protected function _create($table, $sql) {
-        
         $this->_db()->query($sql);
-
     }
 
     /**
@@ -243,7 +246,6 @@ class FaZend_Deployer {
      * @return void
      */
     protected function _update($table, $sql) {
-
         try {
 
             $infoSql = $this->_sqlInfo($sql);
@@ -264,7 +266,6 @@ class FaZend_Deployer {
 
         // tbd
         foreach ($infoSql as $column);
-    
     }
 
     /**
@@ -274,7 +275,6 @@ class FaZend_Deployer {
      * @return array[]
      */
     protected function _sqlInfo($sql) {
-
         $sql = preg_replace(array(
             '/\-\-.*?\n/', // kill comments
             '/[\n\t\r]/', // no special chars
@@ -347,7 +347,6 @@ class FaZend_Deployer {
         }
 
         return $info;
-        
     }
 
     /**
@@ -358,9 +357,7 @@ class FaZend_Deployer {
      * @return int
      */
     protected function _sorter($file1, $file2) {
-        
         return (int)$file1 > (int)$file2;
-
     }
 
     /**
@@ -379,12 +376,10 @@ class FaZend_Deployer {
      * @return string
      */
     protected function _clearSql($file) {
-
         return preg_replace(array(
             '/\-\-.*/',
             '/[\n\r\t]/'
         ), '', "\n" . file_get_contents($file));
-
     }
 
 }

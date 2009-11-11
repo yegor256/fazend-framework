@@ -20,7 +20,7 @@
  * @package Application
  * @return void
  */
-function bug($var) { 
+function bug($var = false) { 
     echo '<pre>' . htmlspecialchars(print_r($var, true)) . '</pre>'; 
     die(); 
 }
