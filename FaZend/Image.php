@@ -209,7 +209,7 @@ class FaZend_Image {
      * @return array (width, height)
      **/
     public static function getTextDimensions($text, $fontSize = 10, $fontMnemo = 'default') {
-        if (method_exists('imagettfbbox')) {
+        if (function_exists('imagettfbbox')) {
             $bbox = imagettfbbox($fontSize, 0, self::getFont($fontMnemo), $text);
             return array(abs($bbox[4]), abs($bbox[5]));
         }
