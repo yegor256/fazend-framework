@@ -25,27 +25,27 @@ require_once 'Zend/Filter/Interface.php';
 class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
 
     /**
+     * Regexp replacement patterns
+     *
+     * @var array
+     */
+    protected static $_replacer = array(
+        '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
+        '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
+        '/([\,\;\:\{\}])\s+/' => '${1} ', // compress trailing white spaces
+        '/\/\*.*?\*\//' => '', // kill comments at all
+    );
+
+    /**
      * Defined by Zend_Filter_Interface
      *
      * Compress CSS into a long string
      *
-     * @param  string $value
+     * @param string CSS content to be compressed
      * @return string
      */
     public function filter($css) {
-
-        return preg_replace(array(
-            '/[\n\r\t]/',
-            '/\s+([\,\:\{\}])/',
-            '/([\,\;\:\{\}])\s+/', // compress white spaces
-            '/\/\*.*?\*\//', // kill comments
-        ), array(
-            ' ',
-            '${1}', 
-            '${1}', 
-            '',
-        ), $css);
-
+        return preg_replace(array_keys(self::$_replacer), self::$_replacer, $css);
     }
 
 }
