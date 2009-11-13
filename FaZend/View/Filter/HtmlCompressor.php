@@ -23,44 +23,51 @@ require_once 'Zend/Filter/Interface.php';
  * @subpackage Filter
  */
 class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
+    
+    /**
+     * List of regex for replacements
+     *
+     * @var array
+     */
+    protected static $_replacer = array(
+        '/[\n\r\t]+/' => ' ', // remove extra spacers
+        '/\>\s+\</' => '><', // remove spaces between tags
+        '/\s\/\>/' => '/>', // remove spaces between tag closing bracket
+        '/\<\!\-\-.*?\-\-\>/' => '', // remove comments
+    );
 
     /**
      * Defined by Zend_Filter_Interface
      *
      * Compress HTML into a long string
      *
-     * @param  string $value
+     * @param string HTML content to be compressed
      * @return string
      */
     public function filter($html) {
+        // we DON'T touch contect in these tags
+        $masked = array(
+            'pre', 
+            'script', 
+            'style', 
+            'textarea');
 
-        $masked = array('pre', 'script', 'style', 'textarea');
-
+        // convert masked tags into BASE64 form
         foreach($masked as $tag) {
             $matches = array();
             preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match)
-                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_encode($matches[2][$id])."</{$tag}>", $html);
+                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>" . base64_encode($matches[2][$id]) . "</{$tag}>", $html);
         }    
 
-        $html = trim(preg_replace(array(
-            '/[\n\r\t]/',
-            '/\s+/',
-            '/\>\s+\</',
-            '/\s\/\>/',
-            '/\<\!\-\-.*?\-\-\>/',
-        ), array(
-            ' ',
-            ' ',
-            '><',
-            '/>',
-            '',
-        ), $html));
+        // compress HTML
+        $html = trim(preg_replace(array_keys(self::$_replacer), self::$_replacer, $html));
 
+        // deconvert masked tags from BASE64
         foreach($masked as $tag) {
             preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match)
-                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>".base64_decode($matches[2][$id])."</{$tag}>", $html);
+                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>" . base64_decode($matches[2][$id]) . "</{$tag}>", $html);
         }    
 
         return $html;
