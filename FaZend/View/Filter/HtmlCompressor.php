@@ -27,15 +27,21 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
     /**
      * List of regex for replacements
      *
+     * I don't like that I have to comment these three lines, but I can't
+     * find why this conversion SOMETIMES produce invalid layout in some
+     * browsers.
+     *
      * @var array
      */
     protected static $_replacer = array(
         '/[\n\r\t]+/' => ' ', // convert spacers into normal spaces
-        '/\s+/' => ' ', // convert multiple spaces to single
-        '/\>\s+/' => '>', // remove spaces after tags
-        '/\s+\</' => '<', // remove spaces before tags
+        '/\s{2,}/' => '  ', // convert two-or-more spaces into two spaces
         '/\s\/\>/' => '/>', // remove spaces between tag closing bracket
         '/\<\!\-\-.*?\-\-\>/' => '', // remove comments
+
+        // '/\s+/' => ' ', // convert multiple spaces to single
+        // '/\>\s+/' => '>', // remove spaces after tags
+        // '/\s+\</' => '<', // remove spaces before tags
     );
 
     /**
