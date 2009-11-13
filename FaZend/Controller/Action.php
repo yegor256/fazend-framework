@@ -66,7 +66,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * flash message to the session.
      *
      * @param string message Flash message
-     * @param string Action name
+     * @param string|false Action name (FALSE = don't do redirect, just save FLASH message to Session)
      * @param string|null Controller name
      * @param string|null Module name
      * @param array List of parameters (associative array)
@@ -74,7 +74,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      */    
     protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
-        $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
+        if ($action !== false)
+            $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
     }
 
     /**
@@ -108,7 +109,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */
     protected function _returnPDF($pdf) {
-    
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -116,7 +116,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
             ->setHeader('Content-Type', 'application/pdf')
             ->setHeader('Content-Length', strlen($pdf))
             ->setBody($pdf);
-
     }    
 
     /**
@@ -125,7 +124,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */
     protected function _returnJSON ($var) {
-    
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -142,7 +140,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
             // what to do here?
 
         }
-
     }    
 
     /**
@@ -151,14 +148,12 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */
     protected function _returnXML ($xml) {
-    
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
         $this->getResponse()
             ->setHeader('Content-Type', 'text/xml')
             ->setBody($xml);
-
     }
 
     /**
@@ -178,7 +173,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      */
     protected function _cacheContent($modifiedTime = false) {
-
         if (!$modifiedTime)
             $modifiedTime = time();
     
@@ -199,7 +193,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
             //->setHeader('Content-Encoding', 'gzip, deflate')
             //->setHeader('X-Compression', 'gzip')
             //->setHeader('Accept-Encoding', 'gzip');
-    
     }    
 
 }
