@@ -30,7 +30,8 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
      * @var array
      */
     protected static $_replacer = array(
-        '/[\n\r\t]+/' => ' ', // remove extra spacers
+        '/[\n\r\t]+/' => ' ', // convert spacers into normal spaces
+        '/\s+/' => ' ', // convert multiple spaces to single
         '/\>\s+\</' => '><', // remove spaces between tags
         '/\s\/\>/' => '/>', // remove spaces between tag closing bracket
         '/\<\!\-\-.*?\-\-\>/' => '', // remove comments

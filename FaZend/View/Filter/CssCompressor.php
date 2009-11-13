@@ -31,8 +31,9 @@ class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
      */
     protected static $_replacer = array(
         '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
+        '/\s+/' => ' ', // convert multiple spaces to single
         '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
-        '/([\,\;\:\{\}])\s+/' => '${1} ', // compress trailing white spaces
+        '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
         '/\/\*.*?\*\//' => '', // kill comments at all
     );
 
