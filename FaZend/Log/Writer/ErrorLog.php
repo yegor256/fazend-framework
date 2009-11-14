@@ -40,7 +40,6 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
      * @return void
      */
     public function __construct() {
-
         // we try to get the file name from php.ini
         $stream = ini_get('error_log');
 
@@ -64,8 +63,14 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
 
         // remove extra file content and send it by email to the site
         // administrator
-        $this->_cutFile($stream);
-
+        try {
+            $this->_cutFile($stream);
+        } catch (Exception $e) {
+            // ignore any exceptions at this stage
+            $file = @fopen($stream, 'a+');
+            @fwrite($file, 'Exception in errorLog contructor: ' . $e->getMessage() . "\n");
+            @fclose($file);
+        }
     }
 
     /**
@@ -75,7 +80,6 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
      * @return void
      */
     protected function _cutFile($file) {
-
         if (APPLICATION_ENV !== 'production')
             return;
 
@@ -118,7 +122,6 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         @fwrite($handle, date('m/d/Y h:i') . ": file content (" . strlen($content) .
             " bytes) was sent by email ({$email}) to admin.\n\n");
         @fclose($handle);
-
     }
 
 }
