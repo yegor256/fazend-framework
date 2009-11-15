@@ -41,7 +41,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
      * @return void
      */
     public function registerAction() {
-
         if (FaZend_User::isLoggedIn())
             return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
@@ -89,7 +88,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         if (method_exists($this, 'registeredAction'))
             $this->_helper->redirector->gotoSimple('registered');
-
     }
         
     /**
@@ -98,7 +96,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
      * @return void
      */
     public function remindAction() {
-
         if (FaZend_User::isLoggedIn()) 
             return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
@@ -133,7 +130,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
      * @return void
      */
     public function logoutAction() {
-
         if (!FaZend_User::isLoggedIn())
             return $this->_redirectFlash('You are not logged in yet', 'notfound', 'error');
 
@@ -141,7 +137,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
 
         // forward to the index action in index controller
         $this->_redirect('/');
-
     }
 
     /**
@@ -150,13 +145,12 @@ class Fazend_UserController extends FaZend_Controller_Action {
      * @return void
      */
     public function loginAction() {
-
         $form = FaZend_Form::create('Login', $this->view);
 
         $pwdLabel = $form->pwd->getLabel();
         $remindUrl = $this->view->url(array('action'=>'remind'), 'user', true);
 
-        $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}'>?</a>)");
+        $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}' title='remind password'>?</a>)");
 
         $form->pwd->getDecorator('label')->setOption('escape', false);
         if (!$form->isFilled())
@@ -182,9 +176,8 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }
 
         if ($form->pwd->hasErrors() || $form->email->hasErrors()) {
-            $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}'>remind?</a>)");
+            $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}' title='remind password by email?'>remind?</a>)");
         }
-
     }    
 
 }
