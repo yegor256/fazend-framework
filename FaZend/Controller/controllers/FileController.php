@@ -29,28 +29,27 @@ class Fazend_FileController extends FaZend_Controller_Action {
      * @return void
      */
     public function indexAction() {
-
         //$this->getResponse()
         //    ->setHeader('Content-type', 'text/javascript');
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
 
         $file = APPLICATION_PATH . '/views/files/' . $this->_getParam('file');
 
         // if it's absent
         if (!file_exists($file)) {
-
             $file = FAZEND_PATH . '/View/files/' . $this->_getParam('file');
             if (!file_exists($file))
-                return $this->_forwardWithMessage('file ' . $this->_getParam('file') . ' not found');
+                $this->getResponse()->setBody('file ' . $this->_getParam('file') . ' not found');
+                return;
         }
 
         // tell browser to cache this content    
         $this->_cacheContent();    
 
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
         $this->getResponse()->setBody(file_get_contents($file));
-
     }    
+    
 }
 
