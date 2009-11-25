@@ -57,6 +57,12 @@ div.page {
     min-height: 400px;
 }
 
+    /* input boxes */
+    div.page input {
+        padding: 4px;
+        font-size: 1em;
+    }
+
     /* broken link */
     div.page span.broken {
         border-bottom: 1px dotted <?=FaZend_Image::getCssColor('error')?>;
