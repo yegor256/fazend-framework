@@ -87,14 +87,14 @@ div.page {
         }
 
         div.page div.actors li.pic {
-            background: transparent url('<?=$this->viewFile('ui/actor.gif')?>');
+            background: transparent url('<?=$this->viewFile("ui/actor.gif")?>');
             display: inline-block;
             width: 13px;
             height: 20px;
         }
 
         div.page div.actors li.picActive {
-            background: transparent url('<?=$this->viewFile('ui/actorActive.gif')?>');
+            background: transparent url('<?=$this->viewFile("ui/actorActive.gif")?>');
             width: 25px;
             height: 39px;
         }
