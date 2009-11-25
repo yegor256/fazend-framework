@@ -58,7 +58,8 @@ div.page {
 }
 
     /* input boxes */
-    div.page input {
+    div.page input,
+    div.page textarea {
         padding: 4px;
         font-size: 1em;
     }
