@@ -32,7 +32,6 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @return string HTML image of the element
      */
     public function html() {
-
         $html = '<p><div style="display: inline-block; background:' . FaZend_Image::getCssColor ('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
 
         $columns = $this->_getOptions('/^column.*/');
@@ -87,7 +86,6 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
         $html .= '</p>';
 
         return $html;
-
     }
 
     /**
@@ -96,7 +94,6 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @return int Height
      */
     public function draw($top) {
-
         // calculate the height of one line of text
         $lineHeight = $this->_getLineHeight(self::FONT_SIZE, $this->_mockup->getImage()->getFont('mockup.content'));
 
@@ -186,7 +183,6 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
 
         // return the height of the table 
         return $y - $top + self::FONT_SIZE * 2;
-
     }
 
     /**
@@ -205,18 +201,23 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
     /**
      * Add new option
      *
+     * @param string Unique name of the link
+     * @param string Name of the view script to link to
+     * @param string Optional parameter of the link (visible for end-user)
      * @return this
      */
     public function addOption($name, $link = false, $header = null) {
         $this->__set('option' . $name, array(
-            'title'=>($header ? $header : $name),
-            'link'=>$link));
+            'title' => (is_null($header) ? $name : $header),
+            'link' => $link));
         return $this;
     }
 
     /**
      * Add a link to column
      *
+     * @param string Name of the column
+     * @param string Optional name of the VIEW script to link to
      * @return this
      */
     public function addLink($name, $link = false) {

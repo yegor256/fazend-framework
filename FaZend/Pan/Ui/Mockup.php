@@ -63,7 +63,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return string PNG image
      */
     public function png() {
-
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
@@ -88,7 +87,6 @@ class FaZend_Pan_Ui_Mockup {
 
         // return the PNG content
         return $this->getImage()->png();
-
     }
 
     /**
@@ -98,7 +96,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return string HTML of the page
      */
     public function html(Zend_View $view) {
-        
         // save View to the class, for further use
         $this->_view = $view;
         
@@ -110,7 +107,6 @@ class FaZend_Pan_Ui_Mockup {
 
         // return the HTML
         return $html;
-
     }
 
     /**
@@ -137,7 +133,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return FaZend_Image
      */
     public function getImage() {
-                       
         if (!isset($this->_image)) {
 
             // create it
@@ -174,7 +169,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return int
      */
     protected function _draw() {
-
         // start from top
         $y = self::INDENT;
 
@@ -185,7 +179,6 @@ class FaZend_Pan_Ui_Mockup {
 
         // return the height of the image
         return $y;
-
     }
 
     /**
@@ -194,7 +187,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return FaZend_Pan_Ui_Meta_Interface[]
      */
     protected function _getMetas() {
-
         if (isset($this->_metas))
             return $this->_metas;
 
@@ -229,7 +221,6 @@ class FaZend_Pan_Ui_Mockup {
         }
 
         return $this->_metas = $metas;
-
     }
 
     /**
@@ -238,7 +229,6 @@ class FaZend_Pan_Ui_Mockup {
      * @return array Dimensions of the image (width, height)
      */
     protected function _getDimensions() {
-
         // the image should NOT draw anything, just calculate the parameter
         $this->getImage()->disableDrawing();
         $height = $this->_draw();
@@ -246,7 +236,6 @@ class FaZend_Pan_Ui_Mockup {
 
         // return the array of WIDTH and HEIGHT
         return array(self::WIDTH, self::INDENT + $height);
-
     }
 
 }

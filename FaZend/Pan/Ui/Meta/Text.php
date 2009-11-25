@@ -30,7 +30,6 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract {
      * @return int Height
      */
     public function draw($y) {
-
         $txt = $this->_parse($this->label);
 
         // get dimensions
@@ -48,7 +47,6 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract {
             $txt);
 
         return (substr_count($txt, "\n") + 1) * self::FONT_SIZE * 1.6 + self::FONT_SIZE;
-
     }
 
     /**

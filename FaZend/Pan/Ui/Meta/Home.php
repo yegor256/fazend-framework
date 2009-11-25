@@ -15,7 +15,7 @@
  */
 
 /**
- * Mark this page as a home page of the actor
+ * Mark this page as a home page of the current actor
  *
  * @package UiModeller
  * @subpackage Mockup

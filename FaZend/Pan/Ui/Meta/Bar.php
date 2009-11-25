@@ -23,12 +23,11 @@
 class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
 
     /**
-     * Draw 
+     * Draw in PNG image
      *
      * @return int Height
      */
     public function draw($y) {
-
         $links = $this->_getOptions('/^link.*/');
 
         $x = FaZend_Pan_Ui_Mockup::INDENT;
@@ -56,8 +55,6 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
         }
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
-
-
     }
 
     /**
@@ -66,7 +63,6 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
      * @return string HTML image of the element
      */
     public function html() {
-
         $links = $this->_getOptions('/^link.*/');
 
         $hrefs = array();
@@ -74,18 +70,21 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
             $hrefs[] = $this->_htmlLink($link['link'], $this->_parse($link['header']));
 
         return '<p>' . implode(' | ', $hrefs) . '</p>';
-
     }
 
     /**
-     * Add link
+     * Add new link to the BAR
      *
+     * @param string Name of the link (UNIQUE in this bar)
+     * @param string Header visible to end-user
+     * @param string Name of VIEW script to link here
      * @return this
      */
     public function addLink($name, $header, $link = false) {
         $this->__set('link' . $name, array(
-            'header'=>$header,
-            'link'=>$link));
+            'header' => $header,
+            'link' => $link,
+            ));
         return $this;
     }
 

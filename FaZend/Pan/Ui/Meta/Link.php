@@ -28,7 +28,6 @@ class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract {
      * @return int Height
      */
     public function draw($y) {
-
         $txt = $this->_parse($this->label);
 
         list($textWidth, ) = FaZend_Image::getTextDimensions(
@@ -48,7 +47,6 @@ class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract {
             $this->_mockup->getImage()->getColor('mockup.link'));
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
-
     }
 
     /**

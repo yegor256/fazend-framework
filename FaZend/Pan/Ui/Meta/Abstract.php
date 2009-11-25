@@ -51,7 +51,6 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      * @return this
      */
     public function __call($method, $args) {
-
         if (substr($method, 0, 3) == 'set') {
             $var = strtolower($method{3}) . (substr($method, 4));
 
@@ -61,11 +60,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                 $args = current($args);
 
             $this->$var = $args;
-
         }
-
         return $this;
-
     }
 
     /**
@@ -117,7 +113,6 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      * @return void
      */
     protected function _parse($txt) {
-
         if ($txt === false)
             $txt = '%s';
         elseif (is_array($txt)) 
@@ -146,7 +141,6 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         $txt = str_replace('\n', "\n", $txt);
 
         return vsprintf($txt, $args);
-
     }
 
     /**
@@ -156,7 +150,6 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      * @return string HTML image of the element
      */
     public function _htmlLink($script, $label) {
-
         // maybe it's a self link?
         if (!$script)
             $script = $this->_mockup->getScript();
