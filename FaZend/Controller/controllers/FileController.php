@@ -40,9 +40,10 @@ class Fazend_FileController extends FaZend_Controller_Action {
         // if it's absent
         if (!file_exists($file)) {
             $file = FAZEND_PATH . '/View/files/' . $this->_getParam('file');
-            if (!file_exists($file))
+            if (!file_exists($file)) {
                 $this->getResponse()->setBody('file ' . $this->_getParam('file') . ' not found');
                 return;
+            }
         }
 
         // tell browser to cache this content    
