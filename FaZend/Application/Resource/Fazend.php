@@ -41,16 +41,12 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $config = new Zend_Config($options);
         FaZend_Properties::setOptions($config);
 
-        $this->_initSessionOptions();
-        $this->_initFrontControllerOptions();        
-        $this->_initViewOptions();
-        $this->_initBlindFaZend();
-        $this->_initRoutes();
-        $this->_initDbProfiler();
-        $this->_initTableCache();
-        $this->_initPluginCache();
-        $this->_initLogger();
-        $this->_initDbAutoloader();
+        $rc = new ReflectionClass($this);
+        foreach ($rc->getMethods() as $method) {
+            if (preg_match('/^\_init/', $method->getName())) {
+                $this->{$method->getName()}();
+            }
+        }
 
         return $config;
     }
