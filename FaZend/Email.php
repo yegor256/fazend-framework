@@ -167,19 +167,13 @@ class FaZend_Email {
 
         // maybe email template is missed?
         if (!file_exists(self::$_config->folder . '/' . $template)) {
-
             // maybe we can find in FaZend?
             if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
-
                 $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
-
             } else {
-
                 FaZend_Exception::raise('FaZend_Email_NoTemplate', 
                     'Template ' . $template . ' is missed in ' . self::$_config->folder);
-
             }
-
         }
 
         // set all variables to View for rendering

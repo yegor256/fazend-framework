@@ -305,4 +305,24 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
     }
 
+    /**
+     * Inject testing elements into the application
+     *
+     * Will be executed ONLY if it is not a production server
+     *
+     * @return void
+     */
+    protected function _initTestInjection() {
+        if (APPLICATION_ENV == 'production')
+            return;
+            
+        $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
+        if (!file_exists($injectorPhp))
+            return;
+            
+        require_once $injectorPhp;
+        $injector = new TestInjector();
+        $injector->inject();
+    }
+
 }
