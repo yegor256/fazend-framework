@@ -118,28 +118,6 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         elseif (is_array($txt)) 
             $txt = $txt[array_rand($txt)];
 
-        if (preg_match_all('/(%(\d+)?([sdf]))[^a-z]?/', $txt, $matches)) {
-            $args = array();
-            foreach ($matches[1] as $id=>$match) {
-                switch ($matches[3][$id]) {
-                    case 'd':
-                        $pow = empty($matches[2][$id]) ? 2 : (int)$matches[2][$id];
-                        $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
-                        break;
-
-                    case 's':
-                        $args[] = FaZend_View_Helper_LoremIpsum::getLoremIpsum($matches[2][$id]);
-                        break;
-
-                    case 'f':
-                        $args[] = rand(0, 1);
-                        break;
-                }
-            }
-
-            $txt = vsprintf(str_replace('\n', "\n", $txt), $args);
-        }
-
         // replace complex meta-s:
         // %name%, %email%, %url%, etc.
         if (preg_match_all('/%(\w+)%/', $txt, $matches)) {
@@ -227,6 +205,28 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
             }
         }
         
+        if (preg_match_all('/(%(\d+)?([sdf]))?/', $txt, $matches)) {
+            $args = array();
+            foreach ($matches[1] as $id=>$match) {
+                switch ($matches[3][$id]) {
+                    case 'd':
+                        $pow = empty($matches[2][$id]) ? 2 : (int)$matches[2][$id];
+                        $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
+                        break;
+
+                    case 's':
+                        $args[] = FaZend_View_Helper_LoremIpsum::getLoremIpsum($matches[2][$id]);
+                        break;
+
+                    case 'f':
+                        $args[] = rand(0, 1);
+                        break;
+                }
+            }
+
+            $txt = vsprintf(str_replace('\n', "\n", $txt), $args);
+        }
+
         return $txt;
     }
 
