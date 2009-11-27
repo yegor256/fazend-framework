@@ -118,7 +118,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         elseif (is_array($txt)) 
             $txt = $txt[array_rand($txt)];
 
-        if (preg_match_all('/(%(\d+)?([sdf]))[^a-z]/', $txt, $matches)) {
+        if (preg_match_all('/(%(\d+)?([sdf]))[^a-z]?/', $txt, $matches)) {
             $args = array();
             foreach ($matches[1] as $id=>$match) {
                 switch ($matches[3][$id]) {
@@ -176,9 +176,52 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                         $replacer = Zend_Date::now()->subDay(rand(20, 100))->get(Zend_Date::DATE_MEDIUM);
                         break;
                         
+                    // date in the future
                     case 'fdate':
                         $replacer = Zend_Date::now()->addDay(rand(20, 100))->get(Zend_Date::DATE_MEDIUM);
                         break;
+                        
+                    // country name
+                    case 'country':
+                        $replacer = array_rand(array_flip(array(
+                            'John & John Ltd.',
+                            'Vittorio Brothers Inc.',
+                            'William & Sons, Co.',
+                            )));
+                        break;
+
+                    // random city name
+                    case 'city':
+                        $replacer = array_rand(array_flip(array(
+                            'New York', 'San Francisco', 'Milan', 'Munich', 'Berlin', 'Toronto', 'Tokyo'
+                            )));
+                        break;
+
+                    // random address
+                    case 'address':
+                        $replacer = array_rand(array_flip(array(
+                            rand(1, 9) . 'th Street, ' . rand(10, 99),
+                            rand(10, 99) . '/' . rand(1, 9) . ' Via Giuseppe Mercalli',
+                            rand(10, 99) . ', ft.' . rand(1, 9) . ', ' . rand(1, 9) . 'th Avenue',
+                            )));
+                        break;
+
+                    // random phone name
+                    case 'phone':
+                        $replacer = array_rand(array_flip(array(
+                            '(' . rand(100, 999) . ') ' . rand(100, 999) . '-' . rand(1000, 9999),
+                            '+' . rand(10, 99) . ' ' . rand(100, 999) . rand(100, 999) . '-' . rand(1000, 9999),
+                            )));
+                        break;
+
+                    // random ZIP code
+                    case 'zip':
+                        $replacer = array_rand(array_flip(array(
+                            rand(10000, 99999),
+                            'SR' . rand(100, 999) . ' ' . rand(10, 99), 
+                            )));
+                        break;
+
                 }
                 $txt = str_replace($match, $replacer, $txt);
             }
