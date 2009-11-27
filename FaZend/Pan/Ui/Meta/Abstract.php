@@ -120,7 +120,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
 
         // replace complex meta-s:
         // %name%, %email%, %url%, etc.
-        if (preg_match_all('/%(\w+)%/', $txt, $matches)) {
+        if (preg_match_all('/%([a-z]+)%/', $txt, $matches)) {
             foreach ($matches[0] as $id=>$match) {
                 switch ($matches[1][$id]) {
                     // random name of a person
