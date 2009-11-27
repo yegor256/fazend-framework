@@ -162,9 +162,12 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                     // country name
                     case 'country':
                         $replacer = array_rand(array_flip(array(
-                            'John & John Ltd.',
-                            'Vittorio Brothers Inc.',
-                            'William & Sons, Co.',
+                            'United States',
+                            'Germany',
+                            'Canada',
+                            'Switzerland',
+                            'Russian Federation',
+                            'Japan',
                             )));
                         break;
 
