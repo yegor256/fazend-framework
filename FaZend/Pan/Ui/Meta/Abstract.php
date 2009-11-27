@@ -184,6 +184,12 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                             )));
                         break;
 
+                    // random currency
+                    // @todo replace it with Zend_Locale call
+                    case 'currency':
+                        $replacer = array_rand(array_flip(array('USD', 'EUR', 'GBP', 'CHF')));
+                        break;
+
                     // random phone name
                     case 'phone':
                         $replacer = array_rand(array_flip(array(
