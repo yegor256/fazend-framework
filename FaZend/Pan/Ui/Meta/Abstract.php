@@ -206,6 +206,27 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                             )));
                         break;
 
+                    // random SWIFT code
+                    case 'swift':
+                        $replacer = array_rand(array_flip(array(
+                            'NYABABAB'
+                            )));
+                        break;
+
+                    // random bank name
+                    case 'bank':
+                        $replacer = array_rand(array_flip(array(
+                            'Bank Of New York', 'Bank Of America', 'ING', 'Bank Of Cyprus',
+                            )));
+                        break;
+
+                    // random IBAN code
+                    case 'iban':
+                        $replacer = array_rand(array_flip(array(
+                            'NY' . rand(10, 99) . 'ABCD' . rand(10000, 99999) . ' 0000000' . '12345678901',
+                            )));
+                        break;
+
                 }
                 $txt = str_replace($match, $replacer, $txt);
             }
