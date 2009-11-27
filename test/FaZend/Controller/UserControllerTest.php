@@ -35,7 +35,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
         FaZend_User::logOut();
 
         $this->dispatch('/index');
-        $this->assertQuery('input#email', "Error in HTML: ".$this->getResponse()->getBody());
+        $this->assertQuery('input#email', "Error in HTML: " . $this->getResponse()->getBody());
     }
 
     public function testWrongLoginIsProcessed () {
@@ -44,12 +44,12 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
         $this->request->setPost(array(
             'email' => 'wrong@fazend.com',
             'pwd' => 'wrong',
-            'submit' => 'Login',
+            'login' => 'Login',
         ));
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
-        $this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
+        $this->assertQuery('ul.errors', "Error in HTML: " . $this->getResponse()->getBody());
     }
 
     public function testWrongPasswordIsProcessed () {
@@ -58,7 +58,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
         $this->request->setPost(array(
             'email' => 'good@fazend.com',
             'pwd' => 'wrong',
-            'submit' => 'Login',
+            'login' => 'Login',
         ));
         $this->request->setMethod('POST');
 
@@ -72,7 +72,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase {
         $this->request->setPost(array(
             'email' => 'good@fazend.com',
             'pwd' => 'good',
-            'submit' => 'Login',
+            'login' => 'Login',
         ));
         $this->request->setMethod('POST');
 

@@ -35,13 +35,13 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase {
             // all spaces between tags should be killed
             array(
                 '<html>  <body>   </body>  </html>',
-                '<html><body></body></html>'
+                '<html>  <body>  </body>  </html>'
             ),
             
             // all \n\r\t should be killed as well
             array(
                 "<html>\t<body>\nworks?</body>\r</html>  \n",
-                '<html><body> works?</body></html>'
+                '<html> <body> works?</body> </html>'
             ),
 
             // kill comments properly
@@ -59,11 +59,9 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase {
     * @dataProvider providerHtml
     */
     public function testCompressesFine ($html, $result) {
-
         $compressor = new FaZend_View_Filter_HtmlCompressor();
         $new = $compressor->filter($html);
-        $this->assertEquals ($result, $new, "Incorrect HTML compression of [{$html}], got this: [{$new}]");
-
+        $this->assertEquals($result, $new, "Incorrect HTML compression of [{$html}], got this: [{$new}], expected: [{$result}]");
     }
 
 }
