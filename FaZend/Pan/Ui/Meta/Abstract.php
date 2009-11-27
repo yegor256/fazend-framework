@@ -118,29 +118,58 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         elseif (is_array($txt)) 
             $txt = $txt[array_rand($txt)];
 
-        $matches = array();
-        preg_match_all('/%(\d+)?([sdf])/', $txt, $matches);
+        if (preg_match_all('/%(\d+)?([sdf])/', $txt, $matches)) {
+            $args = array();
+            foreach ($matches[0] as $id=>$match) {
+                switch ($matches[2][$id]) {
+                    case 'd':
+                        $pow = empty($matches[1][$id]) ? 2 : (int)$matches[1][$id];
+                        $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
+                        break;
 
-        $args = array();
-        foreach ($matches[0] as $id=>$match)
-            switch ($matches[2][$id]) {
-                case 'd':
-                    $pow = empty($matches[1][$id]) ? 2 : (int)$matches[1][$id];
-                    $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
-                    break;
+                    case 's':
+                        $args[] = FaZend_View_Helper_LoremIpsum::getLoremIpsum($matches[1][$id]);
+                        break;
 
-                case 's':
-                    $args[] = FaZend_View_Helper_LoremIpsum::getLoremIpsum($matches[1][$id]);
-                    break;
-
-                case 'f':
-                    $args[] = rand(0, 1);
-                    break;
+                    case 'f':
+                        $args[] = rand(0, 1);
+                        break;
+                }
             }
 
-        $txt = str_replace('\n', "\n", $txt);
+            $txt = vsprintf(str_replace('\n', "\n", $txt), $args);
+        }
 
-        return vsprintf($txt, $args);
+        // replace complex meta-s:
+        // %name%, %email%, %url%, etc.
+        if (preg_match_all('/%(\w+)%/', $txt, $matches)) {
+            foreach ($matches[0] as $id=>$match) {
+                switch ($matches[1][$id]) {
+                    case 'name':
+                        $replacer = array_rand(array_flip(array(
+                            'John Smith',
+                            'Angela Johnson',
+                            'Pamela Peterson',
+                            'Vincenze Scavolini',
+                            'Manuela Orlando',
+                            )));
+                        break;
+                    case 'email':
+                        $replacer = array_rand(array_flip(array('john', 'pam', 'n', 't'))) . rand(100, 999) . '@example.com';
+                        break;
+                    case 'company':
+                        $replacer = array_rand(array_flip(array(
+                            'John & John Ltd.',
+                            'Vittorio Brothers Inc.',
+                            'William & Sons, Co.',
+                            )));
+                        break;
+                }
+                $txt = str_replace($match, $replacer, $txt);
+            }
+        }
+        
+        return $txt;
     }
 
     /**
