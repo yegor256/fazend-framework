@@ -145,6 +145,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         if (preg_match_all('/%(\w+)%/', $txt, $matches)) {
             foreach ($matches[0] as $id=>$match) {
                 switch ($matches[1][$id]) {
+                    // random name of a person
                     case 'name':
                         $replacer = array_rand(array_flip(array(
                             'John Smith',
@@ -154,15 +155,29 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                             'Manuela Orlando',
                             )));
                         break;
+                        
+                    // random email address
                     case 'email':
                         $replacer = array_rand(array_flip(array('john', 'pam', 'n', 't'))) . rand(100, 999) . '@example.com';
                         break;
+                        
+                    // name of the company
                     case 'company':
                         $replacer = array_rand(array_flip(array(
                             'John & John Ltd.',
                             'Vittorio Brothers Inc.',
                             'William & Sons, Co.',
                             )));
+                        break;
+                        
+                    // date in the past
+                    case 'date':
+                    case 'pdate':
+                        $replacer = Zend_Date::now()->subDay(rand(20, 100))->get(Zend_Date::DATE_MEDIUM);
+                        break;
+                        
+                    case 'fdate':
+                        $replacer = Zend_Date::now()->addDay(rand(20, 100))->get(Zend_Date::DATE_MEDIUM);
                         break;
                 }
                 $txt = str_replace($match, $replacer, $txt);
