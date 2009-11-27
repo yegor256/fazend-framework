@@ -235,7 +235,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         if (preg_match_all('/%(\d+)?([sdf])?/', $txt, $matches)) {
             $args = array();
             foreach ($matches[0] as $id=>$match) {
-                switch ($matches[3][$id]) {
+                switch ($matches[2][$id]) {
                     case 'd':
                         $pow = empty($matches[1][$id]) ? 2 : (int)$matches[1][$id];
                         $args[] = rand(pow(10, $pow-1), pow(10, $pow)-1);
