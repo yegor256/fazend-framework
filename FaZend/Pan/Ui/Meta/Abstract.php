@@ -232,7 +232,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
             }
         }
         
-        if (preg_match_all('/%(\d+)?([sdf])?/', $txt, $matches)) {
+        if (preg_match_all('/%(\d+)?([sdf])/', $txt, $matches)) {
             $args = array();
             foreach ($matches[0] as $id=>$match) {
                 switch ($matches[2][$id]) {
