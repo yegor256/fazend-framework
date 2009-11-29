@@ -126,6 +126,7 @@
     </target>    
 
     <target name="sniffer" description="PHP Code Sniffer to run">
+        <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
         <phpcodesniffer format="summary">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
