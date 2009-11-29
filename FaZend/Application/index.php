@@ -75,15 +75,13 @@ $application->bootstrap();
 if (!defined('WEBSITE_URL'))
     define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'fazend.com'));
 
-// we're working from the command line?
-if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
-
-    $router = new FaZend_Cli_Router();
-    exit($router->dispatch());
-
-} else {
-
-    if (!defined('FAZEND_DONT_RUN'))
+// this flag could disable application execution
+if (!defined('FAZEND_DONT_RUN')) {
+    // we're working from the command line?
+    if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
+        $router = new FaZend_Cli_Router();
+        exit($router->dispatch());
+    } else {
         $application->run();
-
+    }
 }
