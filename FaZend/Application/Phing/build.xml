@@ -69,7 +69,10 @@
         <mkdir dir="${coveragedir}" />
 
         <!-- we should initialize the application mostly because of dynamic class loaders -->
-        <php expression="false; define('FAZEND_DONT_RUN', true); include '${project.basedir}/src/library/FaZend/Application/index.php';" />
+        <php expression="false; 
+            define('FAZEND_DONT_RUN', true); 
+            define('APPLICATION_ENV', 'testing'); 
+            include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         
 		<!-- prepare code coverage db -->
 		<coverage-setup database="${coveragedir}/coverage.db">
