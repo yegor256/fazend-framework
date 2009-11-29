@@ -84,7 +84,7 @@
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
                 <fileset dir="${project.basedir}/test">
-                    <include name="**/*Test*.php"/>
+                    <include name="**/*Test.php"/>
                     <exclude name="**/Abstract*.php"/>
                     <exclude name="**/_*.php"/>
                     <exclude name=".svn/**"/>
