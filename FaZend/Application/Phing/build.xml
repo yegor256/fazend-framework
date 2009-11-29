@@ -75,6 +75,7 @@
 		<coverage-setup database="${coveragedir}/coverage.db">
 			<fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php"/>
+				<include name="**/*.phtml"/>
 			</fileset>
 		</coverage-setup>
 
