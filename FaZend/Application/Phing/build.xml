@@ -72,6 +72,7 @@
         <php expression="false; 
             defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true); 
             defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing'); 
+            defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         
 		<!-- prepare code coverage db -->
