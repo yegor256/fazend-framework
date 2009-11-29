@@ -86,7 +86,7 @@
             <formatter type="plain" usefile="no" />
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
-                <fileset dir="${project.basedir}/library/FaZend/Test/tests">
+                <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
                     <include name="**/*Test.php"/>
                     <exclude name="**/Abstract*.php"/>
                     <exclude name="**/_*.php"/>
