@@ -29,11 +29,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function preDispatch() {
-
         $this->view->action = $this->getRequest()->getActionName();    
-
         parent::preDispatch();
-
     }
         
     /**
@@ -42,7 +39,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function indexAction() {
-
     }
     
     /**
@@ -51,8 +47,12 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function schemaAction() {
-
-        $adapter = Zend_Db_Table::getDefaultAdapter();
+        try {
+            $adapter = Zend_Db_Table::getDefaultAdapter();
+        } catch (Exception $e) {
+            $this->view->schema = 'There is no database in the project';
+            return;
+        }
 
         $tables = $adapter->listTables();
 
@@ -74,11 +74,9 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
             }
 
             $sql .= "\n\n";    
-
         }    
 
         $this->view->schema = $sql;
-
     }
 
     /**
@@ -87,7 +85,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function logAction() {
-
         $this->view->filePath = ini_get('error_log');
 
         // maybe error_log is not set?
@@ -100,7 +97,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
 
         } else
             $this->view->log = 'no [phpSettings.error_log] variable set in app.ini';
-
     }
 
     /**
@@ -109,7 +105,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function tablesAction() {
-
         $adapter = Zend_Db_Table::getDefaultAdapter();
         $this->view->tables = array_diff($adapter->listTables(), array('changelog'));
 
@@ -123,7 +118,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
         $this->view->retrieve = $retrieve;
 
         FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse('page'));
-
     }
 
     /**
@@ -132,10 +126,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function squeezeAction() {
-
         if ($this->_hasParam('reload'))
             $this->view->squeezePNG()->startOver();
-
     }
 
     /**
@@ -144,7 +136,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      * @return void
      */
     public function backupAction() {
-
         $this->view->backup = new FaZend_Backup();
 
         if ($this->_hasParam('clear'))
@@ -162,7 +153,6 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
         usort($files, create_function('$a, $b', 'return $a["mtime"] > $b["mtime"];'));
 
         $this->view->files = $files;
-
     }
 
 }
