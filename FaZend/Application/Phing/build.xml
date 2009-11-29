@@ -29,8 +29,9 @@
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
-    <property name="serverDocs" value="/home/continuum/doc/${phing.project.name}" />
-    <property name="serverCoverage" value="/home/continuum/coverage/${phing.project.name}" />
+    <property name="continuumRoot" value="/home/continuum" />
+    <property name="serverDocs" value="${continuumRoot}/doc/${phing.project.name}" />
+    <property name="serverCoverage" value="${continuumRoot}/coverage/${phing.project.name}" />
 
     <target name="main" depends="lint, test, sniffer, deploy, ping, doc" />
 
@@ -116,7 +117,7 @@
 		</coverage-report>
 
         <if>
-        <available file="${serverCoverage}" type="dir" />
+        <available file="${continuumRoot}" type="dir" />
         <then>
             <!-- delete previous coverage report from HTTP hosting and copy a new one -->
             <delete dir="${serverCoverage}" failonerror="true" verbose="false" includeemptydirs="true" />
@@ -195,7 +196,7 @@
             passthru="no" />    
         
         <if>
-        <available file="${serverDocs}" type="dir" />
+        <available file="${continuumRoot}" type="dir" />
         <then>
             <!-- delete previous documentation from HTTP hosting and copy a new one -->
             <delete dir="${serverDocs}" failonerror="true" verbose="false" includeemptydirs="true" />
