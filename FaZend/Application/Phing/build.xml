@@ -32,7 +32,7 @@
     <property name="serverDocs" value="/home/continuum/doc/${phing.project.name}" />
     <property name="serverCoverage" value="/home/continuum/coverage/${phing.project.name}" />
 
-    <target name="main" depends="lint, test, deploy, ping, doc" />
+    <target name="main" depends="lint, test, sniffer, deploy, ping, doc" />
 
     <target name="lint" description="Run syntax check for all classes" >
         <phplint haltonfailure="yes">
@@ -104,19 +104,33 @@
 			<report todir="${coveragedir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 		</coverage-report>
 
-        <!-- delete previous coverage report from HTTP hosting and copy a new one -->
-        <delete dir="${serverCoverage}" failonerror="true" verbose="false" includeemptydirs="true" />
-        <mkdir dir="${serverCoverage}" />
-        <copy todir="${serverCoverage}" >
-            <fileset dir="${coveragedir}/report" />
-        </copy>
+        <if>
+        <available file="${serverCoverage}" type="dir" />
+        <then>
+            <!-- delete previous coverage report from HTTP hosting and copy a new one -->
+            <delete dir="${serverCoverage}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${serverCoverage}" />
+            <copy todir="${serverCoverage}" >
+                <fileset dir="${coveragedir}/report" />
+            </copy>
 
-        <!-- create .htaccess and .htpasswd files to protect documentation -->
-        <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverCoverage}"
-            dir="/home/continuum/continuumFacade/public"
-            escape="false"
-            checkreturn="true" />
-        <echo msg="Access protection files deployed to code coverage report directory" />    
+            <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverCoverage}"
+                dir="/home/continuum/continuumFacade/public"
+                escape="false"
+                checkreturn="true" />
+            <echo msg="Access protection files deployed to code coverage report directory" />    
+        </then>
+        </if>
+    </target>    
+
+    <target name="sniffer" description="PHP Code Sniffer to run">
+        <phpcodesniffer format="summary">
+            <fileset dir="${project.basedir}/src/application">
+				<include name="**/*.php" />
+				<include name="**/*.phtml" />
+            </fileset>
+        </phpcodesniffer>
     </target>    
 
     <target name="deploy" description="Copy working files to FTP">
@@ -168,19 +182,24 @@
         <exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" 
             passthru="no" />    
         
-        <!-- delete previous documentation from HTTP hosting and copy a new one -->
-        <delete dir="${serverDocs}" failonerror="true" verbose="false" includeemptydirs="true" />
-        <mkdir dir="${serverDocs}" />
-        <copy todir="${serverDocs}" >
-            <fileset dir="${project.basedir}/build/doc" />
-        </copy>
+        <if>
+        <available file="${serverDocs}" type="dir" />
+        <then>
+            <!-- delete previous documentation from HTTP hosting and copy a new one -->
+            <delete dir="${serverDocs}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${serverDocs}" />
+            <copy todir="${serverDocs}" >
+                <fileset dir="${project.basedir}/build/doc" />
+            </copy>
 
-        <!-- create .htaccess and .htpasswd files to protect documentation -->
-        <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverDocs}"
-            dir="/home/continuum/continuumFacade/public"
-            escape="false"
-            checkreturn="true" />
-        <echo msg="Access protection files deployed to phpDoc directory" />    
+            <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverDocs}"
+                dir="/home/continuum/continuumFacade/public"
+                escape="false"
+                checkreturn="true" />
+            <echo msg="Access protection files deployed to phpDoc directory" />    
+        </then>
+        </if>
     </target>    
 
 </project>
