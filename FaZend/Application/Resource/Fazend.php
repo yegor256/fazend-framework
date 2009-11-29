@@ -317,7 +317,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             return;
             
         require_once $injectorPhp;
-        $injector = new TestInjector();
+        $injector = new Injector();
         $injector->inject();
     }
 
