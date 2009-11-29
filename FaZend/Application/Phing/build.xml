@@ -75,6 +75,7 @@
 		<coverage-setup database="${coveragedir}/coverage.db">
 			<fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php"/>
+                <exclude name=".svn/**"/>
 			</fileset>
 		</coverage-setup>
 
@@ -129,6 +130,7 @@
         <phpcodesniffer format="summary">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
+                <exclude name=".svn/**"/>
             </fileset>
         </phpcodesniffer>
     </target>    
