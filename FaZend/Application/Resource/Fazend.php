@@ -71,6 +71,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if (!method_exists($this, $method))
             FaZend_Exception('FaZend_Application_Resource_Fazend_InvalidMethod', 
                 "Can't find '{$method}'");
+                
         $this->$method();
         $this->_booted[$name] = true;
     }
@@ -236,7 +237,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      */
     protected function _initDbProfiler() {
         // profiler is used ONLY in development environment
-        if ((APPLICATION_ENV !== 'development'))
+        if (APPLICATION_ENV === 'production')
             return;
 
         // maybe there is no DB in the application, sometimes it happens :)
