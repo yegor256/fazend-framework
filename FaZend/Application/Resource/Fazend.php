@@ -26,6 +26,13 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract {
 
     /**
+     * List of booted items already
+     *
+     * @var string[]
+     */
+    protected $_booted = array();
+
+    /**
      * Initializes the resource (the entire FaZend Framework)
      * 
      * Defined by Zend_Application_Resource_Resource
@@ -43,12 +50,29 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
-            if (preg_match('/^\_init/', $method->getName())) {
-                $this->{$method->getName()}();
+            if (preg_match('/^\_init(\w+)$/', $method->getName(), $matches)) {
+                $this->_boot($matches[1]);
             }
         }
 
         return $config;
+    }
+
+    /**
+     * Call this method, if it wasn't called yet
+     *
+     * @return void
+     **/
+    protected function _boot($name) {
+        if (isset($this->_booted[$name]))
+            return;
+        $method = '_init' . $name;
+        
+        if (!method_exists($this, $method))
+            FaZend_Exception('FaZend_Application_Resource_Fazend_InvalidMethod', 
+                "Can't find '{$method}'");
+        $this->$method();
+        $this->_booted[$name] = true;
     }
 
     /**
@@ -311,6 +335,12 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     protected function _initTestInjection() {
         if (APPLICATION_ENV == 'production')
             return;
+
+        $this->_boot('DbAutoloader');
+        $this->_boot('DbProfiler');
+        $this->_boot('Logger');
+        $this->_boot('PluginCache');
+        $this->_boot('TableCache');
             
         $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
         if (!file_exists($injectorPhp))
