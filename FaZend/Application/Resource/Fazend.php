@@ -343,6 +343,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $this->_boot('PluginCache');
         $this->_boot('TableCache');
             
+        // make sure it's deployed
+        if ($this->_bootstrap->hasPluginResource('deployer'))
+            $this->_bootstrap->bootstrap('deployer');
+
         $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
         if (!file_exists($injectorPhp))
             return;
