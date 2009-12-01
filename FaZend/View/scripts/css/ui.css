@@ -151,10 +151,6 @@ div.page {
     div.page table.forma {
     }
 
-        div.page table.forma td {
-            font-size: 1em !important;
+        div.page table.forma td.left {
+            text-align: right !important;
         }
-
-            div.page table.forma td.left {
-                text-align: right !important;
-            }
