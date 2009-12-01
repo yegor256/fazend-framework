@@ -149,9 +149,12 @@ div.page {
             
     /* input forma in user interface mockup */
     div.page table.forma {
-        font-size: 1em !important;
     }
 
-        div.page table.forma td.left {
-            text-align: right !important;
+        div.page table.forma td {
+            font-size: 1em !important;
         }
+
+            div.page table.forma td.left {
+                text-align: right !important;
+            }
