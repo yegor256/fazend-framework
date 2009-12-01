@@ -113,7 +113,7 @@
         <!-- inject revision number into title -->
         <copy file="${coveragedir}/report/index.html" tofile="${coveragedir}/report/index.html.orig" />
         <svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" />    
-        <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' < ${coveragedir}/report/index.html.orig > ${coveragedir}/report/index.html" 
+        <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coveragedir}/report/index.html.orig &gt; ${coveragedir}/report/index.html" 
             passthru="false" checkreturn="true" />  
 
         <if>
