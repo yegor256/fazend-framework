@@ -33,7 +33,8 @@
     <property name="serverDocs" value="${continuumRoot}/doc/${phing.project.name}" />
     <property name="serverCoverage" value="${continuumRoot}/coverage/${phing.project.name}" />
 
-    <target name="main" depends="lint, test, sniffer, deploy, ping, doc" />
+    <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
+    </target>
 
     <target name="lint" description="Run syntax check for all classes" >
         <phplint haltonfailure="yes">
@@ -108,6 +109,12 @@
 		<coverage-report outfile="${coveragedir}/coverage.xml">
 			<report todir="${coveragedir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 		</coverage-report>
+
+        <!-- inject revision number into title -->
+        <copy file="${coveragedir}/report/index.html" tofile="${coveragedir}/report/index.html.orig" />
+        <svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" />    
+        <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' < ${coveragedir}/report/index.html.orig > ${coveragedir}/report/index.html" 
+            passthru="false" checkreturn="true" />  
 
         <if>
         <available file="${continuumRoot}" type="dir" />
