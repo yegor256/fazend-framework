@@ -146,4 +146,12 @@ div.page {
             div.page div.nav li li a.home:after {
                 content: "]";
             }
+            
+    /* input forma in user interface mockup */
+    div.page table.forma {
+        font-size: 1em !important;
+    }
 
+        div.page table.forma td.left {
+            text-align: right !important;
+        }

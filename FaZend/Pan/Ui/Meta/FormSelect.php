@@ -88,7 +88,7 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
         $select .= '</select>';
 
         if ($this->_alignedStyle)
-            return "<tr><td align='right'>{$header}:</td><td>{$select}</td></tr>";
+            return "<tr><td class='left'>{$header}:</td><td>{$select}</td></tr>";
         else
             return "<p>{$header}:<br/>{$select}</p>";
     }
