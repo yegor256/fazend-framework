@@ -77,14 +77,14 @@
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         
 		<!-- prepare code coverage db -->
-		<coverage-setup database="${coveragedir}/coverage.db">
+		<coverage-setup database="${coveragedir}/coverage.xml">
 			<fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php"/>
                 <exclude name=".svn/**"/>
 			</fileset>
 		</coverage-setup>
 
-        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
             <formatter type="plain" usefile="no" />
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
@@ -105,7 +105,7 @@
 
 		<!-- create an HTML report about code coverage -->
 		<mkdir dir="${coveragedir}/report" />
-		<coverage-report outfile="${coveragedir}/coverage.db">
+		<coverage-report outfile="${coveragedir}/coverage.xml">
 			<report todir="${coveragedir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 		</coverage-report>
 
