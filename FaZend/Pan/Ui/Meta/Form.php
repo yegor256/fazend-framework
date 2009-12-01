@@ -23,12 +23,18 @@
 class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
 
     /**
-     * Draw 
+     * Form is visible in TWO columns (name of field, field)
+     *
+     * @var boolean
+     */
+    protected $_alignedStyle = true;
+
+    /**
+     * Draw in PNG
      *
      * @return int Height
      */
     public function draw($y) {
-
         $fields = $this->_getOptions('/^field.*/');
 
         $height = 0;
@@ -37,7 +43,6 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
         }
 
         return $height;
-
     }
 
     /**
@@ -46,27 +51,44 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
      * @return string HTML image of the element
      */
     public function html() {
-
         $fields = $this->_getOptions('/^field.*/');
 
         $html = '';
-
         foreach ($fields as $field) {
+            $field->setAlignedStyle($this->_alignedStyle);
             $html .= $field->html();
         }
 
-        return $html;
-
+        if ($this->_alignedStyle)
+            return '<table>' . $html . '</table>';
+        else
+            return $html;
     }
 
     /**
-     * Add new field
+     * Set the style of form, an aligned one
      *
      * @return this
      */
-    public function addField($name, $type, $value, $header) {
-
+    public function setAlignedStyle($style = true) {
+        $this->_alignedStyle = $style;
+        return $this;
+    }
+    
+    /**
+     * Add new field
+     *
+     * @param string Name of the field, unique in form
+     * @param string Type of the field ('text', 'textarea', etc)
+     * @param string Value to show in the field
+     * @param string Header to show, if different from $name
+     * @return this
+     */
+    public function addField($name, $type, $value, $header = false) {
         $type = 'FaZend_Pan_Ui_Meta_Form' . ucfirst($type);
+
+        if (is_null($header))
+            $header = $name;
 
         $cls = new $type($this->_mockup);
         $cls->__call('setValue', array($value));
@@ -75,7 +97,6 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
         $this->__set('field' . $name, $cls);
 
         return $this;
-
     }
 
 }

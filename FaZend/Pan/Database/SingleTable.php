@@ -59,7 +59,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function png() {
-
         $x = self::PADDING;
         $y = self::PADDING + FaZend_Pan_Database_MapTable::TITLE_SIZE;
 
@@ -116,7 +115,6 @@ class FaZend_Pan_Database_SingleTable {
 
         // return the PNG content
         return $this->_getImage()->png();
-
     }
 
     /**
@@ -127,7 +125,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function _drawUML($x, $y) {
-
         $entities = $this->_findEntities();
 
         // intitial coordinates
@@ -158,7 +155,6 @@ class FaZend_Pan_Database_SingleTable {
 
         foreach ($entities as $entity)
             $this->_drawLink($entity);
-
     }
     
     /**
@@ -175,7 +171,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function _drawEntity($entity, $x, $y) {
-
         // get width and height of the text to draw
         list($textWidth, $textHeight) = FaZend_Image::getTextDimensions(
             $entity->title,
@@ -203,7 +198,6 @@ class FaZend_Pan_Database_SingleTable {
             ->set('y', $y)
             ->set('width', $width)
             ->set('height', $height);
-
     }
 
     /**
@@ -213,7 +207,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function _drawLink($entity) {
-
         $center = $this->_locations[$this->_name];
         $leaf = $this->_locations[$entity->name];
 
@@ -246,7 +239,6 @@ class FaZend_Pan_Database_SingleTable {
 
         $this->_putMark($centerX, $centerY, $leafX, $leafY, $entity->leafText);
         $this->_putMark($leafX, $leafY, $centerX, $centerY, $entity->centerText);
-
     }
 
     /**
@@ -259,7 +251,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function _putMark($x1, $y1, $x2, $y2, $mark) {
-
         $x = (($x2 - $x1 <= 0) ? -1 : 0.3);
         $y = (($y2 - $y1 <= 0) ? 1.4 : -0.2);
 
@@ -274,7 +265,6 @@ class FaZend_Pan_Database_SingleTable {
             $this->_getImage()->getColor('table.column'), 
             FaZend_Image::getFont('table.column'), 
             $mark);
-
     }
 
     /**
@@ -283,7 +273,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return array
      */
     public function _findEntities() {
-
         $tables = array();
         foreach (FaZend_Deployer::getInstance()->getTables() as $table)
             $tables[$table] = FaZend_Deployer::getInstance()->getTableInfo($table);
@@ -332,7 +321,6 @@ class FaZend_Pan_Database_SingleTable {
         }
 
         return $entities;
-
     }
 
     /**
@@ -341,7 +329,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return FaZend_Image
      */
     protected function _getImage() {
-
         if (!isset($this->_image)) {
             
             // create image
@@ -366,7 +353,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return array
      */
     protected function _getDimensions() {
-
         $info = $this->_getInfo();
 
         $width = 0;
@@ -379,7 +365,6 @@ class FaZend_Pan_Database_SingleTable {
                 + max(count($info) * (FaZend_Pan_Database_MapTable::COLUMN_SIZE + FaZend_Pan_Database_MapTable::COMMENT_SIZE + 4)
                 + FaZend_Pan_Database_MapTable::TITLE_SIZE + 3, self::ENTITIES_WIDTH) // height
         );
-
     }
 
     /**
@@ -388,11 +373,9 @@ class FaZend_Pan_Database_SingleTable {
      * @return void
      */
     public function _getInfo() {
-
         if (!isset($this->_info))
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
-
     }
 
     /**
@@ -401,7 +384,6 @@ class FaZend_Pan_Database_SingleTable {
      * @return array
      */
     protected static function _calculateArrow($x1, $y1, $x2, $y2) {    
-
         $dX = $x1 - $x2;
         $dY = $y1 - $y2;
 
@@ -423,7 +405,6 @@ class FaZend_Pan_Database_SingleTable {
             sin($alpha + pi()/6) * self::ARROW_SIZE + $x2, // x1
             cos($alpha + pi()/6) * self::ARROW_SIZE * $signY + $y2, // y1
         );
-
     }
 
     /**

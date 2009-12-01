@@ -78,7 +78,6 @@ class FaZend_Pan_Database_MapTable {
      * @return string Text
      */
     public static function formatColumnTitle($column) {
-
         $matches = array();
         preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
@@ -94,7 +93,6 @@ class FaZend_Pan_Database_MapTable {
      * @return int Height in pixels
      */
     public function draw($x, $y) {
-
         $top = $y;
         $y += self::TITLE_SIZE;
 
@@ -137,7 +135,6 @@ class FaZend_Pan_Database_MapTable {
         }
 
         return $y - $top;
-
     }
 
     /**
@@ -146,11 +143,9 @@ class FaZend_Pan_Database_MapTable {
      * @return void
      */
     public function _getInfo() {
-
         if (!isset($this->_info))
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
-
     }
 
     /**
@@ -159,14 +154,12 @@ class FaZend_Pan_Database_MapTable {
      * @return int
      */
     public function _getHeight() {
-        
         // the image should NOT draw anything, just calculate the parameter
         $this->_image->disableDrawing();
         $height = $this->draw(0, 0);
         $this->_image->enableDrawing();
 
         return $height;
-
     }
 
 }

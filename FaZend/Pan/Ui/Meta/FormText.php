@@ -25,12 +25,11 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement {
     const WIDTH = 25; // maximum width
 
     /**
-     * Draw 
+     * Draw in PNG
      *
      * @return int Height
      */
     public function draw($y) {
-
         $txt = $this->_parse($this->value);
         $width = FaZend_Pan_Ui_Meta_Text::FONT_SIZE * min(self::WIDTH, strlen($txt) + 2);
 
@@ -63,7 +62,6 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement {
             $txt);
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 5;
-
     }
 
     /**
@@ -72,14 +70,14 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement {
      * @return string HTML image of the element
      */
     public function html() {
-
         $txt = $this->_parse($this->value);
+        $header = $this->_parse($this->header);
+        $input = '<input type="text" value="' . $txt . '" size=" ' . min(self::WIDTH, strlen($txt)) . '"/>';
 
-        $html = '<p>' . $this->_parse($this->header) . ':<br/>' .
-            '<input type="text" value="' . $txt . '" size=" ' . 
-            min(self::WIDTH, strlen($txt)) . '"/></p>';
-
-        return $html;
+        if ($this->_alignedStyle)
+            return "<tr><td>{$header}:</td><td>{$input}</td></tr>";
+        else
+            return "<p>{$header}:<br/>{$input}</p>";
     }
 
 }

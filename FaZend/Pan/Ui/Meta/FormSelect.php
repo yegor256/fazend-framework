@@ -26,12 +26,11 @@
 class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
 
     /**
-     * Draw 
+     * Draw in PNG
      *
      * @return int Height
      */
     public function draw($y) {
-
         $txt = $this->_parse($this->value);
 
         $width = FaZend_Pan_Ui_Meta_Text::FONT_SIZE * min(25, strlen($txt) + 3);
@@ -73,7 +72,6 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
             $txt);
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 5;
-
     }
 
     /**
@@ -82,16 +80,17 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
      * @return string HTML image of the element
      */
     public function html() {
+        $header = $this->_parse($this->header);
 
-        $html = '<p>' . $this->_parse($this->header) . ':<br/>' . 
-            '<select>';
-
+        $select = '<select>';
         foreach ($this->value as $option)
-            $html .= '<option>' . $this->_parse($option) . '</option>';
-            
-        $html .= '</select></p>';
+            $select .= '<option>' . $this->_parse($option) . '</option>';
+        $select .= '</select>';
 
-        return $html;
+        if ($this->_alignedStyle)
+            return "<tr><td>{$header}:</td><td>{$select}</td></tr>";
+        else
+            return "<p>{$header}:<br/>{$select}</p>";
     }
 
 }

@@ -89,7 +89,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
     }
 
     /**
-     * Draw 
+     * Draw in PNG
      *
      * @return int Height
      */
@@ -188,7 +188,10 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
     /**
      * Add new column
      *
-     * @return this
+     * @param string Unique name of the column (to be visible as header)
+     * @param string Mask to use for column content
+     * @param integer Width of the column in letters
+     * @return $this
      */
     public function addColumn($name, $mask, $width) {
         $this->__set('column' . $name, array(
@@ -204,7 +207,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Unique name of the link
      * @param string Name of the view script to link to
      * @param string Optional parameter of the link (visible for end-user)
-     * @return this
+     * @return $this
      */
     public function addOption($name, $link = false, $header = null) {
         $this->__set('option' . $name, array(
@@ -218,7 +221,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @param string Name of the column
      * @param string Optional name of the VIEW script to link to
-     * @return this
+     * @return $this
      */
     public function addLink($name, $link = false) {
         $details = $this->__get('column' . $name);
@@ -230,6 +233,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
     /**
      * Add a sorter to column
      *
+     * @param string Name of the column to become sortable
      * @return this
      */
     public function addSorter($name) {

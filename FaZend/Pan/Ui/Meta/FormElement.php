@@ -22,5 +22,21 @@
  */
 abstract class FaZend_Pan_Ui_Meta_FormElement extends FaZend_Pan_Ui_Meta_Abstract {
 
+    /**
+     * Field is visible in TWO columns (name of field, field)
+     *
+     * @var boolean
+     */
+    protected $_alignedStyle = true;
 
+    /**
+     * Set the style of form, an aligned one
+     *
+     * @return this
+     */
+    public function setAlignedStyle($style = true) {
+        $this->_alignedStyle = $style;
+        return $this;
+    }
+    
 }

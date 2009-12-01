@@ -23,16 +23,17 @@
 class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement {
 
     /**
-     * Draw 
+     * Draw in PNG
      *
      * @return int Height
      */
     public function draw($y) {
-
         $txt = $this->_parse($this->value);
-        $bbox = imagettfbbox(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
 
-        $width = $bbox[4] + 10;
+        // calulate the width of the text inside the button
+        list($width, ) = FaZend_Image::getTextDimensions($txt, 
+            FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
+            $this->_mockup->getImage()->getFont('mockup.content'));
 
         // white rectangle
         $this->_mockup->getImage()->imagefilledrectangle( 
@@ -54,7 +55,6 @@ class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement {
             $txt);
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 3;
-
     }
 
     /**
@@ -63,10 +63,12 @@ class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement {
      * @return string HTML image of the element
      */
     public function html() {
+        $button = $this->_htmlLink($this->header, '<span class="submit">' . $this->_parse($this->value). '</span>');
 
-        return '<p>' . $this->_htmlLink($this->header, '<span class="submit">' . 
-            $this->_parse($this->value). '</span>') . '</p>';
-
+        if ($this->_alignedStyle)
+            return "<tr><td></td><td>{$button}</td></tr>";
+        else
+            return "<p>{$button}</p>";
     }
 
 }
