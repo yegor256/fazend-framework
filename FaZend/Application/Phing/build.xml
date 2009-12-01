@@ -103,13 +103,6 @@
             </batchtest>
         </phpunit>
 
-		<!-- collect together all code coverage reports -->
-		<coverage-merger>
-			<fileset dir="${coveragedir}">
-				<include name="coverage/**/*.data" />
-			</fileset>
-		</coverage-merger>
-
 		<!-- create an HTML report about code coverage -->
 		<mkdir dir="${coveragedir}/report" />
 		<coverage-report outfile="${coveragedir}/coverage.db">
