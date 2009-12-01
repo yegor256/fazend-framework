@@ -60,7 +60,7 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
         }
 
         if ($this->_alignedStyle)
-            return '<table>' . $html . '</table>';
+            return "<table style='font-size: 1em;'>" . $html . '</table>';
         else
             return $html;
     }

@@ -75,7 +75,7 @@ class FaZend_Pan_Ui_Meta_FormTextarea extends FaZend_Pan_Ui_Meta_FormElement {
         $input = '<textarea cols="' . self::WIDTH . '" rows="' . self::HEIGHT . '">' . $this->_parse($this->value) . '</textarea>';
 
         if ($this->_alignedStyle)
-            return "<tr><td>{$header}:</td><td>{$input}</td></tr>";
+            return "<tr><td align='right'>{$header}:</td><td>{$input}</td></tr>";
         else
             return "<p>{$header}:<br/>{$input}</p>";
     }
