@@ -139,15 +139,14 @@
 
     <target name="sniffer" description="PHP Code Sniffer to run">
         <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-        <phpcodesniffer standard="Zend" showWarnings="true" allowedFileExtensions="php phtml">
+        <phpcodesniffer format="xml" standard="Zend" showWarnings="true" allowedFileExtensions="php phtml">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
 				<include name="**/*.phtml" />
                 <exclude name=".svn/**"/>
             </fileset>
             <config name="report" value="full" />
-            <config name="generator" value="HTML" />
-            <config name="report-file" value="${project.basedir}/reports/phpcs/index.html" />
+            <config name="report-file" value="${project.basedir}/reports/phpcs/index.xml" />
         </phpcodesniffer>
 
         <if>
