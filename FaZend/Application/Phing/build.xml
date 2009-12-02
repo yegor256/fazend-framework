@@ -148,7 +148,7 @@
             --report-file=${project.basedir}/reports/phpcs/index.xml 
             ${project.basedir}/src/application >/dev/null" 
             escape="false"
-            checkreturn="true" />
+            checkreturn="false" />
 
         <if>
         <available file="${continuumRoot}" type="dir" />
