@@ -139,6 +139,7 @@
 
     <target name="sniffer" description="PHP Code Sniffer to run">
         <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
+        <mkdir dir="${project.basedir}/reports/phpcs" />
         <exec command="phpcs 
             --standard=Zend 
             --report=xml
