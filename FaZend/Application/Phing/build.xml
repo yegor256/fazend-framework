@@ -32,6 +32,7 @@
     <property name="continuumRoot" value="/home/continuum" />
     <property name="serverDocs" value="${continuumRoot}/doc/${phing.project.name}" />
     <property name="serverCoverage" value="${continuumRoot}/coverage/${phing.project.name}" />
+    <property name="serverPhpcs" value="${continuumRoot}/phpcs/${phing.project.name}" />
 
     <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
     </target>
@@ -138,12 +139,32 @@
 
     <target name="sniffer" description="PHP Code Sniffer to run">
         <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-        <phpcodesniffer format="summary">
+        <phpcodesniffer format="summary" standard="Zend" showWarnings="true">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
                 <exclude name=".svn/**"/>
             </fileset>
+            <config name="report-file" value="${project.basedir}/reports/phpcs/index.html" />
         </phpcodesniffer>
+
+        <if>
+        <available file="${continuumRoot}" type="dir" />
+        <then>
+            <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
+            <delete dir="${serverPhpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${serverPhpcs}" />
+            <copy todir="${serverPhpcs}" >
+                <fileset dir="${project.basedir}/reports/phpcs" />
+            </copy>
+
+            <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverPhpcs}"
+                dir="/home/continuum/continuumFacade/public"
+                escape="false"
+                checkreturn="true" />
+            <echo msg="Access protection files deployed to PHPCS report directory" />    
+        </then>
+        </if>
     </target>    
 
     <target name="deploy" description="Copy working files to FTP">
