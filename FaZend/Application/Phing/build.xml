@@ -144,7 +144,7 @@
             --standard=Zend 
             --report=xml
             --ignore='.svn/*' 
-            --extensions='php phtml' 
+            --extensions='php,phtml' 
             --report-file=${project.basedir}/reports/phpcs/index.xml 
             ${project.basedir}/src/application >/dev/null" 
             escape="false"
