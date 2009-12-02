@@ -142,6 +142,7 @@
         <phpcodesniffer format="full" standard="Zend" showWarnings="true" allowedFileExtensions="php phtml">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
+				<include name="**/*.phtml" />
                 <exclude name=".svn/**"/>
             </fileset>
             <config name="generator" value="HTML" />
