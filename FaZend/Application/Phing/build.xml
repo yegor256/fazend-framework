@@ -139,7 +139,7 @@
 
     <target name="sniffer" description="PHP Code Sniffer to run">
         <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-        <phpcodesniffer format="summary" standard="Zend" showWarnings="true">
+        <phpcodesniffer format="summary" standard="Zend" showWarnings="true" allowedFileExtensions="php phtml">
             <fileset dir="${project.basedir}/src/application">
 				<include name="**/*.php" />
                 <exclude name=".svn/**"/>
