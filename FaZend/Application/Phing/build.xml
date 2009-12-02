@@ -139,12 +139,12 @@
 
     <target name="sniffer" description="PHP Code Sniffer to run">
         <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-        <exec command="phpcs \
-            --format=xml \
-            --report=full \
-            --ignore='.svn/*' \
-            --extensions='php phtml' \
-            --report-file=${project.basedir}/reports/phpcs/index.xml \
+        <exec command="phpcs 
+            --format=xml 
+            --report=full 
+            --ignore='.svn/*' 
+            --extensions='php phtml' 
+            --report-file=${project.basedir}/reports/phpcs/index.xml 
             ${project.basedir}/src/application >/dev/null" 
             escape="false"
             checkreturn="true" />
