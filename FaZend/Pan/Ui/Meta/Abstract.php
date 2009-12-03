@@ -134,6 +134,17 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                             )));
                         break;
                         
+                    // random label (title, name of something, etc.)
+                    case 'label':
+                        $replacer = array_rand(array_flip(array(
+                            'Alpha Green',
+                            'Mega Star',
+                            'World Extra',
+                            'Edwards Universe',
+                            'Ultra Senior',
+                            )));
+                        break;
+
                     // random email address
                     case 'email':
                         $replacer = array_rand(array_flip(array('john', 'pam', 'n', 't'))) . rand(100, 999) . '@example.com';
