@@ -82,8 +82,16 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
     public function html() {
         $header = $this->_parse($this->header);
 
+        $list = $this->value;
+        if (!is_array($list)) {
+            $generated = array();
+            for ($i = 0; $i < 7; $i++)
+                $generated[] = $this->_parse($list);
+            $list = $generated;
+        }
+
         $select = '<select>';
-        foreach ($this->value as $option)
+        foreach ($list as $option)
             $select .= '<option>' . $this->_parse($option) . '</option>';
         $select .= '</select>';
 
