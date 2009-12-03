@@ -153,4 +153,5 @@ div.page {
 
         div.page table.forma td.left {
             text-align: right !important;
+            width: 250px;
         }
