@@ -54,6 +54,7 @@ class Fazend_FileController extends FaZend_Controller_Action {
             }
         }
 
+        $this->getResponse()->setHeader('Content-Length', filesize($file));
         $this->getResponse()->setBody(file_get_contents($file));
     }    
     
