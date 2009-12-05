@@ -29,9 +29,6 @@ class Fazend_FileController extends FaZend_Controller_Action {
      * @return void
      */
     public function indexAction() {
-        //$this->getResponse()
-        //    ->setHeader('Content-type', 'text/javascript');
-
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -48,6 +45,14 @@ class Fazend_FileController extends FaZend_Controller_Action {
 
         // tell browser to cache this content    
         $this->_cacheContent();    
+
+        // set proper type of content
+        if (extension_loaded('fileinfo')) {
+            $finfo = new finfo(FILEINFO_MIME);
+            if ($finfo) {
+                $this->getResponse()->setHeader('Content-type', $finfo->file($file));
+            }
+        }
 
         $this->getResponse()->setBody(file_get_contents($file));
     }    
