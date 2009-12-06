@@ -25,14 +25,4 @@ require_once 'FaZend/Controller/controllers/AdmController.php';
  */
 class AdmController extends Fazend_AdmController {
 
-    /**
-     * Custom action, to test
-     *
-     * @return void
-     */
-    public function customAction() {
-
-
-    }
-
 }

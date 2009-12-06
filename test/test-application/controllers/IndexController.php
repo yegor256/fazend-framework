@@ -25,15 +25,6 @@
 class IndexController extends FaZend_Controller_Action {
 
     /**
-     * Test total application
-     *
-     * @return void
-     */
-    public function indexAction() {
-
-    }
-
-    /**
      * Test _redirectFlash() method
      *
      * @return void
@@ -48,46 +39,7 @@ class IndexController extends FaZend_Controller_Action {
      * @return void
      */
     public function tableAction() {
-
         FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
-
     }
-
-    /**
-     * Test squeezePNG helper
-     *
-     * @return void
-     */
-    public function squeezeAction() {
-
-    }
-    
-    /**
-     * HeadScriptTest
-     *
-     * @return void
-     */
-    public function headscriptAction() {
-
-    }
-
-    /**
-     * LoremIpsumTest
-     *
-     * @return void
-     */
-    public function loremipsumAction() {
-
-    }
-
-    /**
-     * FormaTest
-     *
-     * @return void
-     */
-    public function formaAction() {
-
-    }
-
 
 }
