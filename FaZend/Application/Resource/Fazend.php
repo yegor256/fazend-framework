@@ -348,7 +348,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             $this->_bootstrap->bootstrap('deployer');
 
         // objects in 'test/Mocks' directory
-        $mocks = APPLICATION_PATH . '/../../text/Mocks';
+        $mocks = APPLICATION_PATH . '/../../test/Mocks';
         if (file_exists($mocks) && is_dir($mocks)) {
             Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
         }
