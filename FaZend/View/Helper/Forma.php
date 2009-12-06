@@ -171,7 +171,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
             }
 
             // log this operation
-            logg('Calling ' . $rMethod->getDeclaringClass()->name . '::' . $method .
+            FaZend_Log::info('Calling ' . $rMethod->getDeclaringClass()->name . '::' . $method .
                 '(\'' . implode("', '", $mnemos) . '\')');
 
             // execute the target method
