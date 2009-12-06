@@ -38,7 +38,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
      *
      * @var FaZend_View_Helper_Forma_Field[]
      */
-    protected $_fields;
+    protected $_fields = array();
 
     /**
      * Builds the object
