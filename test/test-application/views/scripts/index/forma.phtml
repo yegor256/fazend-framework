@@ -1,0 +1,17 @@
+<p>This is forma:</p>
+
+<?=$this->forma()
+    ->addField('text')
+        ->fieldLabel('My text:')
+        ->fieldRequired(true)
+        ->fieldAttrib('maxlength', 45)
+    ->addField('select')
+        ->fieldOptions(array('yes', 'no'))
+    ->addField('hidden')
+        ->fieldValue('val')
+    ->addField('textarea')
+        ->fieldAttrib('cols', 15)
+    ->addField('file')
+    ->addField('submit')
+        ->fieldAction($class, $method)
+    ?>

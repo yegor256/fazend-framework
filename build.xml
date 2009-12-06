@@ -41,7 +41,7 @@
 	</target>
 
 	<target name="test" description="Run all existing unit-tests">
-       		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
+   		<phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="no" />
 			<batchtest>
 				<fileset dir="${project.basedir}/test">
@@ -53,6 +53,5 @@
 			</batchtest>
 		</phpunit2>
 	</target>	
-
 
 </project>

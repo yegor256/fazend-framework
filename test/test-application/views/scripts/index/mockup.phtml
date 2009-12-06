@@ -30,7 +30,10 @@
     ->addColumn("id", 'id', 'id')
     ->addColumn("description", 'id', 'id')
     ->addOption("disable", 'disable')
-    ->addOption("enable", 'enable') -->
+    ->addOption("enable", 'enable') 
+    ->addLink('id', false)
+    ->setPaginator()
+    -->
 
 <table>
     <tr><td><?=$this->line?></td></tr>
@@ -42,6 +45,10 @@
 
 <!-- @form()
     ->addField("text", 'text', 'tt', "Title of your photo:")
-    ->addField("textarea", 'text', 'dd', "Description") -->
+    ->addField('area', 'textarea', '%500s', "Description") 
+    ->addField('title', 'select', array('Mr', 'Mrs'), "Title") 
+    ->addField('submit', 'submit', false, 'Save') 
+    ->setAlignedStyle(false)
+    -->
 
 <?=$this->form?>

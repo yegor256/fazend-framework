@@ -80,5 +80,14 @@ class IndexController extends FaZend_Controller_Action {
 
     }
 
+    /**
+     * FormaTest
+     *
+     * @return void
+     */
+    public function formaAction() {
+
+    }
+
 
 }
