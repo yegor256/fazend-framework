@@ -86,7 +86,7 @@
 			</fileset>
 		</coverage-setup>
 
-        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+        <phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
             <formatter type="plain" usefile="no" />
             <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
@@ -103,7 +103,7 @@
                     <exclude name=".svn/**"/>
                 </fileset>
             </batchtest>
-        </phpunit>
+        </phpunit2>
 
 		<!-- create an HTML report about code coverage -->
 		<mkdir dir="${coveragedir}/report" />
