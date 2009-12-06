@@ -88,7 +88,6 @@
 
         <phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
             <formatter type="plain" usefile="no" />
-            <formatter todir="${project.basedir}/reports" type="xml" usefile="yes" />
             <batchtest>
                 <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
                     <include name="**/*Test.php"/>
