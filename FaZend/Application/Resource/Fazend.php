@@ -347,15 +347,21 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         if ($this->_bootstrap->hasPluginResource('deployer'))
             $this->_bootstrap->bootstrap('deployer');
 
-        $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
-        if (!file_exists($injectorPhp))
-            return;
-
         // objects in 'test/Mocks' directory
         $mocks = APPLICATION_PATH . '/../../text/Mocks';
         if (file_exists($mocks) && is_dir($mocks)) {
             Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
         }
+
+        // make sure that directory with test is includeable
+        set_include_path(implode(PATH_SEPARATOR, array(
+            realpath(APPLICATION_PATH . '/../../test'),
+            get_include_path(),
+        )));
+
+        $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
+        if (!file_exists($injectorPhp))
+            return;
 
         require_once $injectorPhp;
         $injector = new Injector();
