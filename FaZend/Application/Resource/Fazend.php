@@ -350,7 +350,13 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
         if (!file_exists($injectorPhp))
             return;
-            
+
+        // objects in 'test/Mocks' directory
+        $mocks = APPLICATION_PATH . '/../../text/Mocks';
+        if (file_exists($mocks) && is_dir($mocks)) {
+            Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
+        }
+
         require_once $injectorPhp;
         $injector = new Injector();
         $injector->inject();

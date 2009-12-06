@@ -47,7 +47,6 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      * @return void
      */
     public function setUp() {
-    
         // run this method before everything else
         $this->bootstrap = array($this, 'fazendTestBootstrap');
 
@@ -56,7 +55,6 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
         // create local view, since it's a controller
         $this->view = new Zend_View();
-
     }
     
     /**
@@ -65,13 +63,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      * @return void
      */
     public function fazendTestBootstrap() {
-        
         // bootstrap the application
         include 'FaZend/Application/index.php';
-
-        // objects in 'test/Mocks' directory
-        Zend_Loader_Autoloader::getInstance()->registerNamespace('Mocks_');
-
     }    
 
     /**
@@ -80,12 +73,10 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      * @return void
      */
     public function tearDown() {
-
         $this->resetRequest();
         $this->resetResponse();
 
         parent::tearDown();
-
     }
     
     /**
