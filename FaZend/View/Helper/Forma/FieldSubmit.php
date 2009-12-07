@@ -52,7 +52,7 @@ class FaZend_View_Helper_Forma_FieldSubmit extends FaZend_View_Helper_Forma_Fiel
      */
     protected function _configureFormElement(Zend_Form_Element $element) {
         parent::_configureFormElement($element);
-        $element->setAttrib('class', 'btn');
+        // $element->setAttrib('class', 'btn');
 
         if (isset($this->_value))
             $label = $this->_value;
