@@ -29,7 +29,7 @@
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
-    <property name="cruisecontrolRoot" value="/home/ccerror" />
+    <property name="cruisecontrolRoot" value="/home/cc" />
     <property name="serverDocs" value="${cruisecontrolRoot}/doc/${phing.project.name}" />
     <property name="serverCoverage" value="${cruisecontrolRoot}/coverage/${phing.project.name}" />
     <property name="serverPhpcs" value="${cruisecontrolRoot}/phpcs/${phing.project.name}" />
@@ -127,11 +127,13 @@
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <!--
             <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverCoverage}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to code coverage report directory" />    
+            -->
         </then>
         </if>
     </target>    
@@ -160,11 +162,13 @@
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <!--
             <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverPhpcs}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to PHPCS report directory" />    
+            -->
         </then>
         </if>
     </target>    
@@ -183,11 +187,13 @@
         
         <!-- build system access file -->
         <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
+        <!--
         <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
             dir="/home/continuum/continuumFacade/public"
             escape="false"
             checkreturn="true" />
         <echo msg="Access config for /__fz URL saved into ${access.file}" />    
+        -->
 
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
         <uploadByFTP server="${ftp.server}"
@@ -229,11 +235,13 @@
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <!--
             <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverDocs}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to phpDoc directory" />    
+            -->
         </then>
         </if>
     </target>    
