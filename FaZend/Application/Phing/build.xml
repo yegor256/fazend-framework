@@ -29,7 +29,7 @@
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
-    <property name="cruisecontrolRoot" value="/home/cc" />
+    <property name="cruisecontrolRoot" value="/home/ccerror" />
     <property name="serverDocs" value="${cruisecontrolRoot}/doc/${phing.project.name}" />
     <property name="serverCoverage" value="${cruisecontrolRoot}/coverage/${phing.project.name}" />
     <property name="serverPhpcs" value="${cruisecontrolRoot}/phpcs/${phing.project.name}" />
