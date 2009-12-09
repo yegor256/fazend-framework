@@ -128,7 +128,7 @@
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
             <!--
-            <exec command="php index.php ProtectDirectory -- project=${phing.project.name} -- dir=${serverCoverage}"
+            <exec command="php index.php ProtectDirectory -project=${phing.project.name} -dir=${serverCoverage}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
@@ -163,7 +163,7 @@
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
             <!--
-            <exec command="php index.php ProtectDirectory -- project=${phing.project.name} -- dir=${serverPhpcs}"
+            <exec command="php index.php ProtectDirectory -project=${phing.project.name} -dir=${serverPhpcs}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
@@ -188,7 +188,7 @@
         <!-- build system access file -->
         <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
         <!--
-        <exec command="php index.php Access -- project=${phing.project.name} > ${access.file}"
+        <exec command="php index.php Access -project=${phing.project.name} > ${access.file}"
             dir="/home/continuum/continuumFacade/public"
             escape="false"
             checkreturn="true" />
@@ -236,7 +236,7 @@
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
             <!--
-            <exec command="php index.php ProtectDirectory -- project=${phing.project.name} -- dir=${serverDocs}"
+            <exec command="php index.php ProtectDirectory -project=${phing.project.name} -dir=${serverDocs}"
                 dir="/home/continuum/continuumFacade/public"
                 escape="false"
                 checkreturn="true" />
