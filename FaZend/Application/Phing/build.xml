@@ -29,10 +29,10 @@
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
-    <property name="continuumRoot" value="/home/continuum" />
-    <property name="serverDocs" value="${continuumRoot}/doc/${phing.project.name}" />
-    <property name="serverCoverage" value="${continuumRoot}/coverage/${phing.project.name}" />
-    <property name="serverPhpcs" value="${continuumRoot}/phpcs/${phing.project.name}" />
+    <property name="cruisecontrolRoot" value="/home/cc" />
+    <property name="serverDocs" value="${cruisecontrolRoot}/doc/${phing.project.name}" />
+    <property name="serverCoverage" value="${cruisecontrolRoot}/coverage/${phing.project.name}" />
+    <property name="serverPhpcs" value="${cruisecontrolRoot}/phpcs/${phing.project.name}" />
 
     <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
     </target>
@@ -117,7 +117,7 @@
             passthru="false" checkreturn="true" />  
 
         <if>
-        <available file="${continuumRoot}" type="dir" />
+        <available file="${cruisecontrolRoot}" type="dir" />
         <then>
             <!-- delete previous coverage report from HTTP hosting and copy a new one -->
             <delete dir="${serverCoverage}" failonerror="true" verbose="false" includeemptydirs="true" />
@@ -150,7 +150,7 @@
             checkreturn="false" />
 
         <if>
-        <available file="${continuumRoot}" type="dir" />
+        <available file="${cruisecontrolRoot}" type="dir" />
         <then>
             <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
             <delete dir="${serverPhpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
@@ -219,7 +219,7 @@
             passthru="no" />    
         
         <if>
-        <available file="${continuumRoot}" type="dir" />
+        <available file="${cruisecontrolRoot}" type="dir" />
         <then>
             <!-- delete previous documentation from HTTP hosting and copy a new one -->
             <delete dir="${serverDocs}" failonerror="true" verbose="false" includeemptydirs="true" />
