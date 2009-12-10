@@ -127,6 +127,11 @@ class UploadByFTP extends Task {
         $this->Log("FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: ".
             preg_replace('/./', '*', $this->_password)."\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'");
 
+        if (!$this->_server) {
+            $this->Log("Server is not specified, the deployment won't happen");    
+            return;
+        }
+
         $this->ftp = @ftp_connect($this->_server);
         if ($this->ftp === false)
             throw new BuildException("Failed to connect to ftp ({$this->_server})");    
