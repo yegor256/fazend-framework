@@ -90,7 +90,7 @@
 		</coverage-setup>
 
         <mkdir dir="${project.basedir}/reports/tests" />
-        <phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
             <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
             <batchtest>
                 <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
@@ -106,7 +106,7 @@
                     <exclude name=".svn/**"/>
                 </fileset>
             </batchtest>
-        </phpunit2>
+        </phpunit>
 
         <!-- create a report after unit tests -->
         <mkdir dir="${project.basedir}/reports/phpunit" />
