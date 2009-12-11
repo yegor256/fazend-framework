@@ -114,7 +114,7 @@
             infile="${project.basedir}/reports/tests/testsuites.xml" 
             format="frames" 
             todir="${project.basedir}/reports/phpunit" 
-            styledir="${project.basedir}/library/FaZend/Application/Phing"/>
+            styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 
         <if>
         <available file="${cruisecontrolRoot}" type="dir" />
