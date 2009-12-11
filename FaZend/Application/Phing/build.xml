@@ -89,7 +89,7 @@
 		</coverage-setup>
 
         <phpunit2 printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-            <formatter type="plain" usefile="no" />
+            <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
             <batchtest>
                 <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
                     <include name="**/*Test.php"/>
@@ -105,6 +105,15 @@
                 </fileset>
             </batchtest>
         </phpunit2>
+
+        <!-- create a report after unit tests -->
+        <!--
+        <phpunitreport 
+            infile="${project.basedir}/reports/tests/testsuites.xml" 
+            format="frames" 
+            todir="${project.basedir}/reports/phpunit" 
+            styledir="???"/>
+        -->
 
 		<!-- create an HTML report about code coverage -->
 		<mkdir dir="${coveragedir}/report" />
@@ -129,13 +138,11 @@
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <!--
-            <exec command="php index.php ProtectDirectory -project=${phing.project.name} -dir=${serverCoverage}"
-                dir="/home/continuum/continuumFacade/public"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverCoverage}"
+                dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to code coverage report directory" />    
-            -->
         </then>
         </if>
     </target>    
@@ -164,13 +171,11 @@
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <!--
-            <exec command="php index.php ProtectDirectory -project=${phing.project.name} -dir=${serverPhpcs}"
-                dir="/home/continuum/continuumFacade/public"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverPhpcs}"
+                dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to PHPCS report directory" />    
-            -->
         </then>
         </if>
     </target>    
@@ -189,13 +194,11 @@
         
         <!-- build system access file -->
         <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
-        <!--
-        <exec command="php index.php Access -project=${phing.project.name} > ${access.file}"
-            dir="/home/continuum/continuumFacade/public"
+        <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
+            dir="${ccFacade}"
             escape="false"
             checkreturn="true" />
         <echo msg="Access config for /__fz URL saved into ${access.file}" />    
-        -->
 
         <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
         <uploadByFTP server="${ftp.server}"
