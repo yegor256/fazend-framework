@@ -201,32 +201,37 @@
     </target>    
 
     <target name="deploy" description="Copy working files to FTP">
-        <svnlastrevision
-            workingcopy="${project.basedir}"
-            propertyname="svn.revision" />    
+        <if>
+        <available file="${cruisecontrolRoot}" type="dir" />
+        <then>
+            <svnlastrevision
+                workingcopy="${project.basedir}"
+                propertyname="svn.revision" />    
 
-        <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
+            <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
-        <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
-        <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/flag.txt" />
+            <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
+            <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/flag.txt" />
             
-        <echo msg="Uploading revision: ${svn.revision}" />    
+            <echo msg="Uploading revision: ${svn.revision}" />    
         
-        <!-- build system access file -->
-        <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
-        <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
-            dir="${ccFacade}"
-            escape="false"
-            checkreturn="true" />
-        <echo msg="Access config for /__fz URL saved into ${access.file}" />    
+            <!-- build system access file -->
+            <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
+            <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
+                dir="${ccFacade}"
+                escape="false"
+                checkreturn="true" />
+            <echo msg="Access config for /__fz URL saved into ${access.file}" />    
 
-        <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-        <uploadByFTP server="${ftp.server}"
-            username="${ftp.user}"
-            password="${ftp.password}"
-            srcdir="${project.basedir}/${ftp.srcdir}"
-            destdir="${ftp.destdir}">
-        </uploadByFTP>
+            <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+            <uploadByFTP server="${ftp.server}"
+                username="${ftp.user}"
+                password="${ftp.password}"
+                srcdir="${project.basedir}/${ftp.srcdir}"
+                destdir="${ftp.destdir}">
+            </uploadByFTP>
+        </then>
+        </if>
     </target>
 
     <target name="ping" description="Ping the production server and show the result">
