@@ -91,7 +91,7 @@
 
         <mkdir dir="${project.basedir}/reports/tests" />
         <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-            <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
+            <formatter type="plain" usefile="true" todir="${project.basedir}/reports/tests" />
             <batchtest>
                 <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
                     <include name="**/*Test.php"/>
