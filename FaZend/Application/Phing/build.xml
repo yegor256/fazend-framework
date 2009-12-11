@@ -35,6 +35,7 @@
     <property name="serverDocs" value="${cruisecontrolRoot}/doc/${phing.project.name}" />
     <property name="serverCoverage" value="${cruisecontrolRoot}/coverage/${phing.project.name}" />
     <property name="serverPhpcs" value="${cruisecontrolRoot}/phpcs/${phing.project.name}" />
+    <property name="serverTests" value="${cruisecontrolRoot}/tests/${phing.project.name}" />
 
     <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
     </target>
@@ -107,13 +108,30 @@
         </phpunit2>
 
         <!-- create a report after unit tests -->
-        <!--
         <phpunitreport 
             infile="${project.basedir}/reports/tests/testsuites.xml" 
             format="frames" 
             todir="${project.basedir}/reports/phpunit" 
-            styledir="???"/>
-        -->
+            styledir="${project.basedir}/library/FaZend/Application/Phing"/>
+
+        <if>
+        <available file="${cruisecontrolRoot}" type="dir" />
+        <then>
+            <!-- delete previous coverage report from HTTP hosting and copy a new one -->
+            <delete dir="${serverTests}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${serverTests}" />
+            <copy todir="${serverTests}" >
+                <fileset dir="${project.basedir}/reports/phpunit" />
+            </copy>
+
+            <!-- create .htaccess and .htpasswd files to protect documentation -->
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverTests}"
+                dir="${ccFacade}"
+                escape="false"
+                checkreturn="true" />
+            <echo msg="Access protection files deployed to phpunit reports directory" />    
+        </then>
+        </if>
 
 		<!-- create an HTML report about code coverage -->
 		<mkdir dir="${coveragedir}/report" />

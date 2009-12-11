@@ -124,8 +124,8 @@ class UploadByFTP extends Task {
      * @return void
      */
     public function main() {
-        $this->Log("FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: ".
-            preg_replace('/./', '*', $this->_password)."\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'");
+        $this->Log("FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: " .
+            preg_replace('/./', '*', $this->_password) . "\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'");
 
         if (!$this->_server) {
             $this->Log("Server is not specified, the deployment won't happen");    
