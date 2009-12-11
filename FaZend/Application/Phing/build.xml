@@ -109,6 +109,7 @@
         </phpunit2>
 
         <!-- create a report after unit tests -->
+        <mkdir dir="${project.basedir}/reports/phpunit" />
         <phpunitreport 
             infile="${project.basedir}/reports/tests/testsuites.xml" 
             format="frames" 
