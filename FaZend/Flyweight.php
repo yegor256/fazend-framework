@@ -50,7 +50,7 @@ class FaZend_Flyweight {
         array_shift($args); // pop out the first argument
         
         // unique object ID in the storage
-        $id = self::_makeId($class, $args);
+        $id = self::_makeId(array_merge(array($class), $args));
         
         // if it's already here - return it
         if (isset(self::$_storage[$id]))
@@ -69,19 +69,20 @@ class FaZend_Flyweight {
     /**
      * Generate ID out of a list of params
      *
-     * @param string Name of the class
      * @param array List of args
      * @return string
      */
-    public static function _makeId($class, array $args) {
-        $args[] = $class;
+    public static function _makeId(array $args) {
         $id = '';
         foreach ($args as $arg) {
-            if (is_scalar($arg))
+            if (is_scalar($arg)) {
                 // kill this SPECIAL symbol from scalar arguments
                 $arg = str_replace('.', '\.', $arg);
-            else
+            } elseif (is_array($arg)) { 
+                $arg = self::_makeId($arg);
+            } else {
                 $arg = '.' . spl_object_hash($arg);
+            }
             $id .= '.' . $arg;
         }
         return $id;
