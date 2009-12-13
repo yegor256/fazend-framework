@@ -26,6 +26,17 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
 class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract {
 
     /**
+     * Injector has been executed already?
+     *
+     * I don't know why we need this validation, but looks like the resource
+     * is initialized many times, once per each test case. Anyway, this variable resolves
+     * the problem, as I see.
+     *
+     * @var boolean
+     */
+    protected static $_injectedAlready = false;
+
+    /**
      * List of booted items already
      *
      * @var string[]
@@ -336,6 +347,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     protected function _initTestInjection() {
         if (APPLICATION_ENV == 'production')
             return;
+            
+        if (self::$_injectedAlready)
+            return;
+        self::$_injectedAlready = true;
 
         $this->_boot('DbAutoloader');
         $this->_boot('DbProfiler');
