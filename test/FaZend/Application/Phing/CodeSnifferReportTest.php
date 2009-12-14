@@ -27,7 +27,7 @@ class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase {
         $destDir = $xml . '-output';
 
         // remove the directory before everything
-        shell_exec('rm -rf ' . escapeshellarg($destDir . '/*'));
+        shell_exec('rm -rf ' . escapeshellarg($destDir));
         mkdir($destDir);
 
         // create phpcs report
