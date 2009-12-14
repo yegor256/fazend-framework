@@ -1,0 +1,39 @@
+<?php include dirname(__FILE__) . '/header.html'; ?>
+
+<table class="dir">
+    <thead><tr>
+        <th width="400px">Name</th>
+        <th class="right">Quality</th>
+        <th class="right">Errors</th>
+        <th class="right">Warns</th>
+        <th class="right">Rev</th>
+        <th width="50%">Last Change</th>
+    </tr></thead>
+    <tbody>
+        <? foreach ($vars['childs'] as $name=>$child): ?>
+        <tr>
+
+            <? if ($child !== false): ?>
+                <td><a href="<?=$vars['name']?>/<?=$name?>.html"><?=$name?></a></td>
+                <td class="right"><?=sprintf('%0.1f', $child->quality)?>%</td>
+                <td class="right"><?=$child->errors?></td>
+                <td class="right"><?=$child->warnings?></td>
+            <? else: ?>
+                <td><?=$name?></td>
+                <td colspan='3'></td>
+            <? endif; ?>
+
+            <? if (($child !== false) && $child->isFile()): ?>
+                <td class="right"><a href="#"><?=$child->revision?></a></td>
+                <td class="changes"><?=$this->_cutEmail($child->author)?>: 
+                    <?=strlen($child->log) < 50 ? $child->log : substr($child->log, 0, 47) . '...'?></td>
+            <? else: ?>
+                <td colspan="2"></td>
+            <? endif; ?>
+
+        </tr>
+        <? endforeach; ?>
+    </tbody>
+</table>
+
+<?php include dirname(__FILE__) . '/footer.html'; ?>

@@ -70,7 +70,15 @@ class CodeSnifferReport extends Task {
         $this->_xml = simplexml_load_file($this->_xmlFile);
         if (!$this->_xml)
             throw new BuildException("Failed to open '{$this->_xmlFile}'");    
+        
+        // get the overall project quality
         $quality = $this->_getQuality($this->_srcDir, $this->_destDir);
+
+        // copy styles.css
+        $this->_createFile($this->_destDir . '/styles.css', 'styles.css', array());
+        
+        if (!@rename($this->_destDir . '/' . pathinfo($this->_srcDir, PATHINFO_BASENAME) . '.html', $this->_destDir . '/index.html'))
+            throw new BuildException("Failed to rename '{$this->_destDir}/index.html'");    
     }
 
     /**
@@ -106,20 +114,23 @@ class CodeSnifferReport extends Task {
     /**
      * Calculate metrics for the given directory
      *
+     * @param string Absolute path of the source directory or file
+     * @param string Absolute path of the destination directory
      * @return array ['lines', 'errors', 'warnings']
      */
     protected function _getQuality($sourceCode, $htmlOutputDirectory) {
-        $quality = array(
-            'lines' => 0,
-            'errors' => 0,
-            'warnings' => 0,
-        );
+        // create new holder of quality metrics
+        require_once dirname(__FILE__) . '/CodeSnifferReport/CodeQuality.php';
+        $quality = new CodeQuality();
         
         $header = substr($sourceCode, strlen($this->_srcDir));
         
+        // name of the processed node (file or dir)
+        $nodeName = pathinfo($sourceCode, PATHINFO_BASENAME);
+        
         if (is_dir($sourceCode)) {
             // make directory for HTML files
-            $destDirectory = $htmlOutputDirectory . '/' . pathinfo($sourceCode, PATHINFO_BASENAME);
+            $destDirectory = $htmlOutputDirectory . '/' . $nodeName;
             mkdir($destDirectory);
             
             $childs = array();
@@ -129,44 +140,45 @@ class CodeSnifferReport extends Task {
                     continue;
                 // we attach metrics to our array
                 $childQuality = $this->_getQuality($sourceCode . '/' . $childFile, $destDirectory);
-                $quality['lines'] += $childQuality['lines'];
-                $quality['errors'] += $childQuality['errors'];
-                $quality['warnings'] += $childQuality['warnings'];
+                if ($childQuality !== false)
+                    $quality->merge($childQuality);
                 $childs[$childFile] = $childQuality;
             }
 
             // we create a summary directory listing for this particular dir
             $this->_createFile(
-                $htmlOutputDirectory . '/index.html',
+                $htmlOutputDirectory . '/' . $nodeName . '.html',
                 'directory.html',
                 array(
                     'childs' => $childs,
                     'header' => $header,
-                    'name' => pathinfo($destDirectory, PATHINFO_BASENAME),
+                    'name' => $nodeName,
                     'quality' => $quality,
                     ));
         } else {
             // here we do real calculation of metrics
-            $info = $this->_xml->xpath("file[name='{$sourceCode}']");
+            $info = $this->_xml->xpath("//file[@name='{$sourceCode}']");
             
             // this file is absent in the PHPCS report
             if (!$info)
-                return $quality;
+                return false;
             
-            $quality['errors'] = $info->attributes()->errors;
-            $quality['warnings'] = $info->attributes()->warnings;
+            // set information from PHPCS (sent to us in XML file)
+            $quality->setInfo($info[0]);
+            
+            // collect quality information
+            $quality->collect($sourceCode);
             
             // we save source code with our marks into HTML directory given in $htmlOutputDirectory
             $this->_createFile(
-                $htmlOutputDirectory . '/' . pathinfo($sourceCode, PATHINFO_BASENAME) . '.html',
+                $htmlOutputDirectory . '/' . $nodeName . '.html',
                 'file.html',
                 array(
-                    'info' => $info,
+                    'info' => $info[0],
                     'header' => $header,
                     'quality' => $quality,
+                    'source' => $sourceCode,
                     ));
-                    
-            $quality['lines'] = 4; //test
         }
 
         return $quality;
@@ -183,6 +195,17 @@ class CodeSnifferReport extends Task {
         $html = ob_get_clean();
         if (!file_put_contents($htmlFile, $html))
             throw new BuildException("Failed to save '{$htmlFile}'");    
+    }
+    
+    /**
+     * Cut email
+     *
+     * @return string
+     **/
+    protected function _cutEmail($email) {
+        if (strpos($email, '@') === false)
+            return $email;
+        return substr($email, 0, strpos($email, '@') + 1) . '...';
     }
     
 }

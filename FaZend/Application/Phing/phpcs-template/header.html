@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>  
+    <title><?=$vars['header']?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+	<link href="<?=str_repeat('../', substr_count($vars['header'], '/'))?>styles.css" media="screen" rel="stylesheet" type="text/css" />    
+</head> 
+<body>
+    
+<h1>
+<? $sectors = explode('/', $vars['header']) ?>
+<? foreach ($sectors as $id=>$sector): ?>
+    <?=($id ? '/' : false)?>
+    <a href="<?=str_repeat('../', count($sectors)-$id-1)?><?=$sector ? $sector : 'index'?>.html"><?=$sector ? $sector : 'root'?></a>
+<? endforeach; ?>
+[<?=$vars['quality']->quality?>%]</h1>
+

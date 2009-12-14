@@ -1,0 +1,137 @@
+/**
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ */
+ 
+body {
+    font-family: Verdana;
+    font-size: 14px;
+}
+
+/* Link styles */
+:link, 
+:visited {
+    text-decoration: none;
+    color: #b00;
+}
+
+    :link:hover, 
+    :visited:hover { 
+        background-color: #eee; 
+        color: #555;
+    }
+
+h1 {
+    font-size: 1.6em;
+}
+
+table {
+    border: 1px solid #ddd;
+    border-spacing: 0;
+    border-top: 0;
+    border-collapse: collapse; 
+    empty-cells: show;
+    line-height: 130%;
+    padding: 0;
+    margin: 0 auto;
+    table-layout: fixed;
+    width: 100%;
+}
+
+    table .right {
+        text-align: right !important;
+    }
+
+    table thead { 
+        background: #f7f7f0 
+    }
+
+        table thead th {
+            border: 1px solid #d7d7d7;
+            border-bottom-color: #999;
+            font-weight: bold;
+            padding: .1em .5em;
+            vertical-align: bottom;
+        }
+
+    table th { 
+        text-align: left; 
+        padding: 0 1em .1em 0; 
+        border-right: 1px solid #d7d7d7;
+        border-bottom: 1px solid #998;
+    }
+
+    table tbody {
+    }
+
+        table tbody th {
+            background: #eed;
+            color: #886;
+            font-weight: normal;
+            padding: 0 .5em;
+            text-align: right;
+            vertical-align: top;
+        }
+    
+        table tbody td {
+            padding: .1em .5em;
+        }
+
+        table tbody tr { 
+            border-top: 1px solid #ddd 
+        }
+    
+            table tbody tr:hover { 
+                background: #eed !important 
+            }
+
+    table.code tbody td {
+        font-family: monospace;
+        overflow: hidden;
+        vertical-align: top;
+        white-space: pre;
+        font-size: 0.9em;
+    }
+
+        table.code tbody td.errors {
+            background: #fdd;
+        } 
+
+        table.code tbody td.comment {
+            font-family: Verdana;
+            white-space: normal !important;
+        } 
+
+            table.code tbody td.comment span.error {
+                color: red;
+            } 
+
+            table.code tbody td.comment span.warning {
+                color: orange;
+            } 
+
+    table.code tbody tr { 
+        border-top: 0 !important;
+    }
+
+    table.code tbody th {
+    }
+    
+        table.code tbody th.errors {
+            color: red;
+            font-weight: bold;
+        } 
+        
+    table.dir tbody td.changes {
+        color: gray;
+    }
