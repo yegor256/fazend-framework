@@ -100,7 +100,6 @@ table {
         overflow: hidden;
         vertical-align: top;
         white-space: pre;
-        font-size: 0.9em;
     }
 
         table.code tbody td.errors {
