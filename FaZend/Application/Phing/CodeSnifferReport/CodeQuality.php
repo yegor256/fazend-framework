@@ -123,7 +123,12 @@ class CodeQuality {
     public function collect($file) {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
-        $info = simplexml_load_string(shell_exec('svn log -l 1 --xml ' . escapeshellarg($file)));
+        $info = simplexml_load_string(shell_exec('svn log -l 1 --non-interactive --xml ' . escapeshellarg($file)));
+        
+        // maybe some mistake here
+        if (!$info)
+            return;
+            
         $this->revision = intval($info->logentry['revision']);
         $this->author = strval($info->logentry->author);
         $this->log = strval($info->logentry->msg);
