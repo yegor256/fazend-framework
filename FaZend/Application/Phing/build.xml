@@ -181,6 +181,7 @@
             escape="false"
             checkreturn="false" />
 
+        <mkdir dir="${project.basedir}/reports/phpcs/report" />
         <codeSnifferReport 
             srcDir="${project.basedir}/src/application"
             destDir="${project.basedir}/reports/phpcs/report"
