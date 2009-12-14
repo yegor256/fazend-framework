@@ -28,6 +28,7 @@
 
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
+    <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
     <property name="cruisecontrolRoot" value="/home/cc" />
     <property name="ccFacade" value="/home/cc/ccFacade/public" />
@@ -180,6 +181,11 @@
             escape="false"
             checkreturn="false" />
 
+        <codeSnifferReport 
+            srcDir="${project.basedir}/src/application"
+            destDir="${project.basedir}/reports/phpcs/report"
+            xmlFile="${project.basedir}/reports/phpcs/index.xml" />
+
         <if>
         <available file="${cruisecontrolRoot}" type="dir" />
         <then>
@@ -187,7 +193,7 @@
             <delete dir="${serverPhpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
             <mkdir dir="${serverPhpcs}" />
             <copy todir="${serverPhpcs}" >
-                <fileset dir="${project.basedir}/reports/phpcs" />
+                <fileset dir="${project.basedir}/reports/phpcs/report" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
