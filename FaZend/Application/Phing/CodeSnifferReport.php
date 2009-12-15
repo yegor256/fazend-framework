@@ -22,7 +22,8 @@ require_once 'phing/Task.php';
  * @package Application
  * @subpackage Phing
  */
-class CodeSnifferReport extends Task {
+class CodeSnifferReport extends Task 
+{
 
     /**
      * XML file after PHPCS
@@ -57,7 +58,8 @@ class CodeSnifferReport extends Task {
      * 
      * @return void
      */
-    public function init() {
+    public function init() 
+    {
     }
 
     /**
@@ -66,7 +68,8 @@ class CodeSnifferReport extends Task {
      * @return void
      * @throws BuildException
      */
-    public function main() {
+    public function main() 
+    {
         $this->_xml = simplexml_load_file($this->_xmlFile);
         if (!$this->_xml)
             throw new BuildException("Failed to open '{$this->_xmlFile}'");    
@@ -87,7 +90,8 @@ class CodeSnifferReport extends Task {
      * @param string Name of XML file, after PHPCS
      * @return void
      */
-    public function setxmlFile($xmlFile) {
+    public function setxmlFile($xmlFile) 
+    {
         $this->_xmlFile = $xmlFile;
     }
     
@@ -97,7 +101,8 @@ class CodeSnifferReport extends Task {
      * @param string Directory with sources
      * @return void
      */
-    public function setsrcDir($srcDir) {
+    public function setsrcDir($srcDir) 
+    {
         $this->_srcDir = $srcDir;
     }
     
@@ -107,7 +112,8 @@ class CodeSnifferReport extends Task {
      * @param string Destination directory
      * @return void
      */
-    public function setdestDir($destDir) {
+    public function setdestDir($destDir) 
+    {
         $this->_destDir = $destDir;
     }
     
@@ -118,7 +124,8 @@ class CodeSnifferReport extends Task {
      * @param string Absolute path of the destination directory
      * @return array ['lines', 'errors', 'warnings']
      */
-    protected function _getQuality($sourceCode, $htmlOutputDirectory) {
+    protected function _getQuality($sourceCode, $htmlOutputDirectory) 
+    {
         // create new holder of quality metrics
         require_once dirname(__FILE__) . '/CodeSnifferReport/CodeQuality.php';
         $quality = new CodeQuality();
@@ -189,7 +196,8 @@ class CodeSnifferReport extends Task {
      *
      * @return void
      **/
-    protected function _createFile($htmlFile, $template, $vars) {
+    protected function _createFile($htmlFile, $template, $vars) 
+    {
         ob_start();
         include(dirname(__FILE__) . '/phpcs-template/' . $template);
         $html = ob_get_clean();
@@ -202,7 +210,8 @@ class CodeSnifferReport extends Task {
      *
      * @return string
      **/
-    protected function _cutEmail($email) {
+    protected function _cutEmail($email) 
+    {
         if (strpos($email, '@') === false)
             return $email;
         return substr($email, 0, strpos($email, '@') + 1) . '...';
@@ -214,7 +223,8 @@ class CodeSnifferReport extends Task {
      * @param float Quality
      * @return string
      **/
-    protected function _showQuality($quality) {
+    protected function _showQuality($quality) 
+    {
         return "<span style='color: " . 
             ($quality > 80 ? 
                 'green' : ($quality > 60 ? 
@@ -228,7 +238,8 @@ class CodeSnifferReport extends Task {
      * @param string File name
      * @return string
      **/
-    protected function _makeName($fileName) {
+    protected function _makeName($fileName) 
+    {
         return str_replace('.', '-', $fileName);
     }
 
