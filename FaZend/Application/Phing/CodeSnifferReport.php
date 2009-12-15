@@ -126,7 +126,7 @@ class CodeSnifferReport extends Task {
         $header = substr($sourceCode, strlen($this->_srcDir));
         
         // name of the processed node (file or dir)
-        $nodeName = pathinfo($sourceCode, PATHINFO_BASENAME);
+        $nodeName = $this->_makeName(pathinfo($sourceCode, PATHINFO_BASENAME));
         
         if (is_dir($sourceCode)) {
             // make directory for HTML files
@@ -222,4 +222,14 @@ class CodeSnifferReport extends Task {
             . "'>" . sprintf('%0.1f', $quality) . '%</span>';
     }
     
+    /**
+     * Convert real file name to the label file
+     *
+     * @param string File name
+     * @return string
+     **/
+    protected function _makeName($fileName) {
+        return str_replace('.', '-', $fileName);
+    }
+
 }

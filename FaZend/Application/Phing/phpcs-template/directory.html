@@ -14,7 +14,7 @@
         <tr>
 
             <? if ($child !== false): ?>
-                <td><a href="<?=$vars['name']?>/<?=$name?>.html"><?=$name?></a></td>
+                <td><a href="<?=$vars['name']?>/<?=$this->_makeName($name)?>.html"><?=$name?></a></td>
                 <td class="right"><?=$this->_showQuality($child->quality)?></td>
                 <td class="right"><?=$child->errors?></td>
                 <td class="right"><?=$child->warnings?></td>
