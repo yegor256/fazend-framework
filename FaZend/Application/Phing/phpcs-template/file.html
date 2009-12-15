@@ -49,7 +49,7 @@ foreach ($vars['info']->children() as $err) {
             <? foreach (array('error', 'warning') as $type): ?>
                 <? if (isset($errors[$lineNo][$type])): ?>
                     <? foreach ($errors[$lineNo][$type] as $err): ?>
-                        <span class="<?=$type?>"><?=$err?></span><br/>
+                        <span class="<?=$type?>"><?=htmlspecialchars($err)?></span><br/>
                     <? endforeach; ?>
                 <? endif; ?>
             <? endforeach; ?>
