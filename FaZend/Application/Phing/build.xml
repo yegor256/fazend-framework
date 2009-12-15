@@ -181,6 +181,7 @@
             escape="false"
             checkreturn="false" />
 
+        <echo msg="Converting PHPCS XML report into HTML files" />    
         <mkdir dir="${project.basedir}/reports/phpcs/report" />
         <codeSnifferReport 
             srcDir="${project.basedir}/src/application"
