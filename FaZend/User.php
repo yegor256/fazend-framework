@@ -21,21 +21,22 @@
  *
  * @package User
  */
-class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
+class FaZend_User extends FaZend_Db_Table_ActiveRow_user 
+{
 
     /**
-     * Auth
+     * Auth, to be retrieved by self::_auth()
      *
      * @var Zend_Auth
      */
-    private static $_auth;
+    private static $_auth = null;
 
     /**
-     * Login status
+     * Login status, to be retrieved by self::isLoggedIn()
      *
      * @var boolean
      */
-    private static $_loggedIn;
+    private static $_loggedIn = null;
     
     /**
      * Name of the class to use
@@ -49,7 +50,8 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      *
      * @return void
      **/
-    public static function setRowClass($className) {
+    public static function setRowClass($className) 
+    {
         self::$_rowClass = $className;
     }
 
@@ -58,8 +60,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      *
      * @return boolean
      */
-    public static function isLoggedIn () {
-        if (isset(self::$_loggedIn))
+    public static function isLoggedIn() 
+    {
+        if (!is_null(self::$_loggedIn))
             return self::$_loggedIn;
 
         // try to analyze the situation in session
@@ -85,9 +88,10 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * Returns current user
      *
      * @return FaZend_User
-     * @throw FaZend_User_NotLoggedIn
+     * @throws FaZend_User_NotLoggedIn
      */
-    public static function getCurrentUser () {
+    public static function getCurrentUser() 
+    {
         if (!self::isLoggedIn())
             FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'user is not logged in');
 
@@ -98,9 +102,10 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * Login this user
      *
      * @return void
-     * @throw FaZend_User_LoginFailed
+     * @throws FaZend_User_LoginFailed
      */
-    public function logIn () {
+    public function logIn() 
+    {
         $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $authAdapter->setTableName('user')
             ->setIdentityColumn('email')
@@ -125,7 +130,8 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      *
      * @return void
      */
-    public static function logOut () {
+    public static function logOut() 
+    {
         // forget previous status
         self::$_loggedIn = false;
 
@@ -157,7 +163,8 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * @param array Associative array of other data for USER table
      * @return boolean
      */
-    public static function register ($email, $password, array $data = array()) {
+    public static function register($email, $password, array $data = array()) 
+    {
         $user = new FaZend_User();
         $user->email = strtolower($email);
         $user->password = $password;
@@ -208,11 +215,13 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * @param string Email of the user
      * @return boolean
      */
-    public static function findByEmail ($email) {
+    public static function findByEmail ($email) 
+    {
         return self::retrieve()
             ->where('email = ?', $email)
             ->setRowClass(self::$_rowClass)
-            ->fetchRow();
+            ->fetchRow()
+            ;
     }
 
     /**
@@ -220,10 +229,10 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      *
      * @return boolean
      */
-    public function isCurrentUser () {
+    public function isCurrentUser () 
+    {
         if (!self::isLoggedIn())
             return false;
-
         return self::getCurrentUser()->__id == $this->__id;
     }
         
@@ -233,20 +242,20 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user {
      * @param string Password
      * @return boolean
      */
-    public function isGoodPassword ($password) {
+    public function isGoodPassword($password) 
+    {
         return $this->password == $password;
     }
 
     /**
-     * Get auth
+     * Get auth from Zend_Auth
      *
      * @return Zend_Auth
      */
-    protected static function _auth() {
-        if (!isset(self::$_auth)) {
+    protected static function _auth() 
+    {
+        if (is_null(self::$_auth))
             self::$_auth = Zend_Auth::getInstance();
-        }
-
         return self::$_auth;
     }
 
