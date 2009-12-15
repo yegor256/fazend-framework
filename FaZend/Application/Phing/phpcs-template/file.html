@@ -42,7 +42,7 @@ foreach ($vars['info']->children() as $err) {
             <?=(isset($errors[$lineNo]) ? " rowspan='2' class='errors'" : false)?>
             ><?=$lineNo?></th><td
             <?=(isset($errors[$lineNo]) ? " class='errors'" : false)?>
-            ><?=$line?></td></tr>
+            ><?=htmlspecialchars($line)?></td></tr>
      
         <? if (isset($errors[$lineNo])): ?>
             <tr><td class="comment">
