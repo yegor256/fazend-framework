@@ -123,7 +123,8 @@ class CodeQuality {
     public function collect($file) {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
-        $info = simplexml_load_string(shell_exec('svn log -l 1 --non-interactive --xml ' . escapeshellarg($file)));
+        $info = simplexml_load_string(shell_exec('svn log -l 1 --non-interactive --xml ' . 
+            escapeshellarg($file) . ' 2>&1'));
         
         // maybe some mistake here
         if (!$info)

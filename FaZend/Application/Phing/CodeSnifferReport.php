@@ -208,4 +208,18 @@ class CodeSnifferReport extends Task {
         return substr($email, 0, strpos($email, '@') + 1) . '...';
     }
     
+    /**
+     * Show quality in %
+     *
+     * @param float Quality
+     * @return string
+     **/
+    protected function _showQuality($quality) {
+        return "<span style='color: " . 
+            ($quality > 80 ? 
+                'green' : ($quality > 60 ? 
+                    'orange' : 'red'))
+            . "'>" . sprintf('%0.1f', $quality) . '%</span>';
+    }
+    
 }

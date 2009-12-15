@@ -1,7 +1,9 @@
 <?php include dirname(__FILE__) . '/header.html'; ?>
 
-<p>Revision <a href="#"><?=$vars['quality']->revision?></a>, commited by <?=$vars['quality']->author?><br/>
-    <?=$vars['quality']->log?></p>
+<? if ($vars['quality']->revision): ?>
+    <p>Revision <a href="#"><?=$vars['quality']->revision?></a>, commited by <?=$vars['quality']->author?><br/>
+        <?=$vars['quality']->log?></p>
+<? endif; ?>
     
 <p><?=$vars['quality']->lines?> lines,
     <?=$vars['quality']->errors?> errors,

@@ -13,5 +13,5 @@
     <?=($id ? '/' : false)?>
     <a href="<?=str_repeat('../', count($sectors)-$id-1)?><?=$sector ? $sector : 'index'?>.html"><?=$sector ? $sector : 'root'?></a>
 <? endforeach; ?>
-[<?=$vars['quality']->quality?>%]</h1>
+[<?=$this->_showQuality($vars['quality']->quality)?>]</h1>
 

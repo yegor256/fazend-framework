@@ -15,7 +15,7 @@
 
             <? if ($child !== false): ?>
                 <td><a href="<?=$vars['name']?>/<?=$name?>.html"><?=$name?></a></td>
-                <td class="right"><?=sprintf('%0.1f', $child->quality)?>%</td>
+                <td class="right"><?=$this->_showQuality($child->quality)?></td>
                 <td class="right"><?=$child->errors?></td>
                 <td class="right"><?=$child->warnings?></td>
             <? else: ?>

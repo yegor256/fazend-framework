@@ -103,12 +103,13 @@ table {
     }
 
         table.code tbody td.errors {
-            background: #fdd;
+            /* background: #fdd; */
         } 
 
         table.code tbody td.comment {
             font-family: Verdana;
             white-space: normal !important;
+            font-size: 0.85em;
         } 
 
             table.code tbody td.comment span.error {
