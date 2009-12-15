@@ -23,21 +23,27 @@
     <!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
     <tstamp/>
 
+    <!-- all php scripts should be able to include files from these dirs -->
     <includepath classpath="${project.basedir}/src/library" />
     <includepath classpath="${project.basedir}/test" />
 
     <!-- ftp uploader -->
     <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
+    <!-- code sniffer reporter -->
     <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
-    <property name="cruisecontrolRoot" value="/home/cc" />
-    <property name="ccFacade" value="/home/cc/ccFacade/public" />
+    <!-- this is where CC home is located -->
+    <property name="cc.root" value="/home/cc" />
+    <!-- ccFacade is hosted there and is used for integration with fazend.com -->
+    <property name="ccFacade" value="${cc.root}/ccFacade/public" />
     
-    <property name="serverDocs" value="${cruisecontrolRoot}/doc/${phing.project.name}" />
-    <property name="serverCoverage" value="${cruisecontrolRoot}/coverage/${phing.project.name}" />
-    <property name="serverPhpcs" value="${cruisecontrolRoot}/phpcs/${phing.project.name}" />
-    <property name="serverTests" value="${cruisecontrolRoot}/tests/${phing.project.name}" />
+    <!-- locations of reports, on CC server -->
+    <property name="cc.doc" value="${cc.root}/doc/${phing.project.name}" />
+    <property name="cc.coverage" value="${cc.root}/coverage/${phing.project.name}" />
+    <property name="cc.phpcs" value="${cc.root}/phpcs/${phing.project.name}" />
+    <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
 
+    <!-- main task, executed by the project -->
     <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
     </target>
 
@@ -45,34 +51,16 @@
         <phplint haltonfailure="yes">
             <fileset dir="${project.basedir}/src/application">
                 <include name="**/*.php"/>
-                <include name="**/*.html"/>
                 <include name="**/*.phtml"/>
                 <exclude name=".svn/**"/>
             </fileset>
         </phplint>
     </target>
 
-    <target name="dbdeploy" description="Deploy db changes" >
-        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
-        <property name="deployScript" value="${project.basedir}/src/application/deploy/scripts/deploy.sql" />
-
-        <dbdeploy
-            url="mysql:host=${db.host};dbname=${db.name}"
-            userid="${db.user}"
-            password="${db.password}"
-            dir="${project.basedir}/database/deltas"
-            outputfile="${deployScript}"
-            undooutputfile="${deployScript}.undo" />
-
-        <exec 
-            command="${progs.mysql} -h${db.host} -u${db.user} -p${db.password} ${db.name} &lt; ${deployScript}"  
-            dir="${project.basedir}/src"  
-            passthru="true"
-            checkreturn="true" />  
-    </target>    
-            
     <target name="test" description="Run all existing unit-tests" >
         <property name="coveragedir" value="${project.basedir}/reports/coverage" />
+
+        <!-- make sure it exists -->
         <mkdir dir="${coveragedir}" />
 
         <!-- we should initialize the application mostly because of dynamic class loaders -->
@@ -118,17 +106,17 @@
             styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 
         <if>
-        <available file="${cruisecontrolRoot}" type="dir" />
+        <available file="${cc.root}" type="dir" />
         <then>
             <!-- delete previous coverage report from HTTP hosting and copy a new one -->
-            <delete dir="${serverTests}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${serverTests}" />
-            <copy todir="${serverTests}" >
+            <delete dir="${cc.tests}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${cc.tests}" />
+            <copy todir="${cc.tests}" >
                 <fileset dir="${project.basedir}/reports/phpunit" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverTests}"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.tests}"
                 dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
@@ -149,17 +137,17 @@
             passthru="false" checkreturn="true" />  
 
         <if>
-        <available file="${cruisecontrolRoot}" type="dir" />
+        <available file="${cc.root}" type="dir" />
         <then>
             <!-- delete previous coverage report from HTTP hosting and copy a new one -->
-            <delete dir="${serverCoverage}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${serverCoverage}" />
-            <copy todir="${serverCoverage}" >
+            <delete dir="${cc.coverage}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${cc.coverage}" />
+            <copy todir="${cc.coverage}" >
                 <fileset dir="${coveragedir}/report" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverCoverage}"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.coverage}"
                 dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
@@ -189,17 +177,17 @@
             xmlFile="${project.basedir}/reports/phpcs/index.xml" />
 
         <if>
-        <available file="${cruisecontrolRoot}" type="dir" />
+        <available file="${cc.root}" type="dir" />
         <then>
             <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
-            <delete dir="${serverPhpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${serverPhpcs}" />
-            <copy todir="${serverPhpcs}" >
+            <delete dir="${cc.phpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${cc.phpcs}" />
+            <copy todir="${cc.phpcs}" >
                 <fileset dir="${project.basedir}/reports/phpcs/report" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverPhpcs}"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.phpcs}"
                 dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
@@ -210,7 +198,7 @@
 
     <target name="deploy" description="Copy working files to FTP">
         <if>
-        <available file="${cruisecontrolRoot}" type="dir" />
+        <available file="${cc.root}" type="dir" />
         <then>
             <svnlastrevision
                 workingcopy="${project.basedir}"
@@ -263,17 +251,17 @@
             passthru="no" />    
         
         <if>
-        <available file="${cruisecontrolRoot}" type="dir" />
+        <available file="${cc.root}" type="dir" />
         <then>
             <!-- delete previous documentation from HTTP hosting and copy a new one -->
-            <delete dir="${serverDocs}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${serverDocs}" />
-            <copy todir="${serverDocs}" >
+            <delete dir="${cc.doc}" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${cc.doc}" />
+            <copy todir="${cc.doc}" >
                 <fileset dir="${project.basedir}/build/api" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${serverDocs}"
+            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.doc}"
                 dir="${ccFacade}"
                 escape="false"
                 checkreturn="true" />
