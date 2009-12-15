@@ -85,17 +85,26 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     }
 
     /**
-     * Returns current user
+     * Returns current user, if he is logged in. Otherwise throws exception
      *
-     * @return FaZend_User
-     * @throws FaZend_User_NotLoggedIn
+     * @return FaZend_User The user who is currently logged in
+     * @throws FaZend_User_NotLoggedIn If there is no logged in user
      */
     public static function getCurrentUser() 
     {
         if (!self::isLoggedIn())
-            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'user is not logged in');
+            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'User is not logged in');
 
-        return FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
+        $identity = self::_auth()->getIdentity();
+        
+        // something went wrong, and we should clear everything and throw
+        // an exception
+        if (!isset($identity->email)) {
+            self::logOut();
+            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'User is not logged in, and there is some problem');
+        }
+
+        return FaZend_User::findByEmail($identity->email);
     }
 
     /**
