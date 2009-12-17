@@ -48,7 +48,7 @@
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-        <phplint haltonfailure="yes" level="error">
+        <phplint haltonfailure="yes">
             <fileset dir="${project.basedir}/src/application">
                 <include name="**/*.php"/>
                 <include name="**/*.phtml"/>
