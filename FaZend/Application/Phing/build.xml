@@ -59,6 +59,9 @@
 
     <target name="test" description="Run all existing unit-tests" >
         <property name="coveragedir" value="${project.basedir}/reports/coverage" />
+        <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
+        <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
+        <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
 
         <!-- make sure it exists -->
         <mkdir dir="${coveragedir}" />
@@ -132,9 +135,6 @@
 
         <!-- inject revision number into title -->
         <copy file="${coveragedir}/report/index.html" tofile="${coveragedir}/report/index.html.orig" />
-        <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
-        <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-        <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
         <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coveragedir}/report/index.html.orig &gt; ${coveragedir}/report/index.html" 
             passthru="false" checkreturn="true" />  
 
@@ -202,9 +202,9 @@
         <if>
         <available file="${cc.root}" type="dir" />
         <then>
-            <svnlastrevision
-                workingcopy="${project.basedir}"
-                propertyname="svn.revision" />    
+            <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
+            <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
+            <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
 
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
