@@ -132,7 +132,9 @@
 
         <!-- inject revision number into title -->
         <copy file="${coveragedir}/report/index.html" tofile="${coveragedir}/report/index.html.orig" />
-        <svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" />    
+        <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
+        <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
+        <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
         <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coveragedir}/report/index.html.orig &gt; ${coveragedir}/report/index.html" 
             passthru="false" checkreturn="true" />  
 
