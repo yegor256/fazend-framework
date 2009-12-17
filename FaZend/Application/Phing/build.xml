@@ -44,7 +44,7 @@
     <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
 
     <!-- main task, executed by the project -->
-    <target name="main" depends="lint, test, sniffer, deploy, ping, doc">
+    <target name="main" depends="lint, test, sniffer, doc, deploy, ping">
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
