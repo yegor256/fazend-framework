@@ -65,11 +65,10 @@ class FaZend_Db_Wrapper {
      * @param boolean Set FROM attribute to the select or not
      * @return void
      */
-    public function __construct($table, $setFrom = true) {
-
+    public function __construct($table, $setFrom = true) 
+    {
         $this->_table = $table;
         $this->_setFrom = $setFrom;
-
     }
 
     /**
@@ -77,7 +76,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function setRowClass($rowClass) {
+    public function setRowClass($rowClass) 
+    {
         $this->table()->setRowClass($rowClass);
         return $this;
     }
@@ -115,8 +115,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function table() {
-
+    public function table() 
+    {
         // if we just initialized the class with constructor
         if (is_string($this->_table)) {
             $this->_table = FaZend_Db_ActiveTable::createTableClass($this->_table);
@@ -130,8 +130,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function select() {
-
+    public function select() 
+    {
         if (!isset($this->_select)) {
             
             $this->_select = $this->table()->select();
@@ -151,8 +151,8 @@ class FaZend_Db_Wrapper {
      * @return void
      * @throws FaZend_Db_Table_NotFoundException
      */
-    public function fetchRow() {
-
+    public function fetchRow() 
+    {
         // get row with fetchRow from the select we have
         $row = $this->table()->fetchRow($this->select());
 
@@ -173,7 +173,6 @@ class FaZend_Db_Wrapper {
         FaZend_Exception::raise($exceptionClassName, 
             'row not found in ' . $this->getRowClass(),
             'FaZend_Db_Table_NotFoundException');
-
     }
 
     /**
@@ -181,7 +180,8 @@ class FaZend_Db_Wrapper {
      *
      * @return FaZend_Db_RowsetWrapper
      */
-    public function fetchAll() {
+    public function fetchAll() 
+    {
         return new FaZend_Db_RowsetWrapper($this->table(), $this->select());
     }
 
@@ -190,8 +190,19 @@ class FaZend_Db_Wrapper {
      *
      * @return array
      */
-    public function fetchPairs() {
+    public function fetchPairs() 
+    {
         return $this->table()->getAdapter()->fetchPairs($this->select());
+    }
+
+    /**
+     * Fetch one column
+     *
+     * @return array
+     */
+    public function fetchOne() 
+    {
+        return $this->table()->getAdapter()->fetchOne($this->select());
     }
 
     /**
@@ -199,11 +210,10 @@ class FaZend_Db_Wrapper {
      *
      * @return FaZend_Db_Wrapper
      */
-    public function __call($name, $args) {
-
+    public function __call($name, $args) 
+    {
         $this->_select = call_user_func_array(array($this->select(), $name), $args);
         return $this;
-
     }
 
     /**
@@ -224,7 +234,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function debug() {
+    public function debug() 
+    {
         bug($this->select()->__toString());
     }
 }
