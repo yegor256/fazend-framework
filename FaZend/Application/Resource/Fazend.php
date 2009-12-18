@@ -23,7 +23,8 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
  * @package Application
  * @subpackage Resource
  */
-class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract {
+class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract 
+{
 
     /**
      * Injector has been executed already?
@@ -50,7 +51,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return Zend_Config Configuration of fazend, from INI file
      */
-    public function init() {
+    public function init() 
+    {
         $options = $this->getOptions();
 
         validate()->true(isset($options['name']),
@@ -72,6 +74,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     /**
      * Call this method, if it wasn't called yet
      *
+     * @param string Name of the method to call (suffix only, without '_init')
      * @return void
      **/
     protected function _boot($name) {
@@ -92,7 +95,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      **/
-    protected function _initSessionOptions() {
+    protected function _initSessionOptions() 
+    {
         // if there is NO session - ignore
         if (!$this->_bootstrap->hasPluginResource('session'))
             return;
@@ -129,7 +133,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initFrontControllerOptions() {
+    protected function _initFrontControllerOptions() 
+    {
         // make sure the front controller already bootstraped
         $this->_bootstrap->bootstrap('frontController');
         $front = $this->_bootstrap->getResource('frontController');
@@ -153,7 +158,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initViewOptions() {
+    protected function _initViewOptions() 
+    {
         // make sure the view already bootstraped
         $this->_bootstrap->bootstrap('view');
         $view = $this->_bootstrap->getResource('view');
@@ -186,7 +192,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initBlindFaZend() {
+    protected function _initBlindFaZend() 
+    {
         // make sure it is loaded already
         $this->_bootstrap->bootstrap('layout');
 
@@ -209,7 +216,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initRoutes() {
+    protected function _initRoutes() 
+    {
         $this->_bootstrap->bootstrap('frontController');
         $front = $this->_bootstrap->getResource('frontController');
 
@@ -246,7 +254,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initDbProfiler() {
+    protected function _initDbProfiler() 
+    {
         // profiler is used ONLY in development environment
         if (APPLICATION_ENV === 'production')
             return;
@@ -267,7 +276,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initDbAutoloader() {
+    protected function _initDbAutoloader() 
+    {
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->pushAutoloader(new FaZend_Db_Table_RowLoader(), 'FaZend_Db_Table_ActiveRow_');
         $autoloader->pushAutoloader(new FaZend_Db_TableLoader(), 'FaZend_Db_ActiveTable_');
@@ -278,7 +288,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initTableCache() {
+    protected function _initTableCache() 
+    {
         $cache = Zend_Cache::factory('Core', new FaZend_Cache_Backend_Memory(),
             array(
                 'caching' => true,
@@ -298,7 +309,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initPluginCache() {
+    protected function _initPluginCache() 
+    {
         // only in production
         if (APPLICATION_ENV !== 'production')
             return;
@@ -323,7 +335,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initLogger() {
+    protected function _initLogger() 
+    {
         $this->_bootstrap->bootstrap('Email');
 
         // remove all writers
@@ -344,7 +357,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @return void
      */
-    protected function _initTestInjection() {
+    protected function _initTestInjection() 
+    {
         if (APPLICATION_ENV == 'production')
             return;
             
@@ -354,6 +368,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
 
         $this->_boot('FrontControllerOptions');
         $this->_boot('ViewOptions');
+        $this->_boot('Routes');
         $this->_boot('DbAutoloader');
         $this->_boot('DbProfiler');
         $this->_boot('Logger');
