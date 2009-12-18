@@ -44,7 +44,14 @@
     <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
 
     <!-- main task, executed by the project -->
-    <target name="main" depends="lint, test, sniffer, doc, deploy, ping">
+    <target name="main" depends="svn, lint, test, sniffer, doc, deploy, ping">
+    </target>
+
+    <target name="svn" description="Get all necessary information about current build" >
+        <exec command="svn info --non-interactive ${project.basedir} | grep Revision | sed 's/Revision: //g'" 
+            returnProperty="svn.revision" />    
+        <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
+        <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
@@ -59,9 +66,6 @@
 
     <target name="test" description="Run all existing unit-tests" >
         <property name="coveragedir" value="${project.basedir}/reports/coverage" />
-        <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
-        <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-        <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
 
         <!-- make sure it exists -->
         <mkdir dir="${coveragedir}" />
@@ -202,10 +206,6 @@
         <if>
         <available file="${cc.root}" type="dir" />
         <then>
-            <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" returnProperty="svn.revision" />    
-            <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-            <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
-
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
             <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
