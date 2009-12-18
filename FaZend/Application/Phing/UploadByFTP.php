@@ -136,12 +136,12 @@ class UploadByFTP extends Task {
         if ($this->ftp === false)
             throw new BuildException("Failed to connect to ftp ({$this->_server})");    
 
-        $this->Log("Logged in successfully to '{$this->_server}'");    
+        $this->Log("Connected successfully to '{$this->_server}'");    
 
         if (@ftp_login($this->ftp, $this->_userName, $this->_password) === false)
             throw new BuildException("Failed to login to ftp ({$this->_server})");    
 
-        $this->Log("Connected successfully to FTP as '{$this->_userName}'");    
+        $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
         if (@ftp_pasv($this->ftp, true) === false)
             throw new BuildException("Failed to turn PASV mode ON");    
