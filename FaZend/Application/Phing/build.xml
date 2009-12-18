@@ -63,13 +63,17 @@
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-        <phplint haltonfailure="yes">
-            <fileset dir="${project.basedir}/src/application">
-                <include name="**/*.php"/>
-                <include name="**/*.phtml"/>
-                <exclude name=".svn/**"/>
-            </fileset>
-        </phplint>
+		<if><isset property="to.deploy" /><then>
+            <phplint haltonfailure="yes">
+                <fileset dir="${project.basedir}/src/application">
+                    <include name="**/*.php"/>
+                    <include name="**/*.phtml"/>
+                    <exclude name=".svn/**"/>
+                </fileset>
+            </phplint>
+        </then><else>
+            <echo msg="Skipped, since it's not a continuous integration environment" />    
+        </else></if>
     </target>
 
     <target name="test" description="Run all existing unit-tests" >
