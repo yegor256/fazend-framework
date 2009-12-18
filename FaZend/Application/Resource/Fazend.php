@@ -352,6 +352,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             return;
         self::$_injectedAlready = true;
 
+        $this->_boot('FrontControllerOptions');
+        $this->_boot('ViewOptions');
         $this->_boot('DbAutoloader');
         $this->_boot('DbProfiler');
         $this->_boot('Logger');
