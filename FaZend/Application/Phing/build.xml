@@ -53,7 +53,7 @@
             <!-- code sniffer reporter -->
             <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
-            <php expression="shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\'')" 
+            <php expression="trim(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''), \"\n\")" 
                 returnProperty="svn.revision" />    
             <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
             <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
