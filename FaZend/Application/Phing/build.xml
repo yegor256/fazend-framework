@@ -53,6 +53,7 @@
             <!-- code sniffer reporter -->
             <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
+            <!-- get the number of SVN revision we're currently working with -->
             <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))" 
                 returnProperty="svn.revision" />    
             <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
