@@ -53,10 +53,11 @@
             <!-- code sniffer reporter -->
             <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
-            <exec command="svn info --non-interactive ${project.basedir} | grep Revision | sed 's/Revision: //g'" 
+            <exec command="svn info ${project.basedir} | grep Revision | sed 's/Revision: //g'" 
                 returnProperty="svn.revision" />    
             <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
             <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
+            <echo msg="SVN revision: ${svn.revision}" />
         </then><else>
             <echo msg="Skipped, since it's not a continuous integration environment" />    
         </else></if>
