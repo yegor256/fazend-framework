@@ -270,7 +270,7 @@ class FaZend_Deployer
         foreach ($infoSql as $column);
 
         // log the operation
-        FaZend_Log::info("DB table '{$table}' was updated: {$sql}");
+        // FaZend_Log::info("DB table '{$table}' was updated: {$sql}");
     }
 
     /**
