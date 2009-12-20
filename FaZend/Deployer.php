@@ -118,7 +118,6 @@ class FaZend_Deployer
 
                 // go through all .SQL files
                 foreach ($files as $file) {
-
                     $matches = array();
                     preg_match('/^\d+\s(.*)\.sql$/', $file, $matches);
                     $table = $matches[1];
@@ -129,7 +128,6 @@ class FaZend_Deployer
                     } else {
                         $this->_create($table, $this->_clearSql($dir . '/' . $file));
                     }
-
                 }
             } catch (FaZend_Deployer_Exception $exception) {
                 // if there is no email - show the error
@@ -157,7 +155,8 @@ class FaZend_Deployer
      *
      * @return string[]
      */
-    public function getTables() {
+    public function getTables() 
+    {
         $list = array();
 
         foreach ($this->_dirNames() as $dir) {
@@ -187,7 +186,8 @@ class FaZend_Deployer
      * @param string Name of the table
      * @return array[]
      */
-    public function getTableInfo($table) {
+    public function getTableInfo($table) 
+    {
         foreach ($this->_dirNames() as $dir) {
             if (!file_exists($dir) || !is_dir($dir))
                 continue;
@@ -205,7 +205,8 @@ class FaZend_Deployer
      * @param string SQL
      * @return array[]
      */
-    public function getSqlInfo($sql) {
+    public function getSqlInfo($sql) 
+    {
         return $this->_sqlInfo($sql);
     }
 
@@ -214,7 +215,8 @@ class FaZend_Deployer
      *
      * @return array List of directories
      */
-    protected function _dirNames() {
+    protected function _dirNames() 
+    {
         return $this->_options->folders;
     }
 
@@ -234,8 +236,11 @@ class FaZend_Deployer
      * @param string SQL file content
      * @return void
      */
-    protected function _create($table, $sql) {
+    protected function _create($table, $sql) 
+    {
         $this->_db()->query($sql);
+        // log the operation
+        FaZend_Log::info("DB table '{$table}' was created: {$sql}");
     }
 
     /**
@@ -245,20 +250,17 @@ class FaZend_Deployer
      * @param string SQL file content
      * @return void
      */
-    protected function _update($table, $sql) {
+    protected function _update($table, $sql) 
+    {
         try {
-
             $infoSql = $this->_sqlInfo($sql);
-
         } catch (FaZend_Deployer_NotTableButView $e) {
-
             // this is VIEW, not table
             // we just drop and create again
             //$this->_db()->query("DROP VIEW $table");
 
             // create this VIEW again
             //$this->_create($table, $sql);
-
             return;
         }
 
@@ -266,6 +268,9 @@ class FaZend_Deployer
 
         // tbd
         foreach ($infoSql as $column);
+
+        // log the operation
+        FaZend_Log::info("DB table '{$table}' was updated: {$sql}");
     }
 
     /**
@@ -274,7 +279,8 @@ class FaZend_Deployer
      * @param string SQL spec of the table
      * @return array[]
      */
-    protected function _sqlInfo($sql) {
+    protected function _sqlInfo($sql) 
+    {
         $sql = preg_replace(array(
             '/\-\-.*?\n/', // kill comments
             '/[\n\t\r]/', // no special chars
@@ -356,7 +362,8 @@ class FaZend_Deployer
      * @param string File name 2
      * @return int
      */
-    protected function _sorter($file1, $file2) {
+    protected function _sorter($file1, $file2) 
+    {
         return (int)$file1 > (int)$file2;
     }
 
@@ -365,7 +372,8 @@ class FaZend_Deployer
      *
      * @return Zend_Db_Adapter
      */
-    protected function _db() {
+    protected function _db() 
+    {
         return Zend_Db_Table::getDefaultAdapter();
     }
 
@@ -375,7 +383,8 @@ class FaZend_Deployer
      * @param string Name of the SQL file
      * @return string
      */
-    protected function _clearSql($file) {
+    protected function _clearSql($file) 
+    {
         return preg_replace(array(
             '/\-\-.*/',
             '/[\n\r\t]/'
