@@ -77,6 +77,7 @@ class FaZend_Deployer
      * Deploy Db schema
      *
      * @return void
+     * @throws FaZend_Deployer_Exception
      */
     public function deploy() 
     {
@@ -132,16 +133,15 @@ class FaZend_Deployer
             } catch (FaZend_Deployer_Exception $exception) {
                 // if there is no email - show the error
                 if (FaZend_Properties::get()->errors->email) {
-
                     // send email to the site admin admin
                     FaZend_Email::create('fazendDeployerException.tmpl')
                         ->set('toEmail', FaZend_Properties::get()->errors->email)
-                        ->set('toName', 'Admin of ' . WEBSITE_URL)
-                        ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . ' database deployment exception, rev.' . FaZend_Revision::get())
+                        ->set('toName', 'admin')
+                        ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . 
+                            ' database deployment exception, rev.' . FaZend_Revision::get())
                         ->set('text', $exception->getMessage())
                         ->send()
                         ->logError();
-
                  }
 
                  // throw it to the application
