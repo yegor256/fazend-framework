@@ -23,7 +23,8 @@
  * @package Deployer
  * @todo Refactor in order to support other DB servers
  */
-class FaZend_Deployer {
+class FaZend_Deployer
+{
 
     const EXCEPTION_CLASS = 'FaZend_Deployer_Exception';
 
@@ -47,7 +48,8 @@ class FaZend_Deployer {
      * @param Zend_Config Configuration parameters
      * @return void
      */
-    public static function getInstance(Zend_Config $config = null) {
+    public static function getInstance(Zend_Config $config = null) 
+    {
         if (!isset(self::$_instance)) {
             if (is_null($config))
                 FaZend_Exception::raise('FaZend_Deployer_InvalidConfig', 
@@ -66,7 +68,8 @@ class FaZend_Deployer {
      * @param Zend_Config Configuration parameters
      * @return void
      */
-    protected function __construct(Zend_Config $options) {
+    protected function __construct(Zend_Config $options) 
+    {
         $this->_options = $options;
     }
 
@@ -75,7 +78,8 @@ class FaZend_Deployer {
      *
      * @return void
      */
-    public function deploy() {
+    public function deploy() 
+    {
         // if it's turned off
         if (!$this->_options->deploy)
             return;
@@ -93,18 +97,16 @@ class FaZend_Deployer {
             return;
         }
 
+        // if we can't get a list of tables in DB - we stop
+        if (!method_exists($this->_db(), 'listTables'))
+            return;
+    
         // go through ALL deployment directories
         foreach ($this->_dirNames() as $dir) {
-            if (!file_exists($dir) || !is_dir($dir)) {
-                return;
-            }
+            if (!file_exists($dir) || !is_dir($dir))
+                continue;
 
-            // if we can't get a list of tables in DB - we stop
-            if (!method_exists($this->_db(), 'listTables'))
-                return;
-        
             try {
-
                 // get full list of existing(!) tables in Db
                 $tables = array_map(create_function('$a', 'return strtolower($a);'), $this->_db()->listTables());
             
@@ -129,9 +131,7 @@ class FaZend_Deployer {
                     }
 
                 }
-
             } catch (FaZend_Deployer_Exception $exception) {
-
                 // if there is no email - show the error
                 if (FaZend_Properties::get()->errors->email) {
 
