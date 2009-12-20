@@ -49,7 +49,8 @@ class FaZend_Email {
      * @param Zend_View View to use for rendering
      * @return FaZend_Email
      */
-    public static function config(Zend_Config $config, Zend_View $view) {
+    public static function config(Zend_Config $config, Zend_View $view) 
+    {
         // to allow further modifications
         self::$_config = new Zend_Config($config->toArray(), true);
         self::$_config->view = clone $view;
@@ -59,18 +60,22 @@ class FaZend_Email {
     /**
      * Creates an object of class FaZend_Email, statically
      *
+     * @param string Name of the template to use, absolute file name (in 'application/emails')
      * @return FaZend_Email
      */
-    public static function create($template) {
+    public static function create($template = null) 
+    {
         return new FaZend_Email($template);
     }
 
     /**
      * Creates an object of class FaZend_Email 
      *
+     * @param string Name of the template to use, absolute file name (in 'application/emails')
      * @return void
      */
-    public function __construct($template = false) {
+    public function __construct($template = false) 
+    {
         $this->set('template', $template);
 
         validate()
@@ -97,7 +102,8 @@ class FaZend_Email {
      * @param string Value
      * @return void
      */
-    public function set($key, $value) {
+    public function set($key, $value) 
+    {
         $this->_variables[$key] = $value;
         return $this;
     }
@@ -108,7 +114,8 @@ class FaZend_Email {
      * @param string Name of the element
      * @return var
      */
-    public function get($key) {
+    public function get($key) 
+    {
         return $this->_variables[$key];
     }
 
@@ -118,7 +125,8 @@ class FaZend_Email {
      * @param boolean Send it anyway (no matter what)
      * @return FaZend_Email
      */
-    public function send($force = false) {
+    public function send($force = false) 
+    {
         $mailer = $this->_getFilledMailer();
 
         if (self::$_config->send || $force)
@@ -141,7 +149,8 @@ class FaZend_Email {
      *
      * @return FaZend_Email
      */
-    public function logError() {
+    public function logError() 
+    {
         FaZend_Log::err($this->_getFilledMailer()->getBodyText()->getContent());
         return $this;
     }
@@ -151,7 +160,8 @@ class FaZend_Email {
      *
      * @return Zend_Mail
      */
-    protected function _getFilledMailer() {
+    protected function _getFilledMailer() 
+    {
         if (isset($this->_mailer))
             return $this->_mailer;
 
@@ -165,41 +175,46 @@ class FaZend_Email {
         $view->setScriptPath(self::$_config->folder);
         $template = $this->get('template');
 
-        // maybe email template is missed?
-        if (!file_exists(self::$_config->folder . '/' . $template)) {
-            // maybe we can find in FaZend?
-            if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
-                $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
-            } else {
-                FaZend_Exception::raise('FaZend_Email_NoTemplate', 
-                    'Template ' . $template . ' is missed in ' . self::$_config->folder);
+        // if the template was specified
+        if ($template) {
+            // maybe email template is missed?
+            if (!file_exists(self::$_config->folder . '/' . $template)) {
+                // maybe we can find in FaZend?
+                if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
+                    $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
+                } else {
+                    FaZend_Exception::raise('FaZend_Email_NoTemplate', 
+                        'Template ' . $template . ' is missed in ' . self::$_config->folder);
+                }
             }
-        }
 
-        // set all variables to View for rendering
-        foreach ($this->_variables as $key=>$value)
-            $view->assign($key, $value);
+            // set all variables to View for rendering
+            foreach ($this->_variables as $key=>$value)
+                $view->assign($key, $value);
 
-        $body = $view->render($template);
+            $body = $view->render($template);
         
-        // replace old-styled new lines with \n
-        $body = preg_replace("/\r\n|\n\r|\r/", "\n", $body);
+            // replace old-styled new lines with \n
+            $body = preg_replace("/\r\n|\n\r|\r/", "\n", $body);
         
-        // parse body for extra variables
-        $lines = explode("\n", $body);
-        foreach ($lines as $id=>$line) {
-            $matches = array();
-            // format is simple: "variable: value"    
-            if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
-                $this->set($matches[1], $matches[2]);
+            // parse body for extra variables
+            $lines = explode("\n", $body);
+            foreach ($lines as $id=>$line) {
+                $matches = array();
+                // format is simple: "variable: value"    
+                if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
+                    $this->set($matches[1], $matches[2]);
+                }    
+
+                // empty line stops parsing
+                if ($line == '--')
+                    break;
             }    
 
-            // empty line stops parsing
-            if ($line == '--')
-                break;
-        }    
-
-        $body = trim(implode("\n", array_slice ($lines, $id+1)), " \n\r");
+            $body = trim(implode("\n", array_slice ($lines, $id+1)), " \n\r");
+        } else {
+            $body = $this->get('body');
+        }
 
         // set body of the email
         $signatureFile = $view->getScriptPath('signature.txt');
@@ -225,7 +240,8 @@ class FaZend_Email {
      *
      * @return Zend_Mail
      */
-    protected function _createZendMailer () {
+    protected function _createZendMailer () 
+    {
         if (!isset($this->_mailer))
             $this->_mailer = new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
 
