@@ -21,7 +21,8 @@ require_once 'Zend/Form.php';
  *
  * @package Form 
  */
-class FaZend_Form extends Zend_Form {
+class FaZend_Form extends Zend_Form
+{
 
     /**
      * Create a new form and save it to View
@@ -30,10 +31,11 @@ class FaZend_Form extends Zend_Form {
      *
      * @param string File short name, will be translated to form<Name>.ini
      * @param ZendView Instance of view, $view->form will be set, if defined
+     * @param string Name of the variable
      * @return FaZend_Form
      */
-    public static function create($file, Zend_View $view = null) {
-
+    public static function create($file, Zend_View $view = null, $name = 'form') 
+    {
         $formIniFile = APPLICATION_PATH . '/config/form' . $file . '.ini';
 
         if (!file_exists($formIniFile))
@@ -43,10 +45,9 @@ class FaZend_Form extends Zend_Form {
 
         // if it's null, ignore it
         if ($view !== null)
-            $view->form = $form;
+            $view->$name = $form;
 
         return $form;
-
     }
 
     /**
