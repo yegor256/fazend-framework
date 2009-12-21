@@ -20,6 +20,10 @@ require_once realpath(dirname(__FILE__) . '/handler.php');
 global $startTime;
 $startTime = microtime(true);
 
+// whether it's CLI?
+defined('CLI_ENVIRONMENT')
+    || (empty($_SERVER['DOCUMENT_ROOT']) && define('CLI_ENVIRONMENT', true));
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
@@ -78,7 +82,7 @@ if (!defined('WEBSITE_URL'))
 // this flag could disable application execution
 if (!defined('FAZEND_DONT_RUN')) {
     // we're working from the command line?
-    if (empty($_SERVER['DOCUMENT_ROOT']) && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
+    if (defined('CLI_ENVIRONMENT') && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
         $router = new FaZend_Cli_Router();
         exit($router->dispatch());
     } else {
