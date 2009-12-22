@@ -34,7 +34,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
      *
      * @var string
      **/
-    protected $_rootClass = 'FaZend_Pos_Root';
+    protected static $_rootClass = 'FaZend_Pos_Root';
    
     /**
      * Contains the system properties for this object
