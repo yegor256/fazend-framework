@@ -81,9 +81,16 @@ class FaZend_Pos_Properties
     /**
      * List of object properties
      * 
-     * @var array Defaults to array(). 
+     * @var ArrayIterator Defaults to array(). 
      */
-    protected $_properties = array();
+    protected $_properties;
+    
+    /**
+     * Iterator through properties, showing ONLY items
+     *
+     * @var Iterator
+     **/
+    protected $_itemsIterator;
 
     /**
      * Stores the version associated with this object.  By default, this will
@@ -114,6 +121,7 @@ class FaZend_Pos_Properties
     public function __construct(FaZend_Pos_Abstract $object) 
     {
         $this->_object = $object;
+        $this->_properties = new ArrayIterator();
     }
 
     /**
@@ -237,12 +245,19 @@ class FaZend_Pos_Properties
     /**
      * Set one item
      *
-     * @param string Name of the item
+     * @param string|null Name of the item or null
      * @param mixed Value of it
      * @return void
      **/
     public function setItem($name, $value) 
     {
+        if ($name === null) {
+            $keys = array_keys($this->itemsIterator->getArrayCopy());
+            if (count($keys))
+                $name = max($keys) + 1;
+            else
+                $name = 0;
+        }
         $this->setProperty(self::ARRAY_PREFIX . $name, $value);
     }
 
@@ -421,7 +436,24 @@ class FaZend_Pos_Properties
     protected function _getProperties()
     {
         $this->_attachToPos();
-        return array_keys($this->_properties);
+        return array_keys($this->_properties->getArrayCopy());
+    }
+
+    /**
+     * Get iterator for the items
+     *
+     * @return ArrayIterator
+     */
+    protected function _getItemsIterator()
+    {
+        $this->_attachToPos();
+        if (!isset($this->_itemsIterator))
+            $this->_itemsIterator = new RegexIterator(
+                $this->_properties,
+                '/^' . preg_quote(self::ARRAY_PREFIX) . '/',
+                RegexIterator::MATCH, 
+                RegexIterator::USE_KEY);
+        return $this->_itemsIterator;
     }
 
     /**
@@ -500,7 +532,7 @@ class FaZend_Pos_Properties
         } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
         }
-        $this->_properties = unserialize($this->_fzSnapshot->properties);
+        $this->_properties = new ArrayIterator(unserialize($this->_fzSnapshot->properties));
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
             $this->_properties[$partOf->name] = $this->_restoreFromObject(

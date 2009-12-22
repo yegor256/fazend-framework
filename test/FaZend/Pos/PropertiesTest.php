@@ -29,7 +29,6 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
     {
         parent::setUp();
 
-        FaZend_Pos_Abstract::cleanPosMemory();
         $this->_user = FaZend_User::register('test2', 'test2');
         FaZend_Pos_Properties::setUserId($this->_user->__id);
     }
@@ -39,12 +38,12 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
-        $car->ps()->save();
+        $car->ps()->save(true);
 
         $actual = $car->ps()->editor->email;
         $expected = $this->_user->email;
 
-        $this->assertEquals( $expected, $actual );
+        $this->assertEquals($expected, $actual, "Expected '$expected' user, but received '$actual', why?");
     }
 
     /**

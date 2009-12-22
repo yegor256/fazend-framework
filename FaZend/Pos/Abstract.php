@@ -19,7 +19,7 @@
  * 
  * @package Pos
  */
-abstract class FaZend_Pos_Abstract implements ArrayAccess
+abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
 {
     
     /**
@@ -157,7 +157,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
     /**
      * for ArrayAccess
      * 
-     * @param string Key
+     * @param string|false Key or false, if the element should be added as new
      * @param string Value
      * @return void
      */
@@ -175,6 +175,66 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
     public function offsetUnset($name)
     {
         return $this->ps()->unsetItem($name, $value);
+    }
+
+    /**
+     * Countable Interface method
+     *
+     * @return integer
+     **/
+    public function count() 
+    {
+        return $this->ps()->itemsIterator->count();
+    }
+
+    /**
+     * Method for Iterator interface
+     *
+     * @return void
+     **/
+    public function rewind() 
+    {
+        return $this->ps()->itemsIterator->rewind();
+    }
+
+    /**
+     * Method for Iterator interface
+     *
+     * @return void
+     **/
+    public function valid() 
+    {
+        return $this->ps()->itemsIterator->rewind();
+    }
+
+    /**
+     * Method for Iterator interface
+     *
+     * @return void
+     **/
+    public function next() 
+    {
+        return $this->ps()->itemsIterator->rewind();
+    }
+
+    /**
+     * Method for Iterator interface
+     *
+     * @return void
+     **/
+    public function key() 
+    {
+        return $this->ps()->itemsIterator->rewind();
+    }
+
+    /**
+     * Method for Iterator interface
+     *
+     * @return void
+     **/
+    public function current() 
+    {
+        return $this->ps()->itemsIterator->current();
     }
 
     /**

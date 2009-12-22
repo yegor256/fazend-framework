@@ -175,7 +175,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string Log to save
      * @return boolean Processed without errors?
      */
-    protected function _process(Zend_Form $form, &$log) {
+    protected function _process(Zend_Form $form, &$log) 
+    {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', 'forma');
 
@@ -249,7 +250,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @return class
      * @throws Helper_Forma_ParamNotFound
      */
-    protected function _getFormParam(Zend_Form $form, ReflectionParameter $param) {
+    protected function _getFormParam(Zend_Form $form, ReflectionParameter $param) 
+    {
         // this is a name of element in the form, which we expect to send to the method
         $name = $param->name;
         

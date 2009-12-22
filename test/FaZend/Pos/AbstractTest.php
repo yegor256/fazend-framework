@@ -215,6 +215,27 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertTrue(count($bike->owners) == 2, 'Array inside the object is lost, why?');
     }
 
+    public function testObjectWorksAsArray() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->car = $car;
+        
+        $car[] = 1;
+        $car[] = 2;
+        $car['test'] = 3;
+        $this->assertEquals(3, count($car), 'Array has invalid number of elements, why?');
+    }
+
+    public function testGetPropertiesWork() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->car = $car;
+        
+        $car->test = 1;
+        $car->test2 = 2;
+        $this->assertEquals(2, count($car->ps()->properties), 'List of properties is broken, why?');
+    }
+
     public function testObjectCanBeVeryDeep() {
         FaZend_Pos_Abstract::cleanPosMemory();
         
@@ -273,5 +294,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertTrue($bike instanceof Model_Pos_Bike, 'Bike object was not retrieved');
         $this->assertEquals('kawasaki', $bike->model, 'Bike property is lost, why?');
     }
+
+    
 
 }
