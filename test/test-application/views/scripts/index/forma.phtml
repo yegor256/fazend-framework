@@ -1,6 +1,7 @@
 <p>This is forma:</p>
 
 <?=$this->forma()
+    ->setBehavior('redirect', 'index', 'forma')
     ->addField('text')
         ->fieldLabel('My text:')
         ->fieldRequired(true)

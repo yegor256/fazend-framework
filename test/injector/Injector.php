@@ -49,6 +49,8 @@ class Injector extends FaZend_Test_Injector
     protected function _injectPos() 
     {
         FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->label = 'test';
+        FaZend_Pos_Abstract::root()->object = new FaZend_StdObject();
     }
 
 }

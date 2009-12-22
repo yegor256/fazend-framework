@@ -19,6 +19,7 @@
  *
  * <code>
  * <?=$this->forma()
+ *    ->setBehavior('forward', 'index')
  *    ->addField('text')
  *        ->fieldLabel('My text:')
  *        ->fieldRequired(true)
@@ -31,7 +32,8 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_Forma extends FaZend_View_Helper {
+class FaZend_View_Helper_Forma extends FaZend_View_Helper
+{
 
     /**
      * Fields
@@ -39,13 +41,23 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
      * @var FaZend_View_Helper_Forma_Field[]
      */
     protected $_fields = array();
+    
+    /**
+     * What to do when the form is completed?
+     *
+     * @var array
+     **/
+    protected $_behavior = array(
+        'type' => 'showLog', // default behavior, just to show LOG
+        );
 
     /**
      * Builds the object
      *
      * @return FaZend_View_Helper_Forma
      */
-    public function forma() {
+    public function forma() 
+    {
         return $this;
     }
 
@@ -54,7 +66,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
      *
      * @return string HTML
      */
-    public function __toString() {
+    public function __toString() 
+    {
         try {
             return (string)$this->_render();
         } catch (Exception $e) {
@@ -69,7 +82,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
      * @param string|null Name of the field to create
      * @return Helper_Forma
      */
-    public function addField($type, $name = null) {
+    public function addField($type, $name = null) 
+    {
         require_once 'FaZend/View/Helper/Forma/Field.php';
         $field = FaZend_View_Helper_Forma_Field::factory($type, $this);
         $this->_fields[$this->_uniqueName($name)] = $field;
@@ -77,11 +91,25 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
     }
 
     /**
+     * Set behavior
+     *
+     * @param string Name of the behavior
+     * @return Helper_Forma
+     */
+    public function setBehavior($type /*, ... */) 
+    {
+        $this->_behavior['type'] = $type;
+        $this->_behavior['args'] = func_get_args();
+        return $this;
+    }
+
+    /**
      * Converts it to HTML
      *
      * @return string HTML
      */
-    public function _render() {
+    public function _render() 
+    {
         $form = new FaZend_Form();
 
         $form->setView($this->getView())
@@ -96,11 +124,23 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
 
         $log = '';
         if (!$form->isFilled() || !$this->_process($form, $log))
-            return '<p>' . (string)$form->__toString() . '</p>' .
-                ($log ? '<pre class="log">' . $log . '</pre>' : false);
-
-        // $this->getView()->formaCompleted = $log;
-        return '';
+            return '<p>' . (string)$form->__toString() . '</p>';
+        
+        // the form was filled, what to do now?
+        switch ($this->_behavior['type']) {
+            // show the LOG instead of form, that's it
+            case 'showLog':
+                return '<pre class="log">' . ($log ? $log : 'done') . '</pre>';
+            
+            // redirect to another action/controller
+            case 'redirect':
+                Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
+                    ->gotoSimple($this->_behavior['args'][0], $this->_behavior['args'][0]);
+                return;
+            
+            default:
+                return false;
+        }
     }
 
     /**
@@ -109,7 +149,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper {
      * @param string Name
      * @return string Name which is unique
      */
-    protected function _uniqueName($name) {
+    protected function _uniqueName($name) 
+    {
         if (!is_null($name)) {
             if (isset($this->_fields[$name])) {
                 FaZend_Exception::raise('FaZend_View_Helper_Forma_FieldAlreadyExists', 
