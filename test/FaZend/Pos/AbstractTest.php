@@ -228,4 +228,50 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Abstract::root()->ps()->save(true);
     }
 
+    public function testObjectsAreLoadedFromDatabase() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+
+        $queries = array(
+             // clear everything beforehand
+            'DELETE FROM fzObject',
+            'DELETE FROM fzSnapshot',
+            'DELETE FROM fzPartof',
+
+            // create objects
+            'INSERT INTO fzObject (id, class) values(1, "FaZend_Pos_Root")',
+            'INSERT INTO fzObject (id, class) values(2, "Model_Pos_Car")',
+            'INSERT INTO fzObject (id, class) values(3, "Model_Pos_Bike")',
+
+            // create their snapshots
+            // root
+            'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
+                'values(1, ' . $this->_dbAdapter->quote(serialize(array())) . ', 1, 1, ' . 
+                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+            // car
+            'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
+                'values(2, ' . $this->_dbAdapter->quote(serialize(array('model'=>'bmw'))) . ', 1, 1, ' . 
+                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+            // bike
+            'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
+                'values(3, ' . $this->_dbAdapter->quote(serialize(array('model'=>'kawasaki'))) . ', 1, 1, ' . 
+                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+
+            // create links between them
+            // root->car
+            'INSERT INTO fzPartOf (parent, kid, name) values(1, 2, "car")',
+            'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "bike")',
+            );
+        
+        foreach ($queries as $query)
+            $this->_dbAdapter->fetchAll($query);
+            
+        $car = FaZend_Pos_Abstract::root()->car;
+        $this->assertTrue($car instanceof Model_Pos_Car, 'Car object was not retrieved');
+        $this->assertEquals('bmw', $car->model, 'Car property is lost, why?');
+
+        $bike = $car->bike;
+        $this->assertTrue($bike instanceof Model_Pos_Bike, 'Bike object was not retrieved');
+        $this->assertEquals('kawasaki', $bike->model, 'Bike property is lost, why?');
+    }
+
 }
