@@ -184,7 +184,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public function count() 
     {
-        return $this->ps()->itemsIterator->count();
+        return iterator_count($this->ps()->itemsIterator);
     }
 
     /**

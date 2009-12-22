@@ -252,7 +252,9 @@ class FaZend_Pos_Properties
     public function setItem($name, $value) 
     {
         if ($name === null) {
-            $keys = array_keys($this->itemsIterator->getArrayCopy());
+            $keys = array_map(
+                create_function('$a', 'return substr($a, ' . strlen(self::ARRAY_PREFIX) . ');'),
+                array_keys($this->itemsIterator->getArrayCopy()));
             if (count($keys))
                 $name = max($keys) + 1;
             else
@@ -447,12 +449,13 @@ class FaZend_Pos_Properties
     protected function _getItemsIterator()
     {
         $this->_attachToPos();
-        if (!isset($this->_itemsIterator))
+        if (!isset($this->_itemsIterator)) {
             $this->_itemsIterator = new RegexIterator(
                 $this->_properties,
                 '/^' . preg_quote(self::ARRAY_PREFIX) . '/',
                 RegexIterator::MATCH, 
                 RegexIterator::USE_KEY);
+        }
         return $this->_itemsIterator;
     }
 

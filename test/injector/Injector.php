@@ -51,6 +51,7 @@ class Injector extends FaZend_Test_Injector
         $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
         $car[] = new Model_Pos_Bike();
         $car[] = new Model_Pos_Bike();
+        $car[] = new Model_Pos_Bike();
         $car['the owner'] = 'John Smith';
         FaZend_Pos_Abstract::root()->label = 'test';
         FaZend_Pos_Abstract::root()->object = new FaZend_StdObject();
