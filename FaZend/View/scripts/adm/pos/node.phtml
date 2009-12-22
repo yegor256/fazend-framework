@@ -3,9 +3,15 @@
 
 <ul>
 <? foreach ($this->node->ps()->properties as $name): ?>
-    <?=$this->partial('adm/pos/node.phtml', array(
-        'node'=>$this->node->$name,
-        'name'=>$name))?>    
+    <? if ($this->node->$name instanceof FaZend_Pos_Abstract): ?>
+        <?=$this->partial('adm/pos/node.phtml', array(
+            'node'=>$this->node->$name,
+            'name'=>$name))?>    
+    <? elseif (is_scalar($this->node->$name)): ?>
+        <li><?=$name?>: <?=$this->node->$name?></li>
+    <? else: ?>
+        <li><?=$name?>: <?=get_class($this->node->$name)?></li>
+    <? endif; ?>
 <? endforeach; ?>
 </ul>
 
