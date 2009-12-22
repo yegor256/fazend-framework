@@ -21,32 +21,27 @@ require_once 'FaZend/Controller/Action.php';
  *
  * @package controllers
  */
-class Fazend_AdmController extends FaZend_Controller_Panel {
+class Fazend_AdmController extends FaZend_Controller_Panel
+{
 
     /**
      * Get action name
      *
      * @return void
      */
-    public function preDispatch() {
+    public function preDispatch() 
+    {
         $this->view->action = $this->getRequest()->getActionName();    
         parent::preDispatch();
     }
         
     /**
-     * Front page
-     *
-     * @return void
-     */
-    public function indexAction() {
-    }
-    
-    /**
      * Show db schema
      *
      * @return void
      */
-    public function schemaAction() {
+    public function schemaAction() 
+    {
         try {
             $adapter = Zend_Db_Table::getDefaultAdapter();
         } catch (Exception $e) {
@@ -84,7 +79,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function logAction() {
+    public function logAction() 
+    {
         $this->view->filePath = ini_get('error_log');
 
         // maybe error_log is not set?
@@ -104,7 +100,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function tablesAction() {
+    public function tablesAction() 
+    {
         $adapter = Zend_Db_Table::getDefaultAdapter();
         $this->view->tables = array_diff($adapter->listTables(), array('changelog'));
 
@@ -125,7 +122,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function squeezeAction() {
+    public function squeezeAction() 
+    {
         if ($this->_hasParam('reload'))
             $this->view->squeezePNG()->startOver();
     }
@@ -135,7 +133,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function backupAction() {
+    public function backupAction() 
+    {
         $this->view->backup = new FaZend_Backup();
 
         if ($this->_hasParam('clear'))
@@ -155,5 +154,15 @@ class Fazend_AdmController extends FaZend_Controller_Panel {
         $this->view->files = $files;
     }
 
+    /**
+     * Show POS content
+     *
+     * @return void
+     */
+    public function posAction() {
+        if (!FaZend_Pos_Root::exists())
+            return $this->_redirectFlash('POS does not exist', 'index');
+    }
+    
 }
             

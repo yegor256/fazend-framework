@@ -21,6 +21,17 @@
  */
 class FaZend_Pos_Root extends FaZend_Pos_Abstract
 {
+
+    /**
+     * Root exists?
+     *
+     * @return boolean
+     **/
+    public static function exists() 
+    {
+        $root = new FaZend_Pos_Model_Object(1);
+        return $root->exists();
+    }
     
     /**
      * Init it

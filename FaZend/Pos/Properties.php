@@ -194,7 +194,7 @@ class FaZend_Pos_Properties
 
         if (!$this->hasProperty($name))
             FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
-                "Can't find property '{$name}' in " . get_class($this),
+                "Can't find property '{$name}' in " . get_class($this->_object),
                 'FaZend_Pos_Exception');        
                 
         $this->_resolveStub($name);
@@ -411,6 +411,17 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
         return intval((string)$this->_fzObject);
+    }
+
+    /**
+     * List of all properties
+     *
+     * @return string[]
+     */
+    protected function _getProperties()
+    {
+        $this->_attachToPos();
+        return array_keys($this->_properties);
     }
 
     /**

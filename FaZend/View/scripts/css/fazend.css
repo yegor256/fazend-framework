@@ -62,6 +62,11 @@ p {
     color: <?=FaZend_Image::getCssColor('mockup.content')?>;
 }
 
+    /* error message */
+    p.flash {
+        color: red;
+    }
+
 /* control elements */
 input, 
 textarea, 

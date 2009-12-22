@@ -1,0 +1,12 @@
+<li>
+<b><?=$this->name?></b>: <?=$this->node->ps()->type?>
+
+<ul>
+<? foreach ($this->node->ps()->properties as $name): ?>
+    <?=$this->partial('adm/pos/node.phtml', array(
+        'node'=>$this->node->$name,
+        'name'=>$name))?>    
+<? endforeach; ?>
+</ul>
+
+</li>
