@@ -175,5 +175,22 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     {
         
     }
+    
+    public function testObjectCanHaveSubObjects() {
+        $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->car = $car;
+        
+        $bike = new Model_Pos_Bike();
+        $car->bike = $bike;
+        $car->bike->owners = array('Jim', 'Nick');
+        
+        $bike->price = '1670 USD';
+        unset($bike);
+        unset($car);
+        
+        $bike = FaZend_Pos_Abstract::root()->car->bike;
+        $this->assertEquals($bike->price, '1670 USD', 'Object is lost, why?');
+        $this->assertTrue(count($bike->owners) == 2, 'Array inside the object is lost, why?');
+    }
 
 }
