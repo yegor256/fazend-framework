@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `fzPartOf` (
 --    PRIMARY KEY(`fzObject`),
 --    FOREIGN KEY(`fzObject`) REFERENCES `fzObject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(`parent`) REFERENCES `fzObject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(`child`) REFERENCES `fzObject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`kid`) REFERENCES `fzObject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 
     -- relation name is unique for any particular object
     UNIQUE(`parent`, `name`)
