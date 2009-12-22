@@ -456,7 +456,8 @@ class FaZend_Pos_Properties
         $toSerialize = array();
         foreach ($this->_properties as $key=>$property) {
             // don't touch the stubs
-            if (is_a($property, self::STUB_CLASS))
+            $stubClass = self::STUB_CLASS;
+            if ($property instanceof $stubClass)
                 continue;
                 
             if ($property instanceof FaZend_Pos_Abstract) {
@@ -526,7 +527,8 @@ class FaZend_Pos_Properties
             
         $property = $this->_properties[$name];
         // this is just a stub for now and the real object should be loaded?
-        if (is_a($property, self::STUB_CLASS)) {
+        $stubClass = self::STUB_CLASS;
+        if ($property instanceof $stubClass) {
             $class = $property->className;
             $property = new $class();
             $property->ps()->_attachTo($this->_object, $name);
