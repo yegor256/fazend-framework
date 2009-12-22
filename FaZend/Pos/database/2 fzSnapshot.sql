@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `fzSnapshot` (
 
     PRIMARY KEY(`id`),
     FOREIGN KEY(`fzObject`) REFERENCES `fzObject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(`user`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 
     -- unique version number for any particular object
     UNIQUE (`fzObject`, `version`)
