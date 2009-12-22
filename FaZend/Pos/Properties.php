@@ -454,7 +454,7 @@ class FaZend_Pos_Properties
         $this->_properties = unserialize($this->_fzSnapshot->properties);
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
-            $this->_properties[$partOf->name] = self::_restoreFromObject($partOf->getObject('kid', 'FaZend_Pos_Model_Object'));
+            $this->_properties[$partOf->name] = $this->_restoreFromObject($partOf->getObject('kid', 'FaZend_Pos_Model_Object'));
         }
     }
 
@@ -490,7 +490,7 @@ class FaZend_Pos_Properties
      * @param FaZend_Pos_Model_Object
      * @return FaZend_Pos_Abstract
      **/
-    private static function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
+    private function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
     {
         $class = $fzObject->class;
         $obj = new $class();
