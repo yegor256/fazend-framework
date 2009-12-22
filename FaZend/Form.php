@@ -58,15 +58,14 @@ class FaZend_Form extends Zend_Form
      * @param Zend_Config Configuration of the form
      * @return string
      */
-    public function setConfig(Zend_Config $config) {
-
+    public function setConfig(Zend_Config $config) 
+    {
         $this->addPrefixPath('FaZend_Form_Element', 'FaZend/Form/Element/', 'element');
 
         parent::setConfig($config);
 
         if (file_exists(APPLICATION_PATH . '/validators'))
             $this->addElementPrefixPath('Validator', APPLICATION_PATH . '/validators/', 'validate');
-
     }    
 
     /**
@@ -74,8 +73,8 @@ class FaZend_Form extends Zend_Form
      *
      * @return boolean
      */
-    public function isFilled() {
-
+    public function isFilled() 
+    {
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         // just show the form

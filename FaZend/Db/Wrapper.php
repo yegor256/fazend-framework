@@ -224,7 +224,7 @@ class FaZend_Db_Wrapper {
      * <code>
      * return self::retrieve()
      *     ->where('user = ?', $user)
-     *     ->setRowClass('Model_Car')
+     *     ->setRowClass('Model_Pos_Car')
      * //    ->debug()
      *     ->fetchAll();
      * </code>

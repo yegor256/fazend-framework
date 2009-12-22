@@ -196,7 +196,8 @@ class FaZend_Deployer
                     return $this->_sqlInfo(file_get_contents($dir . '/' . $file));
         }
 
-        FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
+        FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', 
+            "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
     }
 
     /**
@@ -235,12 +236,20 @@ class FaZend_Deployer
      * @param string Name of the table
      * @param string SQL file content
      * @return void
+     * @throws FaZend_Deployer_Exception
      */
     protected function _create($table, $sql) 
     {
-        $this->_db()->query($sql);
+        try {
+            $this->_db()->query($sql);
+        } catch (Exception $e) {
+            FaZend_Exception::raise('FaZend_Deployer_CreateFailed', 
+                $e->getMessage() . ': ' . $sql, self::EXCEPTION_CLASS);
+        }
+        
         // log the operation
-        FaZend_Log::info("DB table '{$table}' was created: {$sql}");
+        if ($this->_options->verbose)
+            FaZend_Log::info("DB table '{$table}' was created: {$sql}");
     }
 
     /**

@@ -16,11 +16,15 @@
 
 require_once 'AbstractTestCase.php';
 
-class BuildException extends Exception { }
+if (!class_exists('BuildException', false)) {
+    class BuildException extends Exception { }
+}
 
-class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase {
+class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase 
+{
     
-    public function testSimpleScenarioWorks() {
+    public function testSimpleScenarioWorks() 
+    {
         //$xml = tempnam(TEMP_PATH, 'phpcs');
         $xml = 'test.xml';
         $srcDir = APPLICATION_PATH;

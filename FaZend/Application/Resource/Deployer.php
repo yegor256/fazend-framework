@@ -23,19 +23,20 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
  * @package Application
  * @subpackage Resource
  */
-class FaZend_Application_Resource_Deployer extends Zend_Application_Resource_ResourceAbstract {
+class FaZend_Application_Resource_Deployer extends Zend_Application_Resource_ResourceAbstract
+{
 
     /**
     * Defined by Zend_Application_Resource_Resource
     *
     * @return boolean
     */
-    public function init() {
-
+    public function init() 
+    {
         // db is mandatory
         if (!$this->getBootstrap()->hasPluginResource('db'))
             return;
-        $this->getBootstrap()->bootstrap('db');
+        $this->_bootstrap->bootstrap('db');
 
         $options = $this->getOptions();
 
@@ -43,6 +44,5 @@ class FaZend_Application_Resource_Deployer extends Zend_Application_Resource_Res
         FaZend_Deployer::getInstance(new Zend_Config($options))->deploy();
 
         return true;
-
     }
 }
