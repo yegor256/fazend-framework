@@ -27,6 +27,11 @@ class FaZend_Pos_Properties
     // array: $this->_properties. But array items have this prefix
     // in their names.
     const ARRAY_PREFIX = 'item:';
+
+    // This class will be assigned to $this->_properties instead
+    // of partOf relations, in order to indicate that the relation
+    // exists, but is not loaded yet.
+    const STUB_CLASS = 'FaZend_Pos_StubClass';
     
     /**
      * Current user ID
@@ -165,6 +170,7 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
         
+        $this->_resolveStub($name);
         $this->_properties[$name] = $value;
         
         // this flag will be validated later, in _saveSnapshot()        
@@ -172,7 +178,7 @@ class FaZend_Pos_Properties
 
         // this new property is also a POS object?
         if ($value instanceof FaZend_Pos_Abstract) {
-            $value->ps()->_setMyParent($this->_object, $name);
+            $value->ps()->_attachTo($this->_object, $name);
         }
     }
 
@@ -191,6 +197,7 @@ class FaZend_Pos_Properties
                 "Can't find property '{$name}' in " . get_class($this),
                 'FaZend_Pos_Exception');        
                 
+        $this->_resolveStub($name);
         return $this->_properties[$name];
     }
 
@@ -347,7 +354,7 @@ class FaZend_Pos_Properties
      * @param string Unique name inside the parent
      * @return void
      **/
-    protected function _setMyParent(FaZend_Pos_Abstract $parent, $name) 
+    protected function _attachTo(FaZend_Pos_Abstract $parent, $name) 
     {
         $this->_parent = $parent;
         
@@ -440,28 +447,7 @@ class FaZend_Pos_Properties
     }
 
     /**
-     * Loads a snapshot
-     *
-     * @return void
-     */
-    private function _loadSnapshot() 
-    {
-        try {
-            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::findByObject($this->_fzObject);
-        } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
-            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
-        }
-        $this->_properties = unserialize($this->_fzSnapshot->properties);
-        
-        foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
-            $this->_properties[$partOf->name] = $this->_restoreFromObject(
-                $partOf->getObject('kid', 'FaZend_Pos_Model_Object'),
-                $partOf->name);
-        }
-    }
-
-    /**
-     * Write a new snapshot to the database.
+     * Write a new snapshot to the database
      * 
      * @return void 
      */
@@ -469,6 +455,10 @@ class FaZend_Pos_Properties
     {
         $toSerialize = array();
         foreach ($this->_properties as $key=>$property) {
+            // don't touch the stubs
+            if (is_a($property, self::STUB_CLASS))
+                continue;
+                
             if ($property instanceof FaZend_Pos_Abstract) {
                 try {
                     FaZend_Pos_Model_PartOf::findByParent($this->_fzObject, $key);
@@ -487,18 +477,61 @@ class FaZend_Pos_Properties
     }
     
     /**
+     * Loads a snapshot, from the DB
+     *
+     * @return void
+     */
+    private function _loadSnapshot() 
+    {
+        try {
+            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::findByObject($this->_fzObject);
+        } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
+            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
+        }
+        $this->_properties = unserialize($this->_fzSnapshot->properties);
+        
+        foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
+            $this->_properties[$partOf->name] = $this->_restoreFromObject(
+                $partOf->getObject('kid', 'FaZend_Pos_Model_Object'));
+        }
+    }
+
+    /**
      * Restore object from fzObject
      *
      * @param FaZend_Pos_Model_Object
      * @param string Name of the kid
      * @return FaZend_Pos_Abstract
      **/
-    private function _restoreFromObject(FaZend_Pos_Model_Object $fzObject, $name) 
+    private function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
     {
-        $class = $fzObject->class;
-        $obj = new $class();
-        $obj->ps()->_setMyParent($this->_object, $name);
+        $stub = self::STUB_CLASS;
+        if (!class_exists($stub, false))
+            eval("class {$stub} {};");
+        $obj = new $stub();
+        $obj->className = $fzObject->class;
         return $obj;
+    }
+    
+    /**
+     * Resolve stub the the given name, in $this->_properties
+     *
+     * @param strig Name of the key
+     * @return void
+     **/
+    private function _resolveStub($name) 
+    {
+        if (!isset($this->_properties[$name]))
+            return;
+            
+        $property = $this->_properties[$name];
+        // this is just a stub for now and the real object should be loaded?
+        if (is_a($property, self::STUB_CLASS)) {
+            $class = $property->className;
+            $property = new $class();
+            $property->ps()->_attachTo($this->_object, $name);
+            $this->_properties[$name] = $property;
+        }
     }
 
 }
