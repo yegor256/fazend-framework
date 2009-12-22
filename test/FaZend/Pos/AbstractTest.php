@@ -143,10 +143,10 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->year = 2009;
         $car->ps()->save();
 
-        $result = $this->_dbAdapter->fetchAll( "SELECT * FROM fzSnapshot" );
+        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
 
         // 4 snapshots: 2 for root and two for the object
-        $this->assertEquals( 4, count( $result ),
+        $this->assertEquals( 4, count($result),
             'FaZend_Pos_Abstrast::save() did not create unique versions' );
     }
 
@@ -161,9 +161,9 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->active = false;
         serialize( $car );
 
-        $result = $this->_dbAdapter->fetchAll( "SELECT * FROM fzSnapshot" );
+        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
         
-        $this->assertTrue( count( $result ) > 0, 'Serialize did not save object'  );
+        $this->assertTrue(count($result) > 0, 'Serialize did not save object');
     }
 
     public function testSerializedObjectReceivesUpdatesOnUnserialize()
@@ -185,11 +185,6 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertTrue( $car2->active, 'Unserialized object did not recieve updated property values' );
     }
 
-    public function testExtendedObjectCanHavePublicMethods()
-    {
-        
-    }
-
     public function testThereIsOnlyOneRoot()
     {
         FaZend_Pos_Abstract::cleanPosMemory();
@@ -199,7 +194,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             FaZend_Pos_Abstract::cleanPosMemory();
             $car = FaZend_Pos_Abstract::root()->car;
         }
-        $result = $this->_dbAdapter->fetchAll( "SELECT * FROM fzSnapshot" );
+        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
         $this->assertEquals(2, count($result), 'Root object produces many snapshots when created');
     }
     
@@ -218,6 +213,19 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $bike = FaZend_Pos_Abstract::root()->car->bike;
         $this->assertEquals($bike->price, '1670 USD', 'Object is lost, why?');
         $this->assertTrue(count($bike->owners) == 2, 'Array inside the object is lost, why?');
+    }
+
+    public function testObjectCanBeVeryDeep() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        
+        $obj = FaZend_Pos_Abstract::root()->obj = new Model_Pos_Car();
+
+        for ($i = 0; $i<25; $i++) {
+            $obj->obj = new Model_Pos_Bike();
+            $obj = $obj->obj;
+        }
+        
+        FaZend_Pos_Abstract::root()->ps()->save(true);
     }
 
 }
