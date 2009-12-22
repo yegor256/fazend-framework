@@ -494,7 +494,7 @@ class FaZend_Pos_Properties
     {
         $class = $fzObject->class;
         $obj = new $class();
-        $obj->ps()->_setMyParent($this);
+        $obj->ps()->_setMyParent($this->_object);
         return $obj;
     }
 
