@@ -28,6 +28,13 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
      * @var FaZend_Pos_Abstract
      **/
     protected static $_root;
+    
+    /**
+     * Name of root class
+     *
+     * @var string
+     **/
+    protected $_rootClass = 'FaZend_Pos_Root';
    
     /**
      * Contains the system properties for this object
@@ -37,6 +44,17 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
     protected $_ps = null;
 
     /**
+     * Set name of root class
+     *
+     * @param string Name of root class
+     * @return void
+     **/
+    public static function setRootClass($rootClass) 
+    {
+        self::$_rootClass = $rootClass;
+    }
+
+    /**
      * Get root object
      *
      * @return FaZend_Pos_Abstract
@@ -44,7 +62,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
     public static function root() 
     {
         if (!isset(self::$_root))
-            self::$_root = new FaZend_Pos_Root();
+            self::$_root = new self::$_rootClass();
         return self::$_root;
     }
 
