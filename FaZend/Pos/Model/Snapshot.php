@@ -70,10 +70,12 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
      */
     protected static function _getNextVersion(FaZend_Pos_Model_Object $fzObject)
     {
-        $row = self::retrieve()
-            ->columns(array('version'=>new Zend_Db_Expr('MAX(version)+1')))
+        $row = self::retrieve(false)
+            ->from('fzSnapshot', array(
+                'ver' => new Zend_Db_Expr('MAX(version)+1')
+                ))
             ->where('fzObject = ?', strval($fzObject))
-            ->group('fzSnapshot')
+            ->group('fzObject')
             ->setSilenceIfEmpty()
             ->fetchRow()
             ;
@@ -81,7 +83,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
         if (empty( $row)) {
             return 0;
         } else {
-            return $row->version;
+            return $row->ver;
         }
     }
 

@@ -75,7 +75,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
                 ;
         } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
             $root = new FaZend_Pos_Model_Object();
-            $root->class = 'FaZend_Pos_Abstract';
+            $root->class = 'FaZend_Pos_Root';
             $root->save();
             return $root;
         }
