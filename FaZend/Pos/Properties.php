@@ -452,6 +452,10 @@ class FaZend_Pos_Properties
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
         }
         $this->_properties = unserialize($this->_fzSnapshot->properties);
+        
+        foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
+            $this->_properties[$partOf->name] = self::_restoreFromObject($partOf->fzObject);
+        }
     }
 
     /**
@@ -461,10 +465,37 @@ class FaZend_Pos_Properties
      */
     private function _saveSnapshot()
     {
+        $toSerialize = array();
+        foreach ($this->_properties as $key=>$property) {
+            if ($property instanceof FaZend_Pos_Abstract) {
+                try {
+                    FaZend_Pos_Model_PartOf::findByParent($this->_fzObject, $key);
+                } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
+                    FaZend_Pos_Model_PartOf::create($property->ps()->fzObject, $this->_fzObject, $key);
+                }
+            } else {
+                $toSerialize[$key] = $property;
+            }
+        }
+        
         $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
             $this->_fzObject, 
             self::$_userId, 
-            serialize($this->_properties));
+            serialize($toSerialize));
+    }
+    
+    /**
+     * Restore object from fzObject
+     *
+     * @param FaZend_Pos_Model_Object
+     * @return FaZend_Pos_Abstract
+     **/
+    private static function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
+    {
+        $class = $fzObject->class;
+        $obj = new $class();
+        $obj->_setMyParent($this);
+        return $obj;
     }
 
 }

@@ -42,4 +42,35 @@ class FaZend_Pos_Model_PartOf extends FaZend_Db_Table_ActiveRow_fzPartOf
         return $partOf;
     }
 
+    /**
+     * Find by parent and name
+     * 
+     * @param FaZend_Pos_Model_Object Parent object
+     * @param string Name inside the parent
+     * @return FaZend_Pos_Model_PartOf
+     */
+    public static function findByParent(FaZend_Pos_Model_Object $parent, $name)
+    {
+        return self::retrieve()
+            ->where('parent = ?', $parent)
+            ->where('name = ?', $name)
+            ->setRowClass('FaZend_Pos_Model_PartOf')
+            ->limit(1)
+            ->fetchRow();
+    }
+
+    /**
+     * Find all kids
+     * 
+     * @param FaZend_Pos_Model_Object Parent object
+     * @return FaZend_Pos_Model_PartOf[]
+     */
+    public static function retrieveByParent(FaZend_Pos_Model_Object $parent)
+    {
+        return self::retrieve()
+            ->where('parent = ?', $parent)
+            ->setRowClass('FaZend_Pos_Model_PartOf')
+            ->fetchAll();
+    }
+
 }
