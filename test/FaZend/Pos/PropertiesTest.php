@@ -29,14 +29,14 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
     {
         parent::setUp();
 
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $this->_user = FaZend_User::register('test2', 'test2');
         FaZend_Pos_Properties::setUserId($this->_user->__id);
     }
 
     public function testCanRetreiveLastEditor()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->save();
@@ -52,7 +52,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSetLastEditor()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->save();
@@ -62,7 +62,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testCanRetrieveLatestVersionNumber()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->model = 'test';
@@ -80,7 +80,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSetLastVersionNumber()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->version = 1;
@@ -88,7 +88,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testCanRetrieveLastUpdatedTimestamp()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $start = new Zend_Date();
         
         sleep(1);
@@ -108,7 +108,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSetLastUpdatedTimestamp()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->updated = time();
@@ -116,7 +116,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testCanGetIdOfObject()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->save();
@@ -140,7 +140,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSsetIdOfObject()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->id = 3;
@@ -148,7 +148,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testCanGetTypeOfObject()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -164,7 +164,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSetTypeOfObject()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car(); 
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->type = 'Bike';
@@ -172,7 +172,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testCanGetParent()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car(); 
         FaZend_Pos_Abstract::root()->car = $car;
         $parent = $car->ps()->parent;
@@ -183,7 +183,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testCannotSetParent()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->ps()->parent = new Model_Pos_Bike();
@@ -196,7 +196,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
 
     public function testWorkWithVersionReturnsCorrectSnapshot()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $make  = 'Lotus';
         $model = 'Elise 112 R';
         $status = 'inactive';

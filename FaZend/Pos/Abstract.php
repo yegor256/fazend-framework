@@ -71,7 +71,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess
      *
      * @return void
      **/
-    public static function clean() 
+    public static function cleanPosMemory() 
     {
         self::$_root = null;
     }

@@ -29,14 +29,14 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     {
         parent::setUp();
 
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $this->_user = FaZend_User::register( 'test2', 'test2' );
         FaZend_Pos_Properties::setUserId($this->_user->__id);
     }
 
     public function testCanAssignValuesToProperties()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $trims = array( 'Coupe', 'Sedan' );
         
         $car = new Model_Pos_Car();
@@ -56,7 +56,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testPropertiesAreUniquePerObject()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -85,7 +85,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testPropertyValueCanBeNull()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         
@@ -95,7 +95,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testIssetWorksWithProperties()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -104,13 +104,13 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertFalse( isset( $car->make ), 'Nulled property reported as set!' );
         
         $car->bike = new Model_Pos_Car();
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $this->assertTrue(isset(FaZend_Pos_Abstract::root()->car->bike), 'Property lost?');
     }
 
     public function testUnsetWorksWithProperties()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -124,7 +124,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
      */
     public function testUnassignedPropertyReturnsNull()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -133,7 +133,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testSaveCreatesNewVersion()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -152,7 +152,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testSerializeObjectSavesSnapshotOnSerialize()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -168,7 +168,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testSerializedObjectReceivesUpdatesOnUnserialize()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
 
@@ -192,11 +192,11 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testThereIsOnlyOneRoot()
     {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
 
         for ($i=0; $i<10; $i++) {
-            FaZend_Pos_Abstract::clean();
+            FaZend_Pos_Abstract::cleanPosMemory();
             $car = FaZend_Pos_Abstract::root()->car;
         }
         $result = $this->_dbAdapter->fetchAll( "SELECT * FROM fzSnapshot" );
@@ -204,7 +204,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     }
     
     public function testObjectCanHaveSubObjects() {
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         
@@ -213,7 +213,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $car->bike->price = '1670 USD';
         $car->bike->ps()->save(true);
-        FaZend_Pos_Abstract::clean();
+        FaZend_Pos_Abstract::cleanPosMemory();
 
         $bike = FaZend_Pos_Abstract::root()->car->bike;
         $this->assertEquals($bike->price, '1670 USD', 'Object is lost, why?');
