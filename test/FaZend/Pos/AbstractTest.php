@@ -158,7 +158,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->make  = 'Nissan';
         $car->model = 'Maxima';
         $car->active = false;
-        serialize( $car );
+        serialize($car);
     
         $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
         
@@ -175,13 +175,13 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->model = 'Maxima';
         $car->active = false;
     
-        $serialized = serialize( $car );
+        $serialized = serialize($car);
     
         $car->active = true;
         $car->ps()->save();
     
-        $car2 = unserialize( $serialized );
-        $this->assertTrue( $car2->active, 'Unserialized object did not recieve updated property values' );
+        $car2 = unserialize($serialized);
+        $this->assertTrue($car2->active, 'Unserialized object did not recieve updated property values');
     }
     
     public function testThereIsOnlyOneRoot()
@@ -206,7 +206,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->bike->owners = array('Jim', 'Nick');
         
         $car->bike->price = '1670 USD';
-        $car->bike->ps()->save(true);
+        $car->bike->ps()->save();
         FaZend_Pos_Abstract::cleanPosMemory();
     
         $bike = FaZend_Pos_Abstract::root()->car->bike;
@@ -248,7 +248,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $car2 = $car->bike->car->bike->car->bike->car->bike->car; // should work
     }
-
+    
     public function testLinkCanLeadToItself() {
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
@@ -256,12 +256,35 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $car2 = $car->car->car->car->car->car; // should work
     }
-
+    
+    public function testObjectsCanBeLinkedThroughMediators() {
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->bike = $bike = new Model_Pos_Bike();
+        
+        $car->holder = new FaZend_StdObject();
+        $car->holder->bike = $bike;
+        $car->ps()->save();
+        FaZend_Pos_Abstract::cleanPosMemory();
+    
+        $bike = FaZend_Pos_Abstract::root()->car->holder->bike;
+    }
+    
+    /**
+     * @expectedException FaZend_Pos_Exception
+     */
+    public function testLostObjectsCantBeLinked() {
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+        
+        $car->holder = $holder = new FaZend_StdObject();
+        $car->holder->bike = $bike = new Model_Pos_Bike();
+        $car->ps()->save();
+    }
+    
     public function testObjectsCanBeStandalone() {
         $car = new Model_Pos_Car();
         unset($car);
     }
-
+    
     /**
      * @expectedException FaZend_Pos_Exception
      */
@@ -269,11 +292,11 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car = new Model_Pos_Car();
         $car->mode = 'bmw'; // we expect an exception here
     }
-
+    
     public function testObjectIsAnIterator() {
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
-
+    
         for ($i = 0; $i<10; $i++)
             $car[$i] = $i;
             
@@ -282,34 +305,34 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             $this->assertEquals($name, $item);
         }
     }
-
+    
     public function testObjectCanBeVeryDeep() {
         FaZend_Pos_Abstract::cleanPosMemory();
         
-        $obj = FaZend_Pos_Abstract::root()->obj = new Model_Pos_Car();
-
-        for ($i = 0; $i<100; $i++) {
+        $obj = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
+    
+        for ($i = 0; $i<10; $i++) {
             $obj->obj = new Model_Pos_Bike();
             $obj = $obj->obj;
         }
         
-        FaZend_Pos_Abstract::root()->ps()->save(true);
+        FaZend_Pos_Abstract::root()->ps()->save();
     }
-
+    
     public function testObjectsAreLoadedFromDatabase() {
         FaZend_Pos_Abstract::cleanPosMemory();
-
+    
         $queries = array(
              // clear everything beforehand
             'DELETE FROM fzObject',
             'DELETE FROM fzSnapshot',
             'DELETE FROM fzPartof',
-
+    
             // create objects
             'INSERT INTO fzObject (id, class) values(1, "FaZend_Pos_Root")',
             'INSERT INTO fzObject (id, class) values(2, "Model_Pos_Car")',
             'INSERT INTO fzObject (id, class) values(3, "Model_Pos_Bike")',
-
+    
             // create their snapshots
             // root
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
@@ -323,7 +346,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
                 'values(3, ' . $this->_dbAdapter->quote(serialize(array('model'=>'kawasaki'))) . ', 1, 1, ' . 
                 $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
-
+    
             // create links between them
             // root->car
             'INSERT INTO fzPartOf (parent, kid, name) values(1, 2, "car")',
@@ -336,12 +359,12 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car = FaZend_Pos_Abstract::root()->car;
         $this->assertTrue($car instanceof Model_Pos_Car, 'Car object was not retrieved');
         $this->assertEquals('bmw', $car->model, 'Car property is lost, why?');
-
+    
         $bike = $car->bike;
         $this->assertTrue($bike instanceof Model_Pos_Bike, 'Bike object was not retrieved');
         $this->assertEquals('kawasaki', $bike->model, 'Bike property is lost, why?');
     }
-
+    
     
 
 }

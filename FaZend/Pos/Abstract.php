@@ -17,6 +17,16 @@
 /**
  * Abstract class for all POS objects
  * 
+ * In order to use FaZend_Pos you should inherit your own classes from
+ * this class and use them as you wish. The only important requirement is that
+ * before you do anything with your POS objects, you should attach them to
+ * POS root or to some other POS object, e.g.:
+ *
+ * <code>
+ * FaZend_Pos_Abstract::root()->obj = $obj = new Model_My_Pos_Object();
+ * $obj->test = 'works good!';
+ * </code>
+ *
  * @package Pos
  */
 abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
@@ -42,9 +52,24 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * @var FaZend_Pos_Properties
      */
     protected $_ps = null;
+    
+    /**
+     * Pos ID used for serialization only
+     *
+     * @var integer
+     * @see __sleep()
+     * @see __wakeup()
+     **/
+    protected $__posId = null;
 
     /**
      * Set name of root class
+     *
+     * You can give your own name of the class, which will be used for
+     * ROOT object. Overriding the _init() method in that class you will
+     * be able to initialize your root tree before usage.
+     *
+     * Your ROOT class should be a child from FaZend_Pos_Root.
      *
      * @param string Name of root class
      * @return void
@@ -55,7 +80,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
 
     /**
-     * Get root object
+     * Get root object, the main object of the entire POS tree
      *
      * @return FaZend_Pos_Abstract
      **/
@@ -67,7 +92,29 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
 
     /**
-     * Clean the entire structure
+     * Clean the entire POS structure from memory
+     *
+     * Be careful with this method, it is mostly used for unit testing. When
+     * you're clearing the memory, you DON'T save changes to the database. All
+     * your changes will be saved only during destruction of objects. Consider
+     * the example:
+     *
+     * <code>
+     * FaZend_Pos_Abstract::root()->obj = $obj = new Model_My_Pos_Object();
+     * $obj->test = 'works good!';
+     * FaZend_Pos_Abstract::cleanPosMemory();
+     * isset(FaZend_Pos_Abstract::root()->obj->test); // return FALSE
+     * </code>
+     *
+     * Another example, which explains how it should be done:
+     *
+     * <code>
+     * FaZend_Pos_Abstract::root()->obj = $obj = new Model_My_Pos_Object();
+     * $obj->test = 'works good!';
+     * $obj->ps()->save(); // forces the object to be saved to DB
+     * FaZend_Pos_Abstract::cleanPosMemory();
+     * isset(FaZend_Pos_Abstract::root()->obj->test); // return TRUE
+     * </code>
      *
      * @return void
      **/
@@ -77,13 +124,39 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
 
     /**
-     * Constructor.
+     * Class constructor, don't override it!
+     *
+     * If you need to specify your own initialization behavior, use _init() method
+     * instead of constructor.
      *
      * @return void
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @see _init()
      */
     public function __construct()
     {
         $this->_init();
+    }
+
+    /**
+     * Save all changes to DB
+     *
+     * @return void
+     **/
+    public function __destruct() 
+    {
+        // We don't want any exceptions to be thrown in constructor, 
+        // since they will destroy the entire application framework. That's
+        // why we catch them here and log them.
+        try {
+            $this->ps()->save(false);
+        } catch (FaZend_Pos_Exception $e) {
+            $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
+            if (defined('TESTING_RUNNING'))
+                echo $msg . "\n";
+            else
+                FaZend_Log::info();
+        }
     }
 
     /**
@@ -94,12 +167,25 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      */
     protected function _init()
     {
-        //...
+        // to be overriden in child classes
     }
 
     /**
      * Accesses the system properties for this object.
      * 
+     * Anything that you might want to do with the POS object is done by means
+     * of this specific class, attached to your POS object automatically. For
+     * example:
+     *
+     * <code>
+     * FaZend_Pos_Abstract::root()->obj = $obj = new Model_My_Pos_Object();
+     * $obj->test = 'works good!';
+     * $obj->ps()->save(); // you're saving changes to the DB
+     * $ver = $obj->ps()->version; // you get current version of the object
+     * FaZend_Pos_Abstract::cleanPosMemory();
+     * isset(FaZend_Pos_Abstract::root()->obj->test); // return TRUE
+     * </code>
+     *
      * @return FaZend_Pos_Properties
      */
     public final function ps()
@@ -113,8 +199,10 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * Magic method implementation for setting public properties on the object
      * 
      * @param string Name of property
-     * @param mixed Value of it
+     * @param mixed Value of the property
      * @return void
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function __set($name, $value)
     {
@@ -126,6 +214,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param mixed $name 
      * @return TODO
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function __get($name)
     {
@@ -137,6 +227,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param string Key of the item
      * @return boolean
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function offsetExists($name)
     {
@@ -148,6 +239,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param string Key of the item
      * @return mixed
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function offsetGet($name)
     {
@@ -160,6 +252,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * @param string|false Key or false, if the element should be added as new
      * @param string Value
      * @return void
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function offsetSet($name, $value)
     {
@@ -171,6 +264,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param string Key
      * @return void
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function offsetUnset($name)
     {
@@ -180,7 +274,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     /**
      * Countable Interface method
      *
-     * @return integer
+     * @return integer Total amount of ITEMS in the array
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function count() 
     {
@@ -191,6 +286,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * Method for Iterator interface
      *
      * @return void
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function rewind() 
     {
@@ -200,7 +296,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     /**
      * Method for Iterator interface
      *
-     * @return void
+     * @return boolean
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function valid() 
     {
@@ -210,7 +307,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     /**
      * Method for Iterator interface
      *
-     * @return void
+     * @return mixed
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function next() 
     {
@@ -221,6 +319,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * Method for Iterator interface
      *
      * @return void
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function key() 
     {
@@ -231,6 +330,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * Method for Iterator interface
      *
      * @return void
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function current() 
     {
@@ -242,6 +342,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param mixed Key
      * @return boolean
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function __isset($name)
     {
@@ -254,6 +356,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @param string Name of the property to unset
      * @return void
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      */
     public function __unset($name)
     {
@@ -261,13 +365,63 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
     
     /**
-     * Called after unserialize()
+     * Called after unserialize(), magic method
+     *
+     * Here we should reload the object from DB and fill it's internal
+     * structure with data.
      *
      * @return void
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
      **/
     public function __wakeup() 
     {
-        $this->ps()->load(true);
+        if ($this instanceof FaZend_Pos_Root) {
+            FaZend_Exception::raise('FaZend_Pos_RootUnserializationProhibited',
+                "Object of class " . get_class($this) . " can't be unserialized, since it's ROOT",
+                'FaZend_Pos_Exception');
+        }
+
+        if (!isset($this->__posId) || !$this->__posId) {
+            FaZend_Exception::raise('FaZend_Pos_UnserializationFailure',
+                "Object of class " . get_class($this) . " wasn't properly serialized",
+                'FaZend_Pos_Exception');
+        }
+
+        // The only thing we know about the object is its ID (fzObject.id).
+        // Now we should recover its "parent", in order to make it attached
+        // to the POS structure. This operation will be done recursively, until
+        // the ROOT is reached.
+        $this->ps()->recoverById($this->__posId);
+    }
+
+    /**
+     * Called before serialize()
+     *
+     * @return void
+     * @see http://php.net/manual/en/language.oop5.magic.php
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
+     **/
+    public function __sleep() 
+    {
+        if ($this instanceof FaZend_Pos_Root) {
+            FaZend_Exception::raise('FaZend_Pos_RootSerializationProhibited',
+                "Object of class " . get_class($this) . " can't be serialized, since it's ROOT",
+                'FaZend_Pos_Exception');
+        }
+
+        // We're trying to save the object. There could be an error, if the
+        // object is NOT yet in POS.
+        try {
+            $this->ps()->save();
+            $this->__posId = $this->ps()->id;
+        } catch (FaZend_Pos_LostObjectException $e) {
+            FaZend_Exception::raise('FaZend_Pos_SerializationProhibited',
+                "Object of class " . get_class($this) . " can't be serialized, since it's not in POS",
+                'FaZend_Pos_Exception');
+        } 
+        
+        return array('__posId');
     }
 
 }

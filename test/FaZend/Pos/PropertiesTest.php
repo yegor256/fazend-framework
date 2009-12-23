@@ -38,7 +38,7 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
-        $car->ps()->save(true);
+        $car->ps()->save();
 
         $actual = $car->ps()->editor->email;
         $expected = $this->_user->email;
