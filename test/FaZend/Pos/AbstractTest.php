@@ -46,13 +46,13 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->year  = 2009;
         $car->active = true;
         $car->trims = $trims;
-
+    
         $this->assertEquals( 'BMW', $car->make, 'Could not retreive "make" property value' );
         $this->assertEquals( '330xi', $car->model, 'Could not retreive "model" property value' );
         $this->assertEquals( 2009, $car->year, 'Could not retreive "year" property value' );
         #$this->assertEquals( $trims, $car->trims, 'Could not retreive "trims" property value' );
     }
-
+    
     public function testPropertiesAreUniquePerObject()
     {
         FaZend_Pos_Abstract::cleanPosMemory();
@@ -237,6 +237,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     }
     
     public function testLinksBetweenObjectsCanByCycled() {
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         
@@ -250,6 +251,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     }
     
     public function testLinkCanLeadToItself() {
+        FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
         $car->car = $car;
@@ -258,21 +260,26 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     }
     
     public function testObjectsCanBeLinkedThroughMediators() {
+        FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->bike = $bike = new Model_Pos_Bike();
         
         $car->holder = new FaZend_StdObject();
         $car->holder->bike = $bike;
         $car->ps()->save();
+        // $car->ps()->dump(true);
         FaZend_Pos_Abstract::cleanPosMemory();
     
-        $bike = FaZend_Pos_Abstract::root()->car->holder->bike;
+        $car = FaZend_Pos_Abstract::root()->car;
+        $bike = $car->holder->bike;
     }
     
     /**
-     * @expectedException FaZend_Pos_Exception
+     * @expectedException FaZend_Pos_SerializationProhibited 
      */
     public function testLostObjectsCantBeLinked() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        echo "\nThis test will throw exception FaZend_Pos_SerializationProhibited when all tests are finished, it's OK\n";
         FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
         
         $car->holder = $holder = new FaZend_StdObject();
@@ -323,14 +330,17 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Abstract::cleanPosMemory();
         
         $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
-
+    
         $obj = new FaZend_StdObject();
         $obj->link = $obj;
         
         $car->obj = $obj;
-        $car->obj->link->link->link->link->link; // should work
     
-        FaZend_Pos_Abstract::root()->ps()->save();
+        FaZend_Pos_Abstract::root()->car->ps()->save();
+    
+        // clean and retrieve it back
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $car = FaZend_Pos_Abstract::root()->car->obj->link->link->link->link->link;
     }
     
     public function testEndlessCyclesWithMeditatorsWork() {
@@ -342,9 +352,32 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->obj = $obj;
         $obj->car = $car;
 
-        $car->obj->car->obj->car->obj->car; // should work
-    
         FaZend_Pos_Abstract::root()->ps()->save();
+        FaZend_Pos_Abstract::root()->car->ps()->save();
+        
+        // clean and retrieve it back
+        FaZend_Pos_Abstract::cleanPosMemory();
+        
+        $car1 = FaZend_Pos_Abstract::root()->car;
+        $obj1 = $car1->obj;
+        
+        $car2 = $obj1->car;
+        $obj2 = $car2->obj;
+        
+        // Cars are different
+        $this->assertNotEquals(spl_object_hash($car1), spl_object_hash($car2));
+        
+        // But their internal structures are THE SAME!
+        $this->assertEquals(spl_object_hash($obj1), spl_object_hash($obj2));
+
+        $this->assertEquals(spl_object_hash($car1->ps()->parent), spl_object_hash($car2->ps()->parent), 
+            'Why both parents are not root?');
+        
+        $car3 = $obj2->car;
+        $this->assertEquals(spl_object_hash($car2->ps()->parent), spl_object_hash($car3->ps()->parent), 
+            'Why both parents are not root?');
+        
+        $obj3 = $car3->obj;
     }
 
     public function testObjectsAreLoadedFromDatabase() {

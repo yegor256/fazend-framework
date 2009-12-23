@@ -55,7 +55,14 @@ class FaZend_Pos_Properties
      * @see setUserId()
      **/
     protected static $_userId = null;
-
+    
+    /**
+     * List of already existing objects
+     *
+     * @var FaZend_Pos_Properties[]
+     **/
+    protected static $_instances = array();
+    
     /**
      * Active Row in fzObject table
      * 
@@ -159,6 +166,16 @@ class FaZend_Pos_Properties
     }
     
     /**
+     * Clean all memory structures
+     *
+     * @return void
+     **/
+    public static function cleanPosMemory() 
+    {
+        self::$_instances = array();
+    }
+    
+    /**
      * Constructor
      *
      * @param FaZend_Pos_Abstract Object
@@ -241,7 +258,8 @@ class FaZend_Pos_Properties
 
         if (!$this->hasProperty($name))
             FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
-                "Can't find property '{$name}' in " . get_class($this->_object),
+                "Can't find property '{$name}' in " . get_class($this->_object) . 
+                    ', among ' . count($this->_properties) . ' properties',
                 'FaZend_Pos_Exception');        
                 
         $this->_resolveStub($name);
@@ -399,6 +417,54 @@ class FaZend_Pos_Properties
     {
         $this->save(true);
     }
+    
+    /**
+     * Show full details of the internal structure
+     *
+     * @param boolean Shall we DIE after it?
+     * @return string
+     **/
+    public function dump($die = false) 
+    {
+        $text = 
+        "Object: " . get_class($this->_object) . ' (SPL hash: ' . spl_object_hash($this->_object) . ")\n" .
+        "Clean status: " . (is_null($this->_clean) ? 'NULL' : ($this->_clean ? 'TRUE' : 'FALSE')) . "\n";
+        
+        $text .= "fzObject:\n" . (isset($this->_fzObject) ? 
+            '    id: ' . $this->_fzObject->__id . "\n    class: " . $this->_fzObject->class
+            : '    NULL') . "\n";
+        
+        $text .= "fzSnapshot:\n" . (isset($this->_fzSnapshot) ? 
+            "    id: " . $this->_fzSnapshot->__id . 
+            "\n    properties: " . cutLongLine($this->_fzSnapshot->properties, 90) .
+            "\n    version: " . $this->_fzSnapshot->version
+            : '    NULL') . "\n";
+        
+        $text .= "Properties:\n";
+        
+        if (!count($this->_properties))
+            $text .= "    none\n";
+        else {
+            foreach ($this->_properties as $name=>$property) {
+                $text .= "    {$name}: ";
+                $stubClass = self::STUB_CLASS;
+                if ($property instanceof $stubClass)
+                    $text .= 'STUB to ' . $property->class;
+                elseif (is_scalar($property))
+                    $text .= $property;
+                else
+                    $text .= get_class($property);
+                $text .= "\n";
+            }
+        }
+        
+        $text .= "Parent: " . (isset($this->_parent) ? get_class($this->_parent) : 'NULL') . "\n";
+
+        if (!$die)
+            return $text;
+        echo "\n\n" . $text . "\n\n";
+        die();
+    }
 
     /**
      * Recovers the object by fzObject.id
@@ -483,8 +549,19 @@ class FaZend_Pos_Properties
             $this->_fzObject = FaZend_Pos_Model_Object::create($this->_object, $parent, $name);
         }
         
-        // make sure it is property attached
-        $this->_attachToPos();
+        // Maybe we found an object, which already exists in memory? This is
+        // the ID of the object in fzObject, and we should search the list
+        // of existing instances of PROPERTIES for it.
+        $id = $this->_fzObject->__id;
+        
+        // If it exists, we REPLACE the current one by existing one, in the object.
+        if (isset(self::$_instances[$id])) {
+            $this->_object->ps(self::$_instances[$id]);
+        } else {
+            self::$_instances[$id] = $this;
+            // make sure it is property attached
+            $this->_attachToPos();
+        }
     }
     
     /**

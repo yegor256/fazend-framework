@@ -121,6 +121,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public static function cleanPosMemory() 
     {
         self::$_root = null;
+        FaZend_Pos_Properties::cleanPosMemory();
     }
 
     /**
@@ -186,10 +187,33 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * isset(FaZend_Pos_Abstract::root()->obj->test); // return TRUE
      * </code>
      *
+     * Object in the DB are static, while in PHP they are dymanic. In other
+     * words, you can have many PHP objects, linked to the same DB object. 
+     * For example:
+     *
+     * <code>
+     * $car = FaZend_Pos_Abstract::root()->car;
+     * $car2 = FaZend_Pos_Abstract::root()->car;
+     * </code>
+     *
+     * As you see from the example, two PHP variables will be linked to the
+     * same object in the DB. When you're making changes to one object, the
+     * other will stay unchanged. To avoid such a situation we have a list
+     * of already instantiated objects in FaZend_Pos_Properties::$_instances. 
+     * When you are trying to create a new PHP object, but we
+     * already have one in memory - we find this object and link to it, by means
+     * of calling ps() with the PS object, related to the existing object.
+     *
+     * @param FaZend_Pos_Properties Properties to be explicitly set, if we need
+     *     to link this object to already existing clone. The method will be called
+     *     with this parameter specified only from FaZend_Pos_Properties::_attachTo()
      * @return FaZend_Pos_Properties
+     * @see FaZend_Pos_Properties::_attachTo()
      */
-    public final function ps()
+    public final function ps(FaZend_Pos_Properties $ps = null)
     {
+        if (!is_null($ps))
+            $this->__ps = $ps;
         if (!isset($this->__ps))
             $this->__ps = new FaZend_Pos_Properties($this);
         return $this->__ps;
@@ -393,6 +417,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         // to the POS structure. This operation will be done recursively, until
         // the ROOT is reached.
         $this->ps()->recoverById($this->__posId);
+        
     }
 
     /**
