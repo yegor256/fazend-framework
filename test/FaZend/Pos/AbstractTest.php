@@ -236,9 +236,38 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertEquals(2, count($car->ps()->properties), 'List of properties is broken, why?');
     }
     
+    public function testLinksBetweenObjectsCanByCycled() {
+        $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->car = $car;
+        
+        $bike = new Model_Pos_Bike();
+        FaZend_Pos_Abstract::root()->bike = $bike;
+        
+        $car->bike = $bike;
+        $bike->car = $car;
+        
+        $car2 = $car->bike->car->bike->car->bike->car->bike->car; // should work
+    }
+
+    public function testLinkCanLeadToItself() {
+        $car = new Model_Pos_Car();
+        FaZend_Pos_Abstract::root()->car = $car;
+        $car->car = $car;
+        
+        $car2 = $car->car->car->car->car->car; // should work
+    }
+
     public function testObjectsCanBeStandalone() {
         $car = new Model_Pos_Car();
         unset($car);
+    }
+
+    /**
+     * @expectedException FaZend_Pos_Exception
+     */
+    public function testObjectCantBeManagedOutsideOfPos() {
+        $car = new Model_Pos_Car();
+        $car->mode = 'bmw'; // we expect an exception here
     }
 
     public function testObjectIsAnIterator() {
@@ -259,7 +288,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $obj = FaZend_Pos_Abstract::root()->obj = new Model_Pos_Car();
 
-        for ($i = 0; $i<25; $i++) {
+        for ($i = 0; $i<100; $i++) {
             $obj->obj = new Model_Pos_Bike();
             $obj = $obj->obj;
         }
