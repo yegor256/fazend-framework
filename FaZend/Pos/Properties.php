@@ -449,7 +449,7 @@ class FaZend_Pos_Properties
                 $text .= "    {$name}: ";
                 $stubClass = self::STUB_CLASS;
                 if ($property instanceof $stubClass)
-                    $text .= 'STUB to ' . $property->class;
+                    $text .= 'STUB to ' . $property->className;
                 elseif (is_scalar($property))
                     $text .= $property;
                 else
