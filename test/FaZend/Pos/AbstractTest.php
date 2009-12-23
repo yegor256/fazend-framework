@@ -216,14 +216,14 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     
     public function testObjectWorksAsArray() {
         FaZend_Pos_Abstract::cleanPosMemory();
-        $car = new Model_Pos_Car();
-        FaZend_Pos_Abstract::root()->car = $car;
+        FaZend_Pos_Abstract::root()->carArray = $car = new Model_Pos_Car();
         
         $car[] = 1;
         $car[] = 1;
         $car[] = 1;
         $car['test'] = 2;
         $this->assertEquals(4, count($car), 'Array has invalid number of elements, why?');
+        $this->assertEquals(2, $car['test'], 'Array item is lost, why?');
     }
     
     public function testGetPropertiesWork() {
@@ -267,7 +267,6 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->holder = new FaZend_StdObject();
         $car->holder->bike = $bike;
         $car->ps()->save();
-        // $car->ps()->dump(true);
         FaZend_Pos_Abstract::cleanPosMemory();
     
         $car = FaZend_Pos_Abstract::root()->car;
@@ -347,11 +346,11 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Abstract::cleanPosMemory();
         
         $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
-
+    
         $obj = new FaZend_StdObject();
         $car->obj = $obj;
         $obj->car = $car;
-
+    
         FaZend_Pos_Abstract::root()->ps()->save();
         FaZend_Pos_Abstract::root()->car->ps()->save();
         
@@ -369,7 +368,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         // But their internal structures are THE SAME!
         $this->assertEquals(spl_object_hash($obj1), spl_object_hash($obj2));
-
+    
         $this->assertEquals(spl_object_hash($car1->ps()->parent), spl_object_hash($car2->ps()->parent), 
             'Why both parents are not root?');
         
@@ -379,7 +378,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $obj3 = $car3->obj;
     }
-
+    
     public function testObjectsAreLoadedFromDatabase() {
         FaZend_Pos_Abstract::cleanPosMemory();
     
@@ -405,7 +404,10 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
                 $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
             // bike
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
-                'values(3, ' . $this->_dbAdapter->quote(serialize(array('model'=>'kawasaki'))) . ', 1, 1, ' . 
+                'values(3, ' . $this->_dbAdapter->quote(serialize(array(
+                    'model' => 'kawasaki',
+                    FaZend_Pos_Properties::ARRAY_PREFIX . 'code' => 'test',
+                    ))) . ', 1, 1, ' . 
                 $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
     
             // create links between them
@@ -424,6 +426,9 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $bike = $car->bike;
         $this->assertTrue($bike instanceof Model_Pos_Bike, 'Bike object was not retrieved');
         $this->assertEquals('kawasaki', $bike->model, 'Bike property is lost, why?');
+        $this->assertEquals('test', $bike['code'], 'Bike CODE is lost, why?');
+        $this->assertTrue(isset($bike->model), 'Why MODEL is not set?');
+        $this->assertTrue(isset($bike['code']), 'Why CODE is not set?');
     }
     
     

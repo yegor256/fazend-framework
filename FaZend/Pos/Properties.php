@@ -324,7 +324,7 @@ class FaZend_Pos_Properties
             else
                 $name = 0;
         }
-        $this->setProperty(self::ARRAY_PREFIX . $name, $value);
+        return $this->setProperty(self::ARRAY_PREFIX . $name, $value);
     }
 
     /**
@@ -337,7 +337,7 @@ class FaZend_Pos_Properties
      **/
     public function getItem($name) 
     {
-        $this->getProperty(self::ARRAY_PREFIX . $name);
+        return $this->getProperty(self::ARRAY_PREFIX . $name);
     }
 
     /**
@@ -350,7 +350,7 @@ class FaZend_Pos_Properties
      **/
     public function hasItem($name) 
     {
-        $this->hasProperty(self::ARRAY_PREFIX . $name);
+        return $this->hasProperty(self::ARRAY_PREFIX . $name);
     }
 
     /**
@@ -363,7 +363,7 @@ class FaZend_Pos_Properties
      **/
     public function unsetItem($name) 
     {
-        $this->unsetProperty(self::ARRAY_PREFIX . $name);
+        return $this->unsetProperty(self::ARRAY_PREFIX . $name);
     }
 
     /**

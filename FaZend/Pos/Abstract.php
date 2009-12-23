@@ -255,7 +255,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      */
     public function offsetExists($name)
     {
-        return $this->ps()->hasItem($name);
+        return $this->ps()->hasItem($name) &&
+            !is_null($this->ps()->getItem($name));
     }
 
     /**
