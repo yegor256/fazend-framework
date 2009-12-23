@@ -424,7 +424,7 @@ class FaZend_Pos_Properties
      * @param boolean Shall we DIE after it?
      * @return string
      **/
-    public function dump($die = false) 
+    public function dump($die = true) 
     {
         $text = 
         "Object: " . get_class($this->_object) . ' (SPL hash: ' . spl_object_hash($this->_object) . ")\n" .
