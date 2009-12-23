@@ -40,6 +40,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * @param FaZend_Pos_Abstract The object, which is parent
      * @param string Unique name inside the parent
      * @return void
+     * @throws FaZend_Pos_RootException Always
      **/
     protected function _setParent(FaZend_Pos_Abstract $parent, $name) 
     {
@@ -51,6 +52,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * Get parent
      * 
      * @return FaZend_Pos_Abstract
+     * @throws FaZend_Pos_RootException Always
      */
     protected function _getParent()
     {

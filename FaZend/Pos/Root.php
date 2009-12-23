@@ -40,7 +40,7 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
      */
     protected function _init()
     {
-        $this->_ps = new FaZend_Pos_RootProperties($this);
+        $this->__ps = new FaZend_Pos_RootProperties($this);
     }
 
 }

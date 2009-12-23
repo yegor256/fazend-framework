@@ -51,7 +51,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @var FaZend_Pos_Properties
      */
-    protected $_ps = null;
+    protected $__ps = null;
     
     /**
      * Pos ID used for serialization only
@@ -190,9 +190,9 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      */
     public final function ps()
     {
-        if (!isset($this->_ps))
-            $this->_ps = new FaZend_Pos_Properties($this);
-        return $this->_ps;
+        if (!isset($this->__ps))
+            $this->__ps = new FaZend_Pos_Properties($this);
+        return $this->__ps;
     }
 
     /**
@@ -410,16 +410,19 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
                 'FaZend_Pos_Exception');
         }
 
-        // We're trying to save the object. There could be an error, if the
-        // object is NOT yet in POS.
-        try {
-            $this->ps()->save();
-            $this->__posId = $this->ps()->id;
-        } catch (FaZend_Pos_LostObjectException $e) {
-            FaZend_Exception::raise('FaZend_Pos_SerializationProhibited',
-                "Object of class " . get_class($this) . " can't be serialized, since it's not in POS",
-                'FaZend_Pos_Exception');
-        } 
+        // We should validate, maybe we already serialized this object before?
+        if (is_null($this->__posId)) {
+            // We're trying to save the object. There could be an error, if the
+            // object is NOT yet in POS.
+            try {
+                $this->__posId = $this->ps()->id;
+                $this->ps()->save();
+            } catch (FaZend_Pos_LostObjectException $e) {
+                FaZend_Exception::raise('FaZend_Pos_SerializationProhibited',
+                    "Object of class " . get_class($this) . " can't be serialized, since it's not in POS",
+                    'FaZend_Pos_Exception');
+            } 
+        }
         
         return array('__posId');
     }

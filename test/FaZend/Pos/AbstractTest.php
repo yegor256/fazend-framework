@@ -319,6 +319,34 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Abstract::root()->ps()->save();
     }
     
+    public function testEndlessCyclesAreUnderstoodProperly() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        
+        $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
+
+        $obj = new FaZend_StdObject();
+        $obj->link = $obj;
+        
+        $car->obj = $obj;
+        $car->obj->link->link->link->link->link; // should work
+    
+        FaZend_Pos_Abstract::root()->ps()->save();
+    }
+    
+    public function testEndlessCyclesWithMeditatorsWork() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        
+        $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
+
+        $obj = new FaZend_StdObject();
+        $car->obj = $obj;
+        $obj->car = $car;
+
+        $car->obj->car->obj->car->obj->car; // should work
+    
+        FaZend_Pos_Abstract::root()->ps()->save();
+    }
+
     public function testObjectsAreLoadedFromDatabase() {
         FaZend_Pos_Abstract::cleanPosMemory();
     

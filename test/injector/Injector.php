@@ -32,7 +32,6 @@ class Injector extends FaZend_Test_Injector
      **/
     public function inject() 
     {
-        // bug('injector');
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
             if (preg_match('/^\_inject/', $method->getName())) {

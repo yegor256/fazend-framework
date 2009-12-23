@@ -25,8 +25,10 @@ class FaZend_Pos_Properties
     // By means of this prefix we distinguish properties
     // and array items. Physically they are stored in the same
     // array: $this->_properties. But array items have this prefix
-    // in their names.
-    const ARRAY_PREFIX = 'item:';
+    // in their names. By means of using such prefix we assume
+    // that NO properties might ever have a name that starts with
+    // this prefix.
+    const ARRAY_PREFIX = ':@i:';
 
     // This class will be assigned to $this->_properties instead
     // of partOf relations, in order to indicate that the relation
@@ -36,35 +38,75 @@ class FaZend_Pos_Properties
     /**
      * Current user ID
      *
-     * @var integer
+     * This variable is used for dependency injection. You should set
+     * it inside your application (preferrably in bootstrap.php), and 
+     * it should contain the ID (or email, if you like), of the user who
+     * is currently making changes to the POS database.
+     *
+     * Normally this is INTEGER, since fzSnapshot.user is integer, but you
+     * can change it. You should create your own "fzSnapshot.sql" file, 
+     * and place it into deployment directory (application/deploy/database).
+     * Once it is there, YOUR table will be created before the standard
+     * POS table. And in your table you can set any type for this column.
+     * Make sure that your table doesn't change names or types of OTHER
+     * columns.
+     *
+     * @var integer|string
+     * @see setUserId()
      **/
     protected static $_userId = null;
 
     /**
-     * Object that we're managing
+     * Active Row in fzObject table
      * 
+     * This is the row in fzObject table, that relates to the object we
+     * are managing. This property is set inside _attachTo()
+     *
      * @var FaZend_Pos_Model_Object
+     * @see _attachTo()
      */
     protected $_fzObject = null;
     
     /**
      * Object that we're managing
      * 
+     * When this class is constructed, it gets a link to the object as
+     * a parameter for the contructor.
+     *
      * @var FaZend_Pos_Abstract
+     * @see __construct()
      */
     protected $_object = null;
     
     /**
-     * Latest snapshot
+     * Latest snapshot of the object.
+     *
+     * This property is set inside _loadSnapshot()
      * 
      * @var FaZend_Pos_Model_Snapshot
+     * @see _loadSnapshot()
      */
     protected $_fzSnapshot = null;
     
     /**
      * Parent object
      *
+     * The property is set inside _attachTo(), and can be accessed by means
+     * of _getParent(). If the property is not set, the object we're managing
+     * is considered to be OUT OF the entire POS structure, and you can't
+     * do anything with it. For example:
+     *
+     * <code>
+     * class MyObject extends FaZend_Pos_Abstract {}
+     * $obj = new MyObject();
+     * $obj->name = 'test'; // Exception here, since the object is not attached
+     * FaZend_Pos_Abstract::root()->obj = $obj;
+     * $obj->name = 'test'; // works perfectly
+     * </code>
+     *
      * @var FaZend_Pos_Abstract
+     * @see _attachTo()
+     * @see _getParent()
      **/
     protected $_parent = null;
 
@@ -81,25 +123,29 @@ class FaZend_Pos_Properties
     /**
      * List of object properties
      * 
-     * @var ArrayIterator Defaults to array(). 
+     * This variable is set inside _construct(), and is changed by means
+     * of setProperty() and unsetProperty(). You can retrieve by means
+     * of _getProperties(), but be careful, since it contains BOTH
+     * properties and array items. Read more about it in docBlock for
+     * self::ARRAY_PREFIX.
+     *
+     * @var ArrayIterator Defaults to empty array 
+     * @see setProperty()
+     * @see unsetProperty()
+     * @see ARRAY_PREFIX
      */
-    protected $_properties;
+    protected $_properties = null;
     
     /**
      * Iterator through properties, showing ONLY items
      *
+     * If you need an access to array items, you should use this iterator,
+     * accessible by means of _getItemsIterator()
+     *
      * @var Iterator
+     * @see _getItemsIterator()
      **/
     protected $_itemsIterator;
-
-    /**
-     * Stores the version associated with this object.  By default, this will
-     * always be null, indicating the current version.  Only when the user calls
-     * a function which forces a version will this have a value.
-     * 
-     * @var int Defaults to null. 
-     */
-    protected $_version = null;
 
     /**
      * Set user ID, dependency injection, so to speak
@@ -117,6 +163,7 @@ class FaZend_Pos_Properties
      *
      * @param FaZend_Pos_Abstract Object
      * @return void
+     * @see FaZend_Pos_Abstract::ps()
      **/
     public function __construct(FaZend_Pos_Abstract $object) 
     {
