@@ -646,8 +646,9 @@ class FaZend_Pos_Properties
         // @see: http://stackoverflow.com/questions/1957069/how-to-work-with-regexiteratorreplace-mode
         $array = array();
         foreach ($this->_properties as $name=>$value) {
-            if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches))
-                $array[$matches[1]] = $value;
+            if (!preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches))
+                continue;
+            $array[$matches[1]] = $this->getItem($matches[1]);
         }
         return $this->_itemsIterator = new ArrayIterator($array);
             

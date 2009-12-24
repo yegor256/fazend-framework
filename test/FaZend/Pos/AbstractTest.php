@@ -421,6 +421,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             // root->car
             'INSERT INTO fzPartOf (parent, kid, name) values(1, 2, "car")',
             'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "bike")',
+            'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "' . FaZend_Pos_Properties::ARRAY_PREFIX . 'item")',
             );
         
         foreach ($queries as $query)
@@ -436,6 +437,13 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertEquals('test', $bike['code'], 'Bike CODE is lost, why?');
         $this->assertTrue(isset($bike->model), 'Why MODEL is not set?');
         $this->assertTrue(isset($bike['code']), 'Why CODE is not set?');
+        
+        // one item should be there, by the key ITEM and value = bike
+        foreach ($car as $name=>$value) {
+            $this->assertEquals('item', $name, 'Item name is not correct, why?');
+            $this->assertTrue($value instanceof Model_Pos_Bike, 'Value is not loaded, why? Class: ' . get_class($value));
+            $this->assertEquals('test', $value['code'], 'Bike CODE is lost in array item, why?');
+        }
     }
     
     
