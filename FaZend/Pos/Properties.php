@@ -331,11 +331,10 @@ class FaZend_Pos_Properties
     public function setItem($name, $value) 
     {
         if ($name === null) {
-            $keys = array_keys($this->itemsIterator->getArrayCopy());
-            if (count($keys)) {
-                $name = max($keys) + 1;
-            } else {
-                $name = 0;
+            $name = 0;
+            foreach ($this->_properties as $key=>$item) {
+                if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(\d+)$/', $key, $matches))
+                    $name = max($name, $matches[1] + 1);
             }
         }
         return $this->setProperty(self::ARRAY_PREFIX . $name, $value);
@@ -425,7 +424,7 @@ class FaZend_Pos_Properties
     {
         if (is_null($this->_parent))
             return;
-            
+
         // object is NOT saved to DB yet?
         if (($this->_clean === false) || $force) {
             $this->_saveSnapshot();
@@ -496,6 +495,16 @@ class FaZend_Pos_Properties
             return $text;
         echo "\n\n" . $text . "\n\n";
         die();
+    }
+    
+    /**
+     * Is it clean, no changes have been made so far?
+     *
+     * @return boolean
+     **/
+    public function isClean() 
+    {
+        return $this->_clean === true;
     }
 
     /**
@@ -751,10 +760,15 @@ class FaZend_Pos_Properties
             }
         }
         
-        $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
-            $this->_fzObject, 
-            self::$_userId, 
-            serialize($toSerialize));
+        $serialized = serialize($toSerialize);
+
+        // avoid saving of the same data
+        if ($this->_fzSnapshot->properties != $serialized) {
+            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
+                $this->_fzObject, 
+                self::$_userId, 
+                $serialized);
+        }
     }
     
     /**

@@ -155,11 +155,11 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->year = 2009;
         $car->ps()->save();
     
-        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
+        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot WHERE fzObject = {$car->ps()->id}");
     
         // 4 snapshots: 2 for root and two for the object
-        $this->assertEquals( 4, count($result),
-            'FaZend_Pos_Abstrast::save() did not create unique versions' );
+        $this->assertEquals(3, count($result),
+            'FaZend_Pos_Abstrast::save() did not create unique versions');
     }
     
     public function testSerializeObjectSavesSnapshotOnSerialize()
@@ -206,8 +206,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             FaZend_Pos_Abstract::cleanPosMemory();
             $car = FaZend_Pos_Abstract::root()->car;
         }
-        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot");
-        $this->assertEquals(2, count($result), 'Root object produces many snapshots when created');
+        $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot WHERE fzObject={$car->ps()->id}");
+        $this->assertEquals(1, count($result), 'Root object produces many snapshots when created');
     }
     
     public function testObjectCanHaveSubObjects() {
@@ -323,6 +323,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     }
     
     public function testObjectIsAnIterator() {
+        FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->carIterator = $car = new Model_Pos_Car();
     
         for ($i = 0; $i<10; $i++)
@@ -343,7 +344,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         
         $obj = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
     
-        for ($i = 0; $i<10; $i++) {
+        for ($i = 0; $i<5; $i++) {
             $obj->obj = new Model_Pos_Bike();
             $obj = $obj->obj;
         }
@@ -447,6 +448,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             $this->_dbAdapter->fetchAll($query);
             
         $car = FaZend_Pos_Abstract::root()->car;
+        
+        // $this->assertTrue(FaZend_Pos_Abstract::root()->ps()->isClean(), 'Root is not clean?');
         $this->assertTrue($car instanceof Model_Pos_Car, 'Car object was not retrieved');
         $this->assertEquals('bmw', $car->model, 'Car property is lost, why?');
     

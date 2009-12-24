@@ -33,6 +33,16 @@ class FaZend_Pos_RootTest extends AbstractTestCase
         FaZend_Pos_Properties::setUserId($this->_user->__id);
     }
 
+    public function testRootInitializationIsSingle() {
+        Model_Pos_Root::$initCounter = 0;
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $car = FaZend_Pos_Abstract::root()->car19 = new Model_Pos_Car();
+        $car->bike = new Model_Pos_Bike();
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $bike = FaZend_Pos_Abstract::root()->car19->bike;
+        $this->assertEquals(2, Model_Pos_Root::$initCounter, 'Root was initialized more than once, why?');
+    }
+
     public function testInitializationOfSubObjectsWorksFine()
     {
         FaZend_Pos_Abstract::cleanPosMemory();
@@ -47,7 +57,7 @@ class FaZend_Pos_RootTest extends AbstractTestCase
         
         FaZend_Pos_Abstract::cleanPosMemory();
         $root = FaZend_Pos_Abstract::root();
-        $this->assertTrue($root->car instanceof Model_Pos_Car, 'Car object was not retrieved');
+        $this->assertTrue($root->carForRoot instanceof Model_Pos_Car, 'Car object was not retrieved');
     }
 
     public function testMultipleInstantiationOfRootDoesntCreateObjects()
