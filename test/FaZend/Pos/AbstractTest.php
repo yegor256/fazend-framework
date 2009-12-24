@@ -127,7 +127,20 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
     
-        $something = $car->something;
+        $car->test = new FaZend_StdObject();
+        $something = $car->something; // exception here
+    }
+    
+    /**
+     * @expectedException FaZend_Pos_Properties_ItemMissed
+     */
+    public function testUnassignedArrayItemReturnsNull()
+    {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+    
+        $car->test = new FaZend_StdObject();
+        $something = $car[1]; // exception here
     }
     
     public function testSaveCreatesNewVersion()
@@ -452,6 +465,14 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         }
     }
     
-    
+    public function tearDown() 
+    {
+        parent::tearDown();
+        try {
+            FaZend_Pos_Abstract::root()->ps()->saveAll();
+        } catch (FaZend_Pos_SerializationProhibited $e) {
+            // ignore them, since they are results of special tests above
+        }
+    }
 
 }

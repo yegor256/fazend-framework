@@ -77,6 +77,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public static function setRootClass($rootClass) 
     {
         self::$_rootClass = $rootClass;
+        self::cleanPosMemory();
     }
 
     /**
@@ -86,8 +87,10 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public static function root() 
     {
-        if (!isset(self::$_root))
+        if (!isset(self::$_root)) {
             self::$_root = new self::$_rootClass();
+            self::$_root->init();
+        }
         return self::$_root;
     }
 
@@ -125,21 +128,6 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
 
     /**
-     * Class constructor, don't override it!
-     *
-     * If you need to specify your own initialization behavior, use _init() method
-     * instead of constructor.
-     *
-     * @return void
-     * @see http://php.net/manual/en/language.oop5.magic.php
-     * @see _init()
-     */
-    public function __construct()
-    {
-        $this->_init();
-    }
-
-    /**
      * Save all changes to DB
      *
      * @return void
@@ -166,7 +154,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @return void
      */
-    protected function _init()
+    public function init()
     {
         // to be overriden in child classes
     }

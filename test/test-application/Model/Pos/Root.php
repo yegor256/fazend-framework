@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *
  * Copyright (c) FaZend.com
@@ -15,33 +15,30 @@
  */
 
 /**
- * Root for all POS objects
- * 
- * @package Pos
+ * POS simple ROOT object
+ *
+ * @package application
+ * @subpackage Model
  */
-class FaZend_Pos_Root extends FaZend_Pos_Abstract
+class Model_Pos_Root extends FaZend_Pos_Root
 {
-
-    /**
-     * Root exists?
-     *
-     * @return boolean
-     **/
-    public static function exists() 
-    {
-        $root = new FaZend_Pos_Model_Object(1);
-        return $root->exists();
-    }
     
     /**
-     * Init it
-     * 
+     * Initialize it
+     *
      * @return void
-     */
-    public function init()
+     **/
+    public function init() 
     {
         parent::init();
-        $this->__ps = new FaZend_Pos_RootProperties($this);
+        
+        $cnt = count($this);
+        
+        // this may potentially lead to endless recursion
+        $cnt = count(FaZend_Pos_Abstract::root());
+        $car = $this->car;
     }
 
 }
+
+

@@ -347,11 +347,17 @@ class FaZend_Pos_Properties
      * @param string Name of the item
      * @return mixed
      * @see setItem()
-     * @throws FaZend_Pos_Exception If the object is not in POS yet
+     * @throws FaZend_Pos_Properties_ItemMissed If the object is not in POS yet
      **/
     public function getItem($name) 
     {
-        return $this->getProperty(self::ARRAY_PREFIX . $name);
+        try {
+            return $this->getProperty(self::ARRAY_PREFIX . $name);
+        } catch (FaZend_Pos_Properties_PropertyMissed $e) {
+            FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
+                "Can't find item [{$name}] in " . get_class($this->_object),
+                'FaZend_Pos_Exception');        
+        }
     }
 
     /**
@@ -377,7 +383,13 @@ class FaZend_Pos_Properties
      **/
     public function unsetItem($name) 
     {
-        return $this->unsetProperty(self::ARRAY_PREFIX . $name);
+        try{
+            return $this->unsetProperty(self::ARRAY_PREFIX . $name);
+        } catch (FaZend_Pos_Properties_PropertyMissed $e) {
+            FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
+                "Can't find item [{$name}] in " . get_class($this->_object),
+                'FaZend_Pos_Exception');        
+        }
     }
 
     /**
@@ -576,6 +588,9 @@ class FaZend_Pos_Properties
             // make sure it is property attached
             $this->_attachToPos();
         }
+        
+        // initialize the object after adding to POS
+        self::$_instances[$id]->_object->init();
     }
     
     /**

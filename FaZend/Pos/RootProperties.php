@@ -23,6 +23,17 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
 {
     
     /**
+     * Saves all changes to the DB
+     *
+     * @return void
+     **/
+    public function saveAll() 
+    {
+        foreach (self::$_instances as $property)
+            $property->save(false);
+    }
+
+    /**
      * Validate whether the object is already in POS
      *
      * @return void
