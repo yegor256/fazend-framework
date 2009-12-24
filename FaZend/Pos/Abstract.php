@@ -363,6 +363,17 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     }
 
     /**
+     * Convert array-iterator to a new array
+     *
+     * @return array
+     * @throws FaZend_Pos_Exception If something goes wrong with the object
+     **/
+    public function getArrayCopy() 
+    {
+        return $this->ps()->itemsIterator->getArrayCopy();
+    }
+
+    /**
      * Check the existence of property
      * 
      * @param mixed Key
