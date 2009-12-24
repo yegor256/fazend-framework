@@ -243,6 +243,9 @@ class FaZend_Pos_Properties
         if ($value instanceof FaZend_Pos_Abstract) {
             $value->ps()->_attachTo($this->_object, $name);
         }
+
+        // @todo remove this line as soon as ItemsIterator is fixed!
+        $this->_itemsIterator = null;
     }
 
     /**
@@ -299,6 +302,8 @@ class FaZend_Pos_Properties
         $this->_clean = false;
         
         unset($this->_properties[$name]);
+        // @todo remove this line as soon as ItemsIterator is fixed!
+        $this->_itemsIterator = null;
     }
 
     /**
@@ -316,13 +321,12 @@ class FaZend_Pos_Properties
     public function setItem($name, $value) 
     {
         if ($name === null) {
-            $keys = array_map(
-                create_function('$a', 'return substr($a, ' . strlen(self::ARRAY_PREFIX) . ');'),
-                array_keys($this->itemsIterator->getArrayCopy()));
-            if (count($keys))
+            $keys = array_keys($this->itemsIterator->getArrayCopy());
+            if (count($keys)) {
                 $name = max($keys) + 1;
-            else
+            } else {
                 $name = 0;
+            }
         }
         return $this->setProperty(self::ARRAY_PREFIX . $name, $value);
     }
@@ -632,15 +636,26 @@ class FaZend_Pos_Properties
      */
     protected function _getItemsIterator()
     {
+        if (isset($this->_itemsIterator))
+            return $this->_itemsIterator;
+            
         $this->_attachToPos();
-        if (!isset($this->_itemsIterator)) {
-            $this->_itemsIterator = new RegexIterator(
-                $this->_properties,
-                '/^' . preg_quote(self::ARRAY_PREFIX) . '/',
-                RegexIterator::MATCH, 
-                RegexIterator::USE_KEY);
+        
+        // this ugly code should be replaced by the iterator, below
+        // but I don't know why - the iterator doesn't work
+        // @see: http://stackoverflow.com/questions/1957069/how-to-work-with-regexiteratorreplace-mode
+        $array = array();
+        foreach ($this->_properties as $name=>$value) {
+            if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches))
+                $array[$matches[1]] = $value;
         }
-        return $this->_itemsIterator;
+        return $this->_itemsIterator = new ArrayIterator($array);
+            
+        // return $this->_itemsIterator = new RegexIterator(
+        //     $this->_properties,
+        //     '/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/',
+        //     RegexIterator::REPLACE, 
+        //     RegexIterator::USE_KEY);
     }
 
     /**
