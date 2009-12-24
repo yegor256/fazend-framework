@@ -315,7 +315,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public function rewind() 
     {
-        $this->ps()->itemsIterator->rewind();
+        return $this->ps()->itemsIterator->rewind();
     }
 
     /**
@@ -337,7 +337,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public function next() 
     {
-        $this->ps()->itemsIterator->next();
+        return $this->ps()->itemsIterator->next();
     }
 
     /**

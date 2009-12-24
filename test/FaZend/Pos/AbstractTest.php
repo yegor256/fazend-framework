@@ -317,8 +317,12 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             
         $this->assertEquals(10, count($car), 'Array has invalid number of elements, why?');
         foreach ($car as $name=>$item) {
-            $this->assertEquals($name, $item, "Strange name/value of the element: '$name'/'$item', why?");
+            $this->assertEquals($name, $item, "Strange key/value of the element: '$name'/'$item', why?");
         }
+        
+        // it fails, and I don't know how to fix it...
+        $c = current($car);
+        $this->assertTrue(is_integer($c), "Current() fails, why? Class: " . get_class($c));
     }
     
     public function testObjectCanBeVeryDeep() {

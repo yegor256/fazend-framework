@@ -222,6 +222,16 @@ class FaZend_Pos_Properties
     }
     
     /**
+     * Convert properties to string
+     *
+     * @return string
+     **/
+    public function __toString() 
+    {
+        return $this->dump(false);
+    }
+    
+    /**
      * Set one property
      *
      * @param string Name of the property
