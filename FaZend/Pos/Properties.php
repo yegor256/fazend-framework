@@ -426,10 +426,9 @@ class FaZend_Pos_Properties
             return;
 
         // object is NOT saved to DB yet?
-        if (($this->_clean === false) || $force) {
+        if (($this->_clean === false) || $force)
             $this->_saveSnapshot();
-            $this->_clean = true;
-        }
+        $this->_clean = true;
     }
     
     /**
