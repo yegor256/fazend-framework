@@ -144,7 +144,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             if (defined('TESTING_RUNNING'))
                 echo $msg . "\n";
             else
-                FaZend_Log::info();
+                FaZend_Log::info($msg);
         }
     }
 
