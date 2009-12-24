@@ -1,6 +1,9 @@
 <li>
 <b><?=$this->label?></b> 
-    <span style="color:gray;">v<?=$this->node->ps()->version?></span>: 
+    <a href="<?=$this->url(array(
+        'controller'=>'adm', 
+        'action'=>'pos', 
+        'object'=>$this->node->ps()->id), 'default', true)?>">v<?=$this->node->ps()->version?></a>: 
     <?=$this->node->ps()->type?>
 
 <ul>

@@ -46,6 +46,22 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
     }
 
     /**
+     * Retrieve all versions of the object
+     * 
+     * @param FaZend_Pos_Model_Object Object
+     * @return FaZend_Pos_Model_Snapshot[]
+     */
+    public static function retrieveVersions(FaZend_Pos_Model_Object $fzObject)
+    {
+        return self::retrieve()
+            ->where('fzObject = ?', strval($fzObject))
+            ->order('version DESC')
+            ->setRowClass('FaZend_Pos_Model_Snapshot')
+            ->fetchAll()
+            ;
+    }
+
+    /**
      * Loads a snapshot for the given POS object, of the given version.
      * 
      * @param FaZend_Pos_Model_Object Object

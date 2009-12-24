@@ -36,7 +36,14 @@ class Model_Pos_Root extends FaZend_Pos_Root
         
         // this may potentially lead to endless recursion
         $cnt = count(FaZend_Pos_Abstract::root());
-        $car = $this->car;
+
+        $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
+        $car[] = new Model_Pos_Bike();
+        $car[] = new Model_Pos_Bike();
+        $car[] = new Model_Pos_Bike();
+        $car['the owner'] = 'John Smith';
+        FaZend_Pos_Abstract::root()->label = 'test';
+        FaZend_Pos_Abstract::root()->object = new FaZend_StdObject();
     }
 
 }

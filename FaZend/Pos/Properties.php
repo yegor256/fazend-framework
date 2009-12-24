@@ -484,7 +484,13 @@ class FaZend_Pos_Properties
             }
         }
         
-        $text .= "Parent: " . (isset($this->_parent) ? get_class($this->_parent) : 'NULL') . "\n";
+        $text .= "Parent: " . (isset($this->_parent) ? 
+            (is_object($this->_parent) ? get_class($this->_parent) : $this->_parent) : 'NULL') . "\n";
+
+        // @todo We should use ->versions here
+        $text .= "Versions:\n";
+        foreach (FaZend_Pos_Model_Snapshot::retrieveVersions($this->_fzObject) as $row)
+            $text .= "    #{$row->version}: " . cutLongLine($row->properties, 100) . "\n";
 
         if (!$die)
             return $text;
@@ -774,11 +780,13 @@ class FaZend_Pos_Properties
     /**
      * Restore object from fzObject
      *
-     * @param FaZend_Pos_Model_Object
-     * @param string Name of the kid
-     * @return FaZend_Pos_Abstract
+     * The method returns STUB, not a real class. Later this stub can be resolved
+     * to a real object, by means of 
+     *
+     * @param FaZend_Pos_Model_Object fzObject to restore from
+     * @return FaZend_Pos_StubClass
      **/
-    private function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
+    protected function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
     {
         $stub = self::STUB_CLASS;
         if (!class_exists($stub, false))
@@ -799,8 +807,10 @@ class FaZend_Pos_Properties
      *
      * @param strig Name of the key
      * @return void
+     * @see setProperty()
+     * @see getProperty()
      **/
-    private function _resolveStub($name) 
+    protected function _resolveStub($name) 
     {
         if (!isset($this->_properties[$name]))
             return;

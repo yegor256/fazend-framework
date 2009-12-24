@@ -1,5 +1,13 @@
-<ul style="line-height: 1.3em;">
-<?=$this->partial('adm/pos/node.phtml', array(
-    'node' => FaZend_Pos_Abstract::root(), 
-    'label' => 'root'))?>
-</ul>
+<? if ($this->node): ?>
+
+    <?=$this->partial('adm/pos/versions.phtml', array('node'=>$this->node))?>
+
+<? else: ?>
+
+    <ul style="line-height: 1.3em;">
+    <?=$this->partial('adm/pos/node.phtml', array(
+        'node' => FaZend_Pos_Abstract::root(), 
+        'label' => 'root'))?>
+    </ul>
+    
+<? endif; ?>
