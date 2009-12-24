@@ -1,5 +1,7 @@
 <li>
-<b><?=$this->label?></b>: <?=$this->node->ps()->type?>
+<b><?=$this->label?></b> 
+    <span style="color:gray;">v<?=$this->node->ps()->version?></span>: 
+    <?=$this->node->ps()->type?>
 
 <ul>
 <? foreach ($this->node->ps()->properties as $name): ?>
