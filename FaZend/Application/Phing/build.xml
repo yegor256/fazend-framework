@@ -90,13 +90,17 @@
         
 		<!-- prepare code coverage db -->
 		<if><isset property="to.deploy" /><then>
-            <property name="coveragedir" value="${project.basedir}/reports/coverage" />
+            <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
+            <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
             <!-- make sure it exists -->
-            <mkdir dir="${coveragedir}" />
+            <mkdir dir="${coverage.dir}" />
+
+            <!-- delete previous files, if any -->
+            <delete file="${coverage.db}" failonerror="false" verbose="true" />
             
             <!-- create coverage database that will collect all reports -->
-    		<coverage-setup database="${coveragedir}/coverage.xml">
+    		<coverage-setup database="${coverage.db}">
     			<fileset dir="${project.basedir}/src/application">
     				<include name="**/*.php"/>
                     <exclude name=".svn/**"/>
@@ -167,21 +171,21 @@
             <echo msg="Access protection files deployed to phpunit reports directory" />    
 
     		<!-- create an HTML report about code coverage -->
-    		<mkdir dir="${coveragedir}/report" />
-    		<coverage-report outfile="${coveragedir}/coverage.xml">
-    			<report todir="${coveragedir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
+    		<mkdir dir="${coverage.dir}/report" />
+    		<coverage-report outfile="${coverage.db}">
+    			<report todir="${coverage.dir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
     		</coverage-report>
 
             <!-- inject revision number into title -->
-            <copy file="${coveragedir}/report/index.html" tofile="${coveragedir}/report/index.html.orig" />
-            <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coveragedir}/report/index.html.orig &gt; ${coveragedir}/report/index.html" 
+            <copy file="${coverage.dir}/report/index.html" tofile="${coverage.dir}/report/index.html.orig" />
+            <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coverage.dir}/report/index.html.orig &gt; ${coverage.dir}/report/index.html" 
                 passthru="false" checkreturn="true" />  
 
             <!-- delete previous coverage report from HTTP hosting and copy a new one -->
             <delete dir="${cc.coverage}" failonerror="true" verbose="false" includeemptydirs="true" />
             <mkdir dir="${cc.coverage}" />
             <copy todir="${cc.coverage}" >
-                <fileset dir="${coveragedir}/report" />
+                <fileset dir="${coverage.dir}/report" />
             </copy>
 
             <!-- create .htaccess and .htpasswd files to protect documentation -->
