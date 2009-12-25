@@ -93,11 +93,11 @@
             <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
+            <!-- delete previous files, if any -->
+            <delete dir="${coverage.dir}" failonerror="false" verbose="true" includeemptydirs="true" />
+
             <!-- make sure it exists -->
             <mkdir dir="${coverage.dir}" />
-
-            <!-- delete previous files, if any -->
-            <delete file="${coverage.db}" failonerror="false" verbose="true" />
             
             <!-- create coverage database that will collect all reports -->
     		<coverage-setup database="${coverage.db}">
