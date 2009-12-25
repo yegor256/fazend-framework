@@ -649,7 +649,12 @@ class FaZend_Pos_Properties
             FaZend_Exception::raise('FaZend_Pos_Exception',
                 "Very strange situation, probably some changes happened to DB online");
         }
-        return $partOf->name;
+        
+        $name = $partOf->name;
+        if (strpos($name, self::ARRAY_PREFIX) === 0)
+            $name = substr($name, strlen(self::ARRAY_PREFIX));
+        
+        return $name;
     }
 
     /**
