@@ -103,6 +103,11 @@
     		</coverage-setup>
     	</then></if>
 
+        <!-- test starter, if necessary -->
+        <php expression="false; 
+            require_once 'FaZend/Test/Starter.php'; 
+            FaZend_Test_Starter::run();" />
+
 		<if><isset property="to.deploy" /><then>
             <mkdir dir="${project.basedir}/reports/tests" />
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">

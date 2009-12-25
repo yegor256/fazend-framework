@@ -89,3 +89,4 @@ if (!defined('FAZEND_DONT_RUN')) {
         $application->run();
     }
 }
+
