@@ -84,6 +84,7 @@
             defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true); 
             defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing'); 
             defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
+            define('RUN_TEST_STARTER', true);
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
@@ -102,11 +103,6 @@
     			</fileset>
     		</coverage-setup>
     	</then></if>
-
-        <!-- test starter, if necessary -->
-        <php expression="false; 
-            require_once 'FaZend/Test/Starter.php'; 
-            FaZend_Test_Starter::run();" />
 
 		<if><isset property="to.deploy" /><then>
             <mkdir dir="${project.basedir}/reports/tests" />

@@ -390,6 +390,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             realpath(APPLICATION_PATH . '/../../test'),
             get_include_path(),
         )));
+        
+        // run it, if required in build.xml
+        if (defined('RUN_TEST_STARTER'))
+            FaZend_Test_Starter::run();
 
         $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
         if (!file_exists($injectorPhp))

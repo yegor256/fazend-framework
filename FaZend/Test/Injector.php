@@ -31,7 +31,7 @@ abstract class FaZend_Test_Injector {
      *
      * @return void
      **/
-    public function inject() {
+    public final function inject() {
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
             if (preg_match('/^\_inject/', $method->getName())) {

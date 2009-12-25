@@ -45,7 +45,7 @@ abstract class FaZend_Test_Starter {
      *
      * @return void
      **/
-    public function start() 
+    public final function start() 
     {
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
