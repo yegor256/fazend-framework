@@ -123,6 +123,7 @@
             </phpunit>
     	</then><else>
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+                <formatter type="plain" usefile="no" />
                 <batchtest>
                     <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
                         <include name="**/*Test.php"/>
