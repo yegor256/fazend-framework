@@ -85,7 +85,7 @@
             defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing'); 
             defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
-        <php expression='echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
+        <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
 		<!-- prepare code coverage db -->
 		<if><isset property="to.deploy" /><then>
