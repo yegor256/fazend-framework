@@ -462,7 +462,7 @@ class FaZend_Pos_Properties
             "    id: " . $this->_fzSnapshot->__id . 
             "\n    properties: " . cutLongLine($this->_fzSnapshot->properties, 90) .
             "\n    version: " . $this->_fzSnapshot->version .
-            "\n    editor: " . $this->_fzSnapshot->editor
+            "\n    editor: " . $this->_fzSnapshot->user
             : '    NULL') . "\n";
         
         $text .= "Properties:\n";
