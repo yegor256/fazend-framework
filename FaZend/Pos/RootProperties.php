@@ -75,7 +75,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * 
      * @param FaZend_Pos_Abstract The object, which is parent
      * @param string Unique name inside the parent
-     * @return void
+     * @return nothing
      * @throws FaZend_Pos_RootException Always
      **/
     protected function _setParent(FaZend_Pos_Abstract $parent, $name) 
@@ -87,13 +87,23 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
     /**
      * Get parent
      * 
-     * @return FaZend_Pos_Abstract
+     * @return nothing
      * @throws FaZend_Pos_RootException Always
      */
     protected function _getParent()
     {
         FaZend_Exception::raise('FaZend_Pos_RootException',
             "You can't get parent from ROOT");
+    }
+
+    /**
+     * Get path
+     * 
+     * @return Path of root
+     */
+    protected function _getPath()
+    {
+        return 'root';
     }
 
 }

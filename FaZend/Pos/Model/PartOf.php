@@ -60,6 +60,23 @@ class FaZend_Pos_Model_PartOf extends FaZend_Db_Table_ActiveRow_fzPartOf
     }
 
     /**
+     * Find name by parent and kid
+     * 
+     * @param FaZend_Pos_Model_Object Parent object
+     * @param FaZend_Pos_Model_Object Kid object
+     * @return FaZend_Pos_Model_PartOf
+     */
+    public static function findByParentAndKid(FaZend_Pos_Model_Object $parent, FaZend_Pos_Model_Object $kid)
+    {
+        return self::retrieve()
+            ->where('parent = ?', $parent)
+            ->where('kid = ?', $kid)
+            ->setRowClass('FaZend_Pos_Model_PartOf')
+            ->limit(1)
+            ->fetchRow();
+    }
+
+    /**
      * Find first available parent, by the kid ID
      * 
      * @param FaZend_Pos_Model_Object Kid object

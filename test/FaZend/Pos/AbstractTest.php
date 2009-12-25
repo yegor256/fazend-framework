@@ -258,6 +258,12 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->test2 = 2;
         $this->assertEquals(2, count($car->ps()->properties), 'List of properties is broken, why?');
     }
+        
+    public function testDumpWorks() {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+        $dump = $car->ps()->dump(false);
+    }
     
     public function testLinksBetweenObjectsCanByCycled() {
         FaZend_Pos_Abstract::cleanPosMemory();

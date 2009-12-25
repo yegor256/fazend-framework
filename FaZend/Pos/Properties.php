@@ -452,6 +452,7 @@ class FaZend_Pos_Properties
     {
         $text = 
         "Object: " . get_class($this->_object) . ' (SPL hash: ' . spl_object_hash($this->_object) . ")\n" .
+        "Path: {$this->path}\n" .
         "Clean status: " . (is_null($this->_clean) ? 'NULL' : ($this->_clean ? 'TRUE' : 'FALSE')) . "\n";
         
         $text .= "fzObject:\n" . (isset($this->_fzObject) ? 
@@ -630,6 +631,37 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
         return intval($this->_fzSnapshot->version);
+    }
+
+    /**
+     * Get name of the object in the current parent
+     * 
+     * @return string Name
+     * @throws FaZend_Pos_Exception If the object is not in POS yet
+     */
+    protected function _getName()
+    {
+        $this->_attachToPos();
+        try {
+            $partOf = FaZend_Pos_Model_PartOf::findByParentAndKid(
+                $this->_parent->ps()->fzObject, $this->_fzObject);
+        } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
+            FaZend_Exception::raise('FaZend_Pos_Exception',
+                "Very strange situation, probably some changes happened to DB online");
+        }
+        return $partOf->name;
+    }
+
+    /**
+     * Get full path of the object
+     * 
+     * @return string Full path in tree, like: 'root/test/myObject/myElement'
+     * @throws FaZend_Pos_Exception If the object is not in POS yet
+     */
+    protected function _getPath()
+    {
+        $this->_attachToPos();
+        return $this->_parent->ps()->path . '/' . $this->name;
     }
 
     /**
