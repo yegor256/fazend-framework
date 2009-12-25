@@ -94,7 +94,7 @@
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
             <!-- delete previous files, if any -->
-            <delete dir="${coverage.dir}" failonerror="false" verbose="true" includeemptydirs="true" />
+            <delete dir="${coverage.dir}" failonerror="false" verbose="false" includeemptydirs="true" />
 
             <!-- make sure it exists -->
             <mkdir dir="${coverage.dir}" />
