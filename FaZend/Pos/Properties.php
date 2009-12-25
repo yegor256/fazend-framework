@@ -272,7 +272,7 @@ class FaZend_Pos_Properties
         if (!$this->hasProperty($name))
             FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
                 "Can't find property '{$name}' in " . get_class($this->_object) . 
-                    ', among ' . count($this->_properties) . ' properties',
+                    ', among ' . count($this->_properties) . " properties ({$this->path})",
                 'FaZend_Pos_Exception');        
                 
         $this->_resolveStub($name);
@@ -305,7 +305,7 @@ class FaZend_Pos_Properties
 
         if (!$this->hasProperty($name))
             FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
-                "Can't find and unset() property '{$name}' in " . get_class($this->_object),
+                "Can't find and unset() property '{$name}' in " . get_class($this->_object) . " ({$this->path})",
                 'FaZend_Pos_Exception');        
         
         // this flag will be validated later, in _saveSnapshot()        
@@ -354,7 +354,7 @@ class FaZend_Pos_Properties
             return $this->getProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
             FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
-                "Can't find item [{$name}] in " . get_class($this->_object),
+                "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
                 'FaZend_Pos_Exception');        
         }
     }
@@ -386,7 +386,7 @@ class FaZend_Pos_Properties
             return $this->unsetProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
             FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
-                "Can't find item [{$name}] in " . get_class($this->_object),
+                "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
                 'FaZend_Pos_Exception');        
         }
     }
