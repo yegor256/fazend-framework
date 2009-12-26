@@ -116,7 +116,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
         if (empty($row)) {
             return 1;
         } else {
-            return $row->ver + 1;
+            return $row->ver;
         }
     }
 
