@@ -836,6 +836,10 @@ class FaZend_Pos_Properties
                     self::$_userId, 
                     $serialized);
             }
+        } else {
+            $this->_fzSnapshot->update(
+                self::$_userId, 
+                $serialized);
         }
     }
     
