@@ -20,16 +20,17 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_DateInterval {
+class FaZend_View_Helper_DateInterval
+{
 
     /**
      * Show interval between now and the given date
      *
-     * @param int Date/time value, in seconds
+     * @param int|Zend_Date Date/time value, in seconds
      * @return string
      */
-    public function dateInterval($time) {
-
+    public function dateInterval($time)
+    {
         $compared = time();
 
         $hoursDifference = ($compared - $time) / (60*60);    
@@ -46,42 +47,44 @@ class FaZend_View_Helper_DateInterval {
             // more than 24months days - we show years
             case $hoursDifference > 24 * 30 * 24:
                 $years = $hoursDifference/(24*30*12);
-                return $sign.self::_mod($years).'years';
+                return $sign . self::_mod($years) . 'years';
 
             // more than 60 days - we show months
             case $hoursDifference > 24 * 60:
-                return $sign.self::_mod($hoursDifference/(24*30)).'months';
+                return $sign . self::_mod($hoursDifference/(24*30)) . 'months';
 
             // more than 14days - we show weeks
             case $hoursDifference > 24 * 14:
-                return $sign.self::_mod($hoursDifference/(24*7)).'weeks';
+                return $sign . self::_mod($hoursDifference/(24*7)) . 'weeks';
 
             // more than 2 days we shouw days    
             case $hoursDifference > 48:
                 $hours = round(fmod ($hoursDifference, 24));
-                return $sign.round($hoursDifference/24).'days'.($hours ? "&nbsp;{$hours}hrs" : '');
+                return $sign . round($hoursDifference/24) . 'days' . ($hours ? "&nbsp;{$hours}hrs" : '');
 
             // more than 5 hours - we should hours    
             case $hoursDifference > 5:
-                return $sign.round($hoursDifference).'hrs';    
+                return $sign . round($hoursDifference) . 'hrs';    
 
             // more than 1 hour - we should hour+min    
             case $hoursDifference >= 1:
                 $minutes = round(fmod ($hoursDifference, 1) * 60);
-                return $sign.floor($hoursDifference).'hrs'.($minutes ? "&nbsp;{$minutes}min" : '');    
+                return $sign . floor($hoursDifference) . 'hrs' . ($minutes ? "&nbsp;{$minutes}min" : '');    
 
             // otherwise just minutes    
             default:
-                return $sign.round($hoursDifference * 60).'min';
+                return $sign . round($hoursDifference * 60) . 'min';
         }
     }
 
     /**
-     * internal function - will convert A/B into C + 1/2 or 1/4 or 3/4
+     * To convert "A/B" into "C + 1/2 or 1/4 or 3/4"
      *
-     * @return string
+     * @param float Value, with float point, e.g. 13.79
+     * @return string String, e.g. "13 3/4"
      */
-    protected static function _mod($a) {
+    protected static function _mod($a)
+    {
         $str = floor($a);
         
         $mod = $a - $str;

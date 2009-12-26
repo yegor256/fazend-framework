@@ -152,8 +152,10 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->make  = 'Nissan';
         $car->model = 'Maxima';
         $car->ps()->save();
+        $ver1 = $car->ps()->version;
         $car->year = 2009;
         $car->ps()->save();
+        $this->assertEquals($ver1 + 1, $car->ps()->version, "Version was not increased, why?");
     
         $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot WHERE fzObject = {$car->ps()->id}");
     
@@ -210,7 +212,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertEquals(1, count($result), 'Root object produces many snapshots when created');
     }
     
-    public function testObjectCanHaveSubObjects() {
+    public function testObjectCanHaveSubObjects()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
@@ -227,7 +230,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertTrue(count($bike->owners) == 2, 'Array inside the object is lost, why?');
     }
     
-    public function testObjectWorksAsArray() {
+    public function testObjectWorksAsArray()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->carArray = $car = new Model_Pos_Car();
         
@@ -249,7 +253,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertEquals(5, count($car->getArrayCopy()), 'getArrayCopy() did not return an array, why?');
     }
     
-    public function testGetPropertiesWork() {
+    public function testGetPropertiesWork()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
@@ -259,13 +264,15 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertEquals(2, count($car->ps()->properties), 'List of properties is broken, why?');
     }
         
-    public function testDumpWorks() {
+    public function testDumpWorks()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
         $dump = $car->ps()->dump(false);
     }
     
-    public function testLinksBetweenObjectsCanByCycled() {
+    public function testLinksBetweenObjectsCanByCycled()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
@@ -279,7 +286,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car2 = $car->bike->car->bike->car->bike->car->bike->car; // should work
     }
     
-    public function testLinkCanLeadToItself() {
+    public function testLinkCanLeadToItself()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->car = $car;
@@ -288,7 +296,17 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car2 = $car->car->car->car->car->car; // should work
     }
     
-    public function testObjectsCanBeLinkedThroughMediators() {
+    public function testVersionsCanBeSuppressed()
+    {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+        $car->ps()->setIgnoreVersions();
+        $car->model = 'bmw';
+        $car->ps()->save();
+    }
+    
+    public function testObjectsCanBeLinkedThroughMediators()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
         FaZend_Pos_Abstract::root()->bike = $bike = new Model_Pos_Bike();
@@ -305,7 +323,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     /**
      * @expectedException FaZend_Pos_SerializationProhibited 
      */
-    public function testLostObjectsCantBeLinked() {
+    public function testLostObjectsCantBeLinked()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         echo "\nThis test will throw exception FaZend_Pos_SerializationProhibited when all tests are finished, it's OK\n";
         FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
@@ -315,7 +334,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->ps()->save();
     }
     
-    public function testObjectsCanBeStandalone() {
+    public function testObjectsCanBeStandalone()
+    {
         $car = new Model_Pos_Car();
         unset($car);
     }
@@ -323,12 +343,14 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
     /**
      * @expectedException FaZend_Pos_Exception
      */
-    public function testObjectCantBeManagedOutsideOfPos() {
+    public function testObjectCantBeManagedOutsideOfPos()
+    {
         $car = new Model_Pos_Car();
         $car->mode = 'bmw'; // we expect an exception here
     }
     
-    public function testObjectIsAnIterator() {
+    public function testObjectIsAnIterator()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         FaZend_Pos_Abstract::root()->carIterator = $car = new Model_Pos_Car();
     
@@ -345,7 +367,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $this->assertTrue(is_integer($c), "Current() fails, why? Class: " . get_class($c));
     }
     
-    public function testObjectCanBeVeryDeep() {
+    public function testObjectCanBeVeryDeep()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         
         $obj = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
@@ -358,7 +381,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Abstract::root()->ps()->save();
     }
     
-    public function testEndlessCyclesAreUnderstoodProperly() {
+    public function testEndlessCyclesAreUnderstoodProperly()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         
         $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
@@ -375,7 +399,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car = FaZend_Pos_Abstract::root()->car->obj->link->link->link->link->link;
     }
     
-    public function testEndlessCyclesWithMeditatorsWork() {
+    public function testEndlessCyclesWithMeditatorsWork()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
         
         $car = FaZend_Pos_Abstract::root()->car = new Model_Pos_Car();
@@ -412,7 +437,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $obj3 = $car3->obj;
     }
     
-    public function testObjectsAreLoadedFromDatabase() {
+    public function testObjectsAreLoadedFromDatabase()
+    {
         FaZend_Pos_Abstract::cleanPosMemory();
     
         $queries = array(
