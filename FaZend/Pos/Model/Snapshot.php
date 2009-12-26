@@ -88,7 +88,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
     public function update($userId, $properties)
     {        
         $this->user = $userId;
-        $this->version = self::_getNextVersion($this->getObject('fzObject', 'FaZend_Pos_Model_Object'));
+        $this->version = self::_getNextVersion($this->fzObject);
         $this->properties = $properties;
         $this->alive = true;
         $this->baselined = false;
@@ -101,7 +101,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
      * @param FaZend_Pos_Model_Object Object
      * @return integer
      */
-    protected static function _getNextVersion(FaZend_Pos_Model_Object $fzObject)
+    protected static function _getNextVersion(FaZend_Db_Table_ActiveRow_fzObject $fzObject)
     {
         $row = self::retrieve(false)
             ->from('fzSnapshot', array(
