@@ -461,7 +461,8 @@ class FaZend_Pos_Properties
         
         $text .= "fzSnapshot:\n" . (isset($this->_fzSnapshot) ? 
             "    id: " . $this->_fzSnapshot->__id . 
-            "\n    properties: " . cutLongLine($this->_fzSnapshot->properties, 90) .
+            "\n    properties (" . strlen($this->_fzSnapshot->properties) . "bytes): " . 
+                cutLongLine($this->_fzSnapshot->properties, 90) .
             "\n    version: " . $this->_fzSnapshot->version .
             "\n    editor: " . $this->_fzSnapshot->user
             : '    NULL') . "\n";
