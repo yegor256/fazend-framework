@@ -126,13 +126,26 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         self::$_root = null;
         FaZend_Pos_Properties::cleanPosMemory();
     }
+    
+    /**
+     * Constructor, you CAN'T override it!
+     *
+     * If you need to setup some initial (!) behavior, you should use init()
+     *
+     * @return void
+     * @see init()
+     */
+    public final function __construct()
+    {
+        // nothing for now
+    }
 
     /**
      * Save all changes to DB
      *
      * @return void
      **/
-    public function __destruct() 
+    public final function __destruct() 
     {
         // We don't want any exceptions to be thrown in constructor, 
         // since they will destroy the entire application framework. That's
