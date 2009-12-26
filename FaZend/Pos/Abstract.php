@@ -281,7 +281,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      */
     public function offsetUnset($name)
     {
-        return $this->ps()->unsetItem($name, $value);
+        return $this->ps()->unsetItem($name);
     }
 
     /**
