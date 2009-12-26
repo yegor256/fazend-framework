@@ -153,6 +153,14 @@ class FaZend_Pos_Properties
      * @see _getItemsIterator()
      **/
     protected $_itemsIterator;
+    
+    /**
+     * Shall we ignore versions?
+     *
+     * @var boolean
+     * @see setIgnoreVersions()
+     **/
+    protected $_ignoreVersions = false;
 
     /**
      * Set user ID, dependency injection, so to speak
@@ -229,6 +237,20 @@ class FaZend_Pos_Properties
     public function __toString() 
     {
         return $this->dump(false);
+    }
+    
+    /**
+     * Tells us that the object should NOT support version control
+     *
+     * Any change you make to the object will REMOVE the previous
+     * version and replace it with the new one. Old version won't be 
+     * kept in the DB.
+     *
+     * @return void
+     **/
+    public function setIgnoreVersions($ignoreVersions = true) 
+    {
+        $this->_ignoreVersions = $ignoreVersions;
     }
     
     /**
@@ -803,10 +825,16 @@ class FaZend_Pos_Properties
 
         // avoid saving of the same data
         if ($this->_fzSnapshot->properties != $serialized) {
-            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
-                $this->_fzObject, 
-                self::$_userId, 
-                $serialized);
+            if ($this->_ignoreVersions) {
+                $this->_fzSnapshot->update(
+                    self::$_userId, 
+                    $serialized);
+            } else {
+                $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
+                    $this->_fzObject, 
+                    self::$_userId, 
+                    $serialized);
+            }
         }
     }
     

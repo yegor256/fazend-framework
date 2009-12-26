@@ -27,7 +27,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
      * Creates a new snapshot.
      * 
      * @param FaZend_Pos_Model_Object Object
-     * @param integer User ID
+     * @param integer|string User ID
      * @param string Serialized array of properties
      * @return FaZend_Pos_Model_Snapshot
      */
@@ -76,6 +76,23 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
             ->limit(1)
             ->fetchRow()
             ;
+    }
+
+    /**
+     * Update it
+     * 
+     * @param integer|string User ID
+     * @param string Serialized array of properties
+     * @return void
+     */
+    public function update($userId, $properties)
+    {        
+        $this->user = $userId;
+        $this->version = self::_getNextVersion($this->fzObject);
+        $this->properties = $properties;
+        $this->alive = true;
+        $this->baselined = false;
+        $this->save();
     }
 
     /**
