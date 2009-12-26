@@ -34,7 +34,8 @@ require_once 'FaZend/Test/TestCase.php';
  *
  * @package test
  */
-class AbstractTestCase extends FaZend_Test_TestCase {
+class AbstractTestCase extends FaZend_Test_TestCase
+{
     
     /**
      * Connection to database
@@ -48,11 +49,10 @@ class AbstractTestCase extends FaZend_Test_TestCase {
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-
         $this->_dbAdapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-
     }    
 
 }

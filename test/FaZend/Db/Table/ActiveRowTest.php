@@ -18,14 +18,8 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
     
-    public function setUp () {
-
-        parent::setUp();
-
-    }
-
-    public function testCreationWorks () {
-
+    public function testCreationWorks ()
+    {
         $owner = new Model_Owner(132);
 
         $this->assertEquals(true, $owner->exists());
@@ -34,11 +28,10 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
         $product->text = 'just test';
         $product->owner = $owner;
         $product->save();
-
     }
 
-    public function testGettingWorks () {
-
+    public function testGettingWorks ()
+    {
         $product = new Model_Product(10);
         
         $this->assertNotEquals(false, $product->owner, "Owner is null, why?");
@@ -46,22 +39,20 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
         $name = $product->owner->name;
         
         $this->assertNotEquals(false, $name, "Owner name is false, why?");
-
     }
 
-    public function testRetrieveWorks () {
-
+    public function testRetrieveWorks ()
+    {
         $list = Model_Owner::retrieve()
             ->where('name is not null')
             ->setRowClass('Model_Owner')
             ->fetchRow();
 
         $list->isMe();
-
     }
 
-    public function testDynamicExceptionWorks () {
-
+    public function testDynamicExceptionWorks ()
+    {
         try {
             $list = Model_Owner::retrieve()
                 ->where('id = 132')
@@ -89,30 +80,27 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
             // everything ok!
 
         }    
-
     }
 
-    public function testTableWithoutIDWorks () {
-
+    public function testTableWithoutIDWorks ()
+    {
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchAll();
 
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchPairs();
-
     }
 
-    public function testTableWithoutPrimaryKeyWorks () {
-
+    public function testTableWithoutPrimaryKeyWorks ()
+    {
         $list = FaZend_Db_Table_ActiveRow_boat::retrieve()
             ->fetchAll();
 
         $boat = new FaZend_Db_Table_ActiveRow_boat (1);
-
     }
 
-    public function testTableWithoutAnyKeyDoesntWork () {
-
+    public function testTableWithoutAnyKeyDoesntWork ()
+    {
         try {
             $list = FaZend_Db_Table_ActiveRow_flower::retrieve()
                 ->fetchAll();
@@ -122,14 +110,19 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
 
             // it's OK.
         }    
-
     }
 
-    public function testDeleteRowWorks () {
-
+    public function testDeleteRowWorks()
+    {
         $owner = new Model_Owner(132);
         $owner->delete();
+    }
 
+    public function testDeleteRowsetWorks()
+    {
+         FaZend_Db_Table_ActiveRow_car::retrieve()
+            ->where('1 = 1')
+            ->delete();
     }
 
 }

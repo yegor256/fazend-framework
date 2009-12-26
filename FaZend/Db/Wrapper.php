@@ -206,6 +206,27 @@ class FaZend_Db_Wrapper {
     }
 
     /**
+     * Delete everything selected
+     *
+     * You can use it like this:
+     *
+     * <code>
+     * public static function removeByUser(Model_User $user) {
+     *     self::retrieve()
+     *         ->where('user = ?', $user)
+     *         ->delete();
+     * }
+     * </code>
+     *
+     * @return FaZend_Db_RowsetWrapper
+     */
+    public function delete() 
+    {
+        $wheres = $this->select()->getPart(Zend_Db_Select::WHERE);
+        $this->table()->delete('(' . implode(') AND (', $wheres) . ')');
+    }
+
+    /**
      * Call wrapping, all other functions will go directly to SELECT object
      *
      * @return FaZend_Db_Wrapper

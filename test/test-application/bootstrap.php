@@ -21,10 +21,11 @@
  *
  * @package application
  */
-class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap { 
+class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
+{ 
 
-    public function _initDbData() {
-       
+    public function _initDbData()
+    {
         $this->bootstrap('db');
         $this->bootstrap('Deployer');
 
@@ -41,7 +42,6 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap {
 
         $adapter->query(
             'insert into boat values (1, "boat", "super 8")');
-
     }
 
 }
