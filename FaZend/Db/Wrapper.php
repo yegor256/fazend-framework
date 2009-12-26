@@ -223,7 +223,7 @@ class FaZend_Db_Wrapper {
     public function delete() 
     {
         $wheres = $this->select()->getPart(Zend_Db_Select::WHERE);
-        $this->table()->delete('(' . implode(') AND (', $wheres) . ')');
+        $this->table()->delete(implode('', $wheres));
     }
 
     /**

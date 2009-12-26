@@ -122,6 +122,7 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase {
     {
          FaZend_Db_Table_ActiveRow_car::retrieve()
             ->where('1 = 1')
+            ->where('2 = 2')
             ->delete();
     }
 
