@@ -47,8 +47,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param integer|false ID of the row to retrieve, otherwise creates NEW row
      * @return FaZend_Db_Table_Row
      */
-    public function __construct($id = false) {
-
+    public function __construct($id = false)
+    {
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->autoload($this->_tableClass);
 
@@ -97,8 +97,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param string Name of the class to be used for instantiating of this row
      * @return void
      */
-    public function getObject($name, $class) {
-        return new $class((int)$this->$name);
+    public function getObject($name, $class)
+    {
+        // make sure the class has live data from DB
+        $this->_loadLiveData();
+
+        return new $class((int)parent::__get($name));
     }
 
     /**
@@ -106,7 +110,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return (string)$this->__id;
     }
 
@@ -115,7 +120,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      *
      * @return void|var
      */
-    public function delete() {
+    public function delete()
+    {
         // make sure the class has live data from DB
         $this->_loadLiveData();
 
@@ -127,7 +133,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      *
      * @return boolean
      */
-    public function exists() {
+    public function exists()
+    {
         try {
             // make sure the class has live data from DB
             $this->_loadLiveData();
@@ -144,7 +151,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param array List of parameters passed
      * @return void|var
      */
-    public function __call($method, array $args) {
+    public function __call($method, array $args)
+    {
         // make sure the class has live data from DB
         $this->_loadLiveData();
 
@@ -157,8 +165,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param string Name of the property to get
      * @return FaZend_Db_Table_Row|var
      */
-    public function __get($name) {
-
+    public function __get($name)
+    {
         // you should not access ID field directly!
         if (strtolower($name) == 'id')
             trigger_error("ID should not be directly accesses in " . get_class($this), E_USER_WARNING);
@@ -189,7 +197,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         }    
 
         return $value;
-
     }
 
     /**
@@ -199,8 +206,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param mixed Value of the property to set
      * @return void
      */
-    public function __set($name, $value) {
-
+    public function __set($name, $value)
+    {
         // make sure the class has live data from DB
         $this->_loadLiveData();
 
@@ -209,7 +216,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         }
 
         return parent::__set($name, $value);
-
     }
 
     /**
@@ -221,8 +227,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      *
      * @return void
      */
-    protected function _loadLiveData() {
-
+    protected function _loadLiveData()
+    {
         // if the class data are not loaded yet, it's a good moment to do it
         if (!isset($this->_preliminaryKey))
             return;
@@ -251,7 +257,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         // kill this variable, since we have LIVE data in the class already
         unset($this->_preliminaryKey);
-
     }
 
     /**
@@ -261,8 +266,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
      * @param string Name of the column
      * @return boolean
      */
-    protected function _isForeignKey($table, $column) {
-        
+    protected function _isForeignKey($table, $column)
+    {
         // if the array of ALL tables in the db is NOT already defined
         // we should grab it from the DB by SQL request
         if (!isset(self::$_allTables))
@@ -270,7 +275,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         // whether this table is in the DB or not?
         return in_array($column, self::$_allTables);
-
     }
 
 }
