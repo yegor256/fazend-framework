@@ -15,7 +15,9 @@
  */
 
 /**
- * Wrapper around tables, adapters etc. 
+ * Wrapper around tables, adapters etc. You should NEVER instantiate it directly!
+ *
+ * This class is created by FaZend_Db_Table_ActiveRow::retrieve().
  *
  * Usase sample:
  *
@@ -26,9 +28,11 @@
  * </code>
  *
  * @see http://framework.zend.com/manual/en/zend.db.table.html
+ * @see FaZend_Db_Table_ActiveRow::retrieve()
  * @package Db
  */
-class FaZend_Db_Wrapper {
+class FaZend_Db_Wrapper
+{
 
     /**
      * Table
@@ -87,7 +91,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function getRowClass() {
+    public function getRowClass()
+    {
         return $this->table()->getRowClass();
     }
 
@@ -96,7 +101,8 @@ class FaZend_Db_Wrapper {
      *
      * @return void
      */
-    public function setSilenceIfEmpty($flag = true) {
+    public function setSilenceIfEmpty($flag = true)
+    {
         $this->_silenceIfEmpty = $flag;
         return $this;
     }
@@ -106,7 +112,8 @@ class FaZend_Db_Wrapper {
      *
      * @return boolean
      */
-    public function getSilenceIfEmpty() {
+    public function getSilenceIfEmpty()
+    {
         return $this->_silenceIfEmpty;
     }
 
