@@ -15,22 +15,35 @@
  */
 
 /**
- * Test starter
+ * Test starter parent class, abstract
  *
  * You should inherit this class and place your starter into
- * /test/starter/Starter.php
+ * /test/starter/Starter.php. Your class should be called "Starter".
+ * Method Starter::run() will be executed in building process, before
+ * all unit tests.
+ *
+ * In your class you should define _start*() methods. All of them will
+ * be called from ::run().
+ *
+ * This class is a good place for:
+ *  - cleaning the database (dropping of all tables)
+ *  - cleaning all system files and directories
  *
  * @see build.xml
+ * @see FaZend_Test_Injector
+ * @see FaZend_Application_Resource_Fazend::_initTestInjection()
  * @package Test
  */
-abstract class FaZend_Test_Starter {
+abstract class FaZend_Test_Starter
+{
 
     /**
      * Run it from build.xml
      *
      * @return void
      **/
-    public static function run() {
+    public static function run()
+    {
         $starterPhp = APPLICATION_PATH . '/../../test/starter/Starter.php';
         if (!file_exists($starterPhp))
             return;

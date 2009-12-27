@@ -27,7 +27,8 @@ require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
  *
  * @package Test
  */
-class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
+class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
+{
 
     /**
      * List of variables
@@ -41,7 +42,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp()
+    {
         // run this method before everything else
         $this->bootstrap = array($this, 'fazendTestBootstrap');
 
@@ -57,7 +59,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      *
      * @return void
      */
-    public function fazendTestBootstrap() {
+    public function fazendTestBootstrap()
+    {
         // bootstrap the application
         include 'FaZend/Application/index.php';
     }    
@@ -67,7 +70,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      *
      * @return void
      */
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->resetRequest();
         $this->resetResponse();
 
@@ -81,7 +85,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      * @param string Value of the variable
      * @return void
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         self::$_variables[$name] = $value;
     }
 
@@ -91,7 +96,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase {
      * @param string Name of the variable
      * @return string
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset(self::$_variables[$name]))
             return self::$_variables[$name];
         return parent::__get($name);

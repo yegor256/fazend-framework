@@ -21,14 +21,16 @@ require_once 'FaZend/Test/TestCase.php';
  *
  * @package Test
  */
-class BaselineTest extends FaZend_Test_TestCase {
+class BaselineTest extends FaZend_Test_TestCase
+{
 
     /**
      * Test entire project for conformance to baselines
      *
      * @return void
      **/
-    public function testCodeConformsToBaselines() {
+    public function testCodeConformsToBaselines()
+    {
         $this->assertTrue(true);
         // ...
     }
