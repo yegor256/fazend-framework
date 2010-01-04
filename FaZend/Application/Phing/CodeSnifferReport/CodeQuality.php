@@ -131,7 +131,7 @@ class CodeQuality {
             return;
             
         $lines = explode("\n", $info);
-        if (!preg_match('/^r(\d+)\s|\s(.*)\s|/', $lines[1], $matches))
+        if (!preg_match('/^r(\d+)\s\|\s(.*)\s\|/', $lines[1], $matches))
             return;
             
         $this->revision = intval($matches[1]);
