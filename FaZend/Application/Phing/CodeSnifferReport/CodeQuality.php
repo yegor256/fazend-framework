@@ -123,16 +123,19 @@ class CodeQuality {
     public function collect($file) {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
-        $info = simplexml_load_string(shell_exec('svn log -l 1 --non-interactive --xml ' . 
-            escapeshellarg($file) . ' 2>&1'));
+        $info = shell_exec('svn log -l 1 --non-interactive ' . 
+            escapeshellarg($file) . ' 2>&1');
         
         // maybe some mistake here
         if (!$info)
             return;
             
-        $this->revision = intval($info->logentry['revision']);
-        $this->author = strval($info->logentry->author);
-        $this->log = strval($info->logentry->msg);
+        $lines = explode("\n", $info);
+        $details = explode('|', $lines[1]);
+            
+        $this->revision = intval(trim($details[0]));
+        $this->author = trim($details[1]);
+        $this->log = implode("\n", array_slice($lines, 3, -1));
     }
     
     /**
