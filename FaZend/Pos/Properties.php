@@ -414,6 +414,18 @@ class FaZend_Pos_Properties
     }
 
     /**
+     * Remove all items from the array
+     *
+     * @return void
+     * @todo Optimize it to make more fast
+     **/
+    public function cleanArray() 
+    {
+        foreach ($this->itemsIterator as $key=>$value)
+            $this->unsetItem($key);
+    }
+
+    /**
      * Load this object
      *
      * @param boolean Force loading in any case?

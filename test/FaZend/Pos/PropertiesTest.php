@@ -113,6 +113,19 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         $car->ps()->updated = time();
     }
 
+    public function testCanCleanArray()
+    {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        FaZend_Pos_Abstract::root()->car = $car = new Model_Pos_Car();
+        $car[1] = 'test';
+        $car[2] = 'test2';
+        $car->ps()->save();
+        
+        FaZend_Pos_Abstract::cleanPosMemory();
+        FaZend_Pos_Abstract::root()->car->ps()->cleanArray();
+        $this->assertTrue(count(FaZend_Pos_Abstract::root()->car) == 0);
+    }
+
     public function testCanGetIdOfObject()
     {
         FaZend_Pos_Abstract::cleanPosMemory();
