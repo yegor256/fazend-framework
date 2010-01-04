@@ -146,7 +146,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             if (!in_array($property->getName(), array('__ps', '__posId'))) {
                 FaZend_Exception::raise('FaZend_Pos_Abstract_ExplicitPropertyFound',
                     "You're not allowed to explicitly declare properties in POS classes, " .
-                    "since they won't be persistent. Property {$property->getName()} found in " .
+                    "since they won't be persistent. Property '{$property->getName()}' found in " .
                     get_class($this));
             }
         }
