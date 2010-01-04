@@ -61,13 +61,15 @@ if (!function_exists('sys_get_temp_dir')) {
         if ($temp = getenv('TMPDIR'))
             return $temp;
             
-        $temp = tempnam(__FILE__, '');
+        // trying to create a temp directory
+        $temp = realpath(APPLICATION_PATH . '/../fz-temp');
+        if (!file_exists($temp))
+            @mkdir($temp);
         
-        if (file_exists($temp)) {
-            unlink($temp);
-            return dirname($temp);
-        }
+        if (is_dir($temp) && is_writable($temp))
+            return $temp;
         
-        return null;
+        throw new Exception('Function sys_get_temp_dir() is absent, probably you should upgrade to PHP 5.2+. ' . 
+            'Also we failed to create a custom TEMP directory here: ' . $temp);
     }
 }
