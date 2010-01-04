@@ -131,10 +131,11 @@ class CodeQuality {
             return;
             
         $lines = explode("\n", $info);
-        $details = explode('|', $lines[1]);
+        if (!preg_match('/^r(\d+)\s|\s(.*)\s|/', $details, $matches))
+            return;
             
-        $this->revision = intval(trim($details[0]));
-        $this->author = trim($details[1]);
+        $this->revision = intval($matches[1]);
+        $this->author = $matches[2];
         $this->log = implode("\n", array_slice($lines, 3, -1));
     }
     
