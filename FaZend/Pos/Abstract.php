@@ -137,7 +137,19 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      */
     public final function __construct()
     {
-        // nothing for now
+        // we should detect all explicitly defined properties
+        // and signal about it, since it's invalid behavior
+        $rc = new ReflectionClass($this);
+        foreach ($rc->getProperties() as $property) {
+            if ($property->isStatic())
+                continue;
+            if (!in_array($property->getName(), array('__ps', '__posId'))) {
+                FaZend_Exception::raise('FaZend_Pos_Abstract_ExplicitPropertyFound',
+                    "You're not allowed to explicitly declare properties in POS classes, " .
+                    "since they won't be persistent. Property {$property->getName()} found in " .
+                    get_class($this));
+            }
+        }
     }
 
     /**
