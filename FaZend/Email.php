@@ -226,6 +226,12 @@ class FaZend_Email {
         // set from user
         $mail->setFrom($this->get('fromEmail'), $this->get('fromName'));
 
+        // set CC, if required
+        if (is_array($this->get('cc'))) {
+            foreach ($this->get('cc') as $email=>$name)
+                $mail->addCc($email, $name);
+        }
+
         // set subject
         $mail->setSubject($this->get('subject'));
 
