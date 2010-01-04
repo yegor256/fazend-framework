@@ -17,10 +17,10 @@
 require_once 'AbstractTestCase.php';
 
 /**
- * TODO: short description.
+ * FaZend_Pos_Abstract testing
  * 
- * TODO: long description.
  * 
+ * @package tests
  */
 class FaZend_Pos_AbstractTest extends AbstractTestCase 
 {
@@ -379,6 +379,23 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         }
         
         FaZend_Pos_Abstract::root()->ps()->save();
+    }
+    
+    public function testObjectCanControlItsCleanStatus()
+    {
+        FaZend_Pos_Abstract::cleanPosMemory();
+        $car = FaZend_Pos_Abstract::root()->car89 = new Model_Pos_Car();
+    
+        $car->obj = $obj = new FaZend_StdObject();
+        $obj->test = 'test';
+        
+        $car->ps()->setDirty();
+        $car->ps()->save(false);
+        FaZend_Pos_Abstract::cleanPosMemory();
+        
+        // I don't know how to fix it yet...
+        // @todo
+        $this->assertEquals(FaZend_Pos_Abstract::root()->car89->obj->test, 'test');
     }
     
     public function testEndlessCyclesAreUnderstoodProperly()

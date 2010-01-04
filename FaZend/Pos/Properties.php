@@ -124,6 +124,8 @@ class FaZend_Pos_Properties
      * make any changes to it.
      *
      * @var boolean TRUE if it's clean, FALSE = some changes were made
+     * @see isClean()
+     * @see setDirty()
      */
     protected $_clean = null;
 
@@ -268,7 +270,7 @@ class FaZend_Pos_Properties
         $this->_resolveStub($name);
         $this->_properties[$name] = $value;
         
-        // this flag will be validated later, in _saveSnapshot()        
+        // this flag will be validated later, in save()        
         $this->_clean = false;
 
         // this new property is also a POS object?
@@ -543,6 +545,17 @@ class FaZend_Pos_Properties
     public function isClean() 
     {
         return $this->_clean === true;
+    }
+
+    /**
+     * Set clean flag to FALSE
+     *
+     * @return void
+     **/
+    public function setDirty() 
+    {
+        $this->_attachToPos();
+        $this->_clean = false;
     }
 
     /**
