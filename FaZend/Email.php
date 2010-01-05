@@ -112,10 +112,12 @@ class FaZend_Email {
      * Get local value
      *
      * @param string Name of the element
-     * @return var
+     * @return mixed|false
      */
     public function get($key) 
     {
+        if (!isset($this->_variables[$key]))
+            return false;
         return $this->_variables[$key];
     }
 
