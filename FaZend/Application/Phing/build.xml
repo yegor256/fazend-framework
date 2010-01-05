@@ -70,7 +70,10 @@
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-		<if><istrue value="${to.deploy}" /><then>
+		<if><or>
+		    <istrue value="${to.deploy}" />
+            <isset property="${to.lint}" />
+		</or><then>
             <phplint haltonfailure="yes">
                 <fileset dir="${project.basedir}/src/application">
                     <include name="**/*.php"/>
