@@ -139,12 +139,12 @@ class CodeQuality
             throw new Exception("Invalid info from SVN: {$info}, while running: {$cmd}");
             
         $lines = explode("\n", $info);
-        if (!preg_match('/^r(\d+)\s?\|\s?(.*?)\s?\|.*/', $lines[1], $matches))
+        if (!preg_match('/^r(\d+)\s?\|\s?(.*?)\s?\|.*?\|\s(\d) line/', $lines[1], $matches))
             throw new Exception("Invalid log line from SVN: {$lines[1]}, while running: {$cmd}");
             
         $this->revision = intval($matches[1]);
         $this->author = $matches[2];
-        $this->log = implode("\n", array_slice($lines, 3, -2));
+        $this->log = implode("\n", array_slice($lines, 3, intval($matches[3])));
     }
     
     /**
