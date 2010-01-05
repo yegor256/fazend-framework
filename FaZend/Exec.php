@@ -255,7 +255,7 @@ class FaZend_Exec extends FaZend_StdObject
      * Set log to be detailed
      *
      * @param boolean Show details?
-     * @return void
+     * @return $this
      **/
     public function setDetailed($detailed = true)
     {
@@ -266,11 +266,25 @@ class FaZend_Exec extends FaZend_StdObject
     /**
      * This operation should be cycled?
      *
-     * @return void
+     * @param boolean Cycled or not?
+     * @return $this
      **/
     public function setCycled($cycled = true) 
     {
         $this->_cycled = $cycled;
+        return $this;
+    }
+
+    /**
+     * Set directory to work in
+     *
+     * @param string Directory name (absolute)
+     * @return $this
+     **/
+    public function setDir($dir) 
+    {
+        $this->_dir = $dir;
+        return $this;
     }
 
     /**
