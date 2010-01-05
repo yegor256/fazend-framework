@@ -206,7 +206,7 @@ class FaZend_Exec extends FaZend_StdObject
     /**
      * Get output
      *
-     * @return string
+     * @return string|false False if the task was never executed yet
      */
     public function output()
     {
@@ -215,6 +215,10 @@ class FaZend_Exec extends FaZend_StdObject
         
         // get an output of the task
         $output = self::_output($id);
+        
+        // if it was never executed before
+        if ($output === false)
+            return false;
         
         // if we don't need to return full details of the task - just return output
         if (!$this->_detailed)
