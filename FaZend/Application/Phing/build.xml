@@ -43,6 +43,9 @@
         <if><not><isset property="to.clean" /></not><then>
             <property name="to.clean" value="false" /></then></if>
 
+        <if><not><isset property="to.coverage" /></not><then>
+            <property name="to.coverage" value="false" /></then></if>
+
         <if><isset property="to.deploy" /><then>
             <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
         </then><else>
@@ -105,7 +108,10 @@
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
 		<!-- prepare code coverage db -->
-		<if><istrue value="${to.deploy}" /><then>
+		<if><or>
+	        <istrue value="${to.deploy}" />
+	        <istrue value="${to.coverage}" />
+		</or><then>
             <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
@@ -124,7 +130,10 @@
     		</coverage-setup>
     	</then></if>
 
-		<if><istrue value="${to.deploy}" /><then>
+		<if><or>
+		    <istrue value="${to.deploy}" />
+		    <istrue value="${to.coverage}" />
+		</or><then>
             <mkdir dir="${project.basedir}/reports/tests" />
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
@@ -172,7 +181,7 @@
                 todir="${project.basedir}/reports/phpunit" 
                 styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
 
-            <!-- delete previous coverage report from HTTP hosting and copy a new one -->
+            <!-- delete previous phpunit report from HTTP hosting and copy a new one -->
             <delete dir="${cc.tests}" failonerror="true" verbose="false" includeemptydirs="true" />
             <mkdir dir="${cc.tests}" />
             <copy todir="${cc.tests}" >
@@ -185,13 +194,20 @@
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to phpunit reports directory" />    
+    	</else></if>
 
+		<if><or>
+		    <istrue value="${to.deploy}" />
+		    <istrue value="${to.coverage}" />
+		</or><then>
     		<!-- create an HTML report about code coverage -->
     		<mkdir dir="${coverage.dir}/report" />
     		<coverage-report outfile="${coverage.db}">
     			<report todir="${coverage.dir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
     		</coverage-report>
+        </then></if>
 
+		<if><istrue value="${to.deploy}" /><then>
             <!-- inject revision number into title -->
             <copy file="${coverage.dir}/report/index.html" tofile="${coverage.dir}/report/index.html.orig" />
             <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coverage.dir}/report/index.html.orig &gt; ${coverage.dir}/report/index.html" 
