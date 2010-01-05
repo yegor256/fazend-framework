@@ -41,7 +41,7 @@
             <property name="to.lint" value="false" /></then></if>
         
         <if><not><isset property="to.clean" /></not><then>
-            <property name="to.lint" value="false" /></then></if>
+            <property name="to.clean" value="false" /></then></if>
 
         <if><isset property="to.deploy" /><then>
             <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
