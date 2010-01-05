@@ -194,7 +194,7 @@
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to phpunit reports directory" />    
-    	</else></if>
+    	</then></if>
 
 		<if><or>
 		    <istrue value="${to.deploy}" />
