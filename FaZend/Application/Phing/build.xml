@@ -35,37 +35,42 @@
     </target>
 
     <target name="svn" description="Get all necessary information about current build" >
-        <if><available file="${cc.root}" type="dir" /><then>
-            <!-- this property is used later in order to turn deployment ON -->
-            <property name="to.deploy" value="true" />
-
-            <!-- ccFacade is hosted there and is used for integration with fazend.com -->
-            <property name="ccFacade" value="${cc.root}/ccFacade/public" />
-
-            <!-- locations of reports, on CC server -->
-            <property name="cc.doc" value="${cc.root}/doc/${phing.project.name}" />
-            <property name="cc.coverage" value="${cc.root}/coverage/${phing.project.name}" />
-            <property name="cc.phpcs" value="${cc.root}/phpcs/${phing.project.name}" />
-            <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
-
-            <!-- ftp uploader -->
-            <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
-            <!-- code sniffer reporter -->
-            <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
-
-            <!-- get the number of SVN revision we're currently working with -->
-            <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))" 
-                returnProperty="svn.revision" />    
-            <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-            <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
-            <echo msg="SVN revision: ${svn.revision}" />
+        <if><isset property="to.deploy" /><then>
+            <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <if><available file="${cc.root}" type="dir" /><then>
+                <!-- this property is used later in order to turn deployment ON -->
+                <property name="to.deploy" value="true" />
+
+                <!-- ccFacade is hosted there and is used for integration with fazend.com -->
+                <property name="ccFacade" value="${cc.root}/ccFacade/public" />
+
+                <!-- locations of reports, on CC server -->
+                <property name="cc.doc" value="${cc.root}/doc/${phing.project.name}" />
+                <property name="cc.coverage" value="${cc.root}/coverage/${phing.project.name}" />
+                <property name="cc.phpcs" value="${cc.root}/phpcs/${phing.project.name}" />
+                <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
+
+                <!-- ftp uploader -->
+                <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
+                <!-- code sniffer reporter -->
+                <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
+
+                <!-- get the number of SVN revision we're currently working with -->
+                <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))" 
+                    returnProperty="svn.revision" />    
+                <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
+                <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
+                <echo msg="SVN revision: ${svn.revision}" />
+            </then><else>
+                <property name="to.deploy" value="false" />
+                <echo msg="Skipped, since it's not a continuous integration environment" />    
+            </else></if>
         </else></if>
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-		<if><isset property="to.deploy" /><then>
+		<if><istrue value="${to.deploy}" /><then>
             <phplint haltonfailure="yes">
                 <fileset dir="${project.basedir}/src/application">
                     <include name="**/*.php"/>
@@ -89,7 +94,7 @@
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
 		<!-- prepare code coverage db -->
-		<if><isset property="to.deploy" /><then>
+		<if><istrue value="${to.deploy}" /><then>
             <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
@@ -108,7 +113,7 @@
     		</coverage-setup>
     	</then></if>
 
-		<if><isset property="to.deploy" /><then>
+		<if><istrue value="${to.deploy}" /><then>
             <mkdir dir="${project.basedir}/reports/tests" />
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
@@ -147,7 +152,7 @@
             </phpunit>
     	</else></if>
 
-    	<if><isset property="to.deploy" /><then>
+    	<if><istrue value="${to.deploy}" /><then>
             <!-- create a report after unit tests -->
             <mkdir dir="${project.basedir}/reports/phpunit" />
             <phpunitreport 
@@ -198,7 +203,7 @@
     </target>    
 
     <target name="sniffer" description="PHP Code Sniffer to run">
-    	<if><isset property="to.deploy" /><then>
+    	<if><istrue value="${to.deploy}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <mkdir dir="${project.basedir}/reports/phpcs" />
             <exec command="phpcs 
@@ -237,7 +242,7 @@
     </target>    
 
     <target name="deploy" description="Copy working files to FTP">
-    	<if><isset property="to.deploy" /><then>
+    	<if><istrue value="${to.deploy}" /><then>
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
             <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
@@ -266,7 +271,7 @@
     </target>
 
     <target name="ping" description="Ping the production server and show the result">
-    	<if><isset property="to.deploy" /><then>
+    	<if><istrue value="${to.deploy}" /><then>
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
             <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
 
@@ -282,7 +287,7 @@
     </target>
 
     <target name="doc" description="Create phpDoc documentation" >
-    	<if><isset property="to.deploy" /><then>
+    	<if><istrue value="${to.deploy}" /><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
 
