@@ -35,6 +35,13 @@ class FaZend_Exec extends FaZend_StdObject {
     protected static $_running = array();
 
     /**
+     * Shall we document our operations in log?
+     *
+     * @var boolean
+     **/
+    protected static $_isVerbose;
+
+    /**
      * Shell command
      *
      * @var string
@@ -78,6 +85,17 @@ class FaZend_Exec extends FaZend_StdObject {
         if (file_exists($dataFile)) {
             $this->_unserialize(@file_get_contents($dataFile));
         }
+    }
+
+    /**
+     * Shall we document our operations in log?
+     *
+     * @param boolean Shall we?
+     * @return void
+     **/
+    public static function setIsVerbose($isVerbose = true) 
+    {
+        self::$_isVerbose = $isVerbose;
     }
 
     /**
@@ -346,6 +364,8 @@ class FaZend_Exec extends FaZend_StdObject {
 
         // execute it!
         shell_exec($shell);
+        if (self::$_isVerbose)
+            FaZend_Log::info("FaZend_Exec executed: {$shell}");
 
         if (!is_null($dir)) {
             chdir($current);
