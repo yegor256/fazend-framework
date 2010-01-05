@@ -165,11 +165,12 @@ class FaZend_Exec extends FaZend_StdObject
     /**
      * Is it still running?
      *
+     * @param boolen Should be cycled?
      * @return boolean
      */
-    public function isRunning()
+    public function isRunning($cycled = true)
     {
-        return self::_isRunning(self::_uniqueId($this->_name));
+        return self::_isRunning(self::_uniqueId($this->_name), $cycled);
     }
 
     /**
@@ -180,7 +181,7 @@ class FaZend_Exec extends FaZend_StdObject
     public function execute()
     {
         // if the task IS running now - just return it's output
-        if ($this->isRunning())
+        if ($this->isRunning($this->_cycled))
             return $this->output();
             
         $id = self::_uniqueId($this->_name);
@@ -318,9 +319,10 @@ class FaZend_Exec extends FaZend_StdObject
      * Is it running now?
      *
      * @param string ID of the task
+     * @param boolean Is it cycled?
      * @return boolean
      */
-    protected static function _isRunning($id)
+    protected static function _isRunning($id, $cycled = true)
     {
         if (isset(self::$_running[$id]))
             return true;
@@ -335,7 +337,7 @@ class FaZend_Exec extends FaZend_StdObject
         }
 
         // read process ID from file
-        $pid = (int)file_get_contents($pidFile);
+        $pid = intval(file_get_contents($pidFile));
 
         // if the file is corrupted
         if ($pid === 0) {
@@ -343,11 +345,13 @@ class FaZend_Exec extends FaZend_StdObject
             return false;
         }
 
-        // if the process is NOT found by this ID
-        if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
-            // we shall remove only PID file and work with log
-            // next time we will remove log as well
-            self::_clean($id, true);
+        if ($cycled) {
+            // if the process is NOT found by this ID
+            if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
+                // we shall remove only PID file and work with log
+                // next time we will remove log as well
+                self::_clean($id, true);
+            }
         }
 
         // remember PID for this task in a static array
