@@ -19,7 +19,8 @@
  *
  * @package Exec
  */
-class FaZend_Exec extends FaZend_StdObject {
+class FaZend_Exec extends FaZend_StdObject
+{
 
     const LOG_SUFFIX = 'log';
     const PID_SUFFIX = 'pid';
@@ -68,6 +69,13 @@ class FaZend_Exec extends FaZend_StdObject {
      * @var boolean
      */
     protected $_detailed = false;
+    
+    /**
+     * This operation is cycled and should be executed again and again?
+     *
+     * @var boolean
+     **/
+    protected $_cycled = true;
 
     /**
      * Construct it
@@ -146,7 +154,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return int
      */
-    public function getPid() {
+    public function getPid()
+    {
         if (!$this->isRunning())
             return false;
 
@@ -158,7 +167,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return boolean
      */
-    public function isRunning() {
+    public function isRunning()
+    {
         return self::_isRunning(self::_uniqueId($this->_name));
     }
 
@@ -167,20 +177,27 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return string
      */
-    public function execute() {
+    public function execute()
+    {
         // if the task IS running now - just return it's output
         if ($this->isRunning())
             return $this->output();
+            
+        $id = self::_uniqueId($this->_name);
+            
+        // maybe it was executed already and we should NOT re-run it again
+        if (!$this->_cycled && (self::_output($id) !== false))
+            return $this->output();
                                 
         // serialize and save all local variables
-        $dataFile = self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX);
+        $dataFile = self::_fileName($id, self::DATA_SUFFIX);
         if (!@file_put_contents($dataFile, $this->_serialize())) {
             FaZend_Exception::raise('FaZend_Exec_DataSaveFailure', 
                 "Failed to save local data before execution: '{$dataFile}'");
         }
 
         // execute the task
-        self::_execute(self::_uniqueId($this->_name), $this->_cmd, $this->_dir);
+        self::_execute($id, $this->_cmd, $this->_dir);
 
         // return output of the task
         return $this->output();
@@ -191,7 +208,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return string
      */
-    public function output() {
+    public function output()
+    {
         // calculate unique ID of the task
         $id = self::_uniqueId($this->_name);
         
@@ -225,7 +243,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return void
      */
-    public function stop() {
+    public function stop()
+    {
         if (!$this->isRunning())
             return;
 
@@ -238,9 +257,20 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param boolean Show details?
      * @return void
      **/
-    public function setDetailed($detailed = true) {
+    public function setDetailed($detailed = true)
+    {
         $this->_detailed = $detailed;
         return $this;
+    }
+
+    /**
+     * This operation should be cycled?
+     *
+     * @return void
+     **/
+    public function setCycled($cycled = true) 
+    {
+        $this->_cycled = $cycled;
     }
 
     /**
@@ -249,7 +279,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string Name of the task, unique!
      * @return string
      */
-    protected static function _uniqueId($name) {
+    protected static function _uniqueId($name)
+    {
         return FaZend_Properties::get()->name . '-' . preg_replace('/[^\w\d]/', '-', $name);
     }
 
@@ -260,7 +291,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string|null Suffix to add
      * @return string
      */
-    protected static function _fileName($id, $suffix = false) {
+    protected static function _fileName($id, $suffix = false)
+    {
         return TEMP_PATH . '/' . $id . ($suffix ? '.' . $suffix : false);
     }
 
@@ -270,7 +302,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string ID of the task
      * @return boolean
      */
-    protected static function _isRunning($id) {
+    protected static function _isRunning($id)
+    {
         if (isset(self::$_running[$id]))
             return true;
         
@@ -279,7 +312,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         // if no file - there is no process
         if (!file_exists($pidFile)) {
-            self::_clear($id);
+            self::_clean($id);
             return false;
         }
 
@@ -288,7 +321,7 @@ class FaZend_Exec extends FaZend_StdObject {
 
         // if the file is corrupted
         if ($pid === 0) {
-            self::_clear($id);
+            self::_clean($id);
             return false;
         }
 
@@ -296,7 +329,7 @@ class FaZend_Exec extends FaZend_StdObject {
         if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
             // we shall remove only PID file and work with log
             // next time we will remove log as well
-            self::_clear($id, true);
+            self::_clean($id, true);
         }
 
         // remember PID for this task in a static array
@@ -304,13 +337,14 @@ class FaZend_Exec extends FaZend_StdObject {
     }
 
     /**
-     * Clear files
+     * Clean files
      *
      * @param string ID of the task
      * @param boolean Clear only PID file?
      * @return boolean
      */
-    protected static function _clear($id, $pidOnly = false) {
+    protected static function _clean($id, $pidOnly = false)
+    {
         if (!$pidOnly) {
             @unlink(self::_fileName($id, self::LOG_SUFFIX));
             @unlink(self::_fileName($id, self::DATA_SUFFIX));
@@ -323,9 +357,10 @@ class FaZend_Exec extends FaZend_StdObject {
      * Get output log, from log file for the currently running task
      *
      * @param string ID of the task
-     * @return boolean|string Output of the EXEC or false
+     * @return false|string Output of the EXEC or false
      */
-    protected static function _output($id) {
+    protected static function _output($id)
+    {
         return @file_get_contents(self::_fileName($id, self::LOG_SUFFIX));
     }
 
@@ -335,7 +370,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string ID of the task
      * @return void
      */
-    protected static function _pid($id) {
+    protected static function _pid($id)
+    {
         if (!self::_isRunning($id))
             return false;
 
@@ -349,7 +385,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string shell command
      * @return void
      */
-    protected static function _execute($id, $cmd, $dir = null) {
+    protected static function _execute($id, $cmd, $dir = null)
+    {
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
         if (!is_null($dir)) {
@@ -386,7 +423,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string ID of the task
      * @return void
      */
-    protected static function _stop($id) {
+    protected static function _stop($id)
+    {
         if (self::_isWindows())
             return;
 
@@ -399,7 +437,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return boolean
      */
-    protected static function _isWindows() {
+    protected static function _isWindows()
+    {
         return stristr(PHP_OS, 'win') !== false;
     }
 
