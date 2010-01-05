@@ -39,7 +39,7 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @var boolean
      **/
-    protected static $_isVerbose;
+    protected static $_isVerbose = false;
 
     /**
      * Shell command
