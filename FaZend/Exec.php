@@ -165,12 +165,11 @@ class FaZend_Exec extends FaZend_StdObject
     /**
      * Is it still running?
      *
-     * @param boolen Should be cycled?
      * @return boolean
      */
-    public function isRunning($cycled = true)
+    public function isRunning()
     {
-        return self::_isRunning(self::_uniqueId($this->_name), $cycled);
+        return self::_isRunning(self::_uniqueId($this->_name), $this->_cycled);
     }
 
     /**
@@ -181,7 +180,7 @@ class FaZend_Exec extends FaZend_StdObject
     public function execute()
     {
         // if the task IS running now - just return it's output
-        if ($this->isRunning($this->_cycled))
+        if ($this->isRunning())
             return $this->output();
             
         $id = self::_uniqueId($this->_name);
