@@ -131,16 +131,16 @@ class CodeQuality
     {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
-        $info = shell_exec('svn log -l 1 --non-interactive ' . 
-            escapeshellarg($file) . ' 2>&1');
+        $cmd = 'svn log -l 1 --non-interactive ' . escapeshellarg($file) . ' 2>&1';
+        $info = shell_exec($cmd);
         
         // maybe some mistake here
         if (!$info)
-            throw new Exception("Invalid info from SVN: {$info}");
+            throw new Exception("Invalid info from SVN: {$info}, while running: {$cmd}");
             
         $lines = explode("\n", $info);
         if (!preg_match('/^r(\d+)\s?\|\s?(.*?)\s?\|.*/', $lines[1], $matches))
-            throw new Exception("Invalid log line from SVN: {$lines[1]}");
+            throw new Exception("Invalid log line from SVN: {$lines[1]}, while running: {$cmd}");
             
         $this->revision = intval($matches[1]);
         $this->author = $matches[2];
