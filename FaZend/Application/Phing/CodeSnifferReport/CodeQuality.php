@@ -125,6 +125,7 @@ class CodeQuality
      *
      * @param string File name
      * @return void
+     * @throws Exception
      **/
     public function collect($file)
     {
@@ -135,11 +136,11 @@ class CodeQuality
         
         // maybe some mistake here
         if (!$info)
-            return;
+            throw new Exception("Invalid info from SVN: {$info}");
             
         $lines = explode("\n", $info);
         if (!preg_match('/^r(\d+)\s?\|\s?(.*?)\s?\|.*/', $lines[1], $matches))
-            return;
+            throw new Exception("Invalid log line from SVN: {$lines[1]}");
             
         $this->revision = intval($matches[1]);
         $this->author = $matches[2];
