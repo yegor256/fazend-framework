@@ -144,7 +144,7 @@ class CodeQuality
             
         $this->revision = intval($matches[1]);
         $this->author = $matches[2];
-        $this->log = implode("\n", array_slice($lines, 3, -1));
+        $this->log = implode("\n", array_slice($lines, 3, -2));
     }
     
     /**
