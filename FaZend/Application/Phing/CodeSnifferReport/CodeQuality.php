@@ -20,7 +20,8 @@
  * @package Application
  * @subpackage Phing
  */
-class CodeQuality {
+class CodeQuality
+{
 
     /**
      * Number of lines
@@ -71,7 +72,8 @@ class CodeQuality {
      * @return mixed
      * @throws Exception
      **/
-    public function __get($name) {
+    public function __get($name)
+    {
         $var = '_' . $name;
         if (property_exists($this, $var))
             return $this->$var;
@@ -88,7 +90,8 @@ class CodeQuality {
      *
      * @return void
      **/
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $var = '_' . $name;
         $this->$var = $value;
     }
@@ -98,7 +101,8 @@ class CodeQuality {
      *
      * @return void
      **/
-    public function setInfo($info) {
+    public function setInfo($info)
+    {
         $this->_errors = $info->attributes()->errors;
         $this->_warnings = $info->attributes()->warnings;
     }
@@ -109,7 +113,8 @@ class CodeQuality {
      * @param CodeQuality Quality of the child file
      * @return void
      **/
-    public function merge(CodeQuality $child) {
+    public function merge(CodeQuality $child)
+    {
         $this->_errors += $child->errors;
         $this->_warnings += $child->warnings;
         $this->_lines += $child->lines;
@@ -118,9 +123,11 @@ class CodeQuality {
     /**
      * Collect information from the file given
      *
+     * @param string File name
      * @return void
      **/
-    public function collect($file) {
+    public function collect($file)
+    {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
         $info = shell_exec('svn log -l 1 --non-interactive ' . 
@@ -131,7 +138,7 @@ class CodeQuality {
             return;
             
         $lines = explode("\n", $info);
-        if (!preg_match('/^r(\d+)\s\|\s(.*)\s\|/', $lines[1], $matches))
+        if (!preg_match('/^r(\d+)\s?\|\s?(.*?)\s?\|.*/', $lines[1], $matches))
             return;
             
         $this->revision = intval($matches[1]);
@@ -144,7 +151,8 @@ class CodeQuality {
      *
      * @return boolean
      **/
-    public function isFile() {
+    public function isFile()
+    {
         return isset($this->_revision);
     }
     
@@ -153,7 +161,8 @@ class CodeQuality {
      *
      * @return float
      **/
-    protected function _getQuality() {
+    protected function _getQuality()
+    {
         return round(100 * (1 - ($this->errors + $this->warnings) / $this->lines), 1);
     }
     
