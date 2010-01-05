@@ -131,7 +131,7 @@ class CodeQuality
     {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
         
-        $cmd = 'svn log -l 1 --non-interactive ' . escapeshellarg($file) . ' 2>&1';
+        $cmd = 'svn log --non-interactive ' . escapeshellarg($file) . ' 2>&1';
         $info = shell_exec($cmd);
         
         // maybe some mistake here
