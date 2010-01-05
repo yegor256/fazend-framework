@@ -31,10 +31,18 @@
     <property name="cc.root" value="/home/cc" />
 
     <!-- main task, executed by the project -->
-    <target name="main" depends="svn, lint, test, sniffer, doc, deploy, ping">
+    <target name="main" 
+        depends="svn, lint, test, sniffer, doc, deploy, ping, clean"
+        description="Validate, compile, deploy and clean">
     </target>
 
     <target name="svn" description="Get all necessary information about current build" >
+        <if><not><isset property="to.lint" /></not><then>
+        </then><property name="to.lint" value="false" /></else></if>
+        
+        <if><not><isset property="to.clean" /></not><then>
+        </then><property name="to.lint" value="false" /></else></if>
+
         <if><isset property="to.deploy" /><then>
             <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
         </then><else>
@@ -72,7 +80,7 @@
     <target name="lint" description="Run syntax check for all classes" >
 		<if><or>
 		    <istrue value="${to.deploy}" />
-            <isset property="to.lint" />
+            <istrue value="${to.lint}" />
 		</or><then>
             <phplint haltonfailure="yes">
                 <fileset dir="${project.basedir}/src/application">
@@ -316,4 +324,21 @@
         </else></if>
     </target>    
 
+    <target name="clean" description="Remove obsolete files just created" >
+    	<if><istrue value="${to.clean}" /><then>
+            <delete verbose="false" includeemptydirs="true">
+                <fileset dir="${project.basedir}/reports">
+                    <include name="*" />
+                </fileset>
+            </delete>
+            <delete verbose="false" includeemptydirs="true">
+                <fileset dir="${project.basedir}/build">
+                    <include name="*" />
+                </fileset>
+            </delete>
+        </then><else>
+            <echo msg="Skipped, since [to.clean] is set to false" />    
+        </else></if>
+    </target>    
+    
 </project>
