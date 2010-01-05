@@ -76,15 +76,18 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string Shell cmd
      * @return void
      */
-    protected function __construct($name, $cmd = null) {
+    protected function __construct($name, $cmd = null)
+    {
         $this->_name = $name;
-        $this->_cmd = $cmd;
-
+        
         // load configuation data, if they exist
         $dataFile = self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX);
         if (file_exists($dataFile)) {
             $this->_unserialize(@file_get_contents($dataFile));
         }
+
+        if (!is_null($cmd))
+            $this->_cmd = $cmd;
     }
 
     /**
@@ -105,7 +108,8 @@ class FaZend_Exec extends FaZend_StdObject {
      * @param string Command to execute
      * @return FaZend_Exec
      */
-    public static function factory($name, $cmd = null) {
+    public static function factory($name, $cmd = null)
+    {
         return new FaZend_Exec($name, $cmd);
     }
 
@@ -114,7 +118,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return (string)$this->output();
     }
 
@@ -123,7 +128,8 @@ class FaZend_Exec extends FaZend_StdObject {
      *
      * @return int Seconds
      */
-    public function getDuration() {
+    public function getDuration()
+    {
         if (!$this->isRunning())
             return false;
 
