@@ -19,7 +19,8 @@
  *
  * @package Cli
  */
-interface FaZend_Cli_Interface {
+interface FaZend_Cli_Interface
+{
 
     /**
      * Executor of a command-line command
@@ -31,7 +32,8 @@ interface FaZend_Cli_Interface {
     /**
      * Save options
      *
-     * @return this
+     * @param array List of options to set
+     * @return void
      */
     public function setOptions(array $options);
 
@@ -39,7 +41,8 @@ interface FaZend_Cli_Interface {
      * Save the instance of the router
      *
      * @param FaZend_Cli_Router instance of the router
-     * @return this
+     * @return void
      */
     public function setRouter(FaZend_Cli_Router $router);
+    
 }

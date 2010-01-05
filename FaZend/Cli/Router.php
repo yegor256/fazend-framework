@@ -20,15 +20,16 @@
  * @see http://code.google.com/p/fazend/wiki/FaZend_Cli
  * @package Cli
  */
-class FaZend_Cli_Router {
+class FaZend_Cli_Router
+{
 
     /**
      * Dispatch command line call
      *
      * @return int Exit code
      */
-    public function dispatch() {
-
+    public function dispatch()
+    {
         // strange situation, we should flag it
         if (empty($_SERVER['argc']))
             return self::_error('$_SERVER[argc] is not defined, how come?');
@@ -50,7 +51,6 @@ class FaZend_Cli_Router {
         $cliName = $argv[1];
 
         return $this->call($cliName);
-
     }                
 
     /**
@@ -59,11 +59,10 @@ class FaZend_Cli_Router {
      * @param string Message to show to the user
      * @return int CLI error code
      */
-    protected static function _error($msg) {
-
+    protected static function _error($msg)
+    {
         echo 'FaZend_Cli_Router::dispatch() raises error in dispatching: ' . $msg . "\n";
         return FaZend_Cli_Abstract::RETURNCODE_ERROR;
-
     }
 
     /**
@@ -73,8 +72,8 @@ class FaZend_Cli_Router {
      * @param array Associative array of options to pass
      * @return int Exit code
      */
-    public function call($name, array $options = null) {
-
+    public function call($name, array $options = null)
+    {
         if (is_null($options))
             $options = self::_getCliOptions();
 
@@ -105,8 +104,8 @@ class FaZend_Cli_Router {
      *
      * @return array
      */
-    protected static function _getCliOptions() {
-
+    protected static function _getCliOptions()
+    {
         $argv = $_SERVER['argv'];
 
         $options = array();

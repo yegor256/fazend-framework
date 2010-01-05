@@ -21,7 +21,8 @@ require_once 'FaZend/Cli/Interface.php';
  *
  * @package Cli
  */
-abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
+abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface
+{
 
     const RETURNCODE_ERROR = -1;
     const RETURNCODE_OK = 0;
@@ -46,26 +47,31 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
      * @param FaZend_Cli_Router instance of the router
      * @return this
      */
-    public function setRouter(FaZend_Cli_Router $router) {
+    public function setRouter(FaZend_Cli_Router $router)
+    {
         $this->_router = $router;
     }
 
     /**
      * Save options
      *
-     * @return this
+     * @param array List of options to set
+     * @return void
      */
-    public function setOptions(array $options) {
+    public function setOptions(array $options)
+    {
         $this->_options = $options;
     }
 
     /**
      * Get option value
      *
-     * @return this
+     * @param string Name of the parameter
+     * @param boolean Shall we throw exception if it's not found?
+     * @return string
      */
-    protected function _get($name, $throwException = true) {
-
+    protected function _get($name, $throwException = true)
+    {
         $name = strtolower($name);
 
         if (!isset($this->_options[$name])) {
@@ -81,12 +87,12 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface {
     /**
      * Call another CLI class, by name
      *
+     * @param string Name of the CLI class
      * @return string
      */
-    protected function _callCli($name) {
-
+    protected function _callCli($name)
+    {
         return $this->_router->call($name);
-
     }
 
 }
