@@ -38,7 +38,7 @@ class BaselineTest extends FaZend_Test_TestCase
             '/\.xml$/') as $file) {
                 
             $map = new FaZend_Pan_Baseliner_Map(APPLICATION_PATH);
-            $map->load(strval($file));
+            $map->load(FaZend_Pan_Baseliner_Map::getStorageDir(true) . '/' . $file);
             $this->assertTrue($validator->validate($map), 
                 "Validation failed for $file");
         }
