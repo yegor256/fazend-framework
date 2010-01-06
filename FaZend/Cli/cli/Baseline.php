@@ -46,6 +46,8 @@ class Baseline extends FaZend_Cli_Abstract
         else
             $path = FaZend_Pan_Baseliner_Map::getStorageDir(true) . '/' . $email . '.xml';
         $map->save($path);
+        
+        echo "\nBaseline XML report saved into: {$path}\nDon't forget to commit it to SVN repository\n";
 
         return self::RETURNCODE_OK;
     }
