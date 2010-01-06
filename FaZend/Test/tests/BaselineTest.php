@@ -23,7 +23,7 @@ require_once 'FaZend/Test/TestCase.php';
  */
 class BaselineTest extends FaZend_Test_TestCase
 {
-
+    
     /**
      * Test entire project for conformance to baselines
      *
@@ -31,13 +31,14 @@ class BaselineTest extends FaZend_Test_TestCase
      **/
     public function testCodeConformsToBaselines()
     {
-        $validator = new FaZend_Pan_Baseliner_Validator(true);
+        $validator = new FaZend_Pan_Baseliner_Validator(APPLICATION_PATH, true);
         
         foreach (new RegexIterator(
             new DirectoryIterator(FaZend_Pan_Baseliner_Map::getStorageDir(true)),
             '/\.xml$/') as $file) {
+                
             $map = new FaZend_Pan_Baseliner_Map(APPLICATION_PATH);
-            $map->load($file);
+            $map->load(strval($file));
             $this->assertTrue($validator->validate($map), 
                 "Validation failed for $file");
         }
