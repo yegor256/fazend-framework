@@ -80,7 +80,7 @@ class FaZend_Pan_Baseliner_Validator
                 $this->_log("\tfailure: {$result}");
                 $success = false;
             } else
-                $this->_log("\tsuccess: {$rule['type']} {$rule['constructor']} {$rule['callback']}");
+                $this->_log("\tsuccess: {$rule['type']}{$rule['constructor']}{$rule['callback']}");
             
         }
         return $success;
