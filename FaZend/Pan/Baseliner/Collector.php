@@ -60,6 +60,7 @@ class FaZend_Pan_Baseliner_Collector
         $map = new FaZend_Pan_Baseliner_Map($path, $this->_email);
         
         // find all files inside the application path
+        $this->_log("{$file}:");
         foreach (
             new RegexIterator(
             new RecursiveIteratorIterator(
@@ -80,8 +81,6 @@ class FaZend_Pan_Baseliner_Collector
             foreach ($reflector->getFunctions() as $functionReflector) {
                 $this->_parse($functionReflector, $map);
             }
-            
-            $this->_log("{$file} passed");
         }
         
         return $map;
