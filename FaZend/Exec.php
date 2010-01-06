@@ -258,15 +258,13 @@ class FaZend_Exec extends FaZend_StdObject
     }
     
     /**
-     * Clean all files, if the task is not running
+     * Stop the task and clean all files
      *
      * @return void
      */
     public function clean()
     {
-        if ($this->isRunning())
-            return;
-
+        $this->stop();
         self::_clean(self::_uniqueId($this->_name));
     }
     
