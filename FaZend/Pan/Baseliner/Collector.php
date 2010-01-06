@@ -67,19 +67,24 @@ class FaZend_Pan_Baseliner_Collector
                 
             $this->_log("{$file}:");
             require_once $file;
-            $reflector = new Zend_Reflection_File(strval($file));
-            $this->_parse($reflector, $map);
             
-            foreach ($reflector->getClasses() as $classReflector) {
-                $this->_parse($classReflector, $map);
-                foreach ($classReflector->getMethods() as $methodReflector)
-                    $this->_parse($methodReflector, $map);
-                // foreach ($classReflector->getProperties() as $propertyReflector)
-                //     $this->_parse($propertyReflector, $map);
-            }
+            try {
+                $reflector = new Zend_Reflection_File(strval($file));
+                $this->_parse($reflector, $map);
             
-            foreach ($reflector->getFunctions() as $functionReflector) {
-                $this->_parse($functionReflector, $map);
+                foreach ($reflector->getClasses() as $classReflector) {
+                    $this->_parse($classReflector, $map);
+                    foreach ($classReflector->getMethods() as $methodReflector)
+                        $this->_parse($methodReflector, $map);
+                    // foreach ($classReflector->getProperties() as $propertyReflector)
+                    //     $this->_parse($propertyReflector, $map);
+                }
+            
+                foreach ($reflector->getFunctions() as $functionReflector) {
+                    $this->_parse($functionReflector, $map);
+                }
+            } catch (ReflectionException $e) {
+                $this->_log("\t" . get_class($e) . ": {$e->getMessage()}:");
             }
         }
         
