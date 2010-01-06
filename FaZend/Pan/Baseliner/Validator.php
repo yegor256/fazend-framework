@@ -58,13 +58,14 @@ class FaZend_Pan_Baseliner_Validator
      */
     public function validate(FaZend_Pan_Baseliner_Map $map)
     {
+        $this->_log("Validating: {$map->getEmail()}");
         $success = true;
         
         foreach ($map->getRules() as $rule) {
             $className = __CLASS__ . '_' . ucfirst($rule['type']);
             
             if (!class_exists($className)) {
-                $this->_log("internal failure: class $className is missed");
+                $this->_log("\tinternal failure: class $className is missed");
                 $success = false;
                 continue;
             }
@@ -76,10 +77,10 @@ class FaZend_Pan_Baseliner_Validator
             eval("\$result = \$validator {$rule['callback']};");
             
             if (is_string($result)) {
-                $this->_log('failure: ' . $result);
+                $this->_log("\tfailure: {$result}");
                 $success = false;
             } else
-                $this->_log("success: {$rule['type']} {$rule['constructor']} {$rule['callback']}");
+                $this->_log("\tsuccess: {$rule['type']} {$rule['constructor']} {$rule['callback']}");
             
         }
         return $success;

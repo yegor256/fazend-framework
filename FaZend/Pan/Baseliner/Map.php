@@ -56,6 +56,16 @@ class FaZend_Pan_Baseliner_Map
     }
 
     /**
+     * Returns email
+     *
+     * @return string
+     **/
+    public function getEmail() 
+    {
+        return $this->_email;
+    }
+
+    /**
      * Get directory where all maps should be stored
      *
      * @param boolean Create it if it's absent?
