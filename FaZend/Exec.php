@@ -357,13 +357,14 @@ class FaZend_Exec extends FaZend_StdObject
             return false;
         }
 
-        if ($cycled) {
-            // if the process is NOT found by this ID
-            if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
-                // we shall remove only PID file and work with log
-                // next time we will remove log as well
+        // if the process is NOT found by this ID
+        if (shell_exec('ps -p ' . $pid . ' | grep ' . $pid) == '') {
+            // we shall remove only PID file and work with log
+            // next time we will remove log as well
+            if ($cycled)
                 self::_clean($id, true);
-            }
+            else
+                return false;
         }
 
         // remember PID for this task in a static array
