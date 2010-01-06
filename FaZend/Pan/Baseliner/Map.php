@@ -105,7 +105,7 @@ class FaZend_Pan_Baseliner_Map
         $xml = simplexml_load_file($path);
 
         $this->_rules = array();
-        foreach ($xml->rules as $rule) {
+        foreach ($xml->rules->children() as $rule) {
             $this->_rules[] = array(
                 'type' => $rule->type,
                 'constructor' => $rule->constructor,
