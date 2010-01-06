@@ -62,6 +62,13 @@ class FaZend_Pan_Baseliner_Validator
         
         foreach ($map->getRules() as $rule) {
             $className = __CLASS__ . '_' . ucfirst($rule['type']);
+            
+            if (!class_exists($className)) {
+                $this->_log("internal failure: class $className is missed");
+                $success = false;
+                continue;
+            }
+                
             eval("\$validator = new {$className} {$rule['constructor']};");
             
             $validator->setLocation($this->_path);
