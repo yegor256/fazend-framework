@@ -60,12 +60,12 @@ class FaZend_Pan_Baseliner_Collector
         $map = new FaZend_Pan_Baseliner_Map($path, $this->_email);
         
         // find all files inside the application path
-        $this->_log("{$file}:");
         foreach (
             new RegexIterator(
             new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($path)), '/\.php$/i') as $file) {
                 
+            $this->_log("{$file}:");
             require_once $file;
             $reflector = new Zend_Reflection_File(strval($file));
             $this->_parse($reflector, $map);
