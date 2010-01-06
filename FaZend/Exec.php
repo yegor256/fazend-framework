@@ -68,14 +68,14 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @var boolean
      */
-    protected $_detailed = false;
+    protected $_detailed;
     
     /**
      * This operation is cycled and should be executed again and again?
      *
      * @var boolean
      **/
-    protected $_cycled = true;
+    protected $_cycled;
 
     /**
      * Construct it
@@ -87,6 +87,8 @@ class FaZend_Exec extends FaZend_StdObject
     protected function __construct($name, $cmd = null)
     {
         $this->_name = $name;
+        $this->_cycled = true;
+        $this->_detailed = false;
         
         // load configuation data, if they exist
         $dataFile = self::_fileName(self::_uniqueId($this->_name), self::DATA_SUFFIX);
