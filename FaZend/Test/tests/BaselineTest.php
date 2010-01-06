@@ -31,8 +31,16 @@ class BaselineTest extends FaZend_Test_TestCase
      **/
     public function testCodeConformsToBaselines()
     {
-        $this->assertTrue(true);
-        // ...
+        $map = new FaZend_Pan_Baseliner_Map();
+        $validator = new FaZend_Pan_Baseliner_Validator(true);
+        
+        foreach (new RegexIterator(
+            new DirectoryIterator(FaZend_Pan_Baseliner_Map::getStorageDir(true)),
+            '/\.xml$/') as $file) {
+            $map->load($file);
+            $this->assertTrue($validator->validate($map), 
+                "Validation failed for $file");
+        }
     }
 
 }

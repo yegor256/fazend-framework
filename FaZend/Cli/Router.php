@@ -79,11 +79,16 @@ class FaZend_Cli_Router
 
         $cliPath = APPLICATION_PATH . '/cli/' . $name . '.php';
 
-        if (!file_exists($cliPath))
-            return self::_error("File '$cliPath' is missed, why?");
+        if (!file_exists($cliPath)) {
+            $cliPath = FAZEND_PATH . '/Cli/cli/' . $name . '.php';
+            if (!file_exists($cliPath))
+                return self::_error("File '$cliPath' is missed, why?");
+        }
 
+        // require this class once
         require_once $cliPath;
 
+        // if the class is not found...
         if (!class_exists($name))    
             return self::_error("Class '$name' is not defined, why?");
 
@@ -111,7 +116,7 @@ class FaZend_Cli_Router
         $options = array();
         foreach (array_slice($argv, 2) as $opt) {
             $matches = array();
-            if (!preg_match('/^\-\-(\w+)(?:\=(.*?))?$/', $opt, $matches))
+            if (!preg_match('/^\-\-([\-\w]+)(?:\=(.*?))?$/', $opt, $matches))
                 return self::_error("Invalid option: '$opt'. Correct format is: '--name=value'");
 
             $name = strtolower($matches[1]);

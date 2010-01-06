@@ -14,22 +14,31 @@
  * @category FaZend
  */
 
-require_once 'AbstractTestCase.php';
-
-class FaZend_Cli_CliTest extends AbstractTestCase
+/**
+ * Validates one entity
+ *
+ * @package Pan
+ * @subpackage Baseliner
+ */
+abstract class FaZend_Pan_Baseliner_Validator_Abstract
 {
+
+    /**
+     * Location of application to validate
+     *
+     * @var string
+     **/
+    protected $_location;
     
-    public function testCliCallsAreProcessed ()
+    /**
+     * Set location
+     *
+     * @param string Location to set
+     * @return void
+     **/
+    public function setLocation($location) 
     {
-
-        $param = rand(100, 999);
-
-        chdir(APPLICATION_PATH . '/public');
-        $result = shell_exec('php index.php OSVersion --param=' . $param . ' 2>&1');
-
-        $this->assertNotEquals(false, $result, "Empty result, why?");
-
+        $this->_location = $location;
     }
 
 }
-        

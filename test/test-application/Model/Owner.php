@@ -12,6 +12,7 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
+ * @baseline team@fazend.com exists()
  */
 
 /**
@@ -20,20 +21,44 @@
  *
  * @package application
  * @subpackage Model
+ * @baseline team@fazend.com exists()
+ * @baseline team@fazend.com instanceOf('FaZend_Db_Table_ActiveRow_owner')
  */
-class Model_Owner extends FaZend_Db_Table_ActiveRow_owner {
+class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
+{
 
-    public static function retrieveAll() {
+    /**
+     * Retrieve all owners 
+     *
+     * @baseline team@fazend.com exists()
+     * @return Model_Owner[]
+     */
+    public static function retrieveAll()
+    {
         return self::retrieve()
             ->setRowClass('Model_Owner')
             ->fetchAll();
     }
 
-    function isMe() {
+    /**
+     * Is it me?
+     *
+     * @baseline team@fazend.com exists()
+     * @return boolean
+     */
+    function isMe()
+    {
         return true;
     }
 
-    function getDetails() {
+    /**
+     * Get full details of the owner
+     *
+     * @baseline team@fazend.com exists()
+     * @return Model_Owner_Details
+     */
+    function getDetails()
+    {
         $details = new Model_Owner_Details();
 
         return $details

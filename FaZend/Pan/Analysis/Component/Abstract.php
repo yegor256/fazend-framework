@@ -186,7 +186,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      *
      * @return string
      **/
-    protected function _cutTitle($text) {
+    protected function _cutTitle($text)
+    {
         if (strlen($text) < 10)
             return $text;
         if (strpos($text, '_') === false)
@@ -199,8 +200,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      *
      * @return void
      **/
-    protected function _relocate(Reflector $reflector) {
-
+    protected function _relocate(Reflector $reflector)
+    {
         $doc = $reflector->getDocblock();
         if (false !== $doc->getTag('category'))
             $this->_moveTo($this->_parent->make('category', trim($doc->getTag('category')->getDescription(), "\r\t\n ")));
@@ -210,7 +211,6 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
 
         if (false !== $doc->getTag('subpackage'))
             $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
-        
     }
     
 }

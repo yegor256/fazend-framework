@@ -19,7 +19,8 @@
  *
  * @package AnalysisModeller
  */
-class FaZend_Pan_Analysis_Diagram {
+class FaZend_Pan_Analysis_Diagram
+{
 
     const SEPARATOR = '-';
     
@@ -32,7 +33,8 @@ class FaZend_Pan_Analysis_Diagram {
      * @param string Name of the diagram
      * @return void
      */
-    public static function factory($name) {
+    public static function factory($name)
+    {
         if (!$name)
             $name = 'System' . self::SEPARATOR . 'partof';
             
@@ -47,7 +49,8 @@ class FaZend_Pan_Analysis_Diagram {
      *
      * @return string[]
      */
-    public static function getTypes() {
+    public static function getTypes()
+    {
         $list = array();
         foreach (glob(dirname(__FILE__) . '/Diagram/*.php') as $file) {
             $type = pathinfo($file, PATHINFO_FILENAME);

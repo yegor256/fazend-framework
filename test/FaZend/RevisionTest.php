@@ -12,16 +12,23 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
- * @baseline team@fazend.com exists()
  */
+
+require_once 'AbstractTestCase.php';
 
 /**
- * 
+ * Test case
  *
- * @package application
- * @subpackage Model
- * @baseline team@fazend.com exists()
+ * @package tests
  */
-class Model_Product extends FaZend_Db_Table_ActiveRow_product {
-}
+class FaZend_RevisionTest extends AbstractTestCase
+{
+    
+    public function testWeCanGetRevisionNumber()
+    {
+        $revision = FaZend_Revision::get();
+        $this->assertNotEquals(false, $revision);
+        FaZend_Log::info('Rev: ' . $revision);
+    }
 
+}

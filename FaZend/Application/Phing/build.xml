@@ -229,7 +229,7 @@
         </then></if>
     </target>    
 
-    <target name="sniffer" description="PHP Code Sniffer to run">
+    <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
     	<if><istrue value="${to.deploy}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <mkdir dir="${project.basedir}/reports/phpcs" />
@@ -268,7 +268,7 @@
         </else></if>
     </target>    
 
-    <target name="deploy" description="Copy working files to FTP">
+    <target name="deploy" description="Upload source files to the production FTP">
     	<if><istrue value="${to.deploy}" /><then>
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
@@ -313,7 +313,7 @@
         </else></if>
     </target>
 
-    <target name="doc" description="Create phpDoc documentation" >
+    <target name="doc" description="Create phpDoc documentation and deploy it" >
     	<if><istrue value="${to.deploy}" /><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
@@ -346,8 +346,6 @@
                 <fileset dir="${project.basedir}/reports">
                     <include name="*" />
                 </fileset>
-            </delete>
-            <delete verbose="false" includeemptydirs="true">
                 <fileset dir="${project.basedir}/build">
                     <include name="*" />
                 </fileset>
