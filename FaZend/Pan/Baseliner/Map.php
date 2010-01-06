@@ -49,7 +49,7 @@ class FaZend_Pan_Baseliner_Map
      *
      * @return void
      */
-    public function __construct($path, $email)
+    public function __construct($path, $email = null)
     {
         $this->_path = $path;
         $this->_email = $email;
