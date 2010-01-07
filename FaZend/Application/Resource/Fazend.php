@@ -125,7 +125,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
         
         // make session alive by COOKIE information
-        Zend_Session::rememberMe();
+        if (FaZend_Properties::get()->rememberSession)
+            Zend_Session::rememberMe();
     }
 
     /**
