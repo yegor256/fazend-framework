@@ -62,7 +62,8 @@ class FaZend_Log {
      *
      * @return FaZend_Log
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (is_null(self::$_instance))
             self::$_instance = new FaZend_Log();
         return self::$_instance;
@@ -73,7 +74,8 @@ class FaZend_Log {
      *
      * @return void
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -81,7 +83,8 @@ class FaZend_Log {
      *
      * @return $this
      */
-    public function clean() {
+    public function clean()
+    {
         $this->_loggers = array();
         $this->_writers = array();
         return $this;
@@ -94,7 +97,8 @@ class FaZend_Log {
      * @param string Name of the writer
      * @return $this
      */
-    public function addWriter($writer, $name = null) {
+    public function addWriter($writer, $name = null)
+    {
         if (!($writer instanceof Zend_Log_Writer_Abstract)) {
 
             if (!is_string($writer))
@@ -128,7 +132,8 @@ class FaZend_Log {
      * @return $this
      * @throws FaZend_Log_WriterNotFound
      */
-    public function removeWriter($name) {
+    public function removeWriter($name)
+    {
         if (!isset($this->_loggers[$name]))
             FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
 
@@ -145,7 +150,8 @@ class FaZend_Log {
      * @return Zend_Log_Writer_Abstract
      * @throws FaZend_Log_WriterNotFound
      */
-    public function getWriter($name) {
+    public function getWriter($name)
+    {
         if (!isset($this->_loggers[$name]))
             FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
 
@@ -158,7 +164,8 @@ class FaZend_Log {
      * @param string Name of the writer
      * @return Zend_Log_Writer_Abstract
      */
-    public function getWriterAndRemove($name) {
+    public function getWriterAndRemove($name)
+    {
         $writer = $this->getWriter($name);
         $this->removeWriter($name);
         return $writer;
@@ -170,7 +177,8 @@ class FaZend_Log {
      * @param string Message to log
      * @return void
      */
-    public static function info($msg) {
+    public static function info($msg)
+    {
         return self::getInstance()->_log('info', $msg);
     }
 
@@ -180,7 +188,8 @@ class FaZend_Log {
      * @param string Message to log
      * @return void
      */
-    public static function err($msg) {
+    public static function err($msg)
+    {
         return self::getInstance()->_log('err', $msg);
     }
 
@@ -190,7 +199,8 @@ class FaZend_Log {
      * @param string Message to log
      * @return void
      */
-    public static function warn($msg) {
+    public static function warn($msg)
+    {
         return self::getInstance()->_log('warn', $msg);
     }
 
@@ -210,7 +220,8 @@ class FaZend_Log {
      * @return void
      * @todo in PHP5.3 we should change it to __callStatic()
      */
-    protected function _log($method, $message) {
+    protected function _log($method, $message)
+    {
         foreach ($this->_loggers as $logger)
             call_user_func_array(array($logger, $method), array((string)$message));
     }
