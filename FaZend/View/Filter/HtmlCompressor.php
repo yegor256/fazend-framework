@@ -22,7 +22,10 @@ require_once 'Zend/Filter/Interface.php';
  * @package View
  * @subpackage Filter
  */
-class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
+class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
+{
+    
+    const MASK_PREFIX = 'mask-';
     
     /**
      * List of regex for replacements
@@ -52,31 +55,34 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface {
      * @param string HTML content to be compressed
      * @return string
      */
-    public function filter($html) {
+    public function filter($html)
+    {
         // we DON'T touch contect in these tags
-        $masked = array(
+        $tagsToMask = array(
             'pre', 
             'script', 
             'style', 
             'textarea');
 
-        // convert masked tags into BASE64 form
-        foreach($masked as $tag) {
+        // convert masked tags
+        $masked = array();
+        foreach($tagsToMask as $tag) {
             $matches = array();
             preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
-            foreach ($matches[0] as $id=>$match)
-                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>" . base64_encode($matches[2][$id]) . "</{$tag}>", $html);
-        }    
+            foreach ($matches[0] as $id=>$match) {
+                $html = str_replace($match, self::MASK_PREFIX . $tag . $id, $html);
+                $masked[$tag . $id] = $match;
+            }
+        }   
 
         // compress HTML
         $html = trim(preg_replace(array_keys(self::$_replacer), self::$_replacer, $html));
 
-        // deconvert masked tags from BASE64
-        foreach($masked as $tag) {
-            preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
-            foreach ($matches[0] as $id=>$match)
-                $html = str_replace($match, "<{$tag}{$matches[1][$id]}>" . base64_decode($matches[2][$id]) . "</{$tag}>", $html);
-        }    
+        // deconvert masked tags from
+        preg_match_all('/' . preg_quote(self::MASK_PREFIX, '/'). '(\w+\d+)/', $html, $matches);
+        foreach ($matches[0] as $id=>$match)
+            if (isset($masked[$matches[1][$id]]))
+                $html = str_replace($match, $masked[$matches[1][$id]], $html); 
 
         return $html;
     }

@@ -22,7 +22,8 @@ require_once 'Zend/Filter/Interface.php';
  * @package View
  * @subpackage Filter
  */
-class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
+class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface
+{
 
     /**
      * Regexp replacement patterns
@@ -45,7 +46,8 @@ class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface {
      * @param string CSS content to be compressed
      * @return string
      */
-    public function filter($css) {
+    public function filter($css)
+    {
         return preg_replace(array_keys(self::$_replacer), self::$_replacer, $css);
     }
 
