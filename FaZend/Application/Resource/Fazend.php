@@ -344,7 +344,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         FaZend_Log::getInstance()->clean();
 
         // log errors in ALL environments
-        FaZend_Log::getInstance()->addWriter('ErrorLog');
+        FaZend_Log::getInstance()->addWriter('ErrorLog', 'ErrorLog');
         
         // if testing or development - log into memory as well
         if (APPLICATION_ENV !== 'production')
