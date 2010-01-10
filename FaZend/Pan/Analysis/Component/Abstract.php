@@ -40,6 +40,13 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     protected $_parent;
     
     /**
+     * List of traces to other components
+     *
+     * @var string[]
+     **/
+    protected $_traces = array();
+    
+    /**
      * Constructor
      *
      * @param FaZend_Pan_Analysis_Component_Abstract Parent
@@ -88,6 +95,16 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Returns list of components (string names) that are traced by this one
+     *
+     * @return string[]
+     */
+    public function getTraces()
+    {
+        return $this->_traces;
     }
 
     /**
@@ -231,6 +248,18 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
 
         if (false !== $doc->getTag('subpackage'))
             $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
+    }
+    
+    /**
+     * Convert tags from docblock to traces
+     *
+     * @return void
+     **/
+    protected function _convertTagsToTraces(Zend_Reflection_Docblock $docblock) 
+    {
+        $this->_traces = array();
+        foreach ($docblock->getTags('see') as $tag)
+            $this->_traces[] = $tag->getDescription();
     }
     
 }

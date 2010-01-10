@@ -28,13 +28,17 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
      * @param Reflector Information about entity
      * @return void
      **/
-    public function reflect(Reflector $reflector) {
+    public function reflect(Reflector $reflector)
+    {
         assert($reflector instanceof Zend_Reflection_File);
         
         // get the name of the file
         $this->_name = pathinfo($reflector->getFileName(), PATHINFO_BASENAME);
         
         $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
+
+        if ($reflector->getDocComment())
+            $this->_convertTagsToTraces($reflector->getDocblock());
 
         // change my location
         $this->_relocate($reflector);

@@ -33,6 +33,9 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
     {
         assert($reflector instanceof Zend_Reflection_Method);
         $this->_name = $reflector->getName();
+
+        if ($reflector->getDocComment())
+            $this->_convertTagsToTraces($reflector->getDocblock());
     }
     
     /**
