@@ -37,7 +37,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @var FaZend_Pos_Abstract
      **/
-    protected static $_root;
+    protected static $_root = null;
     
     /**
      * Name of root class
@@ -87,7 +87,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public static function root() 
     {
-        if (!isset(self::$_root)) {
+        if (is_null(self::$_root)) {
             self::$_root = new self::$_rootClass();
             self::$_root->init();
         }
