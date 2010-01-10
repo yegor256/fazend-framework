@@ -91,6 +91,16 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     }
 
     /**
+     * Returns type of the component
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return lcfirst(substr(get_class($this), strlen('FaZend_Pan_Analysis_Component_')));
+    }
+
+    /**
      * Returns full name of the component
      *
      * @return string

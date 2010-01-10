@@ -61,6 +61,7 @@ class FaZend_Pan_Analysis_Facade
             $list[] = array(
                 'name' => $sub->getName(),
                 'fullName' => $sub->getFullName(),
+                'type' => $sub->getType(),
                 );
             $this->_derive($sub, $list);
         }
