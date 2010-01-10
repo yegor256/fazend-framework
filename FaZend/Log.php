@@ -32,7 +32,8 @@
  *
  * @package Log
  */
-class FaZend_Log {
+class FaZend_Log
+{
 
     /**
      * Class instance
@@ -100,10 +101,12 @@ class FaZend_Log {
     public function addWriter($writer, $name = null)
     {
         if (!($writer instanceof Zend_Log_Writer_Abstract)) {
-
-            if (!is_string($writer))
-                FaZend_Exception::raise('FaZend_Log_InvalidWriterName',
-                    "Writer can be an instance of Zend_Log_Writer_Abstract or a string");
+            if (!is_string($writer)) {
+                FaZend_Exception::raise(
+                    'FaZend_Log_InvalidWriterName',
+                    'Writer can be an instance of Zend_Log_Writer_Abstract or a string'
+                );
+            }
 
             $className = 'FaZend_Log_Writer_' . $writer;
             $writer = new $className();
@@ -113,7 +116,6 @@ class FaZend_Log {
         if (is_null($name)) {
             $name = get_class($writer) . '1';
             foreach ($this->_loggers as $id=>$logger) {
-                $matches = array();
                 if (preg_match('/^(' . preg_quote(get_class($writer)) . ')(\d+)$/', $id, $matches))
                     $name = $matches[1] . ((int)$matches[2] + 1);
             }
@@ -135,7 +137,10 @@ class FaZend_Log {
     public function removeWriter($name)
     {
         if (!isset($this->_loggers[$name]))
-            FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
+            FaZend_Exception::raise(
+                'FaZend_Log_WriterNotFound', 
+                "Writer '{$name}' was not found in stack"
+            );
 
         unset($this->_loggers[$name]);
         unset($this->_writers[$name]);
@@ -153,7 +158,10 @@ class FaZend_Log {
     public function getWriter($name)
     {
         if (!isset($this->_loggers[$name]))
-            FaZend_Exception::raise('FaZend_Log_WriterNotFound', "Writer '{$name}' was not found in stack");
+            FaZend_Exception::raise(
+                'FaZend_Log_WriterNotFound', 
+                "Writer '{$name}' was not found in stack"
+            );
 
         return $this->_writers[$name];
     }
