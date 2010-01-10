@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Component_Abstract {
+abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Component_Abstract
+{
 
     /**
      * Build SVG of the component and returns it
@@ -31,7 +32,8 @@ abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Co
      * @param integer Y-coordinate
      * @return string
      */
-    public function svg(Zend_View $view, $type, $x, $y) {
+    public function svg(Zend_View $view, $type, $x, $y)
+    {
     }
     
 }

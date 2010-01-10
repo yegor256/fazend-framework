@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_Package extends FaZend_Pan_Analysis_Component_Class {
+class FaZend_Pan_Analysis_Component_Package extends FaZend_Pan_Analysis_Component_Class
+{
 
     /**
      * Build SVG of the component and returns it
@@ -31,7 +32,8 @@ class FaZend_Pan_Analysis_Component_Package extends FaZend_Pan_Analysis_Componen
      * @param integer Y-coordinate
      * @return string
      */
-    public function svg(Zend_View $view, $type, $x, $y) {
+    public function svg(Zend_View $view, $type, $x, $y)
+    {
         $title = $this->_cutTitle($this->getName());
         $font = FaZend_Pan_Analysis_Component::FONT_SIZE;
         $line = FaZend_Pan_Analysis_Component::STROKE_WIDTH;
@@ -77,7 +79,6 @@ class FaZend_Pan_Analysis_Component_Package extends FaZend_Pan_Analysis_Componen
                 'class' => 'text',
                 'font-family' => 'Verdana',
                 'font-size' => $font), $title));
-                 
     }
 
 }

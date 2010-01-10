@@ -19,7 +19,8 @@
  *
  * @package AnalysisModeller
  */
-class FaZend_Pan_Analysis_Component {
+class FaZend_Pan_Analysis_Component
+{
 
     const SEPARATOR = '.';
     

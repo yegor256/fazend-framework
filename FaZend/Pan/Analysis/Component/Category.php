@@ -20,6 +20,7 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_Category extends FaZend_Pan_Analysis_Component_Package {
+class FaZend_Pan_Analysis_Component_Category extends FaZend_Pan_Analysis_Component_Package
+{
 
 }

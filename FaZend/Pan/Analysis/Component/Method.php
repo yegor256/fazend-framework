@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component_Abstract {
+class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component_Abstract
+{
 
     /**
      * Reconfigure class according to reflection information
@@ -28,7 +29,8 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
      * @param Reflector Information about entity
      * @return void
      **/
-    public function reflect(Reflector $reflector) {
+    public function reflect(Reflector $reflector)
+    {
         assert($reflector instanceof Zend_Reflection_Method);
         $this->_name = $reflector->getName();
     }
@@ -42,7 +44,8 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
      * @param integer Y-coordinate
      * @return string
      */
-    public function svg(Zend_View $view, $type, $x, $y) {
+    public function svg(Zend_View $view, $type, $x, $y)
+    {
     }
     
 

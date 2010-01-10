@@ -1,0 +1,51 @@
+<?php
+/**
+ *
+ * Copyright (c) FaZend.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/fazend
+ * If you have any questions about privacy, please email privacy@fazend.com
+ *
+ * @copyright Copyright (c) FaZend.com
+ * @version $Id$
+ * @category FaZend
+ */
+
+require_once 'FaZend/Cli/Abstract.php';
+
+/**
+ * Get CLI access to Pan-s
+ *
+ * @package Cli
+ */
+class Pan extends FaZend_Cli_Abstract
+{
+
+    /**
+     * Executor of a command-line command
+     *
+     * @return string
+     */
+    public function execute()
+    {
+        $pan = strtolower($this->_get('pan'));
+
+        switch ($pan) {
+            case 'analysis':
+                $facade = new FaZend_Pan_Analysis_Facade();
+                $list = $facade->getComponentsList();
+                echo Zend_Json::encode($list);
+                break;
+                
+            default:
+                echo "Pan $pan is not accessible\n";
+                return self::RETURNCODE_OK;
+        }
+
+        return self::RETURNCODE_OK;
+    }
+
+}

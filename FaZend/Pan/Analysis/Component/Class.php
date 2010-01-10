@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_Abstract {
+class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_Abstract
+{
 
     /**
      * Reconfigure class according to reflection information
@@ -28,7 +29,8 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
      * @param Reflector Information about entity
      * @return void
      **/
-    public function reflect(Reflector $reflector) {
+    public function reflect(Reflector $reflector)
+    {
         assert($reflector instanceof Zend_Reflection_Class);
         $this->_name = $reflector->getName();
 
@@ -48,7 +50,8 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
      * @param integer Y-coordinate of the center
      * @return string
      */
-    public function svg(Zend_View $view, $type, $x, $y) {
+    public function svg(Zend_View $view, $type, $x, $y)
+    {
         $title = $this->_cutTitle($this->getName());
         $font = FaZend_Pan_Analysis_Component::FONT_SIZE;
         $line = FaZend_Pan_Analysis_Component::STROKE_WIDTH;
@@ -101,7 +104,6 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
                 'class' => 'text',
                 'font-family' => 'Verdana',
                 'font-size' => $font), $title));
-                 
     }
 
 }

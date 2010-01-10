@@ -20,18 +20,48 @@
  * @package Pan
  * @subpackage Analysis
  */
-class FaZend_Pan_Analysis_Facade {
+class FaZend_Pan_Analysis_Facade
+{
 
     /**
      * Get full list of components, as a hierarchy
      *
-     * @return struct
+     * @return array
      **/
-    public function getComponents() {
+    public function getComponents()
+    {
         $list = array();
         foreach (FaZend_Pan_Analysis_Component_System::getInstance() as $component)
             $list[] = $component->getFullName();
         return $list;
+    }
+
+    /**
+     * Get full list of components, as a plain list
+     *
+     * @return array
+     **/
+    public function getComponentsList()
+    {
+        $list = array();
+        $this->_derive(FaZend_Pan_Analysis_Component_System::getInstance(), $list);
+        return $list;
+    }
+
+    /**
+     * Get all components from current and add them to the list
+     *
+     * @return void
+     **/
+    protected function _derive(FaZend_Pan_Analysis_Component_Abstract $component, array &$list) 
+    {
+        foreach ($component as $sub) {
+            $list[] = array(
+                'name' => $sub->getName(),
+                'fullName' => $sub->getFullName(),
+                );
+            $this->_derive($sub, $list);
+        }
     }
 
 }

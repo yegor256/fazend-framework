@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component_Package {
+class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component_Package
+{
 
     const ROOT = 'System';
     
@@ -36,7 +37,8 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
      *
      * @return FaZend_Pan_Analysis_Component_System
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$_instance)) {
             self::$_instance = new self(null, self::ROOT);
             self::$_instance->_init();
@@ -49,7 +51,8 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
      *
      * @return FaZend_Pan_Analysis_Component_Abstract
      **/
-    public function findByFullName($name) {
+    public function findByFullName($name)
+    {
         if ($name == self::ROOT)
             return $this;
             
@@ -67,10 +70,11 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
      *
      * @return void
      **/
-    protected function _init() {
-        
+    protected function _init()
+    {
         $dirs = array(
-            APPLICATION_PATH);
+            APPLICATION_PATH
+        );
         
         // uncomment this line if you're developing the class
         // $dirs[] = FAZEND_PATH;

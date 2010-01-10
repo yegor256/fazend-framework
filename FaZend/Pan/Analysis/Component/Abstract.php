@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
+abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
+{
 
     const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
@@ -45,7 +46,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param string Name of the component
      * @return void
      */
-    public function __construct(FaZend_Pan_Analysis_Component_Abstract $parent = null, $name) {
+    public function __construct(FaZend_Pan_Analysis_Component_Abstract $parent = null, $name)
+    {
         $this->_parent = $parent;
         $this->_name = $name;
     }
@@ -58,7 +60,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param Reflector Information about this component
      * @return FaZend_Pan_Analysis_Component_Abstract
      */
-    public function factory($type, $name, Reflector $reflector = null) {
+    public function factory($type, $name, Reflector $reflector = null)
+    {
         $className = 'FaZend_Pan_Analysis_Component_' . ucfirst($type);
         $component = new $className($this, $name);
         $this[] = $component;
@@ -82,7 +85,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -91,7 +95,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      *
      * @return string
      */
-    public function getFullName() {
+    public function getFullName()
+    {
         if (!$this->_parent)
             return $this->getName();
         return $this->_parent->getFullName() . FaZend_Pan_Analysis_Component::SEPARATOR . $this->getName();
@@ -103,7 +108,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param string Name of the componen to find
      * @return FaZend_Pan_Analysis_Component_Abstract
      */
-    public function find($name) {
+    public function find($name)
+    {
         foreach ($this as $component)
             if ($component->getName() == $name)
                 return $component;
@@ -118,7 +124,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param string Name of the component to find
      * @return FaZend_Pan_Analysis_Component_Abstract
      */
-    public function make($type, $name) {
+    public function make($type, $name)
+    {
         try {
             $component = $this->find($name);
         } catch (FaZend_Pan_Analysis_Component_NotFound $e) { 
@@ -133,7 +140,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param string Type of diagram to tell about this component
      * @return string
      **/
-    public function getDiagramName($type) {
+    public function getDiagramName($type)
+    {
         return str_replace(
             FaZend_Pan_Analysis_Component::SEPARATOR,
             FaZend_Pan_Analysis_Diagram::SEPARATOR,
@@ -148,7 +156,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param string Content of the node
      * @return string SVG node
      **/
-    public static function makeSvg($name, array $options = array(), $content = null) {
+    public static function makeSvg($name, array $options = array(), $content = null)
+    {
         $svg = "\n<" . $name . ' ';
         foreach ($options as $key=>$value)
             $svg .= $key . '="' . $value . '" ';
@@ -172,7 +181,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator {
      * @param FaZend_Pan_Analysis_Component_Abstract Destination to move to
      * @return $this
      **/
-    protected function _moveTo(FaZend_Pan_Analysis_Component_Abstract $destination) {
+    protected function _moveTo(FaZend_Pan_Analysis_Component_Abstract $destination)
+    {
         foreach ($this->_parent as $key=>$component)
             if ($component == $this)
                 unset($this->_parent[$key]);
