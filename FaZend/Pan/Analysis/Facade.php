@@ -51,6 +51,8 @@ class FaZend_Pan_Analysis_Facade
     /**
      * Get all components from current and add them to the list
      *
+     * @param FaZend_Pan_Analysis_Component_Abstract Component to browse
+     * @param array List of elements to fill
      * @return void
      **/
     protected function _derive(FaZend_Pan_Analysis_Component_Abstract $component, array &$list) 
