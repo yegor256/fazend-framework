@@ -97,6 +97,7 @@ class FaZend_Log
      * @param string|Zend_Log_Writer_Abstract
      * @param string Name of the writer
      * @return $this
+     * @throws FaZend_Log_InvalidWriterName
      */
     public function addWriter($writer, $name = null)
     {

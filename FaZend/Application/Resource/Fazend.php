@@ -123,10 +123,6 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             Zend_Session::setOptions($options);
         } else
             trigger_error("Session directory '{$dir}' can't be used", E_USER_WARNING);
-        
-        // make session alive by COOKIE information
-        if (FaZend_Properties::get()->rememberSession)
-            Zend_Session::rememberMe();
     }
 
     /**

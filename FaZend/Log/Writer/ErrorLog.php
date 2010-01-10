@@ -22,7 +22,8 @@
  *
  * @package Log
  */
-class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
+class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
+{
 
     const MAX_LENGTH = 20000; // maximum length of the log file, in bytes
     const MAX_AGE_DAYS = 5; // maximum age of the error_log file in days
@@ -38,8 +39,10 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
      * </code>
      *
      * @return void
+     * @throws FaZend_Log_Writer_ErrorLog_NoLogFile
      */
-    public function __construct() {
+    public function __construct()
+    {
         // we try to get the file name from php.ini
         $stream = ini_get('error_log');
 
@@ -47,8 +50,10 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
         if (!$stream) {
             // and if it's a production mode - we should signal
             if (APPLICATION_ENV === 'production')
-                FaZend_Exception::raise('FaZend_Log_Writer_ErrorLog_NoLogFile',
-                    'error_log is not set in php.ini');
+                FaZend_Exception::raise(
+                    'FaZend_Log_Writer_ErrorLog_NoLogFile',
+                    '[error_log] is not set in php.ini or in app.ini'
+                );
             else
                 // otherwise drop the output to stdout
                 $stream = 'php://stdout';
@@ -81,7 +86,8 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
      * @param string File name to cut
      * @return void
      */
-    protected function _cutFile($file) {
+    protected function _cutFile($file)
+    {
         if (APPLICATION_ENV !== 'production')
             return;
 
@@ -121,8 +127,11 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream {
             return;
         if (@ftruncate($handle, 0) === false)
             return;
-        @fwrite($handle, date('m/d/Y h:i') . ": file content (" . strlen($content) .
-            " bytes) was sent by email ({$email}) to admin.\n\n");
+        @fwrite(
+            $handle, 
+            date('m/d/Y h:i') . ": file content (" . strlen($content) .
+            " bytes) was sent by email ({$email}) to admin.\n\n"
+        );
         @fclose($handle);
     }
 

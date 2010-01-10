@@ -124,14 +124,21 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
 
         $result = self::_auth()->authenticate($authAdapter);
 
-        if (!$result->isValid())
-            FaZend_Exception::raise('FaZend_User_LoginFailed', implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')');
+        if (!$result->isValid()) {
+            FaZend_Exception::raise(
+                'FaZend_User_LoginFailed', 
+                implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')'
+            );
+        }
 
         $data = $authAdapter->getResultRowObject(); 
         self::_auth()->getStorage()->write($data);
 
         // forget previous status
         self::$_loggedIn = true;
+
+        // remember me as a logged in user
+        Zend_Session::rememberMe();
     }
 
     /**
