@@ -73,3 +73,13 @@ if (!function_exists('sys_get_temp_dir')) {
             'Also we failed to create a custom TEMP directory here: ' . $temp);
     }
 }
+
+// patch for PHP 5.2
+if (!function_exists('lcfirst')) {
+    function lcfirst($str) 
+    {
+        if (!isset($str[0]))
+            return $str;
+        return strtolower($str[0]) . substr($str, 1);
+    }
+}
