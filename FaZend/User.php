@@ -63,25 +63,20 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     public static function isLoggedIn() 
     {
         if (!is_null(self::$_loggedIn))
-            return self::$_loggedIn;
+            return (bool)self::$_loggedIn;
 
         // try to analyze the situation in session
         $loggedIn = false;
         if (self::_auth()->hasIdentity()) {
-            try {
-                $user = FaZend_User::findByEmail(self::_auth()->getIdentity()->email);
-                // sanity check
-                if ($user->password != self::_auth()->getIdentity()->password)
-                    FaZend_Exception::raise('FaZend_User_InvalidPassword');
- 
-                // yes, we're here!
-                $loggedIn = true;
-            } catch (FaZend_User_NotFoundException $e) {
-            } catch (FaZend_User_InvalidPassword $e) {
+            $class = self::$_rowClass;
+            $user = new $class(self::_auth()->getIdentity()->id);
+            if ($user->exists() && ($user->password == self::_auth()->getIdentity()->password)) {
+                $user->logIn();
+                return true;
             }
         }
         
-        return self::$_loggedIn = $loggedIn;
+        return self::$_loggedIn = false;
     }
 
     /**
@@ -92,19 +87,13 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      */
     public static function getCurrentUser() 
     {
-        if (!self::isLoggedIn())
-            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'User is not logged in');
-
-        $identity = self::_auth()->getIdentity();
-        
-        // something went wrong, and we should clear everything and throw
-        // an exception
-        if (!isset($identity->email)) {
-            self::logOut();
-            FaZend_Exception::raise('FaZend_User_NotLoggedIn', 'User is not logged in, and there is some problem');
+        if (!self::isLoggedIn()) {
+            FaZend_Exception::raise(
+                'FaZend_User_NotLoggedIn', 
+                'User is not logged in'
+            );
         }
-
-        return FaZend_User::findByEmail($identity->email);
+        return self::$_loggedIn;
     }
 
     /**
@@ -135,7 +124,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         self::_auth()->getStorage()->write($data);
 
         // forget previous status
-        self::$_loggedIn = true;
+        self::$_loggedIn = $this;
 
         // remember me as a logged in user
         Zend_Session::rememberMe();
@@ -231,7 +220,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      * @param string Email of the user
      * @return boolean
      */
-    public static function findByEmail ($email) 
+    public static function findByEmail($email) 
     {
         return self::retrieve()
             ->where('email = ?', $email)
@@ -245,7 +234,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      *
      * @return boolean
      */
-    public function isCurrentUser () 
+    public function isCurrentUser() 
     {
         if (!self::isLoggedIn())
             return false;
