@@ -29,7 +29,9 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      * @var string[]
      **/
     protected $_types = array(
-        'php'
+        'php',
+        'phtml',
+        'css',
         );
         
     /**
@@ -65,7 +67,17 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      */
     public function fix(&$content, $type)
     {
-        $regex = '/^<\?php\s*\n\/\*\*\s*\n(.*?)\*\/\s*\n/ms';
+        switch ($type) {
+            case 'php':
+                $regex = '/^<\?php\s*\n\/\*\*\s*\n(.*?)\*\/\s*\n/ms';
+                break;
+            case 'css':
+                $regex = '/^\/\*\*\s*\n(.*?)\*\/\s*\n/ms';
+                break;
+            case 'phtml':
+                $regex = '/^<!--\s*\n(.*?)-->\n/ms';
+                break;
+        }
         
         if (!preg_match($regex, $content, $matches)) {
             FaZend_Exception::raise(
@@ -100,16 +112,40 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
         
         $license = $this->_getLicense();
         
-        $docBlock = 
-        "<?php\n" .
-        "/**\n" .
-        " * {$license['title']}\n" .
-        " *\n" . 
-        " * " . implode("\n * ", $license['lines']) . "\n" .
-        " *\n" . 
-        implode("\n", array_slice($lines, $i)) .
-        "*/\n\n"
-        ;
+        switch ($type) {
+            case 'php':
+                $docBlock = 
+                "<?php\n" .
+                "/**\n" .
+                " * {$license['title']}\n" .
+                " *\n" . 
+                " * " . implode("\n * ", $license['lines']) . "\n" .
+                " *\n" . 
+                implode("\n", array_slice($lines, $i)) .
+                "*/\n\n";
+                break;
+            case 'php':
+                $docBlock = 
+                "/**\n" .
+                " * {$license['title']}\n" .
+                " *\n" . 
+                " * " . implode("\n * ", $license['lines']) . "\n" .
+                " *\n" . 
+                implode("\n", array_slice($lines, $i)) .
+                "*/\n\n";
+                break;
+            case 'phtml':
+                $docBlock = 
+                "<!--\n" .
+                " *\n" .
+                " * {$license['title']}\n" .
+                " *\n" . 
+                " * " . implode("\n * ", $license['lines']) . "\n" .
+                " *\n" . 
+                implode("\n", array_slice($lines, $i)) .
+                "-->\n";
+                break;
+        }
         
         $new = $docBlock . substr($content, strlen($matches[0]));
         if ($new == $content)
