@@ -21,6 +21,18 @@ class FaZend_Pan_Polisher_Fixers_LicenseTest extends AbstractTestCase
     
     public static function providerSources()
     {
+        $result = "<?php
+/**
+ * license
+ *
+ * my two lines
+ * license
+ *
+ * @param test
+ */
+somecode();
+";
+
         return array(
             array(
                 "<?php
@@ -31,19 +43,8 @@ class FaZend_Pan_Polisher_Fixers_LicenseTest extends AbstractTestCase
  *
  * @param test
  */
- somecode();
-",
-                "<?php
-/**
- * license
- *
- * my license
- *
- * @param test
- */
- somecode();
-"
-                ),
+somecode();
+", $result),
 
             array(
                 "<?php
@@ -52,20 +53,26 @@ class FaZend_Pan_Polisher_Fixers_LicenseTest extends AbstractTestCase
  *
  * @param test
  */
- somecode();
-",
-                "<?php
-/**
- * license
+somecode();
+", $result),
+
+            array(
+                "<?php\t
+/**\t
  *
- * my license
  *
+ * Some line, which
+ * is not correct now
+ *\t
+ *\t 
+ * Another block of text, 
+ * which is not correct again
+ *\t
  * @param test
- */
- somecode();
-"
-                ),
-);
+ */\t
+somecode();
+", $result),
+        );
     }
     
     /**
@@ -74,7 +81,7 @@ class FaZend_Pan_Polisher_Fixers_LicenseTest extends AbstractTestCase
     public function testLicenseCanBeFixed($origin, $result)
     {
         $fixer = new FaZend_Pan_Polisher_Fixer_License();
-        $fixer->setLicense('license', array('my license'));
+        $fixer->setLicense('license', array('my two lines', 'license'));
         
         $fixer->fix($origin, 'php');
         $this->assertEquals($origin, $result, "Failed to process, returned:\n$origin");

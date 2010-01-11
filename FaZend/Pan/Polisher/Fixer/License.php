@@ -65,7 +65,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      */
     public function fix(&$content, $type)
     {
-        $regex = '/^<\?php\n\/\*\*\n(.*?)\*\/\n/ms';
+        $regex = '/^<\?php\s*\n\/\*\*\s*\n(.*?)\*\/\s*\n/ms';
         
         if (!preg_match($regex, $content, $matches)) {
             FaZend_Exception::raise(
@@ -78,7 +78,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
         
         // ignore all leading empty lines
         for ($i=0; $i<count($lines); $i++) {
-            if (trim($lines[$i]) == '*')
+            if (trim($lines[$i]) != '*')
                 break;
         }
         
