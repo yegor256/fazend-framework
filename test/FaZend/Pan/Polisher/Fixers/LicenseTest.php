@@ -30,6 +30,7 @@ class FaZend_Pan_Polisher_Fixers_LicenseTest extends AbstractTestCase
  *
  * @param test
  */
+
 somecode();
 ";
 
@@ -43,6 +44,7 @@ somecode();
  *
  * @param test
  */
+
 somecode();
 ", $result),
 
@@ -53,6 +55,7 @@ somecode();
  *
  * @param test
  */
+
 somecode();
 ", $result),
 
@@ -70,6 +73,7 @@ somecode();
  *\t
  * @param test
  */\t
+
 somecode();
 ", $result),
         );

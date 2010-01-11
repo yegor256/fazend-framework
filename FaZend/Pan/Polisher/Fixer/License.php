@@ -108,7 +108,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
         " * " . implode("\n * ", $license['lines']) . "\n" .
         " *\n" . 
         implode("\n", array_slice($lines, $i)) .
-        "*/\n"
+        "*/\n\n"
         ;
         
         $new = $docBlock . substr($content, strlen($matches[0]));
