@@ -43,6 +43,19 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
     protected $_license;    
     
     /**
+     * Inject license
+     *
+     * @return void
+     **/
+    public function setLicense($title, array $lines) 
+    {
+        $this->_license = array(
+            'title' => $title,
+            'lines' => $lines,
+            );
+    }
+    
+    /**
      * Fix given content
      *
      * @param string File content
@@ -52,7 +65,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      */
     public function fix(&$content, $type)
     {
-        $regex = '/^<\?php\n\/\*\*\n(.*?)\*\//ms';
+        $regex = '/^<\?php\n\/\*\*\n(.*?)\*\/\n/ms';
         
         if (!preg_match($regex, $content, $matches)) {
             FaZend_Exception::raise(
@@ -72,13 +85,16 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
         $empty = false;
         $blockCount = 0;
         // find the second empty line, ignoring any leading empty lines
+        // $i found is the number of the line AFTER the license place
         for (; $i<count($lines); $i++) {
             if (trim($lines[$i]) != '*') {
                 if ($empty)
                     $blockCount++;
             }
             $empty = (trim($lines[$i]) == '*');
-            if ($blockCount == 3)
+            if ($blockCount == 2)
+                break;
+            if (preg_match('/^\s\*\s@\w/', $lines[$i]))
                 break;
         }
         
@@ -89,10 +105,10 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
         "/**\n" .
         " * {$license['title']}\n" .
         " *\n" . 
-        " * " . implode(' * ', $license['lines']) .
+        " * " . implode("\n * ", $license['lines']) . "\n" .
         " *\n" . 
         implode("\n", array_slice($lines, $i)) .
-        "*/"
+        "*/\n"
         ;
         
         $new = $docBlock . substr($content, strlen($matches[0]));
@@ -127,14 +143,14 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
             );
         }
         
-        $lines = file($path);
+        $lines = explode("\n", file_get_contents($path));
         for ($i = 2; $i<count($lines); $i++) {
-            if (!trim($lines[$i], "\n\r\t "))
+            if (!trim($lines[$i]))
                 break;
         }
             
         return $this->_license = array(
-            'title' => trim($lines[0], "\n\r\t "),
+            'title' => trim($lines[0]),
             'lines' => array_slice($lines, 2, $i-2)
             );
     }
