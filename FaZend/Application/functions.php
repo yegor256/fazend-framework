@@ -83,3 +83,38 @@ if (!function_exists('lcfirst')) {
         return strtolower($str[0]) . substr($str, 1);
     }
 }
+
+/**
+ * Translate string
+ *
+ * You can use with any amount of params, like you're doing it with
+ * sprintf() function, e.g.:
+ *
+ * <code>
+ * $s = _t('Your email is: %s', $email);
+ * $s = _t('Your account #%d balance is %0.2f', $accNo, $balance)
+ * </code>
+ *
+ * @param string Translate this string and return it's translated value
+ * @return string
+ */
+function _t($str) 
+{
+    // if array specified - we get a random line from it
+    if (is_array($str))
+        $str = $str[array_rand($str)];
+
+    $str = preg_replace('/\n\t\r/', ' ', $str);
+
+    // translate this string
+    $str = Zend_Registry::get('Zend_Translate')->_($str);
+
+    // pass it to sprintf
+    if (func_num_args() > 1) {
+        $args = func_get_args();
+        $str = call_user_func_array('sprintf', array_merge(array($str), array_slice($args, 1)));
+    }
+    
+    return $str;
+}
+
