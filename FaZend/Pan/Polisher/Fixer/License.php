@@ -124,7 +124,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
                 implode("\n", array_slice($lines, $i)) .
                 "*/\n\n";
                 break;
-            case 'php':
+            case 'css':
                 $docBlock = 
                 "/**\n" .
                 " * {$license['title']}\n" .
