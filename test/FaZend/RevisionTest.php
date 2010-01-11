@@ -28,7 +28,7 @@ class FaZend_RevisionTest extends AbstractTestCase
     {
         $revision = FaZend_Revision::get();
         $this->assertNotEquals(false, $revision);
-        FaZend_Log::info('Rev: ' . $revision);
+        logg('Rev: ' . $revision);
     }
 
 }

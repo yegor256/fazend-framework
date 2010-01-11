@@ -12,6 +12,7 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
+ * @see bootstrap.php
  */
 
 define('APPLICATION_PATH', realpath('../'));

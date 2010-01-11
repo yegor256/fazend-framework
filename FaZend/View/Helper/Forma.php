@@ -213,8 +213,12 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             }
 
             // log this operation
-            FaZend_Log::info('Calling ' . $rMethod->getDeclaringClass()->name . '::' . $method .
-                '(\'' . implode("', '", $mnemos) . '\')');
+            logg(
+                "Calling %s::%s('%s')",
+                $rMethod->getDeclaringClass()->name,
+                $method,
+                implode("', '", $mnemos)
+            );
 
             // execute the target method
             call_user_func_array(array($class, $method), $methodArgs);

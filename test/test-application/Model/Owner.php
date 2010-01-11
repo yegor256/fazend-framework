@@ -32,6 +32,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      *
      * @baseline team@fazend.com exists()
      * @return Model_Owner[]
+     * @see FaZend_Db_Table_ActiveRow
      */
     public static function retrieveAll()
     {

@@ -443,7 +443,7 @@ class FaZend_Exec extends FaZend_StdObject
         // execute it!
         shell_exec($shell);
         if (self::$_isVerbose)
-            FaZend_Log::info("FaZend_Exec executed: {$shell}");
+            logg("FaZend_Exec executed: {$shell}");
 
         if (!is_null($dir)) {
             chdir($current);

@@ -26,7 +26,7 @@ class FaZend_Cli_cli_BaselineTest extends AbstractTestCase
 
         $this->assertNotEquals(false, $result, "Empty result, why?");
         
-        FaZend_Log::info('Baseline returned: ' . $result);
+        logg('Baseline returned: ' . $result);
     }
 
 }

@@ -118,3 +118,24 @@ function _t($str)
     return $str;
 }
 
+/**
+ * Simplified access point to FaZend_Log
+ *
+ * @param string Message to log
+ * @return void
+ * @category Supplementary
+ * @package Functions
+ */
+function logg($message) 
+{
+    if (func_num_args() > 1) {
+        $args = func_get_args();
+        $message = call_user_func_array('sprintf', array_merge(array($message), array_slice($args, 1)));
+    }
+    try {
+        FaZend_Log::info($message);
+    } catch (Zend_Log_Exception $e) {
+        echo '<p>Log missed: ' . $message . '</p>';
+    }
+}
+

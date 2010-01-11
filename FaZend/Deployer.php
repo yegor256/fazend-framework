@@ -249,7 +249,7 @@ class FaZend_Deployer
         
         // log the operation
         if ($this->_options->verbose)
-            FaZend_Log::info("DB table '{$table}' was created: {$sql}");
+            logg("DB table '{$table}' was created: {$sql}");
     }
 
     /**

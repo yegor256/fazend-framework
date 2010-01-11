@@ -26,11 +26,13 @@
  * FaZend_Log::addWriter('ErrorLog');
  *
  * FaZend_Log::info('File was created');
+ * logg('File was created'); // it's the same, but shorter
  * </code>
  *
  * In the example above the message will be sent to both writers.
  *
  * @package Log
+ * @see logg()
  */
 class FaZend_Log
 {

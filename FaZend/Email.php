@@ -135,7 +135,7 @@ class FaZend_Email {
             // send it out
             $mailer->send();
         else
-            FaZend_Log::info(
+            logg(
                 "Email sending skipped:\n" 
                 . "\tFrom: " . $mailer->getFrom() . "\n"
                 . "\tTo: " . implode('; ', $mailer->getRecipients()) . "\n"

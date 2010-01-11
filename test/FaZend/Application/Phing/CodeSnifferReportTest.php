@@ -27,7 +27,7 @@ class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase
     {
         // we need this message since the operations below
         // might take some good time.
-        FaZend_Log::info('CodeSnifferReport testing started...');
+        logg('CodeSnifferReport testing started...');
         
         //$xml = tempnam(TEMP_PATH, 'phpcs');
         $xml = 'test.xml';

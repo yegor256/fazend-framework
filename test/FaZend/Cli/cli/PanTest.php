@@ -27,7 +27,7 @@ class FaZend_Cli_cli_PanTest extends AbstractTestCase
         $this->assertNotEquals(false, $result, "Empty result, why?");
         $json = Zend_Json::decode($result);
         
-        FaZend_Log::info('JSON returned: ' . count($json) . ': ' . cutLongLine($result));
+        logg('JSON returned: ' . count($json) . ': ' . cutLongLine($result));
     }
 
 }

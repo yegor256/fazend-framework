@@ -63,7 +63,7 @@ class FaZend_ValidatorTest extends AbstractTestCase {
                 }
                 $this->fail('Exception should be raised, step: ' . $step);
             } catch (FaZend_Validator_Failure $e) {
-                FaZend_Log::info($e->getMessage());
+                logg($e->getMessage());
             }
             
         } while ($step--);
