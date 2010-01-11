@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Copyright (c) FaZend.com
  * All rights reserved.
  *

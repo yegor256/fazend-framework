@@ -14,6 +14,8 @@
  * @category FaZend
  */
 
+define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
+
 /**
  * Bootstraper
  *

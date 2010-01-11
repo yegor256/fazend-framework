@@ -66,7 +66,35 @@ class FaZend_Pan_Polisher_Facade
      **/
     public function polish() 
     {
-        // to do
+        $fixers = FaZend_Pan_Polisher_Fixer_Abstract::retrieveAll();
+        
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->_path)) as $file) {
+            if (preg_match('/\/.svn\//', $file))
+                continue;
+            
+            $type = pathinfo($file, PATHINFO_EXTENSION);
+            
+            $fixed = false;
+            $content = file_get_contents($file);
+            foreach ($fixers as $fixer) {
+                if (!$fixer->isFixable($type))
+                    continue;
+                try {
+                    if ($fixer->fix($content, $type))
+                        $fixed = true;
+                } catch (FaZend_Pan_Polisher_FixerException $e) {
+                    echo "$file: {$e->getMessage()}\n";
+                }
+            }
+            
+            if ($fixed) {
+                if (!$this->_dry)
+                    file_put_contents($file);
+
+                if ($this->_verbose)
+                    echo "{$file} processed\n";
+            }
+        }
     }
 
 }
