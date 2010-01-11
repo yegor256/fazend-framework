@@ -89,7 +89,7 @@ class FaZend_Pan_Polisher_Facade
             
             if ($fixed) {
                 if (!$this->_dry)
-                    file_put_contents($file);
+                    file_put_contents($file, $content);
 
                 if ($this->_verbose)
                     echo "{$file} processed\n";
