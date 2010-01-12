@@ -32,9 +32,12 @@ class Polish extends FaZend_Cli_Abstract
     public function execute()
     {
         $dry = (bool)$this->_get('dry-run', false);
+        $path = $this->_get('dir', false);
+        if (!$path)
+            $path = APPLICATION_PATH;
 
         // application files
-        $polisher = new FaZend_Pan_Polisher_Facade(APPLICATION_PATH, $dry, true);
+        $polisher = new FaZend_Pan_Polisher_Facade($dir, $dry, true);
         $polisher->polish();
 
         return self::RETURNCODE_OK;
