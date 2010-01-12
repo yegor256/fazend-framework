@@ -81,10 +81,10 @@
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-		<if><or>
-		    <istrue value="${to.deploy}" />
+        <if><or>
+            <istrue value="${to.deploy}" />
             <istrue value="${to.lint}" />
-		</or><then>
+        </or><then>
             <phplint haltonfailure="yes">
                 <fileset dir="${project.basedir}/src/application">
                     <include name="**/*.php"/>
@@ -107,11 +107,11 @@
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
-		<!-- prepare code coverage db -->
-		<if><or>
-	        <istrue value="${to.deploy}" />
-	        <istrue value="${to.coverage}" />
-		</or><then>
+        <!-- prepare code coverage db -->
+        <if><or>
+            <istrue value="${to.deploy}" />
+            <istrue value="${to.coverage}" />
+        </or><then>
             <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
@@ -122,18 +122,18 @@
             <mkdir dir="${coverage.dir}" />
             
             <!-- create coverage database that will collect all reports -->
-    		<coverage-setup database="${coverage.db}">
-    			<fileset dir="${project.basedir}/src/application">
-    				<include name="**/*.php"/>
+            <coverage-setup database="${coverage.db}">
+                <fileset dir="${project.basedir}/src/application">
+                    <include name="**/*.php"/>
                     <exclude name=".svn/**"/>
-    			</fileset>
-    		</coverage-setup>
-    	</then></if>
+                </fileset>
+            </coverage-setup>
+        </then></if>
 
-		<if><or>
-		    <istrue value="${to.deploy}" />
-		    <istrue value="${to.coverage}" />
-		</or><then>
+        <if><or>
+            <istrue value="${to.deploy}" />
+            <istrue value="${to.coverage}" />
+        </or><then>
             <mkdir dir="${project.basedir}/reports/tests" />
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
@@ -152,7 +152,7 @@
                     </fileset>
                 </batchtest>
             </phpunit>
-    	</then><else>
+        </then><else>
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
                 <formatter type="plain" usefile="no" />
                 <batchtest>
@@ -170,9 +170,9 @@
                     </fileset>
                 </batchtest>
             </phpunit>
-    	</else></if>
+        </else></if>
 
-    	<if><istrue value="${to.deploy}" /><then>
+        <if><istrue value="${to.deploy}" /><then>
             <!-- create a report after unit tests -->
             <mkdir dir="${project.basedir}/reports/phpunit" />
             <phpunitreport 
@@ -194,20 +194,20 @@
                 escape="false"
                 checkreturn="true" />
             <echo msg="Access protection files deployed to phpunit reports directory" />    
-    	</then></if>
-
-		<if><or>
-		    <istrue value="${to.deploy}" />
-		    <istrue value="${to.coverage}" />
-		</or><then>
-    		<!-- create an HTML report about code coverage -->
-    		<mkdir dir="${coverage.dir}/report" />
-    		<coverage-report outfile="${coverage.db}">
-    			<report todir="${coverage.dir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
-    		</coverage-report>
         </then></if>
 
-		<if><istrue value="${to.deploy}" /><then>
+        <if><or>
+            <istrue value="${to.deploy}" />
+            <istrue value="${to.coverage}" />
+        </or><then>
+            <!-- create an HTML report about code coverage -->
+            <mkdir dir="${coverage.dir}/report" />
+            <coverage-report outfile="${coverage.db}">
+                <report todir="${coverage.dir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
+            </coverage-report>
+        </then></if>
+
+        <if><istrue value="${to.deploy}" /><then>
             <!-- inject revision number into title -->
             <copy file="${coverage.dir}/report/index.html" tofile="${coverage.dir}/report/index.html.orig" />
             <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coverage.dir}/report/index.html.orig &gt; ${coverage.dir}/report/index.html" 
@@ -230,7 +230,7 @@
     </target>    
 
     <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
-    	<if><istrue value="${to.deploy}" /><then>
+        <if><istrue value="${to.deploy}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <mkdir dir="${project.basedir}/reports/phpcs" />
             <exec command="phpcs 
@@ -269,7 +269,7 @@
     </target>    
 
     <target name="deploy" description="Upload source files to the production FTP">
-    	<if><istrue value="${to.deploy}" /><then>
+        <if><istrue value="${to.deploy}" /><then>
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
 
             <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
@@ -298,7 +298,7 @@
     </target>
 
     <target name="ping" description="Ping the production server and show the result">
-    	<if><istrue value="${to.deploy}" /><then>
+        <if><istrue value="${to.deploy}" /><then>
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
             <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
 
@@ -314,7 +314,7 @@
     </target>
 
     <target name="doc" description="Create phpDoc documentation and deploy it" >
-    	<if><istrue value="${to.deploy}" /><then>
+        <if><istrue value="${to.deploy}" /><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
 
@@ -341,7 +341,7 @@
     </target>    
 
     <target name="clean" description="Remove obsolete files just created" >
-    	<if><istrue value="${to.clean}" /><then>
+        <if><istrue value="${to.clean}" /><then>
             <delete verbose="false" includeemptydirs="true">
                 <fileset dir="${project.basedir}/reports">
                     <include name="*" />

@@ -1,13 +1,13 @@
 <?php
 /**
+ * FaZend Framework
  *
- * Copyright (c) FaZend.com
- * All rights reserved.
- *
- * You can use this product "as is" without any warranties from authors.
- * You can change the product only through Google Code repository
- * at http://code.google.com/p/fazend
- * If you have any questions about privacy, please email privacy@fazend.com
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt. It is also available 
+ * through the world-wide-web at this URL: http://www.fazend.com/license
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
