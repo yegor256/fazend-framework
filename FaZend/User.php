@@ -69,7 +69,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         $loggedIn = false;
         if (self::_auth()->hasIdentity()) {
             $class = self::$_rowClass;
-            $user = new $class(self::_auth()->getIdentity()->id);
+            $user = new $class(intval(self::_auth()->getIdentity()->id));
             if ($user->exists() && ($user->password == self::_auth()->getIdentity()->password)) {
                 $user->logIn();
                 return true;
