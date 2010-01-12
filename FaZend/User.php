@@ -28,27 +28,41 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      * Auth, to be retrieved by self::_auth()
      *
      * @var Zend_Auth
+     * @see _auth()
      */
     private static $_auth = null;
 
     /**
      * Login status, to be retrieved by self::isLoggedIn()
      *
-     * @var boolean
+     * It either contains an instance of FaZend_User, which is a 
+     * currently logged in user. Or it is set to FALSE, which means
+     * that nobody is logged in now. NULL means that the status is
+     * not yet checked.
+     *
+     * @var null|false|FaZend_User
+     * @see isLoggedIn()
      */
     private static $_loggedIn = null;
     
     /**
      * Name of the class to use
      *
-     * @var string
+     * If you change this variable by means of setRowClass(), all
+     * instances of users will be in this class. It's normal to
+     * change this name in your bootstrap.php
+     *
+     * @var string Name of the class to instantiate
+     * @see setRowClass()
      */
     protected static $_rowClass = 'FaZend_User';
 
     /**
      * Set class name to use in all static methods
      *
+     * @param string Name of the class
      * @return void
+     * @see self::$_rowClass
      **/
     public static function setRowClass($className) 
     {
@@ -58,15 +72,25 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     /**
      * User is logged in?
      *
+     * This method will check the status inside the class first (maybe
+     * someone was logged in already during the execution of this script). 
+     * If the status is not set (self::$_loggedIn is NULL) that we will
+     * try to get information about the user from session, by means of
+     * _auth(). If someone is found there - we will instantiate a user class,
+     * login it and save for future use.
+     *
      * @return boolean
+     * @see self::$_loggedIn
+     * @see _auth()
      */
     public static function isLoggedIn() 
     {
+        // If the status is already set to an instance of class
+        // or to FALSE -- we return the boolean
         if (!is_null(self::$_loggedIn))
             return (bool)self::$_loggedIn;
 
         // try to analyze the situation in session
-        $loggedIn = false;
         if (self::_auth()->hasIdentity()) {
             $class = self::$_rowClass;
             $user = new $class(intval(self::_auth()->getIdentity()->id));
@@ -80,17 +104,18 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     }
 
     /**
-     * Returns current user, if he is logged in. Otherwise throws exception
+     * Returns current user, if he is logged in
      *
      * @return FaZend_User The user who is currently logged in
      * @throws FaZend_User_NotLoggedIn If there is no logged in user
+     * @see isLoggedIn()
      */
     public static function getCurrentUser() 
     {
         if (!self::isLoggedIn()) {
             FaZend_Exception::raise(
                 'FaZend_User_NotLoggedIn', 
-                'User is not logged in'
+                'User is not logged in yet'
             );
         }
         return self::$_loggedIn;
@@ -101,6 +126,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      *
      * @return void
      * @throws FaZend_User_LoginFailed
+     * @see _auth()
      */
     public function logIn() 
     {
@@ -113,15 +139,16 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
 
         $result = self::_auth()->authenticate($authAdapter);
 
+        // if we failed to login the user
         if (!$result->isValid()) {
             FaZend_Exception::raise(
                 'FaZend_User_LoginFailed', 
-                implode('; ', $result->getMessages()).' (code: #'.(-$result->getCode()).')'
+                implode('; ', $result->getMessages()) . ' (code: #' . (-$result->getCode()) . ')'
             );
         }
 
-        $data = $authAdapter->getResultRowObject(); 
-        self::_auth()->getStorage()->write($data);
+        // save information about the user into session
+        self::_auth()->getStorage()->write($authAdapter->getResultRowObject());
 
         // forget previous status
         self::$_loggedIn = $this;
@@ -134,12 +161,15 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      * Logout current user
      *
      * @return void
+     * @see self::$_loggedIn
+     * @see _auth()
      */
     public static function logOut() 
     {
         // forget previous status
         self::$_loggedIn = false;
 
+        // clean session
         self::_auth()->clearIdentity();
     }
 
