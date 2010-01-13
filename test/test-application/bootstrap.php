@@ -31,6 +31,8 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('db');
         $this->bootstrap('Deployer');
 
+        FaZend_Db_Table_ActiveRow::addMapping('/product\.owner/', 'Model_Owner');
+
         $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
 
         $adapter->query(

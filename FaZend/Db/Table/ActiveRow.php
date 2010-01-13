@@ -22,7 +22,8 @@ require_once 'Zend/Db/Table/Row.php';
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  * @package Db
  */
-abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
+abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
+{
 
     /**
      * List of all tables in the db schema
@@ -35,11 +36,35 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
     private static $_allTables;
 
     /**
+     * Mapping of certain table columns to PHP classes
+     *
+     * It's an associative array, where keys are regular expressions
+     * and values are class names.
+     *
+     * @var string
+     * @see addMapping()
+     */
+    protected static $_mapping = array();
+
+    /**
      * Internal holder of ROW id, until the data array is filled
      *
      * @return int|string
      */
     private $_preliminaryKey;
+
+    /**
+     * Add new mapping
+     *
+     * @param string Regular expression to match, e.g. "/user\.project/"
+     * @param string Class name, e.g. "Model_Entities_Project"
+     * @return void
+     * @see self::$_mapping
+     */
+    public static function addMapping($regex, $class) 
+    {
+        self::$_mapping[$regex] = $class;
+    }
 
     /**
      * Create new row or load the existing one
@@ -185,16 +210,21 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
 
         $value = parent::__get($name);
 
-        if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
-            
-            // try to find this class and LOAD it if possible
-            if (class_exists('Model_'.ucfirst($name)))
-                $rowClass = 'Model_'.ucfirst($name);
-            else    
-                $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
+        foreach (self::$_mapping as $regex=>$class)
+            if (preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
+                $rowClass = $class;
+                
+        if (!isset($rowClass)) {
+            if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
+                // try to find this class and LOAD it if possible
+                $rowClass = 'Model_' . ucfirst($name);
+                if (!class_exists($rowClass))
+                    $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
+            }
+        }
 
+        if (isset($rowClass))
             $value = new $rowClass((integer)$value);
-        }    
 
         return $value;
     }
@@ -237,7 +267,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
         $rowset = $this->_table->find($this->_preliminaryKey);
 
         // if we failed to find anything with the given ID
-        if (!count($rowset))
+        if (!count($rowset)) {
             // if the name of this class starts with 'FaZend' it means
             // that this row was received from retrieve() method from the table
             // without explicit notification of the RowClass. In such a case
@@ -249,7 +279,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row {
                     get_class($this) . '_NotFoundException', // exception class name
                 get_class($this) . " not found (ID: {$this->_preliminaryKey})", // description of the exception
                 'FaZend_Db_Table_NotFoundException'  // parent class of the exception
-                );
+            );
+        }
 
         // if we found something  fill the data inside this class
         // and stop on it
