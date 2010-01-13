@@ -72,11 +72,19 @@ abstract class FaZend_View_Helper_Forma_Field {
     protected $_validators = array();
 
     /**
+     * Convert to
+     *
+     * @var array|null
+     */
+    protected $_convertTo = null;
+
+    /**
      * Private constructor
      *
      * @return void
      */
-    protected function __construct(FaZend_View_Helper_Forma $helper) {
+    protected function __construct(FaZend_View_Helper_Forma $helper)
+    {
         $this->_helper = $helper;
     }
 
@@ -88,7 +96,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @return Model_Form_Field
      * #throws Model_Form_Field_ClassNotFound
      */
-    public static function factory($type, FaZend_View_Helper_Forma $helper) {
+    public static function factory($type, FaZend_View_Helper_Forma $helper)
+    {
         require_once 'FaZend/View/Helper/Forma/Field' . ucfirst($type) . '.php';
         $className = 'FaZend_View_Helper_Forma_Field' . ucfirst($type);
         return new $className($helper);
@@ -100,7 +109,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param string Name of the element
      * @return Zend_Form_Element
      */
-    public function getFormElement($name) {
+    public function getFormElement($name)
+    {
         $element = $this->_getFormElement($name);
         $this->_configureFormElement($element);
         return $element;
@@ -111,7 +121,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->_helper->__toString();
     }
 
@@ -122,15 +133,18 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param array List of params
      * @return value
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (strpos($method, 'field') !== 0)
             return call_user_func_array(array($this->_helper, $method), $args);
 
         // ->fieldRequired(...) will be converted to _setRequired(...)
         $func = '_set' . substr($method, 5);
         if (!method_exists($this, $func))
-            FaZend_Exception::raise('FaZend_View_Helper_Forma_InvalidOption', 
-                "Method '{$method}' is not defined in " . get_class($this));
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_Forma_InvalidOption', 
+                "Method '{$method}' is not defined in " . get_class($this)
+            );
             
         call_user_func_array(array($this, $func), $args);
 
@@ -143,7 +157,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param string Method name
      * @return value
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         $method = '_get' . ucfirst($name);
         if (method_exists($this, $method))
             return $this->$method();
@@ -156,8 +171,37 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param Zend_Form_Element The element to work with
      * @return mixed
      **/
-    public function deriveValue(Zend_Form_Element $element) {
-        return $element->getValue();
+    public function deriveValue(Zend_Form_Element $element)
+    {
+        $value = $element->getValue();
+        if (!is_null($this->_convertTo))
+            return $value;
+        
+        // maybe scalar type is expected?    
+        switch (strtolower($this->_convertTo['type'])) {
+            case 'integer':
+                return intval($value);
+            case 'bool':
+            case 'boolean':
+                return (bool)$value;
+            case 'float':
+                return (float)$value;
+            case 'string':
+                return strval($value);
+            default:
+                // do nothing, go ahead
+        }
+        
+        $class = $this->_convertTo['type'];
+        if (empty($this->_convertTo['method']))
+            return new $class($value);
+            
+        return call_user_func_array(
+            array(
+                $class,
+                $this->_convertTo['method']
+            ), array($value)
+        );
     }
 
     /**
@@ -166,7 +210,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param Zend_Form_Element The element to configure
      * @return void
      */
-    protected function _configureFormElement(Zend_Form_Element $element) {
+    protected function _configureFormElement(Zend_Form_Element $element)
+    {
         $element->setDecorators(array())
             ->addDecorator('ViewHelper')
             ->addDecorator('Errors')
@@ -236,7 +281,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param boolean Is it required?
      * @return void
      */
-    protected function _setRequired($required = true) {
+    protected function _setRequired($required = true)
+    {
         $this->_required = $required;
     }
 
@@ -247,7 +293,8 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param string Attribute value
      * @return void
      */
-    protected function _setAttrib($attrib, $value) {
+    protected function _setAttrib($attrib, $value)
+    {
         $this->_attribs[$attrib] = $value;
     }
 
@@ -257,8 +304,24 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param callback Validator of the field value
      * @return void
      */
-    protected function _setValidator($validator) {
+    protected function _setValidator($validator)
+    {
         $this->_validators[] = $validator;
+    }
+
+    /**
+     * Set type to be used in conversion
+     *
+     * @param string Type name
+     * @param string Method name to use for conversion
+     * @return void
+     */
+    protected function _setConvertTo($type, $method = null)
+    {
+        $this->_convertTo = array(
+            'type' => $type,
+            'method' => $method
+        );
     }
 
 }

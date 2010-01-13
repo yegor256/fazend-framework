@@ -203,7 +203,6 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $methodArgs = $mnemos = array();
 
         try {
-
             // run through all required paramters. required by method
             foreach ($rMethod->getParameters() as $param) {
                 // get value of this parameter from form
@@ -264,8 +263,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             if ($param->isOptional())
                 return $param->getDefaultValue();
             else
-                FaZend_Exception::raise('FaZend_View_Helper_Forma_ParamNotFound',
-                    "Field '{$name}' not found in forma, but is required by action");
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_ParamNotFound',
+                    "Field '{$name}' not found in forma, but is required by the action"
+                );
         }
 
         // get the value of this element from the form
