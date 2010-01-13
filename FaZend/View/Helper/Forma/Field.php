@@ -203,6 +203,12 @@ abstract class FaZend_View_Helper_Forma_Field
             }
         
             $class = $converter['type'];
+            if (!class_exists($class))
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_InvalidConverter', 
+                    "Class '{$class}' is unknown"
+                );
+            
             if (empty($converter['method'])) {
                 $value = new $class($value);
                 continue;
