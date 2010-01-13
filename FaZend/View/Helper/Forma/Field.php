@@ -20,7 +20,8 @@
  *
  * @package Model_Form
  */
-abstract class FaZend_View_Helper_Forma_Field {
+abstract class FaZend_View_Helper_Forma_Field
+{
 
     /**
      * Helper instance
@@ -72,11 +73,15 @@ abstract class FaZend_View_Helper_Forma_Field {
     protected $_validators = array();
 
     /**
-     * Convert to
+     * Converters
      *
-     * @var array|null
+     * The array
+     *
+     * @var array
+     * @see deriveValue()
+     * @see _setConvertTo()
      */
-    protected $_convertTo = null;
+    protected $_converters = array();
 
     /**
      * Private constructor
@@ -170,38 +175,53 @@ abstract class FaZend_View_Helper_Forma_Field {
      *
      * @param Zend_Form_Element The element to work with
      * @return mixed
+     * @throws FaZend_View_Helper_Forma_InvalidConverter
+     * @uses $_converters
      **/
     public function deriveValue(Zend_Form_Element $element)
     {
         $value = $element->getValue();
-        if (is_null($this->_convertTo))
-            return $value;
         
-        // maybe scalar type is expected?    
-        switch (strtolower($this->_convertTo['type'])) {
-            case 'integer':
-                return intval($value);
-            case 'bool':
-            case 'boolean':
-                return (bool)$value;
-            case 'float':
-                return (float)$value;
-            case 'string':
-                return strval($value);
-            default:
-                // do nothing, go ahead
-        }
+        foreach ($this->_converters as $converter) {
+            // maybe scalar type is expected?    
+            switch (strtolower($converter['type'])) {
+                case 'integer':
+                    $value = intval($value);
+                    continue;
+                case 'bool':
+                case 'boolean':
+                    $value = (bool)$value;
+                    continue;
+                case 'float':
+                    $value = (float)$value;
+                    continue;
+                case 'string':
+                    $value = strval($value);
+                    continue;
+                default:
+                    // do nothing, go ahead
+            }
         
-        $class = $this->_convertTo['type'];
-        if (empty($this->_convertTo['method']))
-            return new $class($value);
+            $class = $converter['type'];
+            if (empty($converter['method'])) {
+                $value = new $class($value);
+                continue;
+            }
             
-        return call_user_func_array(
-            array(
-                $class,
-                $this->_convertTo['method']
-            ), array($value)
-        );
+            if (!method_exists($class, $converter['method']))
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_InvalidConverter', 
+                    "Method '{$converter['method']}' is absent in $class"
+                );
+            
+            $value = call_user_func_array(
+                array(
+                    $class,
+                    $converter['method']
+                ), array($value)
+            );
+        }
+        return $value;
     }
 
     /**
@@ -315,10 +335,11 @@ abstract class FaZend_View_Helper_Forma_Field {
      * @param string Type name
      * @param string Method name to use for conversion
      * @return void
+     * @uses $_converters
      */
     protected function _setConvertTo($type, $method = null)
     {
-        $this->_convertTo = array(
+        $this->_converters[] = array(
             'type' => $type,
             'method' => $method
         );
