@@ -174,7 +174,7 @@ abstract class FaZend_View_Helper_Forma_Field {
     public function deriveValue(Zend_Form_Element $element)
     {
         $value = $element->getValue();
-        if (!is_null($this->_convertTo))
+        if (is_null($this->_convertTo))
             return $value;
         
         // maybe scalar type is expected?    
