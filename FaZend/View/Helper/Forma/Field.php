@@ -143,7 +143,7 @@ abstract class FaZend_View_Helper_Forma_Field {
         if (!method_exists($this, $func))
             FaZend_Exception::raise(
                 'FaZend_View_Helper_Forma_InvalidOption', 
-                "Method '{$method}' is not defined in " . get_class($this)
+                "Method '{$func}' is unknown in " . get_class($this)
             );
             
         call_user_func_array(array($this, $func), $args);
