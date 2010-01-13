@@ -199,33 +199,32 @@ abstract class FaZend_View_Helper_Forma_Field
                     $value = strval($value);
                     continue;
                 default:
-                    // do nothing, go ahead
+                    $class = $converter['type'];
+                    if (!class_exists($class))
+                        FaZend_Exception::raise(
+                            'FaZend_View_Helper_Forma_InvalidConverter', 
+                            "Class '{$class}' is unknown"
+                        );
+
+                    if (empty($converter['method'])) {
+                        $value = new $class($value);
+                        continue;
+                    }
+
+                    if (!method_exists($class, $converter['method']))
+                        FaZend_Exception::raise(
+                            'FaZend_View_Helper_Forma_InvalidConverter', 
+                            "Method '{$converter['method']}' is absent in $class"
+                        );
+
+                    $value = call_user_func_array(
+                        array(
+                            $class,
+                            $converter['method']
+                        ), array($value)
+                    );
+                    break;
             }
-        
-            $class = $converter['type'];
-            if (!class_exists($class))
-                FaZend_Exception::raise(
-                    'FaZend_View_Helper_Forma_InvalidConverter', 
-                    "Class '{$class}' is unknown"
-                );
-            
-            if (empty($converter['method'])) {
-                $value = new $class($value);
-                continue;
-            }
-            
-            if (!method_exists($class, $converter['method']))
-                FaZend_Exception::raise(
-                    'FaZend_View_Helper_Forma_InvalidConverter', 
-                    "Method '{$converter['method']}' is absent in $class"
-                );
-            
-            $value = call_user_func_array(
-                array(
-                    $class,
-                    $converter['method']
-                ), array($value)
-            );
         }
         return $value;
     }
