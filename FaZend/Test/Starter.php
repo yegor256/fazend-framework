@@ -94,7 +94,7 @@ abstract class FaZend_Test_Starter
                 }
             }
         }
-        echo "TABLEs/VIEWs dropped: " . implode(', ', $dropped) . "\n";
+        logg('TABLEs/VIEWs dropped: %s', implode(', ', $dropped));
     }
 
 }
