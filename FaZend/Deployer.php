@@ -398,14 +398,14 @@ class FaZend_Deployer
      */
     protected function _clearSql($file) 
     {
-        return preg_replace(
+        return trim(preg_replace(
             array(
                 '/\-\-.*/',
                 '/[\n\r\t]/'
             ), 
             ' ', // replace with spaces
             "\n" . file_get_contents($file)
-        );
+        ));
     }
 
 }
