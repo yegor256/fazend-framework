@@ -23,6 +23,10 @@ Table:
     // injected column
     ->addColumn('getDetails', 'id')
 
+    // add simple converters
+    ->addConverter('email', 'string')
+    ->addConverter('password', 'string')
+        
     // option
     ->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
 

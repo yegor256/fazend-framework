@@ -23,7 +23,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
+class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
+{
 
     /**
      * Paginator to be used
@@ -79,8 +80,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @return string HTML
      */
-    public function htmlTable($name = null) {
-
+    public function htmlTable($name = null)
+    {
         // no name means no multi-instance - short and fast scenario
         if (is_null($name))
             return $this;
@@ -90,7 +91,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             self::$_instances[$name] = clone $this;
 
         return self::$_instances[$name];
-
     }
 
     /**
@@ -100,8 +100,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @return string HTML
      */
-    public function __toString() {
-        
+    public function __toString()
+    {
         try {
             $html = $this->_render();
         } catch (Exception $e) {
@@ -109,7 +109,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         }
 
         return $html;
-            
     }
 
     /**
@@ -121,7 +120,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param Zend_Paginator Data holder to render
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function setPaginator(Zend_Paginator $paginator) {
+    public function setPaginator(Zend_Paginator $paginator)
+    {
         $this->_paginator = $paginator;
         return $this;
     }
@@ -133,7 +133,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param callback Function to be called with each row
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function setParser($column, $callback) {
+    public function setParser($column, $callback)
+    {
         $this->_column($column)->parser = $callback;
         return $this;
     }
@@ -145,8 +146,26 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Name of the view helper to apply
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function setParserHelper($column, $helper) {
+    public function setParserHelper($column, $helper)
+    {
         $this->_column($column)->helper = $helper;
+        return $this;
+    }
+
+    /**
+     * Add converter to the column
+     *
+     * @param string Column name, case sensitive
+     * @param string Converter class name
+     * @param string|null Converter method
+     * @return FaZend_View_Helper_HtmlTable
+     */
+    public function addConverter($column, $class, $method)
+    {
+        $this->_column($column)->converters[] = array(
+            'type' => $class,
+            'method' => $method,
+        );
         return $this;
     }
 
@@ -156,7 +175,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function hideColumn($column) {
+    public function hideColumn($column)
+    {
         $this->_column($column)->hidden = true;
         return $this;
     }
@@ -167,7 +187,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function calculateSum($column) {
+    public function calculateSum($column)
+    {
         $this->_column($column)->sum = true;
         return $this;
     }
@@ -178,7 +199,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function getSum($column) {
+    public function getSum($column)
+    {
         return $this->_column($column)->sumValue;
     }
 
@@ -188,12 +210,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @param string Column name, case sensitive, which will preceede this new column
      * @return FaZend_View_Helper_HtmlTable
+     * @throws FaZend_View_Helper_HtmlTable_IllegalParameter
      */
-    public function addColumn($column, $predecessor) {
-
+    public function addColumn($column, $predecessor)
+    {
         if ($column == $predecessor) {
-            FaZend_Exception::raise('FaZend_View_Helper_HtmlTable_IllegalParameter', 
-                'Column cannot precede itself');
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_HtmlTable_IllegalParameter', 
+                'Column cannot precede itself'
+            );
         }
 
         $this->_injections[$column] = $predecessor;
@@ -208,7 +233,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array List of columns to show
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function showColumns(array $columns) {
+    public function showColumns(array $columns)
+    {
         $this->_columnsToShow = $columns;
         return $this;
     }
@@ -220,7 +246,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function appendOptionToColumn($option, $column) {
+    public function appendOptionToColumn($option, $column)
+    {
         $this->_option($option)->toColumn = $column;
         return $this;
     }
@@ -235,7 +262,16 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Route to use in URL
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addColumnLink($title, $httpVar, $column, array $urlParams, $route = 'default', $reset = false, $encode = true) {
+    public function addColumnLink(
+        $title, 
+        $httpVar, 
+        $column, 
+        array $urlParams, 
+        $route = 'default', 
+        $reset = false, 
+        $encode = true
+    )
+    {
         $this->_column($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route, $reset, $encode);
         return $this;
     }
@@ -249,7 +285,16 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array Array of parameters for url()
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addOption($title, $httpVar, $column, array $urlParams, $route = 'default', $reset = false, $encode = true) {
+    public function addOption(
+        $title, 
+        $httpVar, 
+        $column, 
+        array $urlParams, 
+        $route = 'default', 
+        $reset = false, 
+        $encode = true
+    )
+    {
         $this->_option($title)->title = $title;
         $this->_option($title)->link = $this->_makeLink($title, $httpVar, $column, $urlParams, $route, $reset, $encode);
         return $this;
@@ -262,7 +307,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param callback Function to be called to understand when the option should be skipped
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function skipOption($title, $callback) {
+    public function skipOption($title, $callback)
+    {
         $this->_option($title)->skip = $callback;
         return $this;
     }
@@ -274,7 +320,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string CSS style
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addColumnStyle($column, $style) {
+    public function addColumnStyle($column, $style)
+    {
         $this->_column($column)->style = $style;
         return $this;
     }
@@ -286,7 +333,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column title to be displayed
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function setColumnTitle($column, $title) {
+    public function setColumnTitle($column, $title)
+    {
         $this->_column($column)->title = $title;
         return $this;
     }
@@ -297,7 +345,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name, case sensitive
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function allowRawHtml($column) {
+    public function allowRawHtml($column)
+    {
         $this->_column($column)->rawHtml = true;
         return $this;
     }
@@ -308,7 +357,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Text message to show when the paginator has no data
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function setNoDataMessage($msg) {
+    public function setNoDataMessage($msg)
+    {
         $this->_noDataMessage = $msg;
         return $this;
     }
@@ -318,8 +368,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      *
      * @return string HTML table
      */
-    protected function _render() {
-
+    protected function _render()
+    {
         // if no data in the paginator
         if (!count($this->_paginator))
             return $this->_noDataMessage;
@@ -373,6 +423,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
                 // maybe we should show only some particular columns
                 if (!$this->_isVisible($title))
                     continue;
+
+                // convert value, if necessary
+                $value = $this->_convertColumnValue($title, $value);
 
                 // parse the value of this TD    
                 if ($this->_column($title)->parser) {
@@ -461,9 +514,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name
      * @return StdObj
      */
-    protected function _column($column) {
-        if (!isset($this->_columns[$column]))
-            $this->_columns[$column] = new FaZend_StdObject();
+    protected function _column($column)
+    {
+        if (!isset($this->_columns[$column])) {
+            $this->_columns[$column] = FaZend_StdObject::create()
+                ->set('converters', array());
+        }
         return $this->_columns[$column];
     }
 
@@ -473,7 +529,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Option name
      * @return StdObj
      */
-    protected function _option($option) {
+    protected function _option($option)
+    {
         if (!isset($this->_options[$option]))
             $this->_options[$option] = new FaZend_StdObject();
         return $this->_options[$option];
@@ -485,8 +542,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Column name
      * @return boolean
      */
-    protected function _isVisible($column) {
-
+    protected function _isVisible($column)
+    {
         // maybe we should show only some particular columns
         if ($this->_columnsToShow) {
             if (!in_array($column, $this->_columnsToShow))
@@ -498,7 +555,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
             return false;
 
         return true;
-
     }
 
     /**
@@ -510,7 +566,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param array Associative array of params
      * @param string Name of route
      */
-    protected function _makeLink($name, $httpVar, $column, $urlParams, $route, $reset, $encode) {
+    protected function _makeLink($name, $httpVar, $column, $urlParams, $route, $reset, $encode)
+    {
         $link = new FaZend_StdObject();
         $link->httpVar = $httpVar;
         $link->urlParams = $urlParams;
@@ -531,7 +588,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string Key of the row
      * @return string HTML
      */
-    protected function _resolveLink(FaZend_StdObject $link, $title, $row, $key) {
+    protected function _resolveLink(FaZend_StdObject $link, $title, $row, $key)
+    {
         $params = $link->urlParams;
 
         // you can specify params as callbacks
@@ -563,7 +621,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
      * @param string The value to be insterted
      * @return void
      */
-    protected function _inject(array &$row, $column, $predecessor, $value) {
+    protected function _inject(array &$row, $column, $predecessor, $value)
+    {
         $result = array();
 
         if (!$predecessor)
@@ -577,6 +636,63 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper {
         }
 
         $row = $result;
+    }
+
+    /**
+     * Convert value of the column
+     *
+     * @param string Name of the column
+     * @param string Current value of the column
+     * @return mixed
+     * @throws FaZend_View_Helper_HtmlTable_InvalidConverter
+     **/
+    protected function _convertColumnValue($name, $value)
+    {
+        foreach ($this->_column($name)->converters as $converter) {
+            // maybe scalar type is expected?    
+            switch (strtolower($converter['type'])) {
+                case 'integer':
+                    $value = intval($value);
+                    continue;
+                case 'bool':
+                case 'boolean':
+                    $value = (bool)$value;
+                    continue;
+                case 'float':
+                    $value = (float)$value;
+                    continue;
+                case 'string':
+                    $value = strval($value);
+                    continue;
+                default:
+                    $class = $converter['type'];
+                    if (!class_exists($class))
+                        FaZend_Exception::raise(
+                            'FaZend_View_Helper_Forma_InvalidConverter', 
+                            "Class '{$class}' is unknown"
+                        );
+
+                    if (empty($converter['method'])) {
+                        $value = new $class($value);
+                        continue;
+                    }
+
+                    if (!method_exists($class, $converter['method']))
+                        FaZend_Exception::raise(
+                            'FaZend_View_Helper_Forma_InvalidConverter', 
+                            "Method '{$converter['method']}' is absent in $class"
+                        );
+
+                    $value = call_user_func_array(
+                        array(
+                            $class,
+                            $converter['method']
+                        ), array($value)
+                    );
+                    break;
+            }
+        }
+        return $value;
     }
 
 }
