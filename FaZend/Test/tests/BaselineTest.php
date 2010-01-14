@@ -32,11 +32,15 @@ class BaselineTest extends FaZend_Test_TestCase
     public function testCodeConformsToBaselines()
     {
         $validator = new FaZend_Pan_Baseliner_Validator(APPLICATION_PATH, true);
+        $dir = FaZend_Pan_Baseliner_Map::getStorageDir(false);
         
-        foreach (new RegexIterator(
-            new DirectoryIterator(FaZend_Pan_Baseliner_Map::getStorageDir(true)),
-            '/\.xml$/') as $file) {
-            $path = FaZend_Pan_Baseliner_Map::getStorageDir(true) . '/' . $file;
+        if (!file_exists($dir) || !is_dir($dir)) {
+            echo "Directory with baselines ($dir) is absent\n";
+            return;
+        }
+        
+        foreach (new RegexIterator(new DirectoryIterator($dir), '/\.xml$/') as $file) {
+            $path = $dir . '/' . $file;
                 
             $map = new FaZend_Pan_Baseliner_Map(APPLICATION_PATH, $path);
             $map->load($path);
