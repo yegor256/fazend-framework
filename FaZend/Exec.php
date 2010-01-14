@@ -43,6 +43,13 @@ class FaZend_Exec extends FaZend_StdObject
     protected static $_isVerbose = false;
 
     /**
+     * Unit testing is running now?
+     *
+     * @var boolean
+     */
+    protected static $_isTesting = false;
+
+    /**
      * Shell command
      *
      * @var string
@@ -109,6 +116,17 @@ class FaZend_Exec extends FaZend_StdObject
     public static function setIsVerbose($isVerbose = true) 
     {
         self::$_isVerbose = $isVerbose;
+    }
+
+    /**
+     * Shall we disable all real-life calls?
+     *
+     * @param boolean Shall we?
+     * @return void
+     **/
+    public static function setIsTesting($isTesting = true) 
+    {
+        self::$_isTesting = $isTesting;
     }
 
     /**
@@ -194,8 +212,10 @@ class FaZend_Exec extends FaZend_StdObject
         // serialize and save all local variables
         $dataFile = self::_fileName($id, self::DATA_SUFFIX);
         if (!@file_put_contents($dataFile, $this->_serialize())) {
-            FaZend_Exception::raise('FaZend_Exec_DataSaveFailure', 
-                "Failed to save local data before execution: '{$dataFile}'");
+            FaZend_Exception::raise(
+                'FaZend_Exec_DataSaveFailure', 
+                "Failed to save local data before execution: '{$dataFile}'"
+            );
         }
 
         // execute the task
@@ -422,6 +442,11 @@ class FaZend_Exec extends FaZend_StdObject
      */
     protected static function _execute($id, $cmd, $dir = null)
     {
+        if (self::$_isTesting) {
+            logg("FaZend_Exec skipped: $cmd");
+            return;
+        }
+        
         // execute the command and quit, saving the PID
         // @see: http://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
         if (!is_null($dir)) {
