@@ -664,8 +664,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 case 'string':
                     $value = strval($value);
                     continue;
+                    
                 default:
                     $class = $converter['type'];
+                    
+                    if (strpos($class, '->') === 0) {
+                        eval("\$value = \$value{$class};");
+                        continue;
+                    }
+                    
                     if (!class_exists($class))
                         FaZend_Exception::raise(
                             'FaZend_View_Helper_Forma_InvalidConverter', 

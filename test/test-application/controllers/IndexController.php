@@ -22,14 +22,16 @@
  * @package application
  * @subpackage controllers
  */
-class IndexController extends FaZend_Controller_Action {
+class IndexController extends FaZend_Controller_Action
+{
 
     /**
      * Test _redirectFlash() method
      *
      * @return void
      */
-    public function flashAction() {
+    public function flashAction()
+    {
         $this->_redirectFlash('That works');
     }    
 
@@ -38,7 +40,8 @@ class IndexController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function tableAction() {
+    public function tableAction()
+    {
         FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
     }
 
