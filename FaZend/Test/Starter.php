@@ -67,5 +67,34 @@ abstract class FaZend_Test_Starter
             }
         }
     }
+    
+    /**
+     * Drop entire database, including all TABLE-s and VIEW-s
+     *
+     * @return void
+     */
+    protected function _dropDatabase() 
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        
+        $dropped = array();
+        while (count($db->listTables())) {
+            foreach ($db->listTables() as $table) {
+                try {
+                    $db->query('DROP TABLE ' . $db->quoteIdentifier($table));
+                    $dropped[] = $table;
+                } catch (Exception $e) {
+                    // ignore it
+                }
+                try {
+                    $db->query('DROP VIEW ' . $db->quoteIdentifier($table));
+                    $dropped[] = $table;
+                } catch (Exception $e) {
+                    // ignore it
+                }
+            }
+        }
+        echo "TABLEs/VIEWs dropped: " . implode(', ', $dropped);
+    }
 
 }
