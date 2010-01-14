@@ -76,7 +76,9 @@ class FaZend_Pan_Baseliner_Map
         $path = APPLICATION_PATH . '/../../test/baseline';
         if ($enforce && !file_exists($path))
             mkdir($path);
-        return realpath($path);
+        if (file_exists($path))
+            $path = realpath($path);
+        return $path;
     }
 
     /**
