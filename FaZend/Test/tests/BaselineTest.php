@@ -35,7 +35,7 @@ class BaselineTest extends FaZend_Test_TestCase
         $dir = FaZend_Pan_Baseliner_Map::getStorageDir(false);
         
         if (!file_exists($dir) || !is_dir($dir)) {
-            echo "Directory with baselines ($dir) is absent\n";
+            logg("Directory with baselines ($dir) is absent");
             return;
         }
         
