@@ -669,15 +669,22 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $class = $converter['type'];
                     
                     if (strpos($class, '->') === 0) {
+                        if (!is_object($value)) {
+                            FaZend_Exception::raise(
+                                'FaZend_View_Helper_Forma_InvalidConverter', 
+                                "Value of column '{$name}' is not an object"
+                            );
+                        }
                         eval("\$value = \$value{$class};");
                         continue;
                     }
                     
-                    if (!class_exists($class))
+                    if (!class_exists($class)) {
                         FaZend_Exception::raise(
                             'FaZend_View_Helper_Forma_InvalidConverter', 
                             "Class '{$class}' is unknown"
                         );
+                    }
 
                     if (empty($converter['method'])) {
                         $value = new $class($value);
