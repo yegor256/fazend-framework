@@ -342,7 +342,7 @@ abstract class FaZend_View_Helper_Forma_Field
      * @return void
      * @uses $_converters
      */
-    protected function _setConvertTo($type, $method = null)
+    protected function _setConverter($type, $method = null)
     {
         $this->_converters[] = array(
             'type' => $type,
