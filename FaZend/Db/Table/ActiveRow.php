@@ -252,7 +252,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         }
 
         if (isset($rowClass))
-            $value = new $rowClass((integer)$value);
+            $value = new $rowClass(is_numeric($value) ? intval($value) : $value);
 
         return $value;
     }
