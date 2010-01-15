@@ -379,7 +379,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         $options = array();
 
         foreach ($this->_paginator as $key=>$rowOriginal) {
-
             // prepare one row for rendering
             if (is_array($rowOriginal)) {
                 $row = $rowOriginal;
@@ -415,7 +414,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
             $tds = array();    
             foreach ($row as $title=>$value) {
-
                 // summarize column values
                 if ($this->_column($title)->sum)
                     $this->_column($title)->sumValue += $value;

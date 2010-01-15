@@ -170,6 +170,24 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     }
 
     /**
+     * Create and array from the row
+     *
+     * This method overrides Zend_Db_Table_Row::toArray() because of ORM
+     * concept we are using. With normal Zend Row you will get a plain
+     * array with values. With FaZend you will get an array with plain
+     * values AND objects. 
+     *
+     * @return array
+     */
+    public function toArray() 
+    {
+        $array = parent::toArray();
+        foreach ($array as $key=>$value)
+            $array[$key] = $this->$key;
+        return $array;
+    }
+
+    /**
      * Before any call we have to be sure that live data are available
      *
      * @param string Name of the method being called
