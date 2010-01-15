@@ -182,8 +182,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function toArray() 
     {
         $array = parent::toArray();
-        foreach ($array as $key=>$value)
+        foreach ($array as $key=>$value) {
+            if ($key == 'id')
+                continue;
             $array[$key] = $this->$key;
+        }
         return $array;
     }
 
