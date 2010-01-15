@@ -185,11 +185,16 @@ class FaZend_Db_Wrapper
     /**
      * Fetch all wrapper
      *
+     * @param array|null Bindings
      * @return FaZend_Db_RowsetWrapper
      */
-    public function fetchAll() 
+    public function fetchAll($bind = null) 
     {
-        return new FaZend_Db_RowsetWrapper($this->table(), $this->select());
+        return new FaZend_Db_RowsetWrapper(
+            $this->table(), 
+            $this->select(),
+            $bind
+        );
     }
 
     /**

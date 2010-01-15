@@ -138,4 +138,3 @@ function logg($message)
         echo '<p>Log missed: ' . $message . '</p>';
     }
 }
-

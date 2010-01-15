@@ -79,7 +79,6 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         // if the ID provided - find this row and save it
         if (is_integer($id)) {
-            
             // create normal row
             parent::__construct();
 
@@ -88,20 +87,19 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             // the ID of the row
             // later data will be loaded, but later, in __get() method
             $this->_preliminaryKey = $id;
-
         } elseif ($id !== false) {    
-
             // $id is NOT equal to FALSE
             // if it's not an array - that it's a mistake for sure
-            if (!is_array($id))
-                FaZend_Exception::raise('FaZend_Db_Table_InvalidConstructor', 
-                    get_class($this)."::new() has incorrect param type (neither INT nor ARRAY)");
+            if (!is_array($id)) {
+                FaZend_Exception::raise(
+                    'FaZend_Db_Table_InvalidConstructor', 
+                    get_class($this) . "::new({$id}:" . gettype($id) . ") has incorrect param type (neither INT nor ARRAY)"
+                );
+            }
 
             // otherwise just pass through to the default constructor
             parent::__construct($id);
-
         } else {
-
             // $id is empty (equals to FALSE) and it means that we should
             // create a NEW object, from scratch
             parent::__construct();
@@ -126,8 +124,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         // make sure the class has live data from DB
         $this->_loadLiveData();
+        $value = parent::__get($name);
+        
+        // maybe toArray() already produced object
+        if (!is_string($value))
+            $value = intval((string)$value);
 
-        return new $class((int)parent::__get($name));
+        return new $class(is_numeric($value) ? intval($value) : $value);
     }
 
     /**
@@ -215,7 +218,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         // you should not access ID field directly!
         if (strtolower($name) == 'id')
-            trigger_error("ID should not be directly accesses in " . get_class($this), E_USER_WARNING);
+            trigger_error('ID should not be directly accesses in ' . get_class($this), E_USER_WARNING);
 
         // system field
         if (strtolower($name) == '__id')
@@ -224,12 +227,18 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // if we are interested in just ID and data are not loaded yet
         // we just return the ID, that's it
         if ($name === 'id' && isset($this->_preliminaryKey))
-            return (string)$this->_preliminaryKey;
+            return intval($this->_preliminaryKey);
 
         // make sure the class has live data from DB
         $this->_loadLiveData();
 
+        // get raw value from Zend_Db_Table_Row
         $value = parent::__get($name);
+        // maybe we're getting the value for the second time, 
+        // and it was already calculated before and stored
+        // in toArray()
+        if (!is_string($value))
+            return $value;
 
         foreach (self::$_mapping as $regex=>$class) {
             if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
