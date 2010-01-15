@@ -231,9 +231,16 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         $value = parent::__get($name);
 
-        foreach (self::$_mapping as $regex=>$class)
-            if (preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
-                $rowClass = $class;
+        foreach (self::$_mapping as $regex=>$class) {
+            if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
+                continue;
+            $rowClass = $class;
+            if (is_array($class)) {
+                eval("\$value = {$class[0]}::{$class[1]}(\$value);");
+                return $value;
+            }
+            break;
+        }
                 
         if (!isset($rowClass)) {
             if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
