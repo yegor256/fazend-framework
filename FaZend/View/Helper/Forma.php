@@ -36,6 +36,13 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 {
 
     /**
+     * Form to render
+     *
+     * @var Zend_Form
+     */
+    protected $_form;
+
+    /**
      * Fields
      *
      * @var FaZend_View_Helper_Forma_Field[]
@@ -58,6 +65,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function forma() 
     {
+        $this->_form = new FaZend_Form();
         return $this;
     }
 
@@ -89,6 +97,19 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $this->_fields[$this->_uniqueName($name)] = $field;
         return $field;
     }
+    
+    /**
+     * Add attribute to the forma
+     *
+     * @param string Attribute name
+     * @param string Attribute value
+     * @return $this
+     */
+    public function addAttrib($attrib, $value) 
+    {
+        $this->_form->setAttrib($attrib, $value);
+        return $this;
+    }
 
     /**
      * Set behavior
@@ -110,21 +131,19 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function _render() 
     {
-        $form = new FaZend_Form();
-
-        $form->setView($this->getView())
+        $this->_form->setView($this->getView())
             ->setMethod('post')
             ->setDecorators(array())
             ->addDecorator('FormElements')
             ->addDecorator('Form');
 
         foreach ($this->_fields as $name=>$field) {
-            $form->addElement($field->getFormElement($name));
+            $this->_form->addElement($field->getFormElement($name));
         }
 
         $log = '';
-        if (!$form->isFilled() || !$this->_process($form, $log))
-            return '<p>' . (string)$form->__toString() . '</p>';
+        if (!$this->_form->isFilled() || !$this->_process($this->_form, $log))
+            return '<p>' . (string)$this->_form->__toString() . '</p>';
         
         // the form was filled, what to do now?
         switch ($this->_behavior['type']) {
@@ -171,11 +190,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     /**
      * Process the form and execute what is required
      *
-     * @param Zend_Form The form
      * @param string Log to save
      * @return boolean Processed without errors?
      */
-    protected function _process(Zend_Form $form, &$log) 
+    protected function _process(&$log) 
     {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', 'forma');
@@ -184,7 +202,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         // find the clicked button
-        foreach ($form->getElements() as $element) {
+        foreach ($this->_form->getElements() as $element) {
             if (!$element instanceof Zend_Form_Element_Submit)
                 continue;
 
@@ -206,7 +224,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             // run through all required paramters. required by method
             foreach ($rMethod->getParameters() as $param) {
                 // get value of this parameter from form
-                $methodArgs[$param->name] = $this->_getFormParam($form, $param);
+                $methodArgs[$param->name] = $this->_getFormParam($this->_form, $param);
                 // this is necessary for logging (see below)
                 $mnemos[] = (is_scalar($methodArgs[$param->name]) ? $methodArgs[$param->name] : get_class($methodArgs[$param->name]));
             }
@@ -248,18 +266,17 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *
      * Retrieve param using POST data and form configuration
      *
-     * @param Zend_Form The form to get params from
      * @param ReflectionParameter What parameter we are looking for...
      * @return class
      * @throws Helper_Forma_ParamNotFound
      */
-    protected function _getFormParam(Zend_Form $form, ReflectionParameter $param) 
+    protected function _getFormParam(ReflectionParameter $param) 
     {
         // this is a name of element in the form, which we expect to send to the method
         $name = $param->name;
         
         // maybe this element is absent in the form?
-        if (!isset($form->$name)) {
+        if (!isset($this->_form->$name)) {
             if ($param->isOptional())
                 return $param->getDefaultValue();
             else
@@ -270,7 +287,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // get the value of this element from the form
-        return $this->_fields[$name]->deriveValue($form->$name);
+        return $this->_fields[$name]->deriveValue($this->_form->$name);
     }
 
 }
