@@ -19,7 +19,8 @@
  *
  * @package Version
  */
-class FaZend_Version {
+class FaZend_Version
+{
 
     const VERSION = '0.1';
 
