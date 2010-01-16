@@ -151,7 +151,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         $log = '';
-        if (!$this->_form->isFilled() || !$this->_process($this->_form, $log))
+        if (!$this->_form->isFilled() || !$this->_process($log))
             return '<p>' . (string)$this->_form->__toString() . '</p>';
         
         // the form was filled, what to do now?
@@ -233,7 +233,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             // run through all required paramters. required by method
             foreach ($rMethod->getParameters() as $param) {
                 // get value of this parameter from form
-                $methodArgs[$param->name] = $this->_getFormParam($this->_form, $param);
+                $methodArgs[$param->name] = $this->_getFormParam($param);
                 // this is necessary for logging (see below)
                 $mnemos[] = (is_scalar($methodArgs[$param->name]) ? $methodArgs[$param->name] : get_class($methodArgs[$param->name]));
             }
