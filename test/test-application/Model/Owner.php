@@ -26,6 +26,19 @@
  */
 class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
 {
+    
+    /**
+     * Create new owner
+     *
+     * @return Model_Owner
+     */
+    public static function create($name) 
+    {
+        $owner = new self();
+        $owner->name = $name;
+        $owner->save();
+        return $owner;
+    }
 
     /**
      * Retrieve all owners 

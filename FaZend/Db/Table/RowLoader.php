@@ -22,7 +22,8 @@ require_once 'Zend/Loader/Autoloader/Interface.php';
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  * @package Db
  */
-class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
+class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
+{
 
     /**
      * Load class
@@ -30,8 +31,8 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
      * @param string Name of the class to create
      * @return FaZend_Db_Table_Row
      */
-    public function autoload ($class) {
-
+    public function autoload ($class)
+    {
         if (class_exists($class))
             return;
 
@@ -39,21 +40,23 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface {
 
         require_once 'FaZend/Db/Table/ActiveRow.php';
         if (false === eval(
-        "class $class extends FaZend_Db_Table_ActiveRow {
-            public function __construct(\$id = false) {
-                \$this->_table = FaZend_Db_ActiveTable::createTableClass(
-                    isset(\$this->_table) ? \$this->_table : '{$name}');
-                parent::__construct(\$id);
-            }    
+            "class $class extends FaZend_Db_Table_ActiveRow {
+                public function __construct(\$id = false) {
+                    \$this->_table = FaZend_Db_ActiveTable::createTableClass(
+                        isset(\$this->_table) ? \$this->_table : '{$name}');
+                    parent::__construct(\$id);
+                }    
 
-            public static function retrieve(\$param = true) {
-                \$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
-                return \$wrapper;
-            }    
-        };"))
-            FaZend_Exception::raise('FaZend_Db_Table_InvalidClass',
-                "Class $class can't be declared, some error in its definition");
-
+                public static function retrieve(\$param = true) {
+                    \$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
+                    return \$wrapper;
+                }    
+            };")) {
+            FaZend_Exception::raise(
+                'FaZend_Db_Table_InvalidClass',
+                "Class $class can't be declared, some error in its definition"
+            );
+        }
     }
 
 }

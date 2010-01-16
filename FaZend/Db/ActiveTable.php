@@ -30,6 +30,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
      *
      * @param string Name of the table in the DB
      * @return void
+     * @throws FaZend_Db_Wrapper_NoIdFieldException
      */
     public static function createTableClass($table)
     {
@@ -54,7 +55,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
                 $cls->info(Zend_Db_Table_Abstract::PRIMARY);
             } catch (Exception $e2) {
                 FaZend_Exception::raise(
-                    'FaZend_Db_Wrapper_NoIDFieldException',
+                    'FaZend_Db_Wrapper_NoIdFieldException',
                     "Table {$table} doesn't have either a primary or ID field. " .
                     " Error1: " . $e->getMessage() . 
                     '. Error2: ' . $e2->getMessage()

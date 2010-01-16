@@ -78,7 +78,8 @@ class FaZend_Db_Wrapper
     /**
      * Set row class
      *
-     * @return void
+     * @param string Name of the class
+     * @return $this
      */
     public function setRowClass($rowClass) 
     {
@@ -87,9 +88,9 @@ class FaZend_Db_Wrapper
     }
 
     /**
-     * Get row class
+     * Get row class name
      *
-     * @return void
+     * @return string
      */
     public function getRowClass()
     {
@@ -99,7 +100,8 @@ class FaZend_Db_Wrapper
     /**
      * Keep silence and return FALSE if fetchRow() doesn't find anything
      *
-     * @return void
+     * @param boolean Set it (TRUE) or reset (FALSE)
+     * @return $this
      */
     public function setSilenceIfEmpty($flag = true)
     {
@@ -120,7 +122,7 @@ class FaZend_Db_Wrapper
     /**
      * Return the table
      *
-     * @return void
+     * @return Zend_Db_Table
      */
     public function table() 
     {
@@ -133,35 +135,41 @@ class FaZend_Db_Wrapper
     }
 
     /**
-     * Return the select object (on-fly)
+     * Return the SELECT object (on-fly)
      *
-     * @return void
+     * @param array|null Bindings in array, if they are required in query
+     * @return Zend_Db_Table_Select
      */
-    public function select() 
+    public function select(array $bind = null) 
     {
         if (!isset($this->_select)) {
-            
             $this->_select = $this->table()->select();
-
             $this->_select->setIntegrityCheck(false);
-
             if ($this->_setFrom)    
                 $this->_select->from($this->table()->info(Zend_Db_Table_Abstract::NAME));
-        }    
+        }
+
+        // add bindings to the query, if necessary
+        if (!is_null($bind))
+            $this->_select->bind($bind);
 
         return $this->_select;
     }
 
     /**
-     * Fetch one row
+     * Fetch one row from the table
      *
-     * @return void
+     * @param array|null Bindings in array, if they are required in query
+     * @return Zend_Db_Table_Row
      * @throws FaZend_Db_Table_NotFoundException
      */
-    public function fetchRow() 
+    public function fetchRow(array $bind = null) 
     {
         // get row with fetchRow from the select we have
-        $row = $this->table()->fetchRow($this->select());
+        $row = $this->table()->fetchRow(
+            $this->select($bind),
+            $this->select()->getBind()
+        );
 
         // if we should keep silence - just return what we got
         if ($this->getSilenceIfEmpty() && !$row)
@@ -174,47 +182,65 @@ class FaZend_Db_Wrapper
         // we should create this class in any case - no matter whether
         // we throw the exception or not. because the try{}catch block
         // will expect this class and will fail to load it    
-        $exceptionClassName = $this->getRowClass() . '_NotFoundException';
+        if (strpos($this->getRowClass(), 'FaZend_Db_Table_ActiveRow') === 0)
+            $exceptionClassName = 'Exception';
+        else
+            $exceptionClassName = $this->getRowClass() . '_NotFoundException';
 
         // raise this exception
-        FaZend_Exception::raise($exceptionClassName, 
-            'row not found in ' . $this->getRowClass(),
-            'FaZend_Db_Table_NotFoundException');
+        FaZend_Exception::raise(
+            $exceptionClassName, 
+            sprintf('Row not found in %s with "%s"', $this->getRowClass(), $this->select()),
+            'FaZend_Db_Table_NotFoundException'
+        );
     }
 
     /**
-     * Fetch all wrapper
+     * Fetch wrapper
      *
-     * @param array|null Bindings
+     * Lazy loading is implemented here. We do NOT execute a query when
+     * you call fetchAll(), we just create a wrapper for such a call and
+     * return its instance. When you actually start using the result of
+     * the query - we execute the call to DB.
+     *
+     * @param array|null Bindings in array, if they are required in query
      * @return FaZend_Db_RowsetWrapper
+     * @uses FaZend_Db_RowsetWrapper
      */
-    public function fetchAll($bind = null) 
+    public function fetchAll(array $bind = null) 
     {
         return new FaZend_Db_RowsetWrapper(
             $this->table(), 
-            $this->select(),
-            $bind
+            $this->select($bind)
         );
     }
 
     /**
      * Fetch pairs
      *
+     * @param array|null Bindings in array, if they are required in query
      * @return array
      */
-    public function fetchPairs() 
+    public function fetchPairs(array $bind = null) 
     {
-        return $this->table()->getAdapter()->fetchPairs($this->select());
+        return $this->table()->getAdapter()->fetchPairs(
+            $this->select($bind),
+            $this->select()->getBind()
+        );
     }
 
     /**
      * Fetch one column
      *
+     * @param array|null Bindings in array, if they are required in query
      * @return array
      */
-    public function fetchOne() 
+    public function fetchOne(array $bind = null) 
     {
-        return $this->table()->getAdapter()->fetchOne($this->select());
+        return $this->table()->getAdapter()->fetchOne(
+            $this->select($bind),
+            $this->select()->getBind()
+        );
     }
 
     /**
@@ -241,9 +267,11 @@ class FaZend_Db_Wrapper
     /**
      * Call wrapping, all other functions will go directly to SELECT object
      *
+     * @param string Name of the method to call
+     * @param array List of arguments
      * @return FaZend_Db_Wrapper
      */
-    public function __call($name, $args) 
+    public function __call($name, array $args) 
     {
         $this->_select = call_user_func_array(array($this->select(), $name), $args);
         return $this;
@@ -271,4 +299,5 @@ class FaZend_Db_Wrapper
     {
         bug($this->select()->__toString());
     }
+    
 }

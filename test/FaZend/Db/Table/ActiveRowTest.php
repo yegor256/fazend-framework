@@ -20,11 +20,9 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
     public function testGettingWorks ()
     {
         $product = new Model_Product(10);
-        
         $this->assertNotEquals(false, $product->owner, "Owner is null, why?");
 
         $name = $product->owner->name;
-        
         $this->assertNotEquals(false, $name, "Owner name is false, why?");
     }
 
@@ -36,6 +34,20 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             ->fetchRow();
 
         $list->isMe();
+    }
+
+    public function testDynamicBindingWorks()
+    {
+        Model_Owner::create('john');
+        $cnt = count(Model_Owner::retrieve()
+            ->where('name = :name')
+            ->fetchAll(array('name' => 'john')));
+        $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
+
+        $owner = Model_Owner::retrieve()
+            ->where('name = :name')
+            ->fetchRow(array('name' => 'john'));
+        $this->assertEquals('john', $owner->name, 'Name of the owner is wrong, hm...');
     }
 
     public function testDynamicExceptionWorks ()

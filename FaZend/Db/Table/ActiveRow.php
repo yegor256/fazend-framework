@@ -70,7 +70,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Create new row or load the existing one
      *
      * @param integer|false ID of the row to retrieve, otherwise creates NEW row
-     * @return FaZend_Db_Table_Row
+     * @return void
      */
     public function __construct($id = false)
     {
@@ -118,7 +118,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @param string Name of the column
      * @param string Name of the class to be used for instantiating of this row
-     * @return void
+     * @return mixed
      */
     public function getObject($name, $class)
     {
@@ -146,13 +146,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     /**
      * Delete the row
      *
-     * @return void|var
+     * @return mixed
      */
     public function delete()
     {
         // make sure the class has live data from DB
         $this->_loadLiveData();
-
         return parent::delete();
     }
 
@@ -198,13 +197,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @param string Name of the method being called
      * @param array List of parameters passed
-     * @return void|var
+     * @return mixed
      */
     public function __call($method, array $args)
     {
         // make sure the class has live data from DB
         $this->_loadLiveData();
-
         return parent::__call($method, $args);
     }
 
@@ -212,7 +210,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Find sub-objects by ID 
      *
      * @param string Name of the property to get
-     * @return FaZend_Db_Table_Row|var
+     * @return FaZend_Db_Table_Row|mixed
      */
     public function __get($name)
     {

@@ -38,13 +38,6 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     private $_select;
     
     /**
-     * List of bindings
-     *
-     * @var array
-     */
-    private $_bind;
-
-    /**
      * Rowset
      *
      * @var Zend_Db_Table_Rowset
@@ -58,11 +51,10 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @param Zend_Db_Select
      * @return void
      */
-    public function __construct(Zend_Db_Table $table, Zend_Db_Select $select, array $bind = null)
+    public function __construct(Zend_Db_Table $table, Zend_Db_Select $select)
     {
         $this->_table = $table;
         $this->_select = $select;
-        $this->_bind = $bind;
     }
 
     /**
@@ -78,15 +70,17 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Count objects in the rowset
      *
-     * @return int
+     * @return int Total number of rows in the query
      */
     public function count()
     {
-        // we build a new query, where the original query goes into
-        // a subquery
+        // We build a new query, where the original query goes into
+        // a subquery. You don't need to calculate rows manually
+        // and you may be sure that no data goes to memory when
+        // you're counting rows. We optimize your request here.
         return $this->_table->getAdapter()->fetchOne(
-            'SELECT COUNT(*) FROM (' . (string)$this->_select . ') AS tbl',
-            $this->_bind
+            sprintf('SELECT COUNT(*) FROM (%s) AS tbl', (string)$this->select()),
+            $this->select()->getBind()
         );
     }
 
@@ -95,14 +89,16 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      *
      * If the rowset is not used yet, it will be created right now
      *
-     * @return void
+     * @param string Name of the method to call
+     * @param array List of arguments
+     * @return mixed
      */
-    public function __call($name, $args)
+    public function __call($name, array $args)
     {
         if (!isset($this->_rowset))
             $this->_rowset = $this->_table->fetchAll(
-                $this->_select, 
-                $this->_bind
+                $this->select(), 
+                $this->select()->getBind()
             );
 
         return call_user_func_array(array($this->_rowset, $name), $args);
@@ -111,7 +107,8 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @param mixed Position
+     * @return mixed
      */
     public function seek($position)
     {
@@ -121,7 +118,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function key()
     {
@@ -131,7 +128,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function next()
     {
@@ -141,7 +138,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function current()
     {
@@ -151,7 +148,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function valid()
     {
@@ -161,7 +158,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function rewind()
     {
@@ -171,7 +168,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function offsetExists($offset)
     {
@@ -181,7 +178,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -191,7 +188,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function offsetSet($offset, $value)
     {
@@ -201,7 +198,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Method wrapping
      *
-     * @return 
+     * @return mixed
      */
     public function offsetUnset($offset)
     {
