@@ -34,6 +34,13 @@
  */
 class FaZend_View_Helper_Forma extends FaZend_View_Helper
 {
+    
+    /**
+     * Instances of the helper
+     *
+     * @var FaZend_View_Helper_Forma[]
+     */
+    protected static $_instances = array();
 
     /**
      * Form to render
@@ -61,12 +68,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     /**
      * Builds the object
      *
+     * @param mixed Name of the form instance
      * @return FaZend_View_Helper_Forma
      */
-    public function forma() 
+    public function forma($id = 1) 
     {
-        $this->_form = new FaZend_Form();
-        return $this;
+        self::$_instances[$id] = new FaZend_View_Helper_Forma();
+        self::$_instances[$id]->_form = new FaZend_Form();
+        return self::$_instances[$id];
     }
 
     /**
