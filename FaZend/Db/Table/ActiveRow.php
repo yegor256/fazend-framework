@@ -119,6 +119,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * @param string Name of the column
      * @param string Name of the class to be used for instantiating of this row
      * @return mixed
+     * @deprecated This method will be REMOVED soon! Use class mapping instead!
      */
     public function getObject($name, $class)
     {
@@ -258,8 +259,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             }
         }
 
-        if (isset($rowClass))
-            $value = new $rowClass(is_numeric($value) ? intval($value) : $value);
+        if (isset($rowClass)) {
+            $value = FaZend_Flyweight::factory(
+                $rowClass, 
+                is_numeric($value) ? intval($value) : $value
+            );
+        }
 
         return $value;
     }
