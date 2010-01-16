@@ -105,7 +105,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         try {
             $html = $this->_render();
         } catch (Exception $e) {
-            $html = 'Exception' . get_class($e) . ': ' . $e->getMessage();
+            $html = 'Exception ' . get_class($e) . ': ' . $e->getMessage();
         }
 
         return $html;
