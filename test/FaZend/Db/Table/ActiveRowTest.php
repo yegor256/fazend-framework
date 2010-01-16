@@ -17,23 +17,31 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $product->save();
     }
 
-    public function testGettingWorks ()
+    public function testGettingWorks()
     {
         $product = new Model_Product(10);
         $this->assertNotEquals(false, $product->owner, "Owner is null, why?");
+        $this->assertTrue($product->owner instanceof Model_Owner, "Owner is invalid");
 
         $name = $product->owner->name;
-        $this->assertNotEquals(false, $name, "Owner name is false, why?");
+        $this->assertTrue(is_string($name), "Owner name is not STRING, why?");
     }
 
-    public function testRetrieveWorks ()
+    public function testClassMappingWorks()
     {
-        $list = Model_Owner::retrieve()
+        $owner = Model_Owner::create('peter');
+        $this->assertTrue($owner->created instanceof Zend_Date, 
+            "CREATED is of invalid type: " . gettype($owner->created));
+    }
+
+    public function testRetrieveWorks()
+    {
+        $owner = Model_Owner::retrieve()
             ->where('name is not null')
             ->setRowClass('Model_Owner')
             ->fetchRow();
 
-        $list->isMe();
+        $this->assertTrue(is_bool($owner->isMe()));
     }
 
     public function testDynamicBindingWorks()

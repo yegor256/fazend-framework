@@ -31,12 +31,12 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('db');
         $this->bootstrap('Deployer');
 
-        FaZend_Db_Table_ActiveRow::addMapping('/product\.owner/', 'Model_Owner');
+        FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'Zend_Date');
 
         $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
 
         $adapter->query(
-            'insert into owner values (132, "john smith")');
+            'insert into owner values (132, "john smith", null)');
 
         $adapter->query(
             'insert into product values (10, "car", 132)');

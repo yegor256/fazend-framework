@@ -127,7 +127,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         $value = parent::__get($name);
         
         // maybe toArray() already produced object
-        if (!is_string($value))
+        if (!is_scalar($value))
             $value = intval((string)$value);
 
         return new $class(is_numeric($value) ? intval($value) : $value);
@@ -235,7 +235,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // maybe we're getting the value for the second time, 
         // and it was already calculated before and stored
         // in toArray()
-        if (!is_string($value))
+        if (!is_scalar($value))
             return $value;
 
         foreach (self::$_mapping as $regex=>$class) {
