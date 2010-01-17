@@ -21,7 +21,8 @@ require_once 'Zend/Controller/Action.php';
  *
  * @package Controller
  */
-class FaZend_Controller_Action extends Zend_Controller_Action {
+class FaZend_Controller_Action extends Zend_Controller_Action
+{
 
     /**
      * Call to one of internal methods, that don't exist
@@ -34,7 +35,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @return void
      * @throws Zend_Controller_Action_Exception
      **/
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (preg_match('/Action$/', $method))
             return;
         return $this->__call($method, $args);
@@ -48,18 +50,30 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param string name of the param for paging
      * @return string
      */
-    protected function _addPaginator ($iterator, $name = 'paginator', $param = 'page') {
-        FaZend_Paginator::addPaginator($iterator, $this->view, $this->_getParamOrFalse($param), $name);
+    protected function _addPaginator($iterator, $name = 'paginator', $param = 'page')
+    {
+        FaZend_Paginator::addPaginator(
+            $iterator, 
+            $this->view, 
+            $this->_getParamOrFalse($param), 
+            $name
+        );
     }
 
     /**
      * Get param or throw an error
      *
+     * @param string Name of param to get
      * @return string
+     * @throws FaZend_Controller_Action_ParamNotFoundException
      */
-    protected function _getParam ($name, $default = null) {
+    protected function _getParam($name, $default = null)
+    {
         if (!$this->_hasParam($name))
-            FaZend_Exception::raise('FaZend_Controller_Action_ParamNotFoundException', "$name is not specified");
+            FaZend_Exception::raise(
+                'FaZend_Controller_Action_ParamNotFoundException', 
+                "Parameter '{$name}' is not specified"
+            );
 
         return parent::_getParam($name, $default);    
     }
@@ -69,10 +83,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      *
      * @return string|false
      */
-    protected function _getParamOrFalse ($name) {
+    protected function _getParamOrFalse($name)
+    {
         if (!$this->_hasParam($name))
             return false;
-
         return parent::_getParam($name);    
     }
 
@@ -89,7 +103,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param array List of parameters (associative array)
      * @return void
      */    
-    protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array()) {
+    protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array())
+    {
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
         if ($action !== false)
             $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
@@ -105,7 +120,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param boolean This image is dynamic (TRUE) or static (FALSE).
      * @return void
      */
-    protected function _returnPNG($png, $dynamic = true) {
+    protected function _returnPNG($png, $dynamic = true)
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -125,7 +141,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param string PDF binary content
      * @return void
      */
-    protected function _returnPDF($pdf) {
+    protected function _returnPDF($pdf)
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -140,22 +157,19 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      *
      * @return void
      */
-    protected function _returnJSON ($var) {
+    protected function _returnJSON ($var)
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
         try {
-     
             $responseJsonEncoded = Zend_Json::encode($var);
             $this->getResponse()
                 ->setHeader('Content-Type', 'application/json')
                 ->setHeader('Content-Length', strlen($responseJsonEncoded))
                 ->setBody($responseJsonEncoded);
-
         } catch (Zend_Json_Exception $e) {
-
             // what to do here?
-
         }
     }    
 
@@ -164,7 +178,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      *
      * @return void
      */
-    protected function _returnXML ($xml) {
+    protected function _returnXML($xml)
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -179,7 +194,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param int
      * @return string
      */
-    protected function _formatHeaderTime($time) {
+    protected function _formatHeaderTime($time)
+    {
         return gmdate('D, d M Y H:i:s', $time) . ' GMT';
     }
     
@@ -189,7 +205,8 @@ class FaZend_Controller_Action extends Zend_Controller_Action {
      * @param int Time when this content was modified last time
      * @return void
      */
-    protected function _cacheContent($modifiedTime = false) {
+    protected function _cacheContent($modifiedTime = false)
+    {
         if (!$modifiedTime)
             $modifiedTime = time();
     

@@ -22,24 +22,23 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper {
+class FaZend_View_Helper_FlashMessage extends FaZend_View_Helper
+{
 
     /**
-     * Render message
+     * Render flash message
      *
-     * @return void
+     * @return string HTML
      */
-    public function flashMessage() {
-
+    public function flashMessage()
+    {
         $actionHelperFlashMessenger = new Zend_Controller_Action_Helper_FlashMessenger();
         $flashMessages = $actionHelperFlashMessenger->setNamespace('FaZend_Messages')->getMessages();
 
-        if (empty($flashMessages)) {
-            return;
-        }
+        if (empty($flashMessages))
+            return '';
 
-        return '<p class="flash">' . implode(";", $flashMessages) . '</p>';
-
+        return sprintf('<p class="flash">%s</p>', implode('; ', $flashMessages));
     }
 
 }

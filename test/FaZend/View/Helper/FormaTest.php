@@ -7,11 +7,11 @@ class FaZend_View_Helper_FormaTest extends AbstractTestCase
     
     public function testFormaWorks()
     {
-        // $this->dispatch('/index/forma');
-        // $this->assertNotEquals(false, (bool)$this->getResponse()->getBody(), 
-        //     "Empty HTML instead of forma, why?");
-        // $this->assertQuery('form', 
-        //     "Error in HTML: {$this->getResponse()->getBody()}");
+        $this->dispatch('/index/forma');
+        $this->assertNotEquals(false, (bool)$this->getResponse()->getBody(), 
+            "Empty HTML instead of forma, why?");
+        $this->assertQuery('form', 
+            "Error in HTML: {$this->getResponse()->getBody()}");
     }
 
     public function testCompletelyFilledFormRedirects()

@@ -31,6 +31,13 @@ abstract class FaZend_View_Helper_Forma_Behavior_Abstract
      * @var array
      */
     protected $_args;
+    
+    /**
+     * List of arguments passed to the method
+     *
+     * @var array
+     */
+    protected $_methodArgs = array();
 
     /**
      * Construct the class
@@ -41,6 +48,16 @@ abstract class FaZend_View_Helper_Forma_Behavior_Abstract
     public final function __construct(array $args)
     {
         $this->_args = $args;
+    }
+    
+    /**
+     * Set list of method args
+     *
+     * @return void
+     */
+    public function setMethodArgs(array $methodArgs) 
+    {
+        $this->_methodArgs = $methodArgs;
     }
     
     /**

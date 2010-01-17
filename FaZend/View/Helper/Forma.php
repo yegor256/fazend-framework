@@ -153,7 +153,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // show the form again, if it's not filled and completed
         $log = '';
-        $completed = ($this->_form->isFilled() && $this->_process($log));
+        $methodArgs = array();
+        $completed = ($this->_form->isFilled() && $this->_process($log, $methodArgs));
         $html = strval($this->_form->__toString());
         
         // if the form was NOT completed yet - just show it
@@ -165,8 +166,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             $this->addBehavior('showLog');
         
         // run them all one by one
-        foreach ($this->_behaviors as $behavior)
+        foreach ($this->_behaviors as $behavior) {
+            $behavior->setMethodArgs($methodArgs);
             $behavior->run($html, $log);
+        }
             
         // return the resulted HTML, after all behavior(s)
         return $html;
@@ -201,9 +204,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * Process the form and execute what is required
      *
      * @param string Log to save
+     * @param array List of params to be passed to method
      * @return boolean Processed without errors?
      */
-    protected function _process(&$log) 
+    protected function _process(&$log, array &$methodArgs) 
     {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', spl_object_hash($this));
@@ -228,7 +232,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // prepare method calling params for this button/callback
         $rMethod = new ReflectionMethod($class, $method);
-        $methodArgs = $mnemos = array();
+        $mnemos = array();
 
         try {
             // run through all required paramters. required by method
@@ -265,7 +269,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             );
 
             // execute the target method
-            call_user_func_array(array($class, $method), $methodArgs);
+            $return = call_user_func_array(array($class, $method), $methodArgs);
             
             // it's done, if we're here and no exception has been thrown
             $result = true;

@@ -2,6 +2,8 @@
 
 <?=$this->forma()
     ->addBehavior('showLog')
+    ->addBehavior('flash', 'FLASH++ for %s (%d bytes in reason)',
+        '{name}', 'strlen({reason})')
     ->addBehavior('redirect', 'submitted', 'index')
     ->addField('text', 'name')
         ->fieldLabel('Your full name')
