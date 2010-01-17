@@ -59,8 +59,9 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      *
      * @baseline team@fazend.com exists()
      * @return boolean
+     * @see FaZend_Cli_cli_BaselineTest
      */
-    function isMe()
+    public function isMe()
     {
         return true;
     }
@@ -71,14 +72,34 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * @baseline team@fazend.com exists()
      * @return Model_Owner_Details
      */
-    function getDetails()
+    public function getDetails()
     {
         $details = new Model_Owner_Details();
-
         return $details
             ->set('name', $this->name)
             ->set('id', $this->__id)
             ->set('balance', rand(100, 999));
+    }
+    
+    /**
+     * Register new person
+     *
+     * This method is used for forma validation.
+     *
+     * @return void
+     * @see views/scripts/index/forma.phtml
+     * @see FaZend_View_Helper_FormaTest
+     */
+    public static function register($name, $reason, $client, $address, $file = null) 
+    {
+        validate()
+            ->type($client, 'boolean', "Invalid type of CLIENT")
+            ->type($address, 'string', "Invalid type of ADDRESS")
+            ->type($name, 'string', "Invalid type of NAME")
+            ->type($name, 'string', "Invalid type of REASON")
+            ;
+        
+        logg('Successfull Registration of new Owner: ++success++');
     }
 
 }

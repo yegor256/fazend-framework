@@ -22,7 +22,8 @@ require_once 'FaZend/View/Helper/Forma/Field.php';
  *
  * @package helpers
  */
-class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field {
+class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field
+{
 
     /**
      * Get value from the form element
@@ -30,7 +31,8 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field 
      * @param Zend_Form_Element The element to work with
      * @return mixed
      **/
-    public function deriveValue(Zend_Form_Element $element) {
+    public function deriveValue(Zend_Form_Element $element)
+    {
         if ($element->isReceived())
             return $element->getFileName();
         return null;
@@ -42,7 +44,8 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field 
      * @param string Name of the element
      * @return Zend_Form_Element
      */
-    protected function _getFormElement($name) {
+    protected function _getFormElement($name)
+    {
         return new Zend_Form_Element_File($name);
     }
 
@@ -52,7 +55,8 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field 
      * @param Zend_Form_Element The element to configure
      * @return void
      */
-    protected function _configureFormElement(Zend_Form_Element $element) {
+    protected function _configureFormElement(Zend_Form_Element $element)
+    {
         parent::_configureFormElement($element);
         $element
             ->setDecorators(array())

@@ -1,30 +1,12 @@
 <?php
-/**
- * FaZend Framework
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.fazend.com/license
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@fazend.com so we can send you a copy immediately.
- *
- * @copyright Copyright (c) FaZend.com
- * @version $Id$
- * @category FaZend
- */
 
 require_once 'AbstractTestCase.php';
 
-/**
- * Test case
- *
- * @package tests
- */
-class FaZend_DeployerTest extends AbstractTestCase {
+class FaZend_DeployerTest extends AbstractTestCase
+{
 
-    public static function providerSqlSamples() {
-
+    public static function providerSqlSamples()
+    {
         return array(
             array(
                 'test',
@@ -54,14 +36,13 @@ class FaZend_DeployerTest extends AbstractTestCase {
                     ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ENGINE=InnoDB;"
             )
         );
-
     }
 
     /**
      * @dataProvider providerSqlSamples
      */
-    public function testEmailsAreRenderedAndSent ($table, $sql) {
-
+    public function testEmailsAreRenderedAndSent ($table, $sql)
+    {
         $deployer = FaZend_Deployer::getInstance();
 
         $info = $deployer->getSqlInfo($sql);
@@ -71,24 +52,20 @@ class FaZend_DeployerTest extends AbstractTestCase {
         foreach ($info as $column) {
             $this->assertTrue($column['COLUMN_NAME'] != 'PRIMARY');
         }
-
-
     }
 
-    public function testGetTablesWorks() {
-
+    public function testGetTablesWorks()
+    {
         $list = FaZend_Deployer::getInstance()->getTables();
         $this->assertTrue(count($list) > 0);
-
     }
 
-    public function testGetTableInfoWorks() {
-
+    public function testGetTableInfoWorks()
+    {
         $list = FaZend_Deployer::getInstance()->getTables();
         $table = array_shift($list);
 
         $info = FaZend_Deployer::getInstance()->getTableInfo($table);
-
     }
 
 }

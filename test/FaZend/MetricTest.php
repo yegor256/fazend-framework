@@ -1,35 +1,12 @@
 <?php
-/**
- * FaZend Framework
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.fazend.com/license
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@fazend.com so we can send you a copy immediately.
- *
- * @copyright Copyright (c) FaZend.com
- * @version $Id$
- * @category FaZend
- */
 
 require_once 'AbstractTestCase.php';
 
-/**
- * Metric tester
- *
- * @package tests
- */
-class FaZend_MetricTest extends AbstractTestCase {
-
+class FaZend_MetricTest extends AbstractTestCase
+{
     
-    /**
-     * Specific setup for test environment
-     *
-     * @return void
-     */
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $schemaSql = file_get_contents(dirname(__FILE__) . '/Metric/database/fz_metric.schema.sqlite.sql');
@@ -40,12 +17,8 @@ class FaZend_MetricTest extends AbstractTestCase {
         $this->_dbAdapter->query($schemaSql);
     }      
 
-    /**
-     * Clean test environment
-     *
-     * @return void
-     */
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
 
         $this->_dbAdapter->query('DROP TABLE fz_dependency');
@@ -62,15 +35,14 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testSimpleScenarioWorks() {
-
+    public function testSimpleScenarioWorks()
+    {
         $calculator = new Model_SampleCalculator();
 
         // we suppose to get the result of pow(2,6)
         $value = $calculator->getBigValue(2, 6);
         
         $this->assertEquals(64, $value, 'Failed to calculate, why?');    
-
     }
 
     /**
@@ -81,8 +53,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testResourceDependencyWorks() {
-
+    public function testResourceDependencyWorks()
+    {
         $calculator = new Model_SampleCalculator();
 
         $value1 = $calculator->getDependentValue();
@@ -92,7 +64,6 @@ class FaZend_MetricTest extends AbstractTestCase {
         $value2 = $calculator->getDependentValue();
 
         //$this->assertNotEquals($value1, $value2, 'Values are the same, why?');    
-
     }
 
     /**
@@ -104,8 +75,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testMetric2MetricDependencyWorks() {
-
+    public function testMetric2MetricDependencyWorks()
+    {
         $calculator = new Model_SampleCalculator();
 
         $value1 = $calculator->getParentValue();
@@ -127,7 +98,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testSyntaxErrorInsideMetricIsProcessedCorrectly() {
+    public function testSyntaxErrorInsideMetricIsProcessedCorrectly()
+    {
         // ...
     }
 
@@ -140,7 +112,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testExceptionsAreProcessedCorrectly() {
+    public function testExceptionsAreProcessedCorrectly()
+    {
         // ...
     }
 
@@ -154,7 +127,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testDatabaseCrashDoesntCauseTroubles() {
+    public function testDatabaseCrashDoesntCauseTroubles()
+    {
         // ...
     }
 
@@ -167,7 +141,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testAbsentOrCorruptTablesDontTerminateWork() {
+    public function testAbsentOrCorruptTablesDontTerminateWork()
+    {
         // ...
     }
 
@@ -183,7 +158,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testTimeoutWontKillSuccessfulMetrics() {
+    public function testTimeoutWontKillSuccessfulMetrics()
+    {
         // ...
     }
 
@@ -197,7 +173,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testConcurrentCallToAMetricWontLeadToDoubleCalculation() {
+    public function testConcurrentCallToAMetricWontLeadToDoubleCalculation()
+    {
         // ...
     }
 
@@ -212,7 +189,8 @@ class FaZend_MetricTest extends AbstractTestCase {
      *
      * @return void
      */
-    public function testFailedForkedCalculationsAreRepeated() {
+    public function testFailedForkedCalculationsAreRepeated()
+    {
         // ...
     }
 

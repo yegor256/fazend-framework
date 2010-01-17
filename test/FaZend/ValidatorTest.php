@@ -4,13 +4,8 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_ValidatorTest extends AbstractTestCase {
 
-    /**
-     * Test it
-     *
-     * @return void
-     */
-    public function testSimpleScenarioWorks() {
-
+    public function testSimpleScenarioWorks()
+    {
         // positive case
         validate()
             ->true(true, 'works')
@@ -48,7 +43,6 @@ class FaZend_ValidatorTest extends AbstractTestCase {
             }
             
         } while ($step--);
-
     }
     
 }

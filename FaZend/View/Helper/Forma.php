@@ -19,7 +19,7 @@
  *
  * <code>
  * <?=$this->forma()
- *    ->setBehavior('forward', 'index')
+ *    ->addBehavior('forward', 'index', 'index')
  *    ->addField('text')
  *        ->fieldLabel('My text:')
  *        ->fieldRequired(true)
@@ -59,11 +59,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     /**
      * What to do when the form is completed?
      *
-     * @var array
+     * @var FaZend_View_Helper_Forma_Behavior_Abstract
      **/
-    protected $_behavior = array(
-        'type' => 'showLog', // default behavior, just to show LOG
-        );
+    protected $_behaviors = array();
 
     /**
      * Builds the object
@@ -121,15 +119,17 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     }
 
     /**
-     * Set behavior
+     * Add new behavior to the form
      *
      * @param string Name of the behavior
      * @return Helper_Forma
      */
-    public function setBehavior($type /*, ... */) 
+    public function addBehavior($type /*, ... */) 
     {
-        $this->_behavior['type'] = $type;
-        $this->_behavior['args'] = func_get_args();
+        $className = 'FaZend_View_Helper_Forma_Behavior_' . ucfirst($type);
+        $args = func_get_args();
+        array_shift($args);
+        $this->_behaviors[] = new $className($args);
         return $this;
     }
 
@@ -140,35 +140,36 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function _render() 
     {
+        // configure the form
         $this->_form->setView($this->getView())
             ->setMethod('post')
             ->setDecorators(array())
             ->addDecorator('FormElements')
             ->addDecorator('Form');
 
-        foreach ($this->_fields as $name=>$field) {
+        // add all input elements to the form
+        foreach ($this->_fields as $name=>$field)
             $this->_form->addElement($field->getFormElement($name));
-        }
 
+        // show the form again, if it's not filled and completed
         $log = '';
-        if (!$this->_form->isFilled() || !$this->_process($log))
-            return '<p>' . (string)$this->_form->__toString() . '</p>';
+        $completed = ($this->_form->isFilled() && $this->_process($log));
+        $html = strval($this->_form->__toString());
         
-        // the form was filled, what to do now?
-        switch ($this->_behavior['type']) {
-            // show the LOG instead of form, that's it
-            case 'showLog':
-                return '<pre class="log">' . ($log ? $log : 'done') . '</pre>';
+        // if the form was NOT completed yet - just show it
+        if (!$completed)
+            return "<p>{$html}</p>";
+
+        // if no behaviors were specified, we use the default one
+        if (!count($this->_behaviors))
+            $this->addBehavior('showLog');
+        
+        // run them all one by one
+        foreach ($this->_behaviors as $behavior)
+            $behavior->run($html, $log);
             
-            // redirect to another action/controller
-            case 'redirect':
-                Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
-                    ->gotoSimple($this->_behavior['args'][0], $this->_behavior['args'][0]);
-                return;
-            
-            default:
-                return false;
-        }
+        // return the resulted HTML, after all behavior(s)
+        return $html;
     }
 
     /**
@@ -205,7 +206,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     protected function _process(&$log) 
     {
         // start logging everything into a new logger
-        FaZend_Log::getInstance()->addWriter('Memory', 'forma');
+        FaZend_Log::getInstance()->addWriter('Memory', spl_object_hash($this));
 
         // HTTP POST request holder
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -235,15 +236,32 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 // get value of this parameter from form
                 $methodArgs[$param->name] = $this->_getFormParam($param);
                 // this is necessary for logging (see below)
-                $mnemos[] = (is_scalar($methodArgs[$param->name]) ? $methodArgs[$param->name] : get_class($methodArgs[$param->name]));
+                switch (true) {
+                    case is_bool($methodArgs[$param->name]):
+                        $mnemo = $methodArgs[$param->name] ? 'TRUE' : 'FALSE';
+                        break;
+                    case is_scalar($methodArgs[$param->name]):
+                        $mnemo = "'" . cutLongLine($methodArgs[$param->name]) . "'";
+                        break;
+                    case is_object($methodArgs[$param->name]):
+                        $mnemo = get_class($methodArgs[$param->name]);
+                        break;
+                    case is_null($methodArgs[$param->name]):
+                        $mnemo = 'NULL';
+                        break;
+                    default:
+                        $mnemo = '???';
+                        break;
+                }
+                $mnemos[] = $mnemo;
             }
 
             // log this operation
             logg(
-                "Calling %s::%s('%s')",
+                "Calling %s::%s(%s)",
                 $rMethod->getDeclaringClass()->name,
                 $method,
-                implode("', '", $mnemos)
+                implode(', ', $mnemos)
             );
 
             // execute the target method
@@ -251,20 +269,16 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             
             // it's done, if we're here and no exception has been thrown
             $result = true;
-
         } catch (Exception $e) {
-
             // add error message to the submit button we pressed
             $submit->addError($e->getMessage());
-
             // and the result is false
             $result = false;
-
         }
 
         // save log into INPUT variable, by reference (see function definition above)
-        $log = FaZend_Log::getInstance()->getWriter('forma')->getLog();
-        FaZend_Log::getInstance()->removeWriter('forma');
+        $log = FaZend_Log::getInstance()->getWriter(spl_object_hash($this))->getLog();
+        FaZend_Log::getInstance()->removeWriter(spl_object_hash($this));
 
         // return boolean result
         return $result;
@@ -276,8 +290,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * Retrieve param using POST data and form configuration
      *
      * @param ReflectionParameter What parameter we are looking for...
-     * @return class
-     * @throws Helper_Forma_ParamNotFound
+     * @return mixed|null
+     * @throws FaZend_View_Helper_Forma_ParamNotFound
      */
     protected function _getFormParam(ReflectionParameter $param) 
     {
