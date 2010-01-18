@@ -769,9 +769,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     else
                         eval("\$result = \$row{$formatter['condition']};");
                     if (is_bool($result))
-                        $styles[] = $result;
-                    else
                         $styles[] = $formatter['style'];
+                    else
+                        $styles[] = $result;
                     break;
 
                 case $formatter['condition'] === 'callback':
