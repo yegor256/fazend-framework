@@ -798,7 +798,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     );
             }
         }
-        return count($styles) ? ' style="' . implode(';', $style) . '"' : '';
+        return count($styles) ? ' style="' . implode(';', $styles) . '"' : '';
     }
 
 }
