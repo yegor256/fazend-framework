@@ -665,14 +665,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     continue;
                     
                 case 'callback':
-                    if (!is_callable($converter['type'])) {
+                    if (!is_callable($converter['method'])) {
                         FaZend_Exception::raise(
                             'FaZend_View_Helper_Forma_InvalidConverter', 
                             "Provided callback for '{$name}' is not callable"
                         );
                     }
                     $value = call_user_func_array(
-                        $converter['type'], 
+                        $converter['method'], 
                         array($value, $row)
                     );
                     continue;
