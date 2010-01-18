@@ -30,6 +30,12 @@ Table:
         '$value, $row',
         'return $value ? "yes" : "no";'
     ))
+    
+    ->addFormatter('email', true, 'color:red')
+    ->addFormatter('email', 'callback', create_function(
+        '$value, $row',
+        'return strlen($value) > 3 ? "color:green" : false;'
+    ))
         
     // option
     ->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
