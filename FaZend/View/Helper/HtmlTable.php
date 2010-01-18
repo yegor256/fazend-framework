@@ -423,7 +423,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     continue;
 
                 // convert value, if necessary
-                $value = $this->_convertColumnValue($title, $value);
+                $value = $this->_convertColumnValue($title, $value, $rowOriginal);
 
                 // parse the value of this TD    
                 if ($this->_column($title)->parser) {
@@ -641,10 +641,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      *
      * @param string Name of the column
      * @param string Current value of the column
+     * @param mixed Original row we're working with
      * @return mixed
      * @throws FaZend_View_Helper_HtmlTable_InvalidConverter
      **/
-    protected function _convertColumnValue($name, $value)
+    protected function _convertColumnValue($name, $value, $row)
     {
         foreach ($this->_column($name)->converters as $converter) {
             // maybe scalar type is expected?    
@@ -663,6 +664,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $value = strval($value);
                     continue;
                     
+                case 'callback':
+                    $value = call_user_func_array(
+                        $converter['type'], 
+                        array($value, $row)
+                    );
+                    continue;
+                
                 default:
                     $class = $converter['type'];
                     

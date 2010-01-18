@@ -26,6 +26,10 @@ Table:
     // add simple converters
     ->addConverter('email', 'string')
     ->addConverter('password', '->isMe()')
+    ->addConverter('password', 'callback', create_function(
+        '$value, $row',
+        'return $value ? "yes" : "no";'
+    ))
         
     // option
     ->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
