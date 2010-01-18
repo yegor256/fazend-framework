@@ -19,7 +19,8 @@
  *
  * @package Email 
  */
-class FaZend_Email {
+class FaZend_Email
+{
 
     /**
      * Configuration of the sender
@@ -48,6 +49,7 @@ class FaZend_Email {
      * @param Zend_Config Config from .ini file
      * @param Zend_View View to use for rendering
      * @return FaZend_Email
+     * @throws FaZend_Email_InvalidTransport
      */
     public static function config(Zend_Config $config, Zend_View $view) 
     {
@@ -55,6 +57,28 @@ class FaZend_Email {
         self::$_config = new Zend_Config($config->toArray(), true);
         self::$_config->view = clone $view;
         self::$_config->view->setFilter(null);        
+        
+        if (!isset(self::$_config->encoding))
+            self::$_config->encoding = 'utf-8';
+            
+        if (isset(self::$_config->transport)) {
+            switch (self::$_config->transport->name) {
+                case 'Zend_Mail_Transport_Smtp':
+                    Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp(
+                        self::$_config->transport->host,
+                        self::$_config->transport->params
+                    ));
+                    break;
+                case 'Zend_Mail_Transport_Sendmail':
+                    // do nothing, it's default
+                    break;
+                default:
+                    FaZend_Exception::raise(
+                        'FaZend_Email_InvalidTransport', 
+                        'Transport ' . self::$_config->transport->name . ' is unknown'
+                    );
+            }
+        }
     }
 
     /**
@@ -185,8 +209,10 @@ class FaZend_Email {
                 if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
                     $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
                 } else {
-                    FaZend_Exception::raise('FaZend_Email_NoTemplate', 
-                        'Template ' . $template . ' is missed in ' . self::$_config->folder);
+                    FaZend_Exception::raise(
+                        'FaZend_Email_NoTemplate', 
+                        'Template ' . $template . ' is missed in ' . self::$_config->folder
+                    );
                 }
             }
 
@@ -251,7 +277,7 @@ class FaZend_Email {
     protected function _createZendMailer () 
     {
         if (!isset($this->_mailer))
-            $this->_mailer = new Zend_Mail(isset(self::$_config->encoding) ? self::$_config->encoding : 'utf-8');
+            $this->_mailer = new Zend_Mail(self::$_config->encoding);
 
         return $this->_mailer;
     }
