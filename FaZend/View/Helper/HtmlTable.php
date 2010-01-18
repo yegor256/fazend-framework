@@ -764,7 +764,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     break;
 
                 case strpos($formatter['condition'], '->') === 0:
-                    eval("\$style[] = \$value{$formatter['style']};");
+                    if (!is_null($value))
+                        eval("\$style[] = \$value{$formatter['style']};");
+                    else
+                        eval("\$style[] = \$row{$formatter['style']};");
                     $styles[] = $formatter['style'];
                     break;
 
