@@ -62,16 +62,18 @@ class FaZend_Email
             self::$_config->encoding = 'utf-8';
             
         if (isset(self::$_config->transport)) {
-            switch (self::$_config->transport->name) {
+            switch (strval(self::$_config->transport->name)) {
                 case 'Zend_Mail_Transport_Smtp':
                     Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp(
-                        self::$_config->transport->host,
+                        strval(self::$_config->transport->host),
                         self::$_config->transport->params
                     ));
                     break;
+                    
                 case 'Zend_Mail_Transport_Sendmail':
                     // do nothing, it's default
                     break;
+                    
                 default:
                     FaZend_Exception::raise(
                         'FaZend_Email_InvalidTransport', 
