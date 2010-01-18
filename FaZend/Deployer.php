@@ -226,7 +226,8 @@ class FaZend_Deployer
      *
      * @return string
      */
-    protected function _flagName() {
+    protected function _flagName()
+    {
         return $this->_options->flag;
     }
 
@@ -240,12 +241,18 @@ class FaZend_Deployer
      */
     protected function _create($table, $sql) 
     {
+        if (empty($sql)) {
+            logg("DB table '{$table}' was NOT created since SQL is empty");
+            return;
+        }
+        
         try {
             $this->_db()->query($sql);
         } catch (Exception $e) {
             FaZend_Exception::raise(
                 'FaZend_Deployer_CreateFailed', 
-                $e->getMessage() . ': ' . $sql, self::EXCEPTION_CLASS
+                $e->getMessage() . ': ' . $sql, 
+                self::EXCEPTION_CLASS
             );
         }
         
