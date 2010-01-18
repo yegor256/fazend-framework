@@ -66,7 +66,7 @@ class FaZend_Email
                 case 'Zend_Mail_Transport_Smtp':
                     Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp(
                         strval(self::$_config->transport->host),
-                        self::$_config->transport->params
+                        self::$_config->transport->params->toArray()
                     ));
                     break;
                     
