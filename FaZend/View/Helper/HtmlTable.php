@@ -470,7 +470,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $value = $this->_resolveLink($this->_column($title)->link, $value, $rowOriginal, $key);
 
                 // append CSS style
-                $tds[$title] = "<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>";
+                $tds[$title] = "<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>{$value}";
             }    
 
             if (count($this->_options)) {
