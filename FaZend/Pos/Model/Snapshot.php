@@ -88,7 +88,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
     public function update($userId, $properties)
     {        
         $this->user = $userId;
-        $this->version = self::_getNextVersion($this->getObject('fzObject', 'FaZend_Pos_Model_Object'));
+        $this->version = self::_getNextVersion($this->fzObject);
         $this->properties = $properties;
         $this->updated = Zend_Date::now()->getIso();
         $this->alive = true;

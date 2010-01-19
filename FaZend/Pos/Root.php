@@ -41,6 +41,12 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
     public function init()
     {
         parent::init();
+        
+        FaZend_Db_Table_ActiveRow::addMapping(
+            '/^fzSnapshot\.fzObject|fzPartOf\.(?:parent|kid)$/', 
+            'FaZend_Pos_Model_Object'
+        );
+        
         $this->__ps = new FaZend_Pos_RootProperties($this);
     }
 

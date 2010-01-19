@@ -632,7 +632,7 @@ class FaZend_Pos_Properties
             );
         }
         
-        $parentClassName = $partOf->getObject('parent', 'FaZend_Pos_Model_Object')->class;
+        $parentClassName = $partOf->parent->class;
         
         // attach it to ROOT?
         if (is_subclass_of($parentClassName, 'FaZend_Pos_Root') || ($parentClassName === 'FaZend_Pos_Root')) {
@@ -952,7 +952,8 @@ class FaZend_Pos_Properties
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
             $this->_properties[$partOf->name] = $this->_restoreFromObject(
-                $partOf->getObject('kid', 'FaZend_Pos_Model_Object'));
+                $partOf->kid
+            );
         }
     }
 
