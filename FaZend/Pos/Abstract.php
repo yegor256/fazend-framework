@@ -77,7 +77,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public static function setRootClass($rootClass) 
     {
         self::$_rootClass = $rootClass;
-        self::cleanPosMemory();
+        self::cleanPosMemory(false);
     }
 
     /**
@@ -123,6 +123,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      **/
     public static function cleanPosMemory() 
     {
+        if (is_null(self::$_root))
+            return;
         self::$_root = null;
         FaZend_Pos_Properties::cleanPosMemory();
     }
