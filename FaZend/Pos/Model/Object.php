@@ -15,10 +15,9 @@
  */
 
 /**
- * TODO: short description.
+ * 'fzObject' PHP representative
  * 
- * TODO: long description.
- * 
+ * @package Pos
  */
 class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
 {
@@ -33,7 +32,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
      */
     public static function create(FaZend_Pos_Abstract $pos, FaZend_Pos_Abstract $parent, $name)
     {
-        $object = new FaZend_Pos_Model_Object();
+        $object = new self();
         $object->class = get_class($pos);
         $object->save();
         
@@ -48,6 +47,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
      * @param FaZend_Pos_Abstract Parent object
      * @param string Name inside the parent
      * @return FaZend_Pos_Model_Object
+     * @throws FaZend_Pos_Model_Object_NotFoundException
      */
     public static function findByParent(FaZend_Pos_Abstract $parent, $name)
     {

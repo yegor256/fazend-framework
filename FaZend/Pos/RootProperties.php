@@ -43,10 +43,13 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
     public function findById($id) 
     {
         $fzObject = new FaZend_Pos_Model_Object(intval($id));
-        if (!$fzObject->exists())
-            FaZend_Exception::raise('FaZend_Pos_Root_ObjectNotFound',
+        if (!$fzObject->exists()) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_Root_ObjectNotFound',
                 "Object can't be found by id:{$id}",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
+        }
             
         $className = $fzObject->class;
         if (is_subclass_of($className, 'FaZend_Pos_Root') || ($className === 'FaZend_Pos_Root')) {
@@ -80,8 +83,10 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      **/
     protected function _setParent(FaZend_Pos_Abstract $parent, $name) 
     {
-        FaZend_Exception::raise('FaZend_Pos_RootException',
-            "You can't attach POS root to any other object");
+        FaZend_Exception::raise(
+            'FaZend_Pos_RootException',
+            "You can't attach POS root to any other object"
+        );
     }
     
     /**
@@ -92,8 +97,10 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      */
     protected function _getParent()
     {
-        FaZend_Exception::raise('FaZend_Pos_RootException',
-            "You can't get parent from ROOT");
+        FaZend_Exception::raise(
+            'FaZend_Pos_RootException',
+            "You can't get parent from ROOT"
+        );
     }
 
     /**

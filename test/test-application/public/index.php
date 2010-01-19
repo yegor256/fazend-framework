@@ -15,15 +15,18 @@
  * @see bootstrap.php
  */
 
-define('APPLICATION_PATH', realpath('../'));
-define('FAZEND_PATH', realpath('../../../FaZend'));
+defined('APPLICATION_PATH') or
+    define('APPLICATION_PATH', realpath('../'));
+defined('FAZEND_PATH') or
+    define('FAZEND_PATH', realpath('../../../FaZend'));
     
 $zendPath = realpath(dirname(__FILE__) . '/../../../../zend-trunk');
 if (!$zendPath || !is_dir($zendPath)) {
     echo "Installation Error: Zend Framework /trunk should be located here: {$zendPath}";
     die();
-} else
-    define('ZEND_PATH', $zendPath);
+} else {
+    defined('ZEND_PATH') or define('ZEND_PATH', $zendPath);
+}
 set_include_path(realpath($zendPath) . PATH_SEPARATOR . get_include_path());
 unset($zendPath);
 

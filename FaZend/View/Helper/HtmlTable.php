@@ -160,7 +160,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @param string|null Converter method
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addConverter($column, $class, $method)
+    public function addConverter($column, $class, $method = null)
     {
         $this->_column($column)->converters[] = array(
             'type' => $class,
@@ -177,7 +177,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @param string|null Style
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addFormatter($column, $condition, $style)
+    public function addFormatter($column, $condition, $style = null)
     {
         $this->_column($column)->formatters[] = array(
             'condition' => $condition,

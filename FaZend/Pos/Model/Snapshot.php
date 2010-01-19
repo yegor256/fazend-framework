@@ -15,10 +15,9 @@
  */
 
 /**
- * TODO: short description.
+ * 'fzSnapshot' PHP representative
  * 
- * TODO: long description.
- * 
+ * @package Pos
  */
 class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
 {
@@ -33,7 +32,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
      */
     public static function create(FaZend_Pos_Model_Object $fzObject, $userId, $properties)
     {        
-        $fzSnapshot = new FaZend_Pos_Model_Snapshot();
+        $fzSnapshot = new self();
         $fzSnapshot->fzObject = $fzObject;
         $fzSnapshot->user = $userId;
         $fzSnapshot->version = self::_getNextVersion($fzObject);
@@ -66,6 +65,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
      * 
      * @param FaZend_Pos_Model_Object Object
      * @return FaZend_Pos_Model_Snapshot
+     * @throws FaZend_Pos_Model_Snapshot_NotFoundException
      */
     public static function findByObject(FaZend_Pos_Model_Object $fzObject)
     {

@@ -144,32 +144,13 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             if ($property->isStatic())
                 continue;
             if (!in_array($property->getName(), array('__ps', '__posId'))) {
-                FaZend_Exception::raise('FaZend_Pos_Abstract_ExplicitPropertyFound',
+                FaZend_Exception::raise(
+                    'FaZend_Pos_Abstract_ExplicitPropertyFound',
                     "You're not allowed to explicitly declare properties in POS classes, " .
                     "since they won't be persistent. Property '{$property->getName()}' found in " .
-                    get_class($this));
+                    get_class($this)
+                );
             }
-        }
-    }
-
-    /**
-     * Save all changes to DB
-     *
-     * @return void
-     **/
-    public final function __destruct() 
-    {
-        // We don't want any exceptions to be thrown in constructor, 
-        // since they will destroy the entire application framework. That's
-        // why we catch them here and log them.
-        try {
-            $this->ps()->save(false);
-        } catch (FaZend_Pos_Exception $e) {
-            $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
-            if (defined('TESTING_RUNNING'))
-                echo $msg . "\n";
-            else
-                logg($msg);
         }
     }
 
@@ -426,15 +407,19 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public function __wakeup() 
     {
         if ($this instanceof FaZend_Pos_Root) {
-            FaZend_Exception::raise('FaZend_Pos_RootUnserializationProhibited',
+            FaZend_Exception::raise(
+                'FaZend_Pos_RootUnserializationProhibited',
                 "Object of class " . get_class($this) . " can't be unserialized, since it's ROOT",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
         }
 
         if (!isset($this->__posId) || !$this->__posId) {
-            FaZend_Exception::raise('FaZend_Pos_UnserializationFailure',
+            FaZend_Exception::raise(
+                'FaZend_Pos_UnserializationFailure',
                 "Object of class " . get_class($this) . " wasn't properly serialized",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
         }
 
         // The only thing we know about the object is its ID (fzObject.id).
@@ -455,9 +440,11 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public function __sleep() 
     {
         if ($this instanceof FaZend_Pos_Root) {
-            FaZend_Exception::raise('FaZend_Pos_RootSerializationProhibited',
+            FaZend_Exception::raise(
+                'FaZend_Pos_RootSerializationProhibited',
                 "Object of class " . get_class($this) . " can't be serialized, since it's ROOT",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
         }
 
         // We should validate, maybe we already serialized this object before?
@@ -468,9 +455,11 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
                 $this->__posId = $this->ps()->id;
                 $this->ps()->save();
             } catch (FaZend_Pos_LostObjectException $e) {
-                FaZend_Exception::raise('FaZend_Pos_SerializationProhibited',
+                FaZend_Exception::raise(
+                    'FaZend_Pos_SerializationProhibited',
                     "Object of class " . get_class($this) . " can't be serialized, since it's not in POS",
-                    'FaZend_Pos_Exception');
+                    'FaZend_Pos_Exception'
+                );
             } 
         }
         

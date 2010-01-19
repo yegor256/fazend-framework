@@ -19,7 +19,8 @@
  *
  * @package UiModeller
  */
-class FaZend_Pan_Ui_Mockup {
+class FaZend_Pan_Ui_Mockup
+{
 
     const INDENT = 50; // border indentation (left, right, top and bottom)
     const WIDTH = 800; // width of the mockup, in pixels
@@ -53,7 +54,8 @@ class FaZend_Pan_Ui_Mockup {
      * @param string Name of the view script, like 'index/settings'
      * @return void
      */
-    public function __construct($script) {
+    public function __construct($script)
+    {
         $this->_script = $script;
     }
 
@@ -62,7 +64,8 @@ class FaZend_Pan_Ui_Mockup {
      *
      * @return string PNG image
      */
-    public function png() {
+    public function png()
+    {
         // get the size of the image
         list($width, $height) = $this->_getDimensions();
 
@@ -95,7 +98,8 @@ class FaZend_Pan_Ui_Mockup {
      * @param Zend_View Current view
      * @return string HTML of the page
      */
-    public function html(Zend_View $view) {
+    public function html(Zend_View $view)
+    {
         // save View to the class, for further use
         $this->_view = $view;
         
@@ -114,7 +118,8 @@ class FaZend_Pan_Ui_Mockup {
      *
      * @return string
      */
-    public function getScript() {
+    public function getScript()
+    {
         return $this->_script;
     }
                        
@@ -123,7 +128,8 @@ class FaZend_Pan_Ui_Mockup {
      *
      * @return Zend_View
      */
-    public function getView() {
+    public function getView()
+    {
         return $this->_view;
     }
                        

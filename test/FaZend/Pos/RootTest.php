@@ -13,6 +13,17 @@ class FaZend_Pos_RootTest extends AbstractTestCase
         FaZend_Pos_Properties::setUserId($this->_user->__id);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        try {
+            FaZend_Pos_Abstract::cleanPosMemory();
+        } catch (FaZend_Pos_SerializationProhibited $e) {
+            // ignore them, since they are results of special tests above
+            logg('Exception in tearDown(): ' . $e->getMessage());
+        }
+    }
+
     public function testRootInitializationIsSingle() {
         Model_Pos_Root::$initCounter = 0;
         FaZend_Pos_Abstract::cleanPosMemory();

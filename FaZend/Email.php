@@ -77,7 +77,7 @@ class FaZend_Email
                 default:
                     FaZend_Exception::raise(
                         'FaZend_Email_InvalidTransport', 
-                        'Transport ' . self::$_config->transport->name . ' is unknown'
+                        'Transport "' . self::$_config->transport->name . '" is unknown'
                     );
             }
         }

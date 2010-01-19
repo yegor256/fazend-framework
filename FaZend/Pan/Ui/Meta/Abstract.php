@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interface {
+abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interface
+{
 
     /**
      * List of options
@@ -41,7 +42,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return void
      */
-    public function __construct(FaZend_Pan_Ui_Mockup $mockup) {
+    public function __construct(FaZend_Pan_Ui_Mockup $mockup)
+    {
         $this->_mockup = $mockup;
     }
 
@@ -50,7 +52,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return this
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (substr($method, 0, 3) == 'set') {
             $var = strtolower($method{3}) . (substr($method, 4));
 
@@ -69,7 +72,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return this
      */
-    public function __set($var, $value) {
+    public function __set($var, $value)
+    {
         $this->_options[$var] = $value;
     }
 
@@ -78,7 +82,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return this
      */
-    public function __get($var) {
+    public function __get($var)
+    {
         if (!isset($this->_options[$var]))
             return false;
         return $this->_options[$var];
@@ -89,7 +94,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return this
      */
-    protected function _getOptions($preg = '//') {
+    protected function _getOptions($preg = '//')
+    {
         return array_intersect_key($this->_options, array_flip(preg_grep($preg, array_keys($this->_options))));
     }
 
@@ -98,7 +104,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @return int
      */
-    protected function _getLineHeight($fontSize, $fontFile) {
+    protected function _getLineHeight($fontSize, $fontFile)
+    {
         list($width, ) = FaZend_Image::getTextDimensions(
             str_repeat("test\n", 10),
             $fontSize, 
@@ -111,8 +118,10 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      *
      * @param string|array|false Text to show
      * @return void
+     * @throws FaZend_Pan_Ui_Meta_InvalidMeta
      */
-    protected function _parse($txt) {
+    protected function _parse($txt)
+    {
         if ($txt === false)
             $txt = '%s';
         elseif (is_array($txt)) 
@@ -240,7 +249,12 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                             'NY' . rand(10, 99) . 'ABCD' . rand(10000, 99999) . ' 0000000' . '12345678901',
                             )));
                         break;
-
+                        
+                    default:
+                        FaZend_Exception::raise(
+                            'FaZend_Pan_Ui_Meta_InvalidMeta',
+                            "Failed to understand meta: {$matches[1][$id]}"
+                        );
                 }
                 $txt = str_replace($match, $replacer, $txt);
             }
@@ -262,7 +276,22 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                     case 'f':
                         $args[] = rand(0, 1);
                         break;
+                    
+                    default:
+                        FaZend_Exception::raise(
+                            'FaZend_Pan_Ui_Meta_InvalidMeta',
+                            "Failed to parse meta: {$matches[2][$id]}"
+                        );
                 }
+            }
+
+            // some unescapted '%' symbols there?
+            // @todo Regexp is NOT complete now!
+            if (preg_match('/([^%]%[^%0-9sdf])/', $txt, $matches)) {
+                FaZend_Exception::raise(
+                    'FaZend_Pan_Ui_Meta_InvalidMeta',
+                    "All '%' symbols should be escaped, as for sprintf() in '{$this->_mockup->getScript()}': '{$txt}' ({$matches[1]})"
+                );
             }
 
             $txt = vsprintf(str_replace('\n', "\n", $txt), $args);
@@ -277,7 +306,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      * @param Zend_View Current view
      * @return string HTML image of the element
      */
-    public function _htmlLink($script, $label) {
+    public function _htmlLink($script, $label)
+    {
         // maybe it's a self link?
         if (!$script)
             $script = $this->_mockup->getScript();

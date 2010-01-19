@@ -60,6 +60,8 @@ class FaZend_Pos_Properties
      * List of already existing objects
      *
      * @var FaZend_Pos_Properties[]
+     * @see cleanPosMemory()
+     * @see _attachTo()
      **/
     protected static $_instances = array();
     
@@ -178,10 +180,18 @@ class FaZend_Pos_Properties
     /**
      * Clean all memory structures
      *
+     * Be careful with this method, since if you DON'T save to DB
+     * first, you may have problems in __destruct() later. Since
+     * objects will stay in memory and will be saved only when PHP
+     * script is finished. Not the best place for saving, actually.
+     *
+     * @param boolean Save everything into DB first?
      * @return void
      **/
-    public static function cleanPosMemory() 
+    public static function cleanPosMemory($saveAll = true) 
     {
+        if ($saveAll)
+            FaZend_Pos_Abstract::root()->ps()->saveAll();
         self::$_instances = array();
     }
     
@@ -199,6 +209,27 @@ class FaZend_Pos_Properties
     }
 
     /**
+     * Save all changes to DB
+     *
+     * @return void
+     **/
+    public final function __destruct() 
+    {
+        // We don't want any exceptions to be thrown in constructor, 
+        // since they will destroy the entire application framework. That's
+        // why we catch them here and log them.
+        try {
+            $this->save(false);
+        } catch (FaZend_Pos_Exception $e) {
+            $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
+            if (defined('TESTING_RUNNING'))
+                echo $msg . "\n";
+            else
+                logg($msg);
+        }
+    }
+
+    /**
      * Getter dispatcher
      *
      * @param string Name of property to get
@@ -209,9 +240,11 @@ class FaZend_Pos_Properties
         if (method_exists($this, $method))
             return $this->$method();
         
-        FaZend_Exception::raise('FaZend_Pos_Properties_PropertyOrMethodNotFound', 
+        FaZend_Exception::raise(
+            'FaZend_Pos_Properties_PropertyOrMethodNotFound', 
             "Can't find what is '$name' in " . get_class($this->_object) . "::ps()",
-            'FaZend_Pos_Exception');        
+            'FaZend_Pos_Exception'
+        );        
     }
     
     /**
@@ -226,9 +259,11 @@ class FaZend_Pos_Properties
         if (method_exists($this, $method))
             return $this->$method($value);
         
-        FaZend_Exception::raise('FaZend_Pos_Properties_PropertyOrMethodNotFound', 
+        FaZend_Exception::raise(
+            'FaZend_Pos_Properties_PropertyOrMethodNotFound', 
             "Can't set '$name' in " . get_class($this->_object) . '::ps()',
-            'FaZend_Pos_Exception');        
+            'FaZend_Pos_Exception'
+        );        
     }
     
     /**
@@ -293,11 +328,14 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
 
-        if (!$this->hasProperty($name))
-            FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
+        if (!$this->hasProperty($name)) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_Properties_PropertyMissed', 
                 "Can't find property '{$name}' in " . get_class($this->_object) . 
-                    ', among ' . count($this->_properties) . " properties ({$this->path})",
-                'FaZend_Pos_Exception');        
+                ', among ' . count($this->_properties) . " properties ({$this->path})",
+                'FaZend_Pos_Exception'
+            );        
+        }
                 
         $this->_resolveStub($name);
         return $this->_properties[$name];
@@ -327,10 +365,13 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
 
-        if (!$this->hasProperty($name))
-            FaZend_Exception::raise('FaZend_Pos_Properties_PropertyMissed', 
+        if (!$this->hasProperty($name)) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_Properties_PropertyMissed', 
                 "Can't find and unset() property '{$name}' in " . get_class($this->_object) . " ({$this->path})",
-                'FaZend_Pos_Exception');        
+                'FaZend_Pos_Exception'
+            );
+        }        
         
         // this flag will be validated later, in _saveSnapshot()        
         $this->_clean = false;
@@ -377,9 +418,11 @@ class FaZend_Pos_Properties
         try {
             return $this->getProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
-            FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
+            FaZend_Exception::raise(
+                'FaZend_Pos_Properties_ItemMissed', 
                 "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
-                'FaZend_Pos_Exception');        
+                'FaZend_Pos_Exception'
+            );        
         }
     }
 
@@ -409,9 +452,11 @@ class FaZend_Pos_Properties
         try{
             return $this->unsetProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
-            FaZend_Exception::raise('FaZend_Pos_Properties_ItemMissed', 
+            FaZend_Exception::raise(
+                'FaZend_Pos_Properties_ItemMissed', 
                 "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
-                'FaZend_Pos_Exception');        
+                'FaZend_Pos_Exception'
+            );        
         }
     }
 
@@ -440,10 +485,13 @@ class FaZend_Pos_Properties
         if (is_null($this->_clean) || $force)
             $this->_loadSnapshot();
 
-        if ($this->_clean === false)
-            FaZend_Exception::raise('FaZend_Pos_DirtyObjectException',
+        if ($this->_clean === false) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_DirtyObjectException',
                 "The object of class " . get_class($this->_object) . " is dirty, you can't reload it",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
+        }
         
         // it's always CLEAN after loading
         $this->_clean = true;
@@ -458,7 +506,8 @@ class FaZend_Pos_Properties
      **/
     public function save($force = true) 
     {
-        if (is_null($this->_parent))
+        // if we're OUT of POS DB structure - ignore the procedure
+        if (is_null($this->_parent) || is_null($this->_clean))
             return;
 
         // object is NOT saved to DB yet?
@@ -576,9 +625,11 @@ class FaZend_Pos_Properties
             $partOf = FaZend_Pos_Model_PartOf::findByKid(new FaZend_Pos_Model_Object(intval($id)));
         } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
             // parent not found, we're the root!
-            FaZend_Exception::raise('FaZend_Pos_RootCantBeRecovered',
+            FaZend_Exception::raise(
+                'FaZend_Pos_RootCantBeRecovered',
                 "Root object can't be recovered by ID",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
         }
         
         $parentClassName = $partOf->getObject('parent', 'FaZend_Pos_Model_Object')->class;
@@ -610,10 +661,13 @@ class FaZend_Pos_Properties
     protected function _attachToPos() 
     {
         // parent is not assigned yet? no access is allowed
-        if (is_null($this->_parent))
-            FaZend_Exception::raise('FaZend_Pos_LostObjectException',
+        if (is_null($this->_parent)) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_LostObjectException',
                 "You can't make changes to the object " . get_class($this->_object) . " since it's not in POS yet",
-                'FaZend_Pos_Exception');
+                'FaZend_Pos_Exception'
+            );
+        }
         // the object was never loaded yet
         if (is_null($this->_clean))
             $this->load(false);
@@ -696,8 +750,10 @@ class FaZend_Pos_Properties
             $partOf = FaZend_Pos_Model_PartOf::findByParentAndKid(
                 $this->_parent->ps()->fzObject, $this->_fzObject);
         } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
-            FaZend_Exception::raise('FaZend_Pos_Exception',
-                "Very strange situation, probably some changes happened to DB online");
+            FaZend_Exception::raise(
+                'FaZend_Pos_Exception',
+                "Very strange situation, probably some changes happened to DB online"
+            );
         }
         
         $name = $partOf->name;
@@ -769,8 +825,8 @@ class FaZend_Pos_Properties
         $this->_attachToPos();
         
         // this ugly code should be replaced by the iterator, below
-        // but I don't know why - the iterator doesn't work
-        // @see: http://stackoverflow.com/questions/1957069/how-to-work-with-regexiteratorreplace-mode
+        // when this bug is fixed:
+        // http://bugs.php.net/bug.php?id=50579
         $array = array();
         foreach ($this->_properties as $name=>$value) {
             if (!preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches))
@@ -829,6 +885,12 @@ class FaZend_Pos_Properties
      */
     private function _saveSnapshot()
     {
+        // to make sure the object ($this) is still a complete
+        // object, mostly for unit tests, since in normal life
+        // this will never happen (should not)
+        assert($this->_fzObject instanceof FaZend_Pos_Model_Object);
+
+        // prepare an array to be serialized and saved into snapshot
         $toSerialize = array();
         foreach ($this->_properties as $key=>$property) {
             // don't touch the stubs
@@ -837,34 +899,35 @@ class FaZend_Pos_Properties
                 continue;
                 
             if ($property instanceof FaZend_Pos_Abstract) {
+                // memory can be destroyed already and some
+                // objects may be missed, we should catch such
+                // a situation properly
+                assert($property->ps()->fzObject instanceof FaZend_Pos_Model_Object);
+                
                 try {
                     FaZend_Pos_Model_PartOf::findByParent($this->_fzObject, $key);
                 } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
                     FaZend_Pos_Model_PartOf::create($property->ps()->fzObject, $this->_fzObject, $key);
                 }
-            } else {
-                $toSerialize[$key] = $property;
+                continue;
             }
+
+            $toSerialize[$key] = $property;
         }
         
         $serialized = serialize($toSerialize);
 
         // avoid saving of the same data
-        if ($this->_fzSnapshot->properties != $serialized) {
+        if ($this->_fzSnapshot->properties !== $serialized) {
             if ($this->_ignoreVersions) {
-                $this->_fzSnapshot->update(
-                    self::$_userId, 
-                    $serialized);
+                $this->_fzSnapshot->update(self::$_userId, $serialized);
             } else {
                 $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
                     $this->_fzObject, 
                     self::$_userId, 
-                    $serialized);
+                    $serialized
+                );
             }
-        } else {
-            $this->_fzSnapshot->update(
-                self::$_userId, 
-                $serialized);
         }
     }
     
