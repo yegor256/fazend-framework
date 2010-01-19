@@ -167,8 +167,7 @@ class FaZend_Db_Wrapper
     {
         // get row with fetchRow from the select we have
         $row = $this->table()->fetchRow(
-            $this->select($bind),
-            $this->select()->getBind()
+            $this->select($bind)
         );
 
         // if we should keep silence - just return what we got
@@ -224,8 +223,7 @@ class FaZend_Db_Wrapper
     public function fetchPairs(array $bind = null) 
     {
         return $this->table()->getAdapter()->fetchPairs(
-            $this->select($bind),
-            $this->select()->getBind()
+            $this->select($bind)
         );
     }
 
@@ -238,8 +236,7 @@ class FaZend_Db_Wrapper
     public function fetchOne(array $bind = null) 
     {
         return $this->table()->getAdapter()->fetchOne(
-            $this->select($bind),
-            $this->select()->getBind()
+            $this->select($bind)
         );
     }
 

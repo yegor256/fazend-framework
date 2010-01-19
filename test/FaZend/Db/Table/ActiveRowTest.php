@@ -48,12 +48,30 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
     {
         Model_Owner::create('john');
         $cnt = count(Model_Owner::retrieve()
-            ->where('name = :name')
+            ->where('name = :name OR name = :name')
             ->fetchAll(array('name' => 'john')));
+        $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
+        
+        $list = Model_Owner::retrieve()
+            ->where('name = :name OR name = :name')
+            ->fetchAll(array('name' => 'john'));
+        $cnt = 0;
+        foreach ($list as $i)
+            $cnt++;
+        $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
+
+        $cnt = count(Model_Owner::retrieve()
+            ->where('name = :name OR name = :name')
+            ->fetchPairs(array('name' => 'john')));
+        $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
+
+        $cnt = count(Model_Owner::retrieve()
+            ->where('name = :name OR name = :name')
+            ->fetchOne(array('name' => 'john')));
         $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
 
         $owner = Model_Owner::retrieve()
-            ->where('name = :name')
+            ->where('name = :name OR name = :name')
             ->fetchRow(array('name' => 'john'));
         $this->assertEquals('john', $owner->name, 'Name of the owner is wrong, hm...');
     }

@@ -95,11 +95,12 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      */
     public function __call($name, array $args)
     {
-        if (!isset($this->_rowset))
+        if (!isset($this->_rowset)) {
             $this->_rowset = $this->_table->fetchAll(
                 $this->select(), 
                 $this->select()->getBind()
             );
+        }
 
         return call_user_func_array(array($this->_rowset, $name), $args);
     }
