@@ -149,6 +149,14 @@ class FaZend_Bo_Money
                 return round($this->_getPoints() / 100);
             case 'points':
                 return $this->_getPoints();
+            case 'original':
+                return $this->_points / 10000;
+            case 'origCents':
+                return $this->_points / 100;
+            case 'origPoints':
+                return $this->_points;
+            case 'currency':
+                return $this->_currency;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownProperty',

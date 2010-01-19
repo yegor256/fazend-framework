@@ -30,6 +30,18 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $this->assertTrue($money->isLess(50));
     }
 
+    public function testWeCanDoBasicCurrencyConversions()
+    {
+        $money = new FaZend_Bo_Money('100 EUR');
+        $this->assertNotEquals($money->usd, $money->original);
+        $this->assertNotEquals($money->cents, $money->origCents);
+        $this->assertNotEquals($money->points, $money->origPoints);
+
+        $money->add('20 GBP');
+
+        $this->assertEquals('EUR', strval($money->currency->getShortName()));
+    }
+
     /**
      * @expectedException FaZend_Bo_Money_InvalidMuliplication
      */
