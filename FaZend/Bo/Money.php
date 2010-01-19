@@ -146,7 +146,7 @@ class FaZend_Bo_Money
             case 'usd':
                 return $this->_getPoints() / 10000;
             case 'cents':
-                return round($this->_getPoints() / 100);
+                return $this->_getPoints() / 100;
             case 'points':
                 return $this->_getPoints();
             case 'original':
