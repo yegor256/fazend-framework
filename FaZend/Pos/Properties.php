@@ -943,7 +943,12 @@ class FaZend_Pos_Properties
         } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
         }
-        $this->_properties = new ArrayIterator(unserialize($this->_fzSnapshot->properties));
+        
+        // there is a potential problem, if a class that is
+        // serialized is actually absent in PHP now.. what shall
+        // we do and how to detect this problem?
+        // @todo We should resolve it somehow
+        $this->_properties = new ArrayIterator(@unserialize($this->_fzSnapshot->properties));
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
             $this->_properties[$partOf->name] = $this->_restoreFromObject(
