@@ -74,7 +74,13 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
             // ignore any exceptions at this stage
             $file = @fopen($stream, 'a+');
             if ($file !== false) {
-                @fwrite($file, get_class($e) . ' in ' . get_class($this) . '::__construct(): ' . $e->getMessage() . "\n");
+                @fprintf(
+                    $file, 
+                    "%s in %s::__construct(): %s\n", 
+                    get_class($e), 
+                    get_class($this), 
+                    $e->getMessage()
+                );
                 @fclose($file);
             }
         }
