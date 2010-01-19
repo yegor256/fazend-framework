@@ -253,6 +253,16 @@ class FaZend_Bo_Money
     }
     
     /**
+     * Is it zero?
+     *
+     * @return boolean
+     */
+    public function isZero() 
+    {
+        return empty($this->_cents);
+    }
+    
+    /**
      * Get conversion rate for the given currency
      *
      * @param Zend_Currency Currency to work with
