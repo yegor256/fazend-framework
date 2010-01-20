@@ -133,7 +133,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         if ($ps instanceof FaZend_Pos_Properties)
             $this->__ps = $ps;
             
-        if (!isset($this->__ps)) {
+        if (is_null($this->__ps)) {
             if (!$throwException)
                 return null;
                 
