@@ -36,6 +36,52 @@ class FaZend_Pos_Properties
     const STUB_CLASS = 'FaZend_Pos_StubClass';
     
     /**
+     * Root object
+     *
+     * @var FaZend_Pos_Abstract
+     **/
+    protected static $_root = null;
+    
+    /**
+     * Name of root class
+     *
+     * @var string
+     **/
+    protected static $_rootClass = 'FaZend_Pos_Root';
+   
+    /**
+     * Set name of root class
+     *
+     * You can give your own name of the class, which will be used for
+     * ROOT object. Overriding the _init() method in that class you will
+     * be able to initialize your root tree before usage.
+     *
+     * Your ROOT class should be a child from FaZend_Pos_Root.
+     *
+     * @param string Name of root class
+     * @return void
+     **/
+    public static function setRootClass($rootClass) 
+    {
+        self::$_rootClass = $rootClass;
+        self::cleanPosMemory(false);
+    }
+
+    /**
+     * Get root object, the main object of the entire POS tree
+     *
+     * @return FaZend_Pos_Abstract
+     **/
+    public static function root() 
+    {
+        if (is_null(self::$_root)) {
+            self::$_root = new self::$_rootClass();
+            self::$_root->init();
+        }
+        return self::$_root;
+    }
+
+    /**
      * Current user ID
      *
      * This variable is used for dependency injection. You should set
@@ -59,9 +105,12 @@ class FaZend_Pos_Properties
     /**
      * List of already existing objects
      *
+     * Associative array where keys are fzObject ID's and values
+     * are instances of FaZend_Pos_Properties.
+     *
      * @var FaZend_Pos_Properties[]
      * @see cleanPosMemory()
-     * @see _attachTo()
+     * @see self::_attachTo()
      **/
     protected static $_instances = array();
     
@@ -69,10 +118,11 @@ class FaZend_Pos_Properties
      * Active Row in fzObject table
      * 
      * This is the row in fzObject table, that relates to the object we
-     * are managing. This property is set inside _attachTo()
+     * are managing. This property is set inside self::_attachTo()
      *
      * @var FaZend_Pos_Model_Object
-     * @see _attachTo()
+     * @see self::_attachTo()
+     * @see __construct()
      */
     protected $_fzObject = null;
     
@@ -100,7 +150,7 @@ class FaZend_Pos_Properties
     /**
      * Parent object
      *
-     * The property is set inside _attachTo(), and can be accessed by means
+     * The property is set inside self::_attachTo(), and can be accessed by means
      * of _getParent(). If the property is not set, the object we're managing
      * is considered to be OUT OF the entire POS structure, and you can't
      * do anything with it. For example:
@@ -109,12 +159,13 @@ class FaZend_Pos_Properties
      * class MyObject extends FaZend_Pos_Abstract {}
      * $obj = new MyObject();
      * $obj->name = 'test'; // Exception here, since the object is not attached
-     * FaZend_Pos_Abstract::root()->obj = $obj;
+     * FaZend_Pos_Properties::root()->obj = $obj;
      * $obj->name = 'test'; // works perfectly
      * </code>
      *
      * @var FaZend_Pos_Abstract
-     * @see _attachTo()
+     * @see self::_attachTo()
+     * @see __construct()
      * @see _getParent()
      **/
     protected $_parent = null;
@@ -178,7 +229,29 @@ class FaZend_Pos_Properties
     }
     
     /**
-     * Clean all memory structures
+     * Clean the entire POS structure from memory
+     *
+     * Be careful with this method, it is mostly used for unit testing. When
+     * you're clearing the memory, you DON'T save changes to the database. All
+     * your changes will be saved only during destruction of objects. Consider
+     * the example:
+     *
+     * <code>
+     * FaZend_Pos_Properties::root()->obj = $obj = new Model_My_Pos_Object();
+     * $obj->test = 'works good!';
+     * FaZend_Pos_Properties::cleanPosMemory();
+     * isset(FaZend_Pos_Properties::root()->obj->test); // return FALSE
+     * </code>
+     *
+     * Another example, which explains how it should be done:
+     *
+     * <code>
+     * FaZend_Pos_Properties::root()->obj = $obj = new Model_My_Pos_Object();
+     * $obj->test = 'works good!';
+     * $obj->ps()->save(); // forces the object to be saved to DB
+     * FaZend_Pos_Properties::cleanPosMemory();
+     * isset(FaZend_Pos_Properties::root()->obj->test); // return TRUE
+     * </code>
      *
      * Be careful with this method, since if you DON'T save to DB
      * first, you may have problems in __destruct() later. Since
@@ -186,25 +259,71 @@ class FaZend_Pos_Properties
      * script is finished. Not the best place for saving, actually.
      *
      * @param boolean Save everything into DB first?
+     * @param boolean Shall we ignore serialization problems?
      * @return void
      **/
-    public static function cleanPosMemory($saveAll = true) 
+    public static function cleanPosMemory($saveAll = true, $ignoreExceptions = false) 
     {
-        if ($saveAll)
-            FaZend_Pos_Abstract::root()->ps()->saveAll();
-        self::$_instances = array();
+        if (is_null(self::$_root))
+            return;
+            
+        if ($saveAll) {
+            foreach (self::$_instances as $property) {
+                try {
+                    $property->save(false);
+                } catch (FaZend_Pos_SerializationProhibited $e) {
+                    if ($ignoreExceptions) {
+                        FaZend_Log::err(get_class($e) . ': ' . $e->getMessage());
+                    } else {
+                        throw $e;
+                    }
+                }
+            }
+        }
+            
+        foreach (self::$_instances as $id=>$instance) {
+            $instance->_object->ps(null, false, true);
+            unset(self::$_instances[$id]);
+        }
+        self::$_root = null;
+    }
+    
+    /**
+     * Create new instance of the class
+     *
+     * @param FaZend_Pos_Abstract Object
+     * @return FaZend_Pos_Properties
+     * @see FaZend_Pos_Abstract::ps()
+     * @see self::_attachTo()
+     */
+    public static function factory(
+        $class, 
+        FaZend_Pos_Abstract $object,
+        FaZend_Pos_Model_Object $fzObject
+    ) 
+    {
+        return self::$_instances[$fzObject->__id] = new $class($object, $fzObject);
     }
     
     /**
      * Constructor
      *
      * @param FaZend_Pos_Abstract Object
+     * @param FaZend_Pos_Model_Object fzObject
+     * @param FaZend_Pos_Abstract Parent
      * @return void
      * @see FaZend_Pos_Abstract::ps()
      **/
-    public function __construct(FaZend_Pos_Abstract $object) 
+    private function __construct(
+        FaZend_Pos_Abstract $object, 
+        FaZend_Pos_Model_Object $fzObject, 
+        FaZend_Pos_Abstract $parent = null
+    ) 
     {
         $this->_object = $object;
+        $this->_fzObject = $fzObject;
+        $this->_parent = $parent;
+        
         $this->_properties = new ArrayIterator();
     }
 
@@ -219,6 +338,7 @@ class FaZend_Pos_Properties
         // since they will destroy the entire application framework. That's
         // why we catch them here and log them.
         try {
+            // bug(array_keys(self::$_instances));
             $this->save(false);
         } catch (FaZend_Pos_Exception $e) {
             $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
@@ -235,7 +355,8 @@ class FaZend_Pos_Properties
      * @param string Name of property to get
      * @return string
      **/
-    public function __get($name) {
+    public function __get($name)
+    {
         $method = '_get' . ucfirst($name);
         if (method_exists($this, $method))
             return $this->$method();
@@ -254,7 +375,8 @@ class FaZend_Pos_Properties
      * @param mixed Value to set
      * @return void
      **/
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $method = '_set' . ucfirst($name);
         if (method_exists($this, $method))
             return $this->$method($value);
@@ -310,7 +432,7 @@ class FaZend_Pos_Properties
 
         // this new property is also a POS object?
         if ($value instanceof FaZend_Pos_Abstract) {
-            $value->ps()->_attachTo($this->_object, $name);
+            self::_attachTo($this->_object, $value, $name);
         }
 
         // @todo remove this line as soon as ItemsIterator is fixed!
@@ -331,8 +453,13 @@ class FaZend_Pos_Properties
         if (!$this->hasProperty($name)) {
             FaZend_Exception::raise(
                 'FaZend_Pos_Properties_PropertyMissed', 
-                "Can't find property '{$name}' in " . get_class($this->_object) . 
-                ', among ' . count($this->_properties) . " properties ({$this->path})",
+                sprintf(
+                    "Can't find property '%s' in %s, among %d properties (%s)",
+                    $name, 
+                    get_class($this->_object), 
+                    count($this->_properties), 
+                    $this->path
+                ),
                 'FaZend_Pos_Exception'
             );        
         }
@@ -507,7 +634,7 @@ class FaZend_Pos_Properties
     public function save($force = true) 
     {
         // if we're OUT of POS DB structure - ignore the procedure
-        if (is_null($this->_parent) || is_null($this->_clean))
+        if (!$this->_isInPos())
             return;
 
         // object is NOT saved to DB yet?
@@ -614,12 +741,13 @@ class FaZend_Pos_Properties
      *
      * Here we recursively (!) restore all parents, until root is reached.
      *
+     * @param FaZend_Pos_Abstract The object to recover
      * @param id fzObject.id
      * @return void
      * @throws FaZend_Pos_Exception If something goes wrong
      * @see FaZend_Pos_Abstract::__wakeup()
      **/
-    public function recoverById($id) 
+    public static function recoverById(FaZend_Pos_Abstract $object, $id) 
     {
         try {
             $partOf = FaZend_Pos_Model_PartOf::findByKid(new FaZend_Pos_Model_Object(intval($id)));
@@ -627,7 +755,7 @@ class FaZend_Pos_Properties
             // parent not found, we're the root!
             FaZend_Exception::raise(
                 'FaZend_Pos_RootCantBeRecovered',
-                "Root object can't be recovered by ID",
+                "Root object can't be recovered by ID ($id)",
                 'FaZend_Pos_Exception'
             );
         }
@@ -636,12 +764,23 @@ class FaZend_Pos_Properties
         
         // attach it to ROOT?
         if (is_subclass_of($parentClassName, 'FaZend_Pos_Root') || ($parentClassName === 'FaZend_Pos_Root')) {
-            FaZend_Pos_Abstract::root()->{$partOf->name} = $this->_object;
+            FaZend_Pos_Properties::root()->{$partOf->name} = $object;
         } else {
             $parent = new $parentClassName();
-            $parent->ps()->recoverById((string)$partOf->parent);
-            $this->_attachTo($parent, $partOf->name);
+            self::recoverById($parent, (string)$partOf->parent);
+            self::_attachTo($parent, $object, $partOf->name);
         }
+    }
+
+    /**
+     * This object is in POS?
+     *
+     * @return boolean
+     * @see _attachToPos()
+     */
+    protected function _isInPos() 
+    {
+        return !is_null($this->_parent);
     }
 
     /**
@@ -652,7 +791,7 @@ class FaZend_Pos_Properties
      * is properly attached to the POS, and has $this->_parent defined.
      *
      * Internal property $this->_parent should be set BEFOREHAND by means of
-     * $this->_attachTo().
+     * self::_attachTo().
      *
      * @return void
      * @throws FaZend_Pos_LostObjectException If the object is not attached yet
@@ -661,7 +800,7 @@ class FaZend_Pos_Properties
     protected function _attachToPos() 
     {
         // parent is not assigned yet? no access is allowed
-        if (is_null($this->_parent)) {
+        if (!$this->_isInPos()) {
             FaZend_Exception::raise(
                 'FaZend_Pos_LostObjectException',
                 "You can't make changes to the object " . get_class($this->_object) . " since it's not in POS yet",
@@ -680,33 +819,38 @@ class FaZend_Pos_Properties
      * change parent of the object.
      *
      * @param FaZend_Pos_Abstract The object, which is parent
+     * @param FaZend_Pos_Abstract The object, which is a kid
      * @param string Unique name inside the parent
      * @return void
      * @throws FaZend_Pos_Exception
      **/
-    protected function _attachTo(FaZend_Pos_Abstract $parent, $name) 
+    protected static function _attachTo(FaZend_Pos_Abstract $parent, FaZend_Pos_Abstract $kid, $name) 
     {
-        $this->_parent = $parent;
-        
+        // maybe this KID object is already in POS,
+        // but somewhere else? we should save it then.
+        if ($kid->ps(null, false) instanceof FaZend_Pos_Properties)
+            $parent->ps()->save();
+            
         try {
             // find my ID
-            $this->_fzObject = FaZend_Pos_Model_Object::findByParent($parent, $name);
+            $fzObject = FaZend_Pos_Model_Object::findByParent($parent, $name);
         } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
-            $this->_fzObject = FaZend_Pos_Model_Object::create($this->_object, $parent, $name);
+            $fzObject = FaZend_Pos_Model_Object::create($kid);
         }
         
         // Maybe we found an object, which already exists in memory? This is
         // the ID of the object in fzObject, and we should search the list
         // of existing instances of PROPERTIES for it.
-        $id = $this->_fzObject->__id;
-        
+        $id = intval($fzObject->__id);
+
         // If it exists, we REPLACE the current one by existing one, in the object.
         if (isset(self::$_instances[$id])) {
-            $this->_object->ps(self::$_instances[$id]);
+            $kid->ps(self::$_instances[$id]);
         } else {
-            self::$_instances[$id] = $this;
+            self::$_instances[$id] = new self($kid, $fzObject, $parent);
+            $kid->ps(self::$_instances[$id]);
             // make sure it is property attached
-            $this->_attachToPos();
+            $kid->ps()->_attachToPos();
         }
         
         // initialize the object after adding to POS
@@ -747,16 +891,14 @@ class FaZend_Pos_Properties
     {
         $this->_attachToPos();
         try {
-            $partOf = FaZend_Pos_Model_PartOf::findByParentAndKid(
-                $this->_parent->ps()->fzObject, $this->_fzObject);
-        } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
+            $name = $this->_parent->ps()->_findKidName($this->_object);
+        } catch (FaZend_Pos_KidNotFoundByObject $e) {
             FaZend_Exception::raise(
                 'FaZend_Pos_Exception',
-                "Very strange situation, probably some changes happened to DB online"
+                "Very strange situation, probably some changes happened to the object"
             );
         }
         
-        $name = $partOf->name;
         if (strpos($name, self::ARRAY_PREFIX) === 0)
             $name = substr($name, strlen(self::ARRAY_PREFIX));
         
@@ -764,15 +906,42 @@ class FaZend_Pos_Properties
     }
 
     /**
+     * Find name of the given kid, inside me
+     *
+     * @param FaZend_Pos_Abstract Object to look for
+     * @return string
+     * @throws FaZend_Pos_KidNotFoundByObject
+     */
+    protected function _findKidName(FaZend_Pos_Abstract $kid) 
+    {
+        foreach ($this->_properties as $name=>$property) {
+            if (($property instanceof FaZend_Pos_Abstract) && 
+                ($kid->ps()->id == $property->ps()->id))
+                return $name;
+        }
+            
+        FaZend_Exception::raise(
+            'FaZend_Pos_KidNotFoundByObject',
+            "Kid not found"
+        );
+    }
+
+    /**
      * Get full path of the object
      * 
      * @return string Full path in tree, like: 'root/test/myObject/myElement'
+     * @see _getUplinks()
      * @throws FaZend_Pos_Exception If the object is not in POS yet
      */
     protected function _getPath()
     {
         $this->_attachToPos();
-        return $this->_parent->ps()->path . '/' . $this->name;
+        
+        $uplinks = $this->_getUplinks();
+        $path = '';
+        foreach ($uplinks as $uplink)
+            $path .= $uplink->ps()->name . '/';
+        return $path . $this->name;
     }
 
     /**
@@ -907,7 +1076,11 @@ class FaZend_Pos_Properties
                 try {
                     FaZend_Pos_Model_PartOf::findByParent($this->_fzObject, $key);
                 } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
-                    FaZend_Pos_Model_PartOf::create($property->ps()->fzObject, $this->_fzObject, $key);
+                    FaZend_Pos_Model_PartOf::create(
+                        $property->ps()->fzObject, 
+                        $this->_fzObject, 
+                        $key
+                    );
                 }
                 continue;
             }
@@ -941,7 +1114,11 @@ class FaZend_Pos_Properties
         try {
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::findByObject($this->_fzObject);
         } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
-            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create($this->_fzObject, self::$_userId, serialize(array()));
+            $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
+                $this->_fzObject, 
+                self::$_userId, 
+                serialize(array())
+            );
         }
         
         // there is a potential problem, if a class that is
@@ -1001,9 +1178,25 @@ class FaZend_Pos_Properties
         if ($property instanceof $stubClass) {
             $class = $property->className;
             $property = new $class();
-            $property->ps()->_attachTo($this->_object, $name);
+            self::_attachTo($this->_object, $property, $name);
             $this->_properties[$name] = $property;
         }
+    }
+    
+    /**
+     * Get list of objects that are ABOVE the current one
+     *
+     * @param array List of uplinks, already prepared
+     * @return array
+     */
+    protected function _getUplinks(array $uplinks = array()) 
+    {
+        $uplink = $this->_parent->ps()->_object;
+        if (isset($uplinks[$uplink->ps()->id]))
+            return $uplinks;
+        $uplinks[$uplink->ps()->id] = $uplink;
+        $this->_parent->ps()->_getUplinks($uplinks);
+        return $uplinks;
     }
 
 }

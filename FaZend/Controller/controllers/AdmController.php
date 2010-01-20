@@ -164,7 +164,7 @@ class Fazend_AdmController extends FaZend_Controller_Panel
             return $this->_redirectFlash('POS does not exist', 'index');
             
         if ($this->_hasParam('object'))
-            $this->view->node = FaZend_Pos_Abstract::root()->ps()->findById($this->_getParam('object'));
+            $this->view->node = FaZend_Pos_Properties::root()->ps()->findById($this->_getParam('object'));
     }
     
 }

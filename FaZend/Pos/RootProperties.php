@@ -23,17 +23,6 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
 {
     
     /**
-     * Saves all changes to the DB
-     *
-     * @return void
-     **/
-    public function saveAll() 
-    {
-        foreach (self::$_instances as $property)
-            $property->save(false);
-    }
-    
-    /**
      * Find object by ID
      *
      * @param integer ID of the object (fzObject.id)
@@ -53,7 +42,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
             
         $className = $fzObject->class;
         if (is_subclass_of($className, 'FaZend_Pos_Root') || ($className === 'FaZend_Pos_Root')) {
-            return FaZend_Pos_Abstract::root();
+            return FaZend_Pos_Properties::root();
         } else {
             $obj = new $className();
             $obj->ps()->recoverById($id);
@@ -64,14 +53,24 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
     /**
      * Validate whether the object is already in POS
      *
-     * @return void
+     * @return boolean
      **/
-    protected function _attachToPos() 
+    protected function _isInPos() 
     {
-        $this->_parent = false;
-        $this->_fzObject = FaZend_Pos_Model_Object::findRoot();
-        return parent::_attachToPos();
+        return true;
     }
+
+    // /**
+    //  * Validate whether the object is already in POS
+    //  *
+    //  * @return void
+    //  **/
+    // protected function _attachToPos() 
+    // {
+    //     $this->_parent = false;
+    //     $this->_fzObject = FaZend_Pos_Model_Object::findRoot();
+    //     return parent::_attachToPos();
+    // }
 
     /**
      * Set parent for the object
@@ -104,13 +103,23 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
     }
 
     /**
-     * Get path
+     * Get my name
      * 
-     * @return Path of root
+     * @return string
      */
-    protected function _getPath()
+    protected function _getName()
     {
         return 'root';
+    }
+    
+    /**
+     * Get array of objects above root
+     * 
+     * @return array()
+     */
+    protected function _getUplinks(array $uplinks = array())
+    {
+        return array();
     }
 
 }

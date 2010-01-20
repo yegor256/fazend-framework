@@ -11,51 +11,50 @@ class FaZend_Pos_RootTest extends AbstractTestCase
 
         $this->_user = FaZend_User::register( 'test2', 'test2' );
         FaZend_Pos_Properties::setUserId($this->_user->__id);
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        try {
-            FaZend_Pos_Abstract::cleanPosMemory();
-        } catch (FaZend_Pos_SerializationProhibited $e) {
-            // ignore them, since they are results of special tests above
-            logg('Exception in tearDown(): ' . $e->getMessage());
-        }
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
     }
 
-    public function testRootInitializationIsSingle() {
+    public function testRootInitializationIsSingle()
+    {
         Model_Pos_Root::$initCounter = 0;
-        FaZend_Pos_Abstract::cleanPosMemory();
-        $car = FaZend_Pos_Abstract::root()->car19 = new Model_Pos_Car();
-        $car->bike = new Model_Pos_Bike();
-        FaZend_Pos_Abstract::cleanPosMemory();
-        $bike = FaZend_Pos_Abstract::root()->car19->bike;
-        $this->assertEquals(2, Model_Pos_Root::$initCounter, 'Root was initialized more than once, why?');
+        FaZend_Pos_Properties::root()->car199 = $car = new Model_Pos_Car();
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
+        FaZend_Pos_Properties::root()->car199->bike = new Model_Pos_Bike();
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
+        $bike = FaZend_Pos_Properties::root()->car199->bike;
+        $this->assertEquals(3, Model_Pos_Root::$initCounter, 
+            'Root was initialized more times than expected (' . Model_Pos_Root::$initCounter . ' times), why?');
     }
-
+    
     public function testInitializationOfSubObjectsWorksFine()
     {
-        FaZend_Pos_Abstract::cleanPosMemory();
-            
-        $car = FaZend_Pos_Abstract::root()->carForRoot = new Model_Pos_Car();
+        $car = FaZend_Pos_Properties::root()->car897 = new Model_Pos_Car();
         $car->holder = new FaZend_StdObject();
-        $car->holder->bike = FaZend_Pos_Abstract::root()->bike = new Model_Pos_Bike();
-
+        $car->holder->bike = FaZend_Pos_Properties::root()->bike = new Model_Pos_Bike();
+        
         $car[1] = new FaZend_StdObject();
         $car[1]->bike = $car->holder->bike;
         $car->ps()->save();
+        $this->assertTrue(FaZend_Pos_Properties::root()->car897 instanceof Model_Pos_Car);
         
-        FaZend_Pos_Abstract::cleanPosMemory();
-        $root = FaZend_Pos_Abstract::root();
-        $this->assertTrue($root->carForRoot instanceof Model_Pos_Car, 'Car object was not retrieved');
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
+        $root = FaZend_Pos_Properties::root();
+        
+        $this->assertTrue($root->car897 instanceof Model_Pos_Car, 
+            'Car object was not retrieved: ' . gettype($root->car897));
     }
 
     public function testMultipleInstantiationOfRootDoesntCreateObjects()
     {
         for ($i = 0; $i < 10; $i++) {
-            FaZend_Pos_Abstract::cleanPosMemory();
-            $id = FaZend_Pos_Abstract::root()->ps()->id;
+            FaZend_Pos_Properties::cleanPosMemory(true, false);
+            $id = FaZend_Pos_Properties::root()->ps()->id;
             if (isset($oldId))
                 $this->assertEquals($id, $oldId, 'Roots are different, why?');
             $oldId = $id;
@@ -64,10 +63,10 @@ class FaZend_Pos_RootTest extends AbstractTestCase
     
     public function testObjectsCanBeFoundById()
     {
-        $id = FaZend_Pos_Abstract::root()->ps()->id;
-        FaZend_Pos_Abstract::cleanPosMemory();
+        $id = FaZend_Pos_Properties::root()->ps()->id;
+        FaZend_Pos_Properties::cleanPosMemory(true, false);
 
-        $obj = FaZend_Pos_Abstract::root()->ps()->findById($id);
+        $obj = FaZend_Pos_Properties::root()->ps()->findById($id);
         $this->assertEquals($obj->ps()->id, $id, 'IDs are different, why?');
     }
 

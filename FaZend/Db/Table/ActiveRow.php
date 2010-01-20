@@ -87,30 +87,54 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             // the ID of the row
             // later data will be loaded, but later, in __get() method
             $this->_preliminaryKey = $id;
-        } elseif ($id !== false) {    
+
+            // inject this object into flyweight
+            FaZend_Flyweight::inject($this, $id);
+            return;
+        }
+        
+        if ($id !== false) {    
             // $id is NOT equal to FALSE
             // if it's not an array - that it's a mistake for sure
             if (!is_array($id)) {
                 FaZend_Exception::raise(
                     'FaZend_Db_Table_InvalidConstructor', 
-                    get_class($this) . "::new({$id}:" . gettype($id) . ") has incorrect param type (neither INT nor ARRAY)"
+                    sprintf(
+                        '%s::new(%s: %s) has incorrect param type (neither INT nor ARRAY)',
+                        $id,
+                        get_class($this),
+                        gettype($id)
+                    )
                 );
             }
 
             // otherwise just pass through to the default constructor
             parent::__construct($id);
-        } else {
-            // $id is empty (equals to FALSE) and it means that we should
-            // create a NEW object, from scratch
-            parent::__construct();
+            return;
+        }
+        
+        // $id is empty (equals to FALSE) and it means that we should
+        // create a NEW object, from scratch
+        parent::__construct();
 
-            // get information from the table
-            $info = $this->_table->info();
+        // get information from the table
+        $info = $this->_table->info();
 
-            // and create internal data array with empty values
-            // for all columns
-            $this->_data = array_fill_keys($info['cols'], null);
-        }    
+        // and create internal data array with empty values
+        // for all columns
+        $this->_data = array_fill_keys($info['cols'], null);
+    }
+    
+    /**
+     * Save the object
+     *
+     * @return void
+     */
+    public function save() 
+    {
+        parent::save();
+        // inject this object into flyweight
+        FaZend_Flyweight::inject($this, $this->__id);
     }
 
     /**
@@ -260,6 +284,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         }
 
         if (isset($rowClass)) {
+            // return new $rowClass(is_numeric($value) ? intval($value) : $value);
             $value = FaZend_Flyweight::factory(
                 $rowClass, 
                 is_numeric($value) ? intval($value) : $value

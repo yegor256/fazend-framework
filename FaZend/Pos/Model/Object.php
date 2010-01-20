@@ -30,13 +30,13 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
      * @param string Name inside the parent
      * @return FaZend_Pos_Model_Object
      */
-    public static function create(FaZend_Pos_Abstract $pos, FaZend_Pos_Abstract $parent, $name)
+    public static function create(FaZend_Pos_Abstract $pos, FaZend_Pos_Abstract $parent = null, $name = null)
     {
         $object = new self();
         $object->class = get_class($pos);
         $object->save();
         
-        FaZend_Pos_Model_PartOf::create($object, $parent->ps()->fzObject, $name);
+        // FaZend_Pos_Model_PartOf::create($object, $parent->ps()->fzObject, $name);
         
         return $object;
     }
@@ -74,7 +74,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
                 ->fetchRow()
                 ;
         } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
-            $root = new FaZend_Pos_Model_Object();
+            $root = new self();
             $root->class = 'FaZend_Pos_Root';
             $root->save();
             return $root;

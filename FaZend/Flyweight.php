@@ -29,7 +29,8 @@
  *
  * @package Model
  */
-class FaZend_Flyweight {
+class FaZend_Flyweight
+{
 
     /**
      * Storage of objects
@@ -45,7 +46,8 @@ class FaZend_Flyweight {
      * @param mixed Any amount of params to be passed to the constructor
      * @return mixed
      **/
-    public static function factory($class /*, many params... */) {
+    public static function factory($class /*, many params... */)
+    {
         $args = func_get_args();
         array_shift($args); // pop out the first argument
         
@@ -67,12 +69,28 @@ class FaZend_Flyweight {
     }
 
     /**
+     * Inject new object into the storage
+     *
+     * @return void
+     */
+    public static function inject($object /* many params... */) 
+    {
+        $args = func_get_args();
+        array_shift($args); // pop out the first argument
+        
+        // unique object ID in the storage
+        $id = self::_makeId(array_merge(array(get_class($object)), $args));
+        self::$_storage[$id] = $object;
+    }
+
+    /**
      * Generate ID out of a list of params
      *
      * @param array List of args
      * @return string
      */
-    public static function _makeId(array $args) {
+    public static function _makeId(array $args)
+    {
         $id = '';
         foreach ($args as $arg) {
             if (is_scalar($arg)) {

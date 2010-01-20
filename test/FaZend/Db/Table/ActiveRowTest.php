@@ -76,65 +76,39 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $this->assertEquals('john', $owner->name, 'Name of the owner is wrong, hm...');
     }
 
-    public function testDynamicExceptionWorks ()
+    /**
+     * @expectedException Model_Owner_NotFoundException
+     */
+    public function testDynamicExceptionWorks()
     {
-        try {
-            $list = Model_Owner::retrieve()
-                ->where('id = 132')
-                ->setRowClass('Model_Owner')
-                ->fetchRow();
-
-            // everything ok!
-
-        } catch (Model_Owner_NotFoundException $e) {
-            
-            $this->fail('no exception, why?');
-
-        }    
-
-        try {
-            $list = Model_Owner::retrieve()
-                ->where('id = 888')
-                ->setRowClass('Model_Owner')
-                ->fetchRow();
-
-            $this->fail('no exception, why?');
-                
-        } catch (Model_Owner_NotFoundException $e) {
-            
-            // everything ok!
-
-        }    
+        $list = Model_Owner::retrieve()
+            ->where('id = 888')
+            ->setRowClass('Model_Owner')
+            ->fetchRow();
     }
 
-    public function testTableWithoutIDWorks ()
+    public function testTableWithoutIDWorks()
     {
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchAll();
-
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchPairs();
     }
 
-    public function testTableWithoutPrimaryKeyWorks ()
+    public function testTableWithoutPrimaryKeyWorks()
     {
         $list = FaZend_Db_Table_ActiveRow_boat::retrieve()
             ->fetchAll();
-
-        $boat = new FaZend_Db_Table_ActiveRow_boat (1);
+        $boat = new FaZend_Db_Table_ActiveRow_boat(1);
     }
 
-    public function testTableWithoutAnyKeyDoesntWork ()
+    /**
+     * @expectedException FaZend_Db_Wrapper_NoIDFieldException
+     */
+    public function testTableWithoutAnyKeyDoesntWork()
     {
-        try {
-            $list = FaZend_Db_Table_ActiveRow_flower::retrieve()
-                ->fetchAll();
-
-            $this->fail('no exception, why?');    
-        } catch (FaZend_Db_Wrapper_NoIDFieldException $e) {
-
-            // it's OK.
-        }    
+        $list = FaZend_Db_Table_ActiveRow_flower::retrieve()
+            ->fetchAll();
     }
 
     public function testDeleteRowWorks()
@@ -149,6 +123,15 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             ->where('1 = 1')
             ->where('2 = 2')
             ->delete();
+    }
+    
+    public function testFlyweightProperlyAllocateObjects()
+    {
+        $owner = new Model_Owner(132);
+        $product = new Model_Product(10);
+        
+        $this->assertTrue($owner === $product->owner, 
+            "Objects are different, but they should be the same");
     }
 
 }
