@@ -318,6 +318,7 @@
         <if><istrue value="${to.deploy}" /><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
+            <mkdir dir="${project.basedir}/build/api" />
 
             <!-- create new php documentation -->
             <exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" 
