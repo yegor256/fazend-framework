@@ -50,38 +50,6 @@ class FaZend_Pos_Properties
     protected static $_rootClass = 'FaZend_Pos_Root';
    
     /**
-     * Set name of root class
-     *
-     * You can give your own name of the class, which will be used for
-     * ROOT object. Overriding the _init() method in that class you will
-     * be able to initialize your root tree before usage.
-     *
-     * Your ROOT class should be a child from FaZend_Pos_Root.
-     *
-     * @param string Name of root class
-     * @return void
-     **/
-    public static function setRootClass($rootClass) 
-    {
-        self::$_rootClass = $rootClass;
-        self::cleanPosMemory(false);
-    }
-
-    /**
-     * Get root object, the main object of the entire POS tree
-     *
-     * @return FaZend_Pos_Abstract
-     **/
-    public static function root() 
-    {
-        if (is_null(self::$_root)) {
-            self::$_root = new self::$_rootClass();
-            self::$_root->init();
-        }
-        return self::$_root;
-    }
-
-    /**
      * Current user ID
      *
      * This variable is used for dependency injection. You should set
@@ -216,6 +184,45 @@ class FaZend_Pos_Properties
      * @see setIgnoreVersions()
      **/
     protected $_ignoreVersions = false;
+
+    /**
+     * Set name of root class
+     *
+     * You can give your own name of the class, which will be used for
+     * ROOT object. Overriding the _init() method in that class you will
+     * be able to initialize your root tree before usage.
+     *
+     * Your ROOT class should be a child from FaZend_Pos_Root.
+     *
+     * @param string Name of root class
+     * @return void
+     * @throws FaZend_Pos_RootIsLocked
+     **/
+    public static function setRootClass($rootClass) 
+    {
+        if (!is_null(self::$_root)) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_RootIsLocked', 
+                "You can't change root class when ROOT is already instantiated",
+                'FaZend_Pos_Exception'
+            );        
+        }
+        self::$_rootClass = $rootClass;
+    }
+
+    /**
+     * Get root object, the main object of the entire POS tree
+     *
+     * @return FaZend_Pos_Abstract
+     **/
+    public static function root() 
+    {
+        if (is_null(self::$_root)) {
+            self::$_root = new self::$_rootClass();
+            self::$_root->init();
+        }
+        return self::$_root;
+    }
 
     /**
      * Set user ID, dependency injection, so to speak
