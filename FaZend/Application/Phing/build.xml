@@ -244,7 +244,7 @@
                 escape="false"
                 checkreturn="true" />
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped, since to.phpcs is FALSE" />    
         </else></if>
     </target>
 
