@@ -237,6 +237,7 @@
         <if><istrue value="${to.phpcs}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <exec command="phpcs 
+                -n
                 --report=full
                 --standard=Zend 
                 --ignore='.svn/*' 
