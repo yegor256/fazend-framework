@@ -268,7 +268,8 @@ class FaZend_Pos_Properties
      * @param boolean Save everything into DB first?
      * @param boolean Shall we ignore serialization problems?
      * @return void
-     **/
+     * @throws FaZend_Pos_SerializationProhibited
+     */
     public static function cleanPosMemory($saveAll = true, $ignoreExceptions = false) 
     {
         if (is_null(self::$_root))
@@ -320,7 +321,7 @@ class FaZend_Pos_Properties
      * @param FaZend_Pos_Abstract Parent
      * @return void
      * @see FaZend_Pos_Abstract::ps()
-     **/
+     */
     private function __construct(
         FaZend_Pos_Abstract $object, 
         FaZend_Pos_Model_Object $fzObject, 

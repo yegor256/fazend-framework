@@ -55,6 +55,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return void
      * @see init()
+     * @throws FaZend_Pos_Abstract_ExplicitPropertyFound
      */
     public final function __construct()
     {

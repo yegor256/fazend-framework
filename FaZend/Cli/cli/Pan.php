@@ -41,7 +41,7 @@ class Pan extends FaZend_Cli_Abstract
                 break;
                 
             default:
-                echo "Pan $pan is not accessible\n";
+                echo "Pan {$pan} is not accessible\n";
                 return self::RETURNCODE_OK;
         }
 

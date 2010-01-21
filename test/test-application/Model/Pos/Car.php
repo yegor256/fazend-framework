@@ -23,6 +23,11 @@
 class Model_Pos_Car extends FaZend_Pos_Abstract
 {
 
+    public function __get($name)
+    {
+        return parent::__get($name);
+    }
+
 }
 
 
