@@ -103,14 +103,33 @@ class FaZend_Bo_Money
         $value = (string)$value;
         
         if ($value && !is_numeric($value)) {
-            if (!preg_match('/^([\-\+]?\d+(?:\.\d+)?)(?:\s?(\w{3}))?$/', str_replace(',', '', $value), $matches)) {
+            // remove spaces and replace comas with dots
+            $value = preg_replace(
+                array('/\s+/', '/\,/'), 
+                array('', '.'), 
+                $value
+            );
+
+            // @todo this is UGLY, and we need to do it with regexp
+            $slices = explode('.', $value);
+            $value = implode('', array_slice($slices, 0, -1)) . '.' . $slices[count($slices)-1];
+            
+            // @todo Zend_Locale should be properly used 
+            // bug(Zend_Locale::getTranslationList('currency'));
+            if (preg_match('/[a-zA-Z]{3}/', $value, $matches)) {
+                $currency = strtoupper($matches[0]);
+            }
+            
+            // validate format
+            if (!preg_match('/\d+(?:\.\d+)?/', $value, $matches)) {
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_InvalidFormat', 
-                    "Invalid cost format: '{$value}'"
+                    "Invalid cost format '{$value}', numeric literal not found"
                 );
             }
-            $value = $matches[1];
-            $currency = $matches[2];
+            if (strpos($value, '-') !== false)
+                $matches[0] = '-' . $matches[0];
+            $value = $matches[0];
         }
         
         // we should implement it properly

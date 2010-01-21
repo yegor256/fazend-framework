@@ -4,13 +4,36 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_Bo_MoneyTest extends AbstractTestCase
 {
-
-    public function testWeCanCreateClassInDifferentWay()
+    
+    public static function providerMonetaryStrings()
     {
-        foreach (array('1 USD', 333, '55EUR', -9.89, '+0') as $value) {
-            $money = new FaZend_Bo_Money($value);
-            $this->assertTrue($money instanceof FaZend_Bo_Money);
-        }
+        return array(
+            array('gbp 6.765', 67650, 'GBP'),
+            array('1 USD', 10000, 'USD'),
+            array(333, 3330000, 'USD'),
+            array("55\tEUR", 550000, 'EUR'),
+            array(-9.89, -98900, 'USD'),
+            array('-9 eur', -90000, 'EUR'),
+            array(-0, 0, 'USD'),
+            array(+0, 0, 'USD'),
+            array('1,879.67 EUR', 18796700, 'EUR'),
+            array('$7,500,000.00', 75000000000, 'USD'),
+            array('$  10', 100000, 'USD'),
+        );
+    }
+
+    /**
+     * @dataProvider providerMonetaryStrings
+     */
+    public function testWeCanCreateClassInDifferentWay($value, $origPoints, $currency)
+    {
+        $money = new FaZend_Bo_Money($value);
+        $this->assertTrue($money instanceof FaZend_Bo_Money,
+            "Format can't be parsed: '{$value}', why?");
+        $this->assertEquals($origPoints, $money->origPoints,
+            "Invalid conversion of {$value}, why?");
+        $this->assertEquals($currency, $money->currency->getShortName(),
+            "Invalid currency in {$value}, why?");
     }
 
     public function testWeCanDoArithmeticOperations()
