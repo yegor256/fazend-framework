@@ -237,12 +237,15 @@
         <if><istrue value="${to.phpcs}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <exec command="phpcs 
+                -n
+                --report=full
                 --standard=Zend 
                 --ignore='.svn/*' 
                 --extensions='php' 
                 ${project.basedir}/src/application" 
                 escape="false"
-                checkreturn="true" />
+                checkreturn="true" 
+                passthru="true" />
         </then><else>
             <echo msg="Skipped, since to.phpcs is FALSE" />    
         </else></if>
