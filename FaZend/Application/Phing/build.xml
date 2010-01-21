@@ -32,7 +32,7 @@
 
     <!-- main task, executed by the project -->
     <target name="main" 
-        depends="svn, lint, test, deploy, sniffer, doc, ping, clean"
+        depends="svn, lint, phpcs, test, deploy, sniffer, doc, ping, clean"
         description="Validate, compile, deploy and clean">
     </target>
 
@@ -45,6 +45,9 @@
 
         <if><not><isset property="to.coverage" /></not><then>
             <property name="to.coverage" value="false" /></then></if>
+
+        <if><not><isset property="to.phpcs" /></not><then>
+            <property name="to.phpcs" value="false" /></then></if>
 
         <if><isset property="to.deploy" /><then>
             <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
@@ -229,6 +232,21 @@
             <echo msg="Access protection files deployed to code coverage report directory" />    
         </then></if>
     </target>    
+
+    <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
+        <if><istrue value="${to.phpcs}" /><then>
+            <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
+            <exec command="phpcs 
+                --standard=Zend 
+                --ignore='.svn/*' 
+                --extensions='php' 
+                ${project.basedir}/src/application" 
+                escape="false"
+                checkreturn="true" />
+        </then><else>
+            <echo msg="Skipped, since it's not a continuous integration environment" />    
+        </else></if>
+    </target>
 
     <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
         <if><istrue value="${to.deploy}" /><then>
