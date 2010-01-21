@@ -764,10 +764,23 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     break;
 
                 case strpos($formatter['condition'], '->') === 0:
-                    if (!is_null($value))
+                    if (!is_null($value)) {
+                        if (!is_object($value)) {
+                            FaZend_Exception::raise(
+                                'FaZend_View_Helper_Forma_InvalidFormatter', 
+                                "The value in column '{$name}' is not an object, can't apply '{$formatter['condition']}' to it"
+                            );
+                        }
                         eval("\$result = \$value{$formatter['condition']};");
-                    else
+                    } else {
+                        if (!is_object($row)) {
+                            FaZend_Exception::raise(
+                                'FaZend_View_Helper_Forma_InvalidFormatter', 
+                                "The row is not an object, can't apply '{$formatter['condition']}' to it"
+                            );
+                        }
                         eval("\$result = \$row{$formatter['condition']};");
+                    }
                     if (is_bool($result) && $result)
                         $styles[] = $formatter['style'];
                     else
