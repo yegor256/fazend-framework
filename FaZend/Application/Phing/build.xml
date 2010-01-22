@@ -157,23 +157,35 @@
                 </batchtest>
             </phpunit>
         </then><else>
-            <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-                <formatter type="plain" usefile="no" />
-                <batchtest>
-                    <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
-                        <include name="**/*Test.php"/>
-                        <exclude name="**/Abstract*.php"/>
-                        <exclude name="**/_*.php"/>
-                        <exclude name=".svn/**"/>
-                    </fileset>
-                    <fileset dir="${project.basedir}/test">
-                        <include name="**/*Test.php"/>
-                        <exclude name="**/Abstract*.php"/>
-                        <exclude name="**/_*.php"/>
-                        <exclude name=".svn/**"/>
-                    </fileset>
-                </batchtest>
-            </phpunit>
+            <!-- one individual test, specified in -Dto.unit=... -->
+            <if><isset property="to.unit" /><then>
+                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+                    <formatter type="plain" usefile="no" />
+                    <batchtest>
+                        <fileset dir="${project.basedir}/test">
+                            <include name="${to.unit}"/>
+                        </fileset>
+                    </batchtest>
+                </phpunit>
+            </then><else>
+                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+                    <formatter type="plain" usefile="no" />
+                    <batchtest>
+                        <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
+                            <include name="**/*Test.php"/>
+                            <exclude name="**/Abstract*.php"/>
+                            <exclude name="**/_*.php"/>
+                            <exclude name=".svn/**"/>
+                        </fileset>
+                        <fileset dir="${project.basedir}/test">
+                            <include name="**/*Test.php"/>
+                            <exclude name="**/Abstract*.php"/>
+                            <exclude name="**/_*.php"/>
+                            <exclude name=".svn/**"/>
+                        </fileset>
+                    </batchtest>
+                </phpunit>
+            </else></if>
         </else></if>
 
         <if><istrue value="${to.deploy}" /><then>
