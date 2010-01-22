@@ -20,7 +20,24 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_LoremIpsum {
+class FaZend_View_Helper_LoremIpsum
+{
+
+    /**
+     * List of stupid texts
+     *
+     * @var string[]
+     */
+    protected static $_loremIpsumSlices = array(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        'Nunc convallis nulla id eros interdum aliquam',
+        'Nullam in elementum enim',
+        'Nam adipiscing hendrerit enim a gravida',
+        'Proin ligula tellus, sagittis vitae malesuada vel, dignissim cursus tellus',
+        'Vivamus aliquam rhoncus dolor quis imperdiet',
+        'Ut sit amet dui vel ligula auctor eleifend',
+        'Cras mauris nisl, porta ac vulputate at, adipiscing nec erat.'
+    );
 
     /**
      * Produces a random line
@@ -28,7 +45,8 @@ class FaZend_View_Helper_LoremIpsum {
      * @param int Total amount of letters to show
      * @return string
      */
-    public function loremIpsum($length = 300) {
+    public function loremIpsum($length = 300)
+    {
         return self::getLoremIpsum($length);
     }
 
@@ -38,28 +56,10 @@ class FaZend_View_Helper_LoremIpsum {
      * @param int Total amount of letters to show
      * @return string
      */
-    public static function getLoremIpsum($length = 300) {
-
+    public static function getLoremIpsum($length = 300)
+    {
         shuffle(self::$_loremIpsumSlices);
-
         return cutLongLine(trim(implode('. ', self::$_loremIpsumSlices)), $length);
-
     }
-                        
-
-    /**
-     * List of stupid texts
-     *
-     * @var string[]
-     */
-    private static $_loremIpsumSlices = array(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        'Nunc convallis nulla id eros interdum aliquam',
-        'Nullam in elementum enim',
-        'Nam adipiscing hendrerit enim a gravida',
-        'Proin ligula tellus, sagittis vitae malesuada vel, dignissim cursus tellus',
-        'Vivamus aliquam rhoncus dolor quis imperdiet',
-        'Ut sit amet dui vel ligula auctor eleifend',
-        'Cras mauris nisl, porta ac vulputate at, adipiscing nec erat.');
 
 }
