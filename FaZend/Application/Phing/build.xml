@@ -332,7 +332,10 @@
     </target>
 
     <target name="ping" description="Ping the production server and show the result">
-        <if><istrue value="${to.deploy}" /><then>
+        <if><and>
+            <istrue value="${to.deploy}" />
+            <isset property="live.home" />
+        </and><then>
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
             <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
 

@@ -23,7 +23,8 @@ require_once 'phing/Task.php';
  * @package Application
  * @subpackage Phing
  */
-class UploadByFTP extends Task {
+class UploadByFTP extends Task
+{
 
     // these directories/files won't be uploaded
     protected static $_forbidden = array(
@@ -259,7 +260,6 @@ class UploadByFTP extends Task {
         }
 
         return $uploaded;
-
     }
 
     /**
@@ -268,8 +268,8 @@ class UploadByFTP extends Task {
      * @param $fileName string
      * @return string file name
      */
-    private function _compressed($fileName) {
-        
+    protected function _compressed($fileName)
+    {
         // compress only PHP files
         if (!preg_match('/\.(php|phtml|php5)$/', $fileName))
             return $fileName;
