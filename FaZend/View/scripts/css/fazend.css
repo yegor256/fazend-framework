@@ -111,7 +111,7 @@ div.hdr {
     background: #<?=FaZend_Image::BRAND_BLUE3?>;
     color: white;
     z-index: 100;
-    padding: 10px 0 0 200px;
+    padding: 10px 0 0 10px;
     font-size: 1.7em;
 }
     
