@@ -54,18 +54,33 @@ class FaZend_Flyweight
         // unique object ID in the storage
         $id = self::_makeId(array_merge(array($class), $args));
         
-        // if it's already here - return it
-        if (isset(self::$_storage[$id]))
-            return self::$_storage[$id];
+        // create an object, if it's not in the storage yet
+        if (!isset(self::$_storage[$id]))
+            self::$_storage[$id] = self::_makeObject($class, $args);
+        return self::$_storage[$id];
+    }
+    
+    /**
+     * undocumented function
+     *
+     * @param string Name of the class to create
+     * @param string ID to use with this class
+     * @param mixed Any amount of params to be passed to the constructor
+     * @return mixed
+     */
+    public static function factoryById($class, $id /*, ...*/) 
+    {
+        $args = func_get_args();
+        array_shift($args); // pop out the first argument
+        array_shift($args); // pop out the second argument
         
-        // initialize validator with dynamic list of params
-        $call = '$object = new $class(';
-        for ($i=0; $i<count($args); $i++)
-            $call .= ($i > 0 ? ', ' : false) . "\$args[{$i}]";
-        $call .= ');';
-        eval($call);
+        // unique object ID in the storage
+        $id = self::_makeId(array($class)) . $id;
         
-        return self::$_storage[$id] = $object;
+        // create an object, if it's not in the storage yet
+        if (!isset(self::$_storage[$id]))
+            self::$_storage[$id] = self::_makeObject($class, $args);
+        return self::$_storage[$id];
     }
 
     /**
@@ -89,7 +104,7 @@ class FaZend_Flyweight
      * @param array List of args
      * @return string
      */
-    public static function _makeId(array $args)
+    protected static function _makeId(array $args)
     {
         $id = '';
         foreach ($args as $arg) {
@@ -104,6 +119,24 @@ class FaZend_Flyweight
             $id .= '.' . $arg;
         }
         return $id;
+    }
+    
+    /**
+     * Create an object from class name and list of params for contructor
+     *
+     * @param string Name of the class
+     * @param array List of arguments for constructor
+     * @return mixed
+     */
+    protected static function _makeObject($class, array $args) 
+    {
+        // initialize validator with dynamic list of params
+        $call = '$object = new $class(';
+        for ($i=0; $i<count($args); $i++)
+            $call .= ($i > 0 ? ', ' : false) . "\$args[{$i}]";
+        $call .= ');';
+        eval($call);
+        return $object;
     }
     
 }
