@@ -450,19 +450,7 @@ class FaZend_Pos_Properties
      */
     public function setStatelessProperty($name) 
     {
-        if (!$this->isClean() && $this->hasProperty($name)) {
-            FaZend_Exception::raise(
-                'FaZend_Pos_StatelessPropertyOnDirtyObject', 
-                sprintf(
-                    "You can't set any property (%s) as stateless when project is dirty",
-                    $name
-                ),
-                'FaZend_Pos_Exception'
-            );        
-        }
         $this->_stateless[$name] = true;
-        $this->save(false);
-        $this->load(true);
         return $this;
     }
     

@@ -242,23 +242,18 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         $car = FaZend_Pos_Properties::root()->car908;
         $car->ps()->setStatelessProperty('drivers');
         $drivers = $car->drivers;
-    }
+        $car->ps()->save();
+        FaZend_Pos_Properties::cleanPosMemory();
 
-    /**
-     * @expectedException FaZend_Pos_StatelessPropertyOnDirtyObject
-     */
-    public function testStatelessPropertyCantBeChangedOnDirtyObject()
-    {
-        FaZend_Pos_Properties::root()->car895 = $car = new Model_Pos_Car();
-        $car->drivers = array('John', 'Peter');
-        $car->ps()->setStatelessProperty('drivers');
+        $car = FaZend_Pos_Properties::root()->car908;
+        $drivers = $car->drivers;
     }
 
     public function testStatelessPropertyNormallyAccessible()
     {
         FaZend_Pos_Properties::root()->car1677 = $car = new Model_Pos_Car();
-        $car->ps()->setStatelessProperty('drivers');
         $car->drivers = array('John', 'Peter');
+        $car->ps()->setStatelessProperty('drivers');
         $this->assertEquals(2, count($car->drivers));
     }
 
