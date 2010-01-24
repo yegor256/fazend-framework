@@ -446,7 +446,7 @@ class FaZend_Pos_Properties
      */
     public function setStatelessProperty($name) 
     {
-        if (!$this->isClean()) {
+        if (!$this->isClean() && $this->hasProperty($name)) {
             FaZend_Exception::raise(
                 'FaZend_Pos_StatelessPropertyOnDirtyObject', 
                 sprintf(
