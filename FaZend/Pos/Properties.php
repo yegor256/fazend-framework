@@ -425,7 +425,9 @@ class FaZend_Pos_Properties
      * version and replace it with the new one. Old version won't be 
      * kept in the DB.
      *
+     * @param boolean Ignore or not?
      * @return $this
+     * @see _saveSnapshot()
      **/
     public function setIgnoreVersions($ignoreVersions = true) 
     {
@@ -436,10 +438,24 @@ class FaZend_Pos_Properties
     /**
      * Given property is stateless and no changes should be saved in POS
      *
+     * @param string Name of the property
      * @return $this
+     * @throws FaZend_Pos_StatelessPropertyOnDirtyObject
+     * @see _saveSnapshot()
+     * @see _loadSnapshot()
      */
     public function setStatelessProperty($name) 
     {
+        if (!$this->isClean()) {
+            FaZend_Exception::raise(
+                'FaZend_Pos_StatelessPropertyOnDirtyObject', 
+                sprintf(
+                    "You can't set any property (%s) as stateless when project is dirty",
+                    $name
+                ),
+                'FaZend_Pos_Exception'
+            );        
+        }
         $this->_stateless[$name] = true;
         $this->save(false);
         $this->load(true);
