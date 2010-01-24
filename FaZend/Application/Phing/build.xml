@@ -162,8 +162,9 @@
                 <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
                     <formatter type="plain" usefile="no" />
                     <batchtest>
-                        <fileset dir="${project.basedir}/test">
+                        <fileset dir="${project.basedir}">
                             <include name="${to.unit}"/>
+                            <include name="test/${to.unit}"/>
                         </fileset>
                     </batchtest>
                 </phpunit>
