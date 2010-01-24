@@ -184,6 +184,18 @@ class FaZend_Pos_Properties
      * @see setIgnoreVersions()
      **/
     protected $_ignoreVersions = false;
+    
+    /**
+     * List of properties which are stateless
+     *
+     * Associative array where keys are names of properties
+     * and values are booleans, where TRUE means that the given
+     * property will NOT be saved to POS or loaded back.
+     *
+     * @var string
+     * @see setStatelessProperty()
+     */
+    protected $_stateless = array();
 
     /**
      * Set name of root class
@@ -413,11 +425,23 @@ class FaZend_Pos_Properties
      * version and replace it with the new one. Old version won't be 
      * kept in the DB.
      *
-     * @return void
+     * @return $this
      **/
     public function setIgnoreVersions($ignoreVersions = true) 
     {
         $this->_ignoreVersions = $ignoreVersions;
+        return $this;
+    }
+    
+    /**
+     * Given property is stateless and no changes should be saved in POS
+     *
+     * @return $this
+     */
+    public function setStatelessProperty($name) 
+    {
+        $this->_stateless[$name] = true;
+        return $this;
     }
     
     /**
@@ -1075,6 +1099,10 @@ class FaZend_Pos_Properties
             if ($property instanceof $stubClass)
                 continue;
                 
+            // don't save stateless properties, ever
+            if (isset($this->_stateless[$key]))
+                continue;
+                
             if ($property instanceof FaZend_Pos_Abstract) {
                 // memory can be destroyed already and some
                 // objects may be missed, we should catch such
@@ -1134,6 +1162,12 @@ class FaZend_Pos_Properties
         // we do and how to detect this problem?
         // @todo We should resolve it somehow
         $this->_properties = new ArrayIterator(@unserialize($this->_fzSnapshot->properties));
+        
+        // kill stateless properties
+        foreach ($this->_properties as $key=>$property) {
+            if (isset($this->_stateless[$key]))
+                unset($this->_properties[$key]);
+        }
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
             $this->_properties[$partOf->name] = $this->_restoreFromObject(

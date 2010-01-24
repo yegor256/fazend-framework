@@ -215,4 +215,18 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         //         'Property driver was not in expected version' );
     }
 
+    /**
+     * @expectedException FaZend_Pos_Properties_PropertyMissed
+     */
+    public function testStatelessPropertyNeverSaved()
+    {
+        FaZend_Pos_Properties::root()->car = $car = new Model_Pos_Car();
+        $car->ps()->setStatelessProperty('drivers');
+        $car->drivers = array('John', 'Peter');
+        $car->ps()->save();
+        FaZend_Pos_Properties::cleanPosMemory();
+        
+        $drivers = FaZend_Pos_Properties::root()->car->drivers;
+    }
+
 }
