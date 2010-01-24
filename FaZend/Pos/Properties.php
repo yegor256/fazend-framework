@@ -212,10 +212,14 @@ class FaZend_Pos_Properties
      **/
     public static function setRootClass($rootClass) 
     {
-        if (!is_null(self::$_root)) {
+        if (!is_null(self::$_root) && (self::$_rootClass != $rootClass)) {
             FaZend_Exception::raise(
                 'FaZend_Pos_RootIsLocked', 
-                "You can't change root class when ROOT is already instantiated",
+                sprintf(
+                    "You can't change root class from %s to %s when ROOT is already instantiated",
+                    self::$_rootClass,
+                    $rootClass
+                ),
                 'FaZend_Pos_Exception'
             );        
         }
