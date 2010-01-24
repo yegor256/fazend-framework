@@ -441,6 +441,8 @@ class FaZend_Pos_Properties
     public function setStatelessProperty($name) 
     {
         $this->_stateless[$name] = true;
+        $this->save(false);
+        $this->load(true);
         return $this;
     }
     

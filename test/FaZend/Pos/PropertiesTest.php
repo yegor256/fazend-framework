@@ -220,13 +220,28 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
      */
     public function testStatelessPropertyNeverSaved()
     {
-        FaZend_Pos_Properties::root()->car = $car = new Model_Pos_Car();
+        FaZend_Pos_Properties::root()->car556 = $car = new Model_Pos_Car();
         $car->ps()->setStatelessProperty('drivers');
         $car->drivers = array('John', 'Peter');
         $car->ps()->save();
         FaZend_Pos_Properties::cleanPosMemory();
         
-        $drivers = FaZend_Pos_Properties::root()->car->drivers;
+        $drivers = FaZend_Pos_Properties::root()->car556->drivers;
+    }
+
+    /**
+     * @expectedException FaZend_Pos_Properties_PropertyMissed
+     */
+    public function testStatelessPropertyEvenIfSavedNeverRestored()
+    {
+        FaZend_Pos_Properties::root()->car908 = $car = new Model_Pos_Car();
+        $car->drivers = array('John', 'Peter');
+        $car->ps()->save();
+        FaZend_Pos_Properties::cleanPosMemory();
+        
+        $car = FaZend_Pos_Properties::root()->car908;
+        $car->ps()->setStatelessProperty('drivers');
+        $drivers = $car->drivers;
     }
 
 }
