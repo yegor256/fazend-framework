@@ -477,6 +477,7 @@ class FaZend_Pos_Properties
      * @param string Name of the property
      * @return mixed
      * @throws FaZend_Pos_Exception If the object is not in POS yet
+     * @throws FaZend_Pos_Properties_PropertyMissed If property is not found
      **/
     public function getProperty($name) 
     {
@@ -519,6 +520,7 @@ class FaZend_Pos_Properties
      * @param string Name of the property
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
+     * @throws FaZend_Pos_Properties_PropertyMissed If property not found
      **/
     public function unsetProperty($name) 
     {
