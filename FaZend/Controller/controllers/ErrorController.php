@@ -91,7 +91,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         $this->view->showError = FaZend_Properties::get()->errors->display;
 
         // notify admin by email
-        if (FaZend_Properties::get()->errors->email) {
+        if (FaZend_Properties::get()->errors->email && !defined('TESTING_RUNNING')) {
             $lines = array();
             foreach (debug_backtrace() as $line) 
                 $lines[] = isset($line['file']) ? "{$line['file']} ({$line['line']})" : false;
