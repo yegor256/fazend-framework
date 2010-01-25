@@ -77,7 +77,7 @@ $application->bootstrap();
 // you can redefine it later, if you wish
 // now we define the site URL, without the leading WWW
 if (!defined('WEBSITE_URL'))
-    define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'fazend.com'));
+    define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'));
 
 // this flag could disable application execution
 if (!defined('FAZEND_DONT_RUN')) {
