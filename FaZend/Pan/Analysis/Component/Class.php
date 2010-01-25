@@ -40,8 +40,12 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
         // change my location
         $this->_relocate($reflector);
                     
-        foreach ($reflector->getMethods() as $method)
+        foreach ($reflector->getMethods() as $method) {
+            // this method is inherited?
+            if ($method->getDeclaringClass()->name != $reflector->name)
+                continue;
             $this->factory('method', null, $method);
+        }
     }
     
     /**
