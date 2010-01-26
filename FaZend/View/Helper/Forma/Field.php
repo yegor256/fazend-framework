@@ -164,6 +164,7 @@ abstract class FaZend_View_Helper_Forma_Field
      * @param string Method name
      * @param array List of params
      * @return value
+     * @throws FaZend_View_Helper_Forma_InvalidOption
      */
     public function __call($method, $args)
     {
@@ -172,11 +173,12 @@ abstract class FaZend_View_Helper_Forma_Field
 
         // ->fieldRequired(...) will be converted to _setRequired(...)
         $func = '_set' . substr($method, 5);
-        if (!method_exists($this, $func))
+        if (!method_exists($this, $func)) {
             FaZend_Exception::raise(
                 'FaZend_View_Helper_Forma_InvalidOption', 
                 "Method '{$func}' is unknown in " . get_class($this)
             );
+        }
             
         call_user_func_array(array($this, $func), $args);
 
@@ -301,41 +303,48 @@ abstract class FaZend_View_Helper_Forma_Field
      * Setter, to add label to the field
      *
      * @param string Label to show above the field
-     * @return void
+     * @return $this
      */
-    protected function _setLabel($label) {
+    protected function _setLabel($label)
+    {
         $this->_label = $label;
+        return $this;
     }
 
     /**
      * Setter, to add help message to the field
      *
      * @param string Help to show below the field
-     * @return void
+     * @return $this
      */
-    protected function _setHelp($help) {
+    protected function _setHelp($help)
+    {
         $this->_help = $help;
+        return $this;
     }
 
     /**
      * Setter, to add value to the field
      *
      * @param string Value to show in the field
-     * @return void
+     * @return $this
      */
-    protected function _setValue($value) {
+    protected function _setValue($value)
+    {
         $this->_value = $value;
+        return $this;
     }
 
     /**
      * This field is required
      *
      * @param boolean Is it required?
-     * @return void
+     * @return $this
      */
     protected function _setRequired($required = true)
     {
         $this->_required = $required;
+        return $this;
     }
 
     /**
@@ -343,22 +352,24 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param string Attribute name
      * @param string Attribute value
-     * @return void
+     * @return $this
      */
     protected function _setAttrib($attrib, $value)
     {
         $this->_attribs[$attrib] = $value;
+        return $this;
     }
 
     /**
      * Set new validator
      *
      * @param callback Validator of the field value
-     * @return void
+     * @return $this
      */
     protected function _setValidator($validator)
     {
         $this->_validators[] = $validator;
+        return $this;
     }
 
     /**
@@ -366,7 +377,7 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param string Type name
      * @param string Method name to use for conversion
-     * @return void
+     * @return $this
      * @uses $_converters
      */
     protected function _setConverter($type, $method = null)
@@ -375,6 +386,7 @@ abstract class FaZend_View_Helper_Forma_Field
             'type' => $type,
             'method' => $method
         );
+        return $this;
     }
 
 }
