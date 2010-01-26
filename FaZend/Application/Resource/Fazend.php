@@ -182,6 +182,11 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         // session
         if (defined('CLI_ENVIRONMENT'))
             Zend_Session::$_unitTestEnabled = true;
+
+        FaZend_View_Helper_Forma_Field::addPluginDir(
+            'FaZend_View_Helper_Forma_Field', 
+            FAZEND_PATH . '/View/Helper/Forma'
+        );
     }
 
     /**
@@ -400,5 +405,5 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         $injector = new Injector();
         $injector->inject();
     }
-
+    
 }

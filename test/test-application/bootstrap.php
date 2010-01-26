@@ -26,7 +26,7 @@ define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
 class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
 { 
 
-    public function _initDbData()
+    protected function _initDbData()
     {
         $this->bootstrap('db');
         $this->bootstrap('Deployer');
@@ -46,6 +46,14 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
 
         $adapter->query(
             'insert into boat values (1, "boat", "super 8")');
+    }
+    
+    protected function _initForma() 
+    {
+        FaZend_View_Helper_Forma_Field::addPluginDir(
+            'Helper_Forma_FieldDate',
+            realpath(APPLICATION_PATH . '/helpers/Forma')
+        );
     }
 
 }

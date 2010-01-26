@@ -121,9 +121,6 @@ abstract class FaZend_View_Helper_Forma_Field
      */
     public static function factory($type, FaZend_View_Helper_Forma $helper)
     {
-        if (!count(self::$_pluginDirs))
-            self::addPluginDir('FaZend_View_Helper_Forma_Field', dirname(__FILE__));
-            
         foreach (self::$_pluginDirs as $prefix=>$dir) {
             $file = $dir . '/Field' . ucfirst($type) . '.php';
             if (file_exists($file)) {
