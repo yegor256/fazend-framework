@@ -9,10 +9,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@fazend.com so we can send you a copy immediately.
  *
- * @author Yegor Bugaenko <egor@technoparkcorp.com>
- * @copyright Copyright (c) TechnoPark Corp., 2001-2009
+ * @copyright Copyright (c) FaZend.com
  * @version $Id$
- *
+ * @category FaZend
  */
 
 require_once 'FaZend/View/Helper/Forma/Field.php';
@@ -22,7 +21,8 @@ require_once 'FaZend/View/Helper/Forma/Field.php';
  *
  * @package Model_Form
  */
-class FaZend_View_Helper_Forma_FieldHidden extends FaZend_View_Helper_Forma_Field {
+class FaZend_View_Helper_Forma_FieldHidden extends FaZend_View_Helper_Forma_Field
+{
 
     /**
      * Create and return form element
@@ -30,7 +30,8 @@ class FaZend_View_Helper_Forma_FieldHidden extends FaZend_View_Helper_Forma_Fiel
      * @param string Name of the element
      * @return Zend_Form_Element
      */
-    protected function _getFormElement($name) {
+    protected function _getFormElement($name)
+    {
         return new Zend_Form_Element_Hidden($name);
     }
 
@@ -40,7 +41,8 @@ class FaZend_View_Helper_Forma_FieldHidden extends FaZend_View_Helper_Forma_Fiel
      * @param Zend_Form_Element The element to configure
      * @return void
      */
-    protected function _configureFormElement(Zend_Form_Element $element) {
+    protected function _configureFormElement(Zend_Form_Element $element)
+    {
         $element->setDecorators(array())
             ->setValue($this->_value);
     }

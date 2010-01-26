@@ -9,10 +9,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@fazend.com so we can send you a copy immediately.
  *
- * @author Yegor Bugaenko <egor@technoparkcorp.com>
- * @copyright Copyright (c) TechnoPark Corp., 2001-2009
+ * @copyright Copyright (c) FaZend.com
  * @version $Id$
- *
+ * @category FaZend
  */
 
 require_once 'FaZend/View/Helper/Forma/Field.php';
