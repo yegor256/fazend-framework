@@ -23,6 +23,13 @@ abstract class FaZend_View_Helper_Forma_Field
 {
 
     /**
+     * List of directories where to find plugins
+     *
+     * @var string[]
+     */
+    protected static $_pluginDirs = array();
+
+    /**
      * Helper instance
      *
      * @var FaZend_View_Helper_Forma
@@ -81,6 +88,18 @@ abstract class FaZend_View_Helper_Forma_Field
      * @see _setConvertTo()
      */
     protected $_converters = array();
+    
+    /**
+     * Add new directory to list of dirs where to find plugins
+     *
+     * @param string Class name prefix
+     * @param string Absolute path to the dir
+     * @return void
+     */
+    public static function addPluginDir($prefix, $dir) 
+    {
+        self::$_pluginDirs[$prefix] = $dir;
+    }
 
     /**
      * Private constructor
@@ -97,14 +116,26 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param string Type of field
      * @param Helper_Forma Form, the owner
-     * @return Model_Form_Field
-     * #throws Model_Form_Field_ClassNotFound
+     * @return FaZend_View_Helper_Form_Field
+     * @throws FaZend_View_Helper_Forma_Field_NotFound
      */
     public static function factory($type, FaZend_View_Helper_Forma $helper)
     {
-        require_once 'FaZend/View/Helper/Forma/Field' . ucfirst($type) . '.php';
-        $className = 'FaZend_View_Helper_Forma_Field' . ucfirst($type);
-        return new $className($helper);
+        if (!count(self::$_pluginDirs))
+            self::addPluginDir('FaZend_View_Helper_Forma_Field', dirname(__FILE__));
+            
+        foreach (self::$_pluginDirs as $prefix=>$dir) {
+            $file = $dir . '/Field' . ucfirst($type) . '.php';
+            if (file_exists($file)) {
+                require_once $file;
+                $className = $prefix . ucfirst($type);
+                return new $className($helper);
+            }
+        }
+        FaZend_Exception::raise(
+            'FaZend_View_Helper_Forma_Field_NotFound',
+            "Plugin '{$type}' not found"
+        );
     }
 
     /**
