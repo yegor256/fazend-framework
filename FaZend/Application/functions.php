@@ -107,6 +107,9 @@ function _t($str)
     $str = preg_replace('/\n\t\r/', ' ', $str);
 
     // translate this string
+    if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate'))
+        return $str;
+        
     $str = Zend_Registry::get('Zend_Translate')->_($str);
 
     // pass it to sprintf
