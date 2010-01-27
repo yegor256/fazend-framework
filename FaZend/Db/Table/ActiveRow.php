@@ -101,8 +101,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
                     'FaZend_Db_Table_InvalidConstructor', 
                     sprintf(
                         '%s::new(%s: %s) has incorrect param type (neither INT nor ARRAY)',
-                        $id,
                         get_class($this),
+                        $id,
                         gettype($id)
                     )
                 );
