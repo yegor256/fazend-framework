@@ -69,8 +69,10 @@ if (!function_exists('sys_get_temp_dir')) {
         if (is_dir($temp) && is_writable($temp))
             return $temp;
         
-        throw new Exception('Function sys_get_temp_dir() is absent, probably you should upgrade to PHP 5.2+. ' . 
-            'Also we failed to create a custom TEMP directory here: ' . $temp);
+        throw new Exception(
+            'Function sys_get_temp_dir() is absent, probably you should upgrade to PHP 5.2+. ' . 
+            'Also we failed to create a custom TEMP directory here: ' . $temp
+        );
     }
 }
 
@@ -115,7 +117,13 @@ function _t($str)
     // pass it to sprintf
     if (func_num_args() > 1) {
         $args = func_get_args();
-        $str = call_user_func_array('sprintf', array_merge(array($str), array_slice($args, 1)));
+        $str = call_user_func_array(
+            'sprintf', 
+            array_merge(
+                array($str), 
+                array_slice($args, 1)
+            )
+        );
     }
     
     return $str;
@@ -133,7 +141,13 @@ function logg($message)
 {
     if (func_num_args() > 1) {
         $args = func_get_args();
-        $message = call_user_func_array('sprintf', array_merge(array($message), array_slice($args, 1)));
+        $message = call_user_func_array(
+            'sprintf', 
+            array_merge(
+                array($message), 
+                array_slice($args, 1)
+            )
+        );
     }
     try {
         FaZend_Log::info($message);

@@ -23,15 +23,16 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
  * @package Application
  * @subpackage Resource
  */
-class FaZend_Application_Resource_Email extends Zend_Application_Resource_ResourceAbstract {
+class FaZend_Application_Resource_Email extends Zend_Application_Resource_ResourceAbstract
+{
 
     /**
      * Defined by Zend_Application_Resource_Resource
      *
      * @return boolean
      */
-    public function init() {
-
+    public function init()
+    {
         // get options from INI file
         $options = $this->getOptions();
 
@@ -42,6 +43,5 @@ class FaZend_Application_Resource_Email extends Zend_Application_Resource_Resour
         FaZend_Email::config(new Zend_Config($options), $this->_bootstrap->getResource('view'));
 
         return true;
-        
     }
 }

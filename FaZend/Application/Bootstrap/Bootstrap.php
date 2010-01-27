@@ -22,7 +22,7 @@ require_once 'Zend/Application/Bootstrap/Bootstrap.php';
  * @package Application
  * @subpackage Bootstrap
  */
-class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
-
+class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+{
 }
 

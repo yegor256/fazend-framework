@@ -71,7 +71,8 @@ class UploadByFTP extends Task
      * 
      * @return void
      */
-    public function init() {
+    public function init()
+    {
     }
 
     /**
@@ -79,7 +80,8 @@ class UploadByFTP extends Task
      *
      * @param $fileName string
      */
-    public function setserver($server) {
+    public function setserver($server)
+    {
         $this->_server = $server;
     }
 
@@ -88,7 +90,8 @@ class UploadByFTP extends Task
      *
      * @param $fileName string
      */
-    public function setusername($userName) {
+    public function setusername($userName)
+    {
         $this->_userName = $userName;
     }
 
@@ -97,7 +100,8 @@ class UploadByFTP extends Task
      *
      * @param $fileName string
      */
-    public function setpassword($password) {
+    public function setpassword($password)
+    {
         $this->_password = $password;
     }
 
@@ -106,7 +110,8 @@ class UploadByFTP extends Task
      *
      * @param $fileName string
      */
-    public function setdestdir($destDir) {
+    public function setdestdir($destDir)
+    {
         $this->_destDir = $destDir;
     }
 
@@ -115,7 +120,8 @@ class UploadByFTP extends Task
      *
      * @param $fileName string
      */
-    public function setsrcdir($srcDir) {
+    public function setsrcdir($srcDir)
+    {
         $this->_srcDir = $srcDir;
     }
 
@@ -124,9 +130,13 @@ class UploadByFTP extends Task
      * 
      * @return void
      */
-    public function main() {
-        $this->Log("FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: " .
-            preg_replace('/./', '*', $this->_password) . "\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'");
+    public function main()
+    {
+        $this->Log(
+            "FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: " .
+            preg_replace('/./', '*', $this->_password) . 
+            "\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'"
+        );
 
         if (!$this->_server) {
             $this->Log("Server is not specified, the deployment won't happen");    
@@ -167,7 +177,6 @@ class UploadByFTP extends Task
         // kill temp file
         if (isset($this->_tempFileName))
             unlink($this->_tempFileName);
-
     }
 
     /**
@@ -176,8 +185,8 @@ class UploadByFTP extends Task
      * @param string Path to upload (local path)
      * @return void
      */
-    protected function _uploadFiles($path) {
-
+    protected function _uploadFiles($path)
+    {
         $dir = scandir($path);
         
         $ftpList = @ftp_nlist($this->ftp, '.');    

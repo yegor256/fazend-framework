@@ -23,7 +23,8 @@ require_once 'phing/Task.php';
  * @package Application
  * @subpackage Phing
  */
-class PingFaZend extends Task {
+class PingFaZend extends Task
+{
 
     /**
      * URL to ping
@@ -37,7 +38,8 @@ class PingFaZend extends Task {
      * 
      * @return void
      */
-    public function init() {
+    public function init()
+    {
     }
 
     /**
@@ -46,8 +48,8 @@ class PingFaZend extends Task {
      * @return void
      * @throws BuildException
      */
-    public function main() {
-
+    public function main()
+    {
         if (!$this->url) {
             $this->Log("Nothing to ping, live.home is not specified in properties");
             return;
@@ -71,7 +73,6 @@ class PingFaZend extends Task {
         curl_close($curl);
 
         $this->Log("Response (" . strlen($response). "bytes): \n{$response}");
-
     }
 
     /**
@@ -80,7 +81,8 @@ class PingFaZend extends Task {
      * @param $fileName string
      * @return void
      */
-    public function seturl($url) {
+    public function seturl($url)
+    {
         $this->url = $url;
     }
     

@@ -20,7 +20,8 @@
  * @package View
  * @subpackage Helper
  */
-abstract class FaZend_View_Helper {
+abstract class FaZend_View_Helper
+{
 
     /**
      * Instance of the view
@@ -34,7 +35,8 @@ abstract class FaZend_View_Helper {
     *
     * @return void
     */
-    public function setView(Zend_View_Interface $view) {
+    public function setView(Zend_View_Interface $view)
+    {
         $this->_view = $view;
     }       
 
@@ -43,7 +45,8 @@ abstract class FaZend_View_Helper {
     *
     * @return Zend_View
     */
-    public function getView() {
+    public function getView()
+    {
         return $this->_view;
     }
 

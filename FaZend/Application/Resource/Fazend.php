@@ -23,7 +23,7 @@ require_once 'Zend/Application/Resource/ResourceAbstract.php';
  * @package Application
  * @subpackage Resource
  */
-class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract 
+class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_ResourceAbstract
 {
 
     /**
@@ -77,7 +77,8 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      * @param string Name of the method to call (suffix only, without '_init')
      * @return void
      **/
-    protected function _boot($name) {
+    protected function _boot($name)
+    {
         if (isset($this->_booted[$name]))
             return;
         $method = '_init' . $name;

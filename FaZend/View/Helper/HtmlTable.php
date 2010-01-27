@@ -426,17 +426,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             }
 
             $resultTRs[] = 
-                "<tr class='" . 
+                "\t<tr class='" . 
                 (fmod (count($resultTRs), 2) ? 'even' : 'odd') .
                 "' onmouseover='this.className=\"highlight\"' onmouseout='this.className=\"" .
                 (fmod(count($resultTRs), 2) ? 'even' : 'odd') . 
-                "\"'{$this->_formatColumnStyle(false, null, $rowOriginal)}>";
+                "\"'{$this->_formatColumnStyle(false, null, $rowOriginal)}>\n";
 
             $tds = array();    
             foreach ($row as $title=>$value) {
+                $column = $this->_column($title);
                 // summarize column values
-                if ($this->_column($title)->sum)
-                    $this->_column($title)->sumValue += $value;
+                if ($column->sum)
+                    $column->sumValue += $value;
 
                 // maybe we should show only some particular columns
                 if (!$this->_isVisible($title))
@@ -446,14 +447,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $value = $this->_convertColumnValue($title, $value, $rowOriginal);
 
                 // parse the value of this TD    
-                if ($this->_column($title)->parser) {
-                    $parser = $this->_column($title)->parser;
+                if ($column->parser) {
+                    $parser = $column->parser;
                     $value = $parser($value, $rowOriginal);
                 }    
 
                 // parse the value of this TD with helper
-                if ($this->_column($title)->helper) {
-                    $helper = $this->_column($title)->helper;
+                if ($column->helper) {
+                    $helper = $column->helper;
                     $value = $this->getView()->$helper($value);
                 }
 
@@ -462,19 +463,19 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $value = (string)$value;
 
                 // strip HTML tags    
-                if (!$this->_column($title)->rawHtml)
+                if (!$column->rawHtml)
                     $value = htmlspecialchars($value);
 
                 // attach link to the TD
-                if ($this->_column($title)->link)
-                    $value = $this->_resolveLink($this->_column($title)->link, $value, $rowOriginal, $key);
+                if ($column->link)
+                    $value = $this->_resolveLink($column->link, $value, $rowOriginal, $key);
 
                 // append CSS style
-                $tds[$title] = "<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>{$value}";
+                $tds[$title] = "\t\t<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>{$value}";
             }    
 
             if (count($this->_options)) {
-                $optString = '<td>';
+                $optString = "\t\t<td>";
                 foreach ($this->_options as $option) {
 
                     // skip the option
@@ -500,7 +501,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         }
 
         // build the header using the last ROW information
-        $header = '';
+        $header = "\t<tr>\n";
         foreach ($row as $title=>$value) {
             if (!$this->_isVisible($title))
                 continue;
@@ -509,23 +510,29 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             if ($this->_column($title)->title)    
                 $title = $this->_column($title)->title;
 
-            $header .= '<th>' . ucwords($title) . '</th>';
+            $header .= "\t\t<th>{$title}</th>\n";
         }    
 
         if (count($this->_options))
-           $header .= '<th>' . _t('Options') . '</th>';
+            $header .= "\t\t<th>" . _t('Options') . "</th>\n";
+      
+        $header .= "\t</tr>\n";
 
-        $html = '<table>' . $header;
+        $html = "\n<table>\n" . $header;
         foreach ($resultTRs as $tr=>$line) {
-            $html .= $line . implode(
-                '</td>', 
+            $html .= 
+            $line . 
+            implode(
+                "</td>\n", 
                 array_merge(
                     $resultTDs[$tr], 
-                    isset($options[$tr]) ? array($options[$tr]) : array())
-                ) . '</td></tr>';
+                    isset($options[$tr]) ? array($options[$tr]) : array()
+                )
+            ) . 
+            "</td>\n\t</tr>\n";
         }    
 
-        return $html . '</table>';    
+        return $html . "</table>\n";    
     }
 
     /**
@@ -615,22 +622,31 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
         // you can specify params as callbacks
         foreach ($params as &$param) {
-            if (is_callable($param)) {
-                if (is_array($param))
-                    $param = call_user_func_array($param, array(
-                        'name'=>$link->name,
-                        'row'=>$row,
-                        'key'=>$key));
-                else
-                    $param = $param($link->name, $row);
+            if (!is_callable($param))
+                continue;
+            if (is_array($param)) {
+                $param = call_user_func_array($param, array(
+                    'name'=>$link->name,
+                    'row'=>$row,
+                    'key'=>$key
+                ));
+            } else {
+                $param = $param($link->name, $row);
             }
         }
 
         // if this process is required - do it
-        if ($link->httpVar)
-            $params += array($link->httpVar => (is_object($row) ? $row->{$link->column} : $row[$link->column]));
+        if ($link->httpVar) {
+            $params += array(
+                $link->httpVar => (is_object($row) ? $row->{$link->column} : $row[$link->column])
+            );
+        }
 
-        return "<a href='".$this->getView()->url($params, $link->route, $link->reset, $link->encode)."'>" . $title . '</a>';
+        return sprintf(
+            "<a href='%s'>%s</a>",
+            $this->getView()->url($params, $link->route, $link->reset, $link->encode),
+            $title
+        );
     }
 
     /**
@@ -811,6 +827,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     );
             }
         }
+        
+        // add this style, added here by default
+        // @see addColumnStyle()
+        $styles[] = $this->_column($name)->style;
+        
         return count($styles) ? ' style="' . implode(';', $styles) . '"' : '';
     }
 

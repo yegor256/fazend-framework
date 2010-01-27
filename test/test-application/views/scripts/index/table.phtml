@@ -2,21 +2,21 @@
  * comments...
  -->
  
-Table:
+<p>Table 1:</p>
 
-<?=$this->htmlTable('test1')
+<?echo $this->htmlTable('test1')
 
     // hide column - don't show it
     ->hideColumn('id')
 
     // change the title of the column
-    ->setColumnTitle('email', 'User Email')
+    ->setColumnTitle('name', 'User Email')
 
     // parse the value of the column
     ->setParser('password', create_function('$value', 'return "***";'))
 
     // change style
-    ->addColumnStyle('email', "width: 450px;")
+    ->addColumnStyle('name', "width:450px;")
 
     // ask table to calculate summ of this column
     ->calculateSum('id')
@@ -64,8 +64,11 @@ Table:
 
 ?>
 
-<?=$this->htmlTable('test2')
-    ->setPaginator($this->paginator)?>
+<p>Table 2:</p>
+
+<?echo $this->htmlTable('test2')
+    ->setPaginator($this->paginator)
+    ?>
 
 <? assert($this->htmlTable('test1')->getSum('id')); ?>
 Summary of ID column: <?=$this->htmlTable('test1')->getSum('id')?>

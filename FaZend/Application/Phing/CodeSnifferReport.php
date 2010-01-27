@@ -22,7 +22,7 @@ require_once 'phing/Task.php';
  * @package Application
  * @subpackage Phing
  */
-class CodeSnifferReport extends Task 
+class CodeSnifferReport extends Task
 {
 
     /**
@@ -80,8 +80,12 @@ class CodeSnifferReport extends Task
         // copy styles.css
         $this->_createFile($this->_destDir . '/styles.css', 'styles.css', array());
         
-        if (!@rename($this->_destDir . '/' . pathinfo($this->_srcDir, PATHINFO_BASENAME) . '.html', $this->_destDir . '/index.html'))
+        if (!@rename(
+            $this->_destDir . '/' . pathinfo($this->_srcDir, PATHINFO_BASENAME) . '.html', 
+            $this->_destDir . '/index.html'
+        )) {
             throw new BuildException("Failed to rename '{$this->_destDir}/index.html'");    
+        }
     }
 
     /**
@@ -142,7 +146,7 @@ class CodeSnifferReport extends Task
             
             $childs = array();
             // we go file by file and analyze them all
-            foreach(scandir($sourceCode) as $childFile) {
+            foreach (scandir($sourceCode) as $childFile) {
                 if ($childFile[0] == '.')
                     continue;
                 // we attach metrics to our array
@@ -161,7 +165,8 @@ class CodeSnifferReport extends Task
                     'header' => $header,
                     'name' => $nodeName,
                     'quality' => $quality,
-                    ));
+                )
+            );
         } else {
             // here we do real calculation of metrics
             $info = $this->_xml->xpath("//file[@name='{$sourceCode}']");
@@ -185,7 +190,8 @@ class CodeSnifferReport extends Task
                     'header' => $header,
                     'quality' => $quality,
                     'source' => $sourceCode,
-                    ));
+                )
+            );
         }
 
         return $quality;
