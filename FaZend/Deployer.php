@@ -152,10 +152,10 @@ class FaZend_Deployer
                         ->set('text', $exception->getMessage())
                         ->send()
                         ->logError();
-                 }
+                }
 
-                 // throw it to the application
-                 throw $exception;
+                // throw it to the application
+                throw $exception;
             } 
         }
     }
