@@ -40,7 +40,8 @@ class FaZend_Cli_Router
         if ($argc < 2)
             return self::_error(
                 'You started the application from the command line ("php index.php" or something), not from Web. ' .
-                'In such a case you should specify a class name, which has to be located in APPLICATION_PATH/cli and should be ' .
+                'In such a case you should specify a class name, ' . 
+                'which has to be located in APPLICATION_PATH/cli and should be ' .
                 'an instance of FaZend_Cli_Interface, e.g. "php index.php Backup" ("Backup" is a sample class name).'
             );
 
