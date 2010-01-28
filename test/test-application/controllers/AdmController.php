@@ -23,6 +23,6 @@ require_once 'FaZend/Controller/controllers/AdmController.php';
  * @package application
  * @subpackage controllers
  */
-class AdmController extends Fazend_AdmController {
-
+class AdmController extends Fazend_AdmController
+{
 }

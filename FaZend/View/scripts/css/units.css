@@ -19,17 +19,17 @@ div.wrapper {
 }
 
 span.unit {
-    color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+    color: <?php echo FaZend_Image::getCssColor('mockup.link')?>;
     cursor: pointer;
 }
 
     span.unit:hover {
         color: white;
-        background-color: <?=FaZend_Image::getCssColor('mockup.link')?>;
+        background-color: <?php echo FaZend_Image::getCssColor('mockup.link')?>;
     }
 
 span.unitlog {
-    color: #<?=FaZend_Image::BRAND_LIGHTGRAY?>;
+    color: #<?php echo FaZend_Image::BRAND_LIGHTGRAY?>;
     display: none;
     cursor: pointer;
 }
@@ -58,7 +58,7 @@ div.panel {
     }
 
     div.panel pre#protocol {
-        color: #<?=FaZend_Image::BRAND_GRAY?>;
+        color: #<?php echo FaZend_Image::BRAND_GRAY?>;
         line-height: 1em;
     }
 

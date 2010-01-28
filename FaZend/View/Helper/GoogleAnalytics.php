@@ -23,7 +23,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
+class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper
+{
 
     /**
      * Show GA script
@@ -31,8 +32,8 @@ class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
      * @param boolean Show google analytics if the user is logged in?
      * @return string HTML code of GA
      */
-    public function googleAnalytics($showForLoggedInUser = true) {
-
+    public function googleAnalytics($showForLoggedInUser = true)
+    {
         // don't show if the user is not logged in
         if (!$showForLoggedInUser && FaZend_User::isLoggedIn())
             return false;
@@ -43,7 +44,6 @@ class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper {
 
         $this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
         return $this->getView()->render('google-analytics.phtml');
-
     }    
 
 }

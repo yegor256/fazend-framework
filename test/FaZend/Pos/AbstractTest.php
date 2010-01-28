@@ -2,13 +2,13 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_Pos_AbstractTest extends AbstractTestCase 
+class FaZend_Pos_AbstractTest extends AbstractTestCase
 {
 
     public function setUp()
     {
         parent::setUp();
-        $this->_user = FaZend_User::register( 'test2', 'test2' );
+        $this->_user = FaZend_User::register('test2', 'test2');
         FaZend_Pos_Properties::setUserId($this->_user->__id);
         FaZend_Pos_Properties::cleanPosMemory(true, true);
     }
@@ -21,7 +21,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
 
     public function testCanAssignValuesToProperties()
     {
-        $trims = array( 'Coupe', 'Sedan' );
+        $trims = array('Coupe', 'Sedan');
         
         $car = new Model_Pos_Car();
         FaZend_Pos_Properties::root()->car = $car;
@@ -32,9 +32,9 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car->active = true;
         $car->trims = $trims;
     
-        $this->assertEquals( 'BMW', $car->make, 'Could not retreive "make" property value' );
-        $this->assertEquals( '330xi', $car->model, 'Could not retreive "model" property value' );
-        $this->assertEquals( 2009, $car->year, 'Could not retreive "year" property value' );
+        $this->assertEquals('BMW', $car->make, 'Could not retreive "make" property value');
+        $this->assertEquals('330xi', $car->model, 'Could not retreive "model" property value');
+        $this->assertEquals(2009, $car->year, 'Could not retreive "year" property value');
         #$this->assertEquals( $trims, $car->trims, 'Could not retreive "trims" property value' );
     }
     
@@ -52,13 +52,13 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $car2->make  = 'Honda';
         $car2->year  = 2003;
     
-        $this->assertNotEquals( 
+        $this->assertNotEquals(
             $car->make, 
             $car2->make, 
             'Different objects have same value. Why?'
         );
     
-        $this->assertNotEquals( 
+        $this->assertNotEquals(
             $car->year, 
             $car2->year, 
             'Different objects have same value. Why?'
@@ -72,7 +72,7 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Properties::root()->car = $car;
         
         $car->make = null;
-        $this->assertNull( $car->make, 'Property value was not null!' );
+        $this->assertNull($car->make, 'Property value was not null!');
     }
     
     public function testIssetWorksWithProperties()
@@ -81,8 +81,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Properties::root()->car = $car;
     
         $car->make = null;
-        $this->assertFalse( isset( $car->model ), 'Unasigned property reported as set!' );
-        $this->assertFalse( isset( $car->make ), 'Nulled property reported as set!' );
+        $this->assertFalse(isset($car->model), 'Unasigned property reported as set!');
+        $this->assertFalse(isset($car->make), 'Nulled property reported as set!');
         
         $car->bike = new Model_Pos_Car();
         FaZend_Pos_Properties::cleanPosMemory(true, true);
@@ -95,8 +95,8 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         FaZend_Pos_Properties::root()->car = $car;
     
         $car->make = 'Nissan';
-        unset( $car->make );
-        $this->assertFalse( isset( $car->make ), 'Property value was still set!');
+        unset($car->make);
+        $this->assertFalse(isset($car->make ), 'Property value was still set!');
     }
     
     /**
@@ -138,8 +138,11 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         $result = $this->_dbAdapter->fetchAll("SELECT * FROM fzSnapshot WHERE fzObject = {$car->ps()->id}");
     
         // 4 snapshots: 2 for root and two for the object
-        $this->assertEquals(3, count($result),
-            'FaZend_Pos_Abstrast::save() did not create unique versions');
+        $this->assertEquals(
+            3, 
+            count($result),
+            'FaZend_Pos_Abstrast::save() did not create unique versions'
+        );
     }
     
     public function testSerializeObjectSavesSnapshotOnSerialize()
@@ -290,7 +293,10 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
      */
     public function testLostObjectsCantBeLinked()
     {
-        logg("\nThis test will throw exception FaZend_Pos_SerializationProhibited when all tests are finished, it's OK");
+        logg(
+            "\nThis test will throw exception FaZend_Pos_SerializationProhibited 
+            when all tests are finished, it's OK"
+        );
         FaZend_Pos_Properties::root()->car = $car = new Model_Pos_Car();
         
         $car->holder = $holder = new FaZend_StdObject();
@@ -325,9 +331,9 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             $this->assertEquals($name, $item, "Strange key/value of the element: '$name'/'$item', why?");
         }
         
-        // it fails, and I don't know how to fix it...
-        $c = current($car);
-        $this->assertTrue(is_integer($c), "Current() fails, why? Class: " . get_class($c));
+        $this->assertTrue(is_null($car->current()));
+        $car->rewind();
+        $this->assertTrue(is_integer($car->current()), "Current() fails, why?");
     }
     
     public function testObjectCanBeVeryDeep()
@@ -400,12 +406,18 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         // But their internal structures are THE SAME!
         $this->assertEquals(spl_object_hash($obj1), spl_object_hash($obj2));
     
-        $this->assertEquals(spl_object_hash($car1->ps()->parent), spl_object_hash($car2->ps()->parent), 
-            'Why both parents are not root?');
+        $this->assertEquals(
+            spl_object_hash($car1->ps()->parent), 
+            spl_object_hash($car2->ps()->parent), 
+            'Why both parents are not root?'
+        );
         
         $car3 = $obj2->car;
-        $this->assertEquals(spl_object_hash($car2->ps()->parent), spl_object_hash($car3->ps()->parent), 
-            'Why both parents are not root?');
+        $this->assertEquals(
+            spl_object_hash($car2->ps()->parent), 
+            spl_object_hash($car3->ps()->parent), 
+            'Why both parents are not root?'
+        );
         
         $obj3 = $car3->obj;
     }
@@ -426,26 +438,31 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
             // create their snapshots
             // root
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
-                'values(1, ' . $this->_dbAdapter->quote(serialize(array())) . ', 1, 1, ' . 
-                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+            'values(1, ' . $this->_dbAdapter->quote(serialize(array())) . ', 1, 1, ' . 
+            $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
             // car
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
-                'values(2, ' . $this->_dbAdapter->quote(serialize(array('model'=>'bmw'))) . ', 1, 1, ' . 
-                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+            'values(2, ' . $this->_dbAdapter->quote(serialize(array('model'=>'bmw'))) . ', 1, 1, ' . 
+            $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
             // bike
             'INSERT INTO fzSnapshot (fzObject, properties, version, alive, updated, baselined) ' . 
-                'values(3, ' . $this->_dbAdapter->quote(serialize(array(
-                    'model' => 'kawasaki',
-                    FaZend_Pos_Properties::ARRAY_PREFIX . 'code' => 'test',
-                    ))) . ', 1, 1, ' . 
-                $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
+            'values(3, ' . $this->_dbAdapter->quote(
+                serialize(
+                    array(
+                        'model' => 'kawasaki',
+                        FaZend_Pos_Properties::ARRAY_PREFIX . 'code' => 'test',
+                    )
+                )
+            ) . ', 1, 1, ' . 
+            $this->_dbAdapter->quote(Zend_Date::now()->getIso()). ', 0)',
     
             // create links between them
             // root->car
             'INSERT INTO fzPartOf (parent, kid, name) values(1, 2, "car")',
             'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "bike")',
-            'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "' . FaZend_Pos_Properties::ARRAY_PREFIX . 'item")',
-            );
+            'INSERT INTO fzPartOf (parent, kid, name) values(2, 3, "' . 
+            FaZend_Pos_Properties::ARRAY_PREFIX . 'item")',
+        );
         
         foreach ($queries as $query)
             $this->_dbAdapter->fetchAll($query);

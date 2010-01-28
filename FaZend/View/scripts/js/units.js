@@ -63,7 +63,7 @@ function run(ahref, spanlog, unit) {
 
     // stop running
     $.ajax({
-        url: "<?=$this->url(array('action'=>'run'), 'units', true)?>",
+        url: "<?php echo $this->url(array('action'=>'run'), 'units', true)?>",
         type: "POST",
         data: {name: runningUnit},
         dataType: "json",
@@ -97,7 +97,7 @@ function stop(unit) {
 
     // stop running
     $.ajax({
-        url: "<?=$this->url(array('action'=>'stop'), 'units', true)?>",
+        url: "<?php echo $this->url(array('action'=>'stop'), 'units', true)?>",
         type: "POST",
         data: {name: unit},
         dataType: "json"
@@ -119,7 +119,7 @@ function _runRoutine() {
 
     // get unit test results
     $.ajax({
-        url: "<?=$this->url(array('action'=>'routine'), 'units', true)?>",
+        url: "<?php echo $this->url(array('action'=>'routine'), 'units', true)?>",
         type: "POST",
         data: {name: runningUnit},
         dataType: "json",

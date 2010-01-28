@@ -9,8 +9,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->_dbAdapter->query(
-            "insert into user values (null, 'good@fazend.com', 'good')");
+        $this->_dbAdapter->query("insert into user values (null, 'good@fazend.com', 'good')");
 
     }
 
@@ -32,11 +31,13 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
     {
         FaZend_User::logOut();
 
-        $this->request->setPost(array(
-            'email' => 'wrong@fazend.com',
-            'pwd' => 'wrong',
-            'login' => 'Login',
-        ));
+        $this->request->setPost(
+            array(
+                'email' => 'wrong@fazend.com',
+                'pwd' => 'wrong',
+                'login' => 'Login',
+            )
+        );
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
@@ -47,11 +48,13 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
     {
         FaZend_User::logOut();
 
-        $this->request->setPost(array(
-            'email' => 'good@fazend.com',
-            'pwd' => 'wrong',
-            'login' => 'Login',
-        ));
+        $this->request->setPost(
+            array(
+                'email' => 'good@fazend.com',
+                'pwd' => 'wrong',
+                'login' => 'Login',
+            )
+        );
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
@@ -62,11 +65,13 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
     {
         FaZend_User::logOut();
 
-        $this->request->setPost(array(
-            'email' => 'good@fazend.com',
-            'pwd' => 'good',
-            'login' => 'Login',
-        ));
+        $this->request->setPost(
+            array(
+                'email' => 'good@fazend.com',
+                'pwd' => 'good',
+                'login' => 'Login',
+            )
+        );
         $this->request->setMethod('POST');
 
         $this->dispatch('/');

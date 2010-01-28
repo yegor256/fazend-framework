@@ -2,8 +2,8 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_Pos_PropertiesTest extends AbstractTestCase 
-{   
+class FaZend_Pos_PropertiesTest extends AbstractTestCase
+{
 
     public function setUp()
     {
@@ -55,11 +55,11 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
         $car->model = 'test';
         $car->ps()->save();
 
-        $this->assertEquals( 2, $car->ps()->version );
+        $this->assertEquals(2, $car->ps()->version);
         $car->model = 'test2';
         $car->ps()->save();
 
-        $this->assertEquals( 3, $car->ps()->version );
+        $this->assertEquals(3, $car->ps()->version);
     }
 
     /**
@@ -124,8 +124,9 @@ class FaZend_Pos_PropertiesTest extends AbstractTestCase
             0, $car->ps()->id,
             'Id returned was not greater than 0'
         );
-        $this->assertGreaterThan( 
-            $car->ps()->id, $bike->ps()->id,
+        $this->assertGreaterThan(
+            $car->ps()->id, 
+            $bike->ps()->id,
             'Second object\'s id was not greater than first object\'s'
         );
     }

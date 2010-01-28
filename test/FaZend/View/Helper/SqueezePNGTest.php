@@ -9,8 +9,12 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase
     {
         // this page contains html with squeze
         $this->dispatch('/index/squeeze');
-        $this->assertNotEquals(false, (bool)$this->getResponse()->getBody(), "Empty HTML instead of page with PNG, why?");
-        $this->assertQuery('div[style*="url"]', 'error here: '.$this->getResponse()->getBody());
+        $this->assertNotEquals(
+            false, 
+            (bool)$this->getResponse()->getBody(), 
+            "Empty HTML instead of page with PNG, why?"
+        );
+        $this->assertQuery('div[style*="url"]', 'error here: ' . $this->getResponse()->getBody());
     }
 
     public function testSqueezePNGShowsActualPNG()
@@ -22,12 +26,24 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase
         file_put_contents($file, $png);
 
         $img = imagecreatefrompng($file);
-        $this->assertNotEquals(false, $img, 'Image is not valid: '.strlen($png).' bytes in PNG: '.htmlspecialchars($png));
+        $this->assertNotEquals(
+            false, 
+            $img, 
+            'Image is not valid: ' . strlen($png) . ' bytes in PNG: ' . htmlspecialchars($png)
+        );
     }
 
     public function testSqueezeIsCompressedAtItsMaximum()
     {
-        eval ('class Foo extends FaZend_View_Helper_SqueezePNG { function testCompress(array $images) { return $this->_compress($images); } };');
+        eval (
+            'class Foo extends FaZend_View_Helper_SqueezePNG
+            {
+                function testCompress(array $images)
+                {
+                    return $this->_compress($images);
+                }
+            };'
+        );
         
         $foo = new Foo();
         $images = array();

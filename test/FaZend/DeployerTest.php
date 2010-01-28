@@ -10,7 +10,8 @@ class FaZend_DeployerTest extends AbstractTestCase
         return array(
             array(
                 'test',
-                "--\n--\t\n\n--\ncreate table   test (id int unsigned, name5_8 varchar(255) not null comment \"this is what works\");\n\n"),
+                "--\n--\t\n\n--\ncreate table   test (id int unsigned, name5_8 varchar(255) not null 
+                comment \"this is what works\");\n\n"),
             array(
                 'ad',
                 "CREATE TABLE IF NOT EXISTS `ad` (

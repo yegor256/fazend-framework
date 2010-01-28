@@ -77,7 +77,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
         $details = new Model_Owner_Details();
         return $details
             ->set('name', $this->name)
-            ->set('id', $this->__id)
+            ->set('id', intval(strval($this)))
             ->set('balance', rand(100, 999));
     }
     
@@ -96,8 +96,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
             ->type($client, 'boolean', "Invalid type of CLIENT")
             ->type($address, 'string', "Invalid type of ADDRESS")
             ->type($name, 'string', "Invalid type of NAME")
-            ->type($name, 'string', "Invalid type of REASON")
-            ;
+            ->type($name, 'string', "Invalid type of REASON");
         
         logg('Successfull Registration of new Owner: ++success++');
     }

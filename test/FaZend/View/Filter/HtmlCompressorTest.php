@@ -8,7 +8,6 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase
     public static function providerHtml()
     {
         return array(
-            
             // pre formatting should NOT be touched
             array(
                 "<html><body><pre style='border:0'>line1\nline2</pre></body></html>",
@@ -32,7 +31,6 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase
                 '<html><script><!-- test --></script><body><style><!-- ff --></style><!-- to kill --></body></html>',
                 '<html><script><!-- test --></script><body><style><!-- ff --></style></body></html>',
             ),
-            
         );
     }
     
@@ -40,7 +38,11 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase
     {
         $compressor = new FaZend_View_Filter_HtmlCompressor();
         $new = $compressor->filter($html);
-        $this->assertEquals($result, $new, "Incorrect HTML compression of [{$html}], got this: [{$new}], expected: [{$result}]");
+        $this->assertEquals(
+            $result, 
+            $new, 
+            "Incorrect HTML compression of [{$html}], got this: [{$new}], expected: [{$result}]"
+        );
     }
 
 }

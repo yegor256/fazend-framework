@@ -11,47 +11,47 @@
  *
 -->
 
-<?
+<?php
 $this->headMeta()
     ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
 
 $this->includeCSS('fazend.css');
 
-?><?= $this->doctype() ?>
+?><?php echo  $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-<?=$this->headTitle()?>
-<?=$this->headMeta()?>
-<?=$this->headLink()?>
-<?=$this->headStyle()?>
+<?php echo $this->headTitle()?>
+<?php echo $this->headMeta()?>
+<?php echo $this->headLink()?>
+<?php echo $this->headStyle()?>
 </head> 
 <body>
 
 <div style='width: auto; padding: 30px;'>
 
-<?=$this->flashMessage()?>
+<?php echo $this->flashMessage()?>
 
 <div style="position: fixed; top: 0; right: 0; padding: 5px;">
     
-    <?=$this->action('login', 'user', 'fazend')?>
+    <?php echo $this->action('login', 'user', 'fazend')?>
 
-    <? if (Model_User::isLoggedIn()): ?>
-        <p><a href="<?=$this->url(array(), 'adm', true)?>">admin</a></p>    
-    <? endif; ?>
+    <?php if (Model_User::isLoggedIn()): ?>
+        <p><a href="<?php echo $this->url(array(), 'adm', true)?>">admin</a></p>    
+    <?php endif; ?>
 </div>
 
 <div style='min-height: 350px; width: 900px;'>
-<?=$this->layout()->content?>
+<?php echo $this->layout()->content?>
 </div>
     
 <div style="margin-top: 40px; line-height: 1.4em; clear: both; font-size: 0.8em; color: gray;">
-    <span style='padding-top: 3px; border-top: 1px gray solid;'>(c) <?=date('Y')?> fazend.com, 
-    rev.<?=FaZend_Revision::get()?>,
-    <?=$this->pageLoadTime()?></span>
+    <span style='padding-top: 3px; border-top: 1px gray solid;'>(c) <?php echo date('Y')?> fazend.com, 
+    rev.<?php echo FaZend_Revision::get()?>,
+    <?php echo $this->pageLoadTime()?></span>
 </div>    
 
 </div>
 
-<?=$this->headScript() ?>
+<?php echo $this->headScript() ?>
 </body>
 </html>

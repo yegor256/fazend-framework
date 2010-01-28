@@ -39,12 +39,16 @@
     -->
 
 <table>
-    <tr><td><?=$this->line?></td></tr>
+    <tr><td><?php echo $this->line?></td></tr>
 </table>
 
 <!-- @link("Upload new photo", "photos/upload") -->
 
-<a href="<?=$this->url(array('controller'=>'photos', 'action'=>'upload'), 'default', true)?>">upload new photo</a>
+<a href="<?php echo $this->url(
+    array('controller'=>'photos', 'action'=>'upload'), 
+    'default', 
+    true
+)?>">upload new photo</a>
 
 <!-- @form()
     ->addField("text", 'text', 'tt', "Title of your photo:")
@@ -54,4 +58,6 @@
     ->setAlignedStyle(false)
     -->
 
-<?=$this->form?>
+<?php echo $this->form?>
+
+<p>test</p>

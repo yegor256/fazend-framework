@@ -350,6 +350,24 @@ class FaZend_Pos_Properties
         
         $this->_properties = new ArrayIterator();
     }
+    
+    /**
+     * Find instance by id
+     *
+     * @param integer ID of the instance (fzObject id)
+     * @return FaZend_Pos_Properties
+     * @throws FaZend_Pos_Properties_InstanceNotFound
+     */
+    public static function factoryById($id)
+    {
+        if (isset(self::$_instances[$id]))
+            return self::$_instances[$id];
+        FaZend_Exception::raise(
+            'FaZend_Pos_Properties_InstanceNotFound', 
+            "Instance not found by ID: $id",
+            'FaZend_Pos_Exception'
+        );        
+    }
 
     /**
      * Save all changes to DB

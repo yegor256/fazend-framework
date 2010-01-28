@@ -11,20 +11,21 @@
  *
 -->
 
-<?=$this->render('adm/_menu.phtml')?>
+<?php echo $this->render('adm/_menu.phtml')?>
 
 <h1>Backup</h1>
 
-<p>Latest backup done: <tt><?=date('m/d/y h:i:s', $this->backup->getLatestRunTime())?></tt> 
-    (<a href="<?=$this->url(array('clear'=>true))?>">clear semaphore</a>)</p>
+<p>Latest backup done: <tt><?php echo date('m/d/y h:i:s', $this->backup->getLatestRunTime())?></tt> 
+    (<a href="<?php echo $this->url(array('clear'=>true))?>">clear semaphore</a>)</p>
 
-<pre><?=$this->backup->getLatestLog()?></pre>
+<pre><?php echo $this->backup->getLatestLog()?></pre>
 
 <p>All objects in your S3 bucket:</p>
 
 <ul>
-<? foreach ($this->files as $file): ?>
-    <li><?=$file['name']?>: <?=$file['size']?> bytes, <?=date('m/d/y h:i', $file['mtime'])?></li>
-<? endforeach; ?>
+<?php foreach ($this->files as $file): ?>
+    <li><?php echo $file['name']?>: 
+        <?php echo $file['size']?> bytes, <?php echo date('m/d/y h:i', $file['mtime'])?></li>
+<?php endforeach; ?>
 </ul>
 

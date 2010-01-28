@@ -23,7 +23,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
+class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
+{
 
     const SQUEEZE_FOLDER = '/views/squeeze/';
     const FAILURE = 'border: 1px solid red;';
@@ -41,7 +42,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      *
      * @return string
      */
-    public function getImagePath() {
+    public function getImagePath()
+    {
         return TEMP_PATH . '/fazend-' . md5(WEBSITE_URL) . '-' . FaZend_Revision::get() . '.png';
     }       
 
@@ -50,7 +52,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      *
      * @return string
      */
-    public function getMapPath() {
+    public function getMapPath()
+    {
         return $this->getImagePath().'.data';
     }       
 
@@ -59,7 +62,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      *
      * @return array
      */
-    public function loadMap() {
+    public function loadMap()
+    {
         $file = $this->getMapPath();
 
         if (!file_exists($file))
@@ -86,7 +90,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      * @param string PNG image (all images together)
      * @return void
      */
-    public function saveMap(array $map, $png) {
+    public function saveMap(array $map, $png)
+    {
         $file = $this->getMapPath();
         $pngFile = $this->getImagePath();
 
@@ -102,12 +107,11 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     *
     * @return string
     */
-    public function squeezePNG($file = false) {
-
+    public function squeezePNG($file = false)
+    {
         if ($file)
             $this->_file = $file;
         return $this;
-
     }
 
     /**
@@ -115,7 +119,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     *
     * @return string HTML
     */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->_render();
     }
 
@@ -124,7 +129,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     *
     * @return string HTML
     */
-    public function startOver() {
+    public function startOver()
+    {
         if (file_exists($this->getMapPath()))
             unlink($this->getMapPath());
         if (file_exists($this->getImagePath()))
@@ -137,7 +143,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      *
      * @return string
      */
-    public function url() {
+    public function url()
+    {
         return $this->getView()->url(array('id'=> (int)FaZend_Revision::get()), self::ROUTE, true);
     }
 
@@ -146,8 +153,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
      *
      * @return string
      */
-    protected function _render() {
-
+    protected function _render()
+    {
         // build full name of the file
         $file = APPLICATION_PATH . self::SQUEEZE_FOLDER . $this->_file;
 
@@ -168,7 +175,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
             $map['images'][$file]['height'],
             -$map['images'][$file]['x'],
             -$map['images'][$file]['y']);
-
     }
 
     /**
@@ -177,8 +183,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param string File name of a new image (or existing one)
     * @return array
     */
-    protected function _loadUpdatedMap($file) {
-
+    protected function _loadUpdatedMap($file)
+    {
         // load map from the file, as it is
         $map = $this->loadMap();
 
@@ -198,7 +204,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 
         // return it after all changes done
         return $map;
-
     }
 
     /**
@@ -207,8 +212,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param array Map of files
     * @return void
     */
-    protected function _clean(array &$map) {
-
+    protected function _clean(array &$map)
+    {
         // if it's very fresh - prepare it
         if (!isset($map['images']))
             $map['images'] = array();
@@ -220,7 +225,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 
             unset($map['images'][$id]);
         }
-
     }    
 
     /**
@@ -230,8 +234,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param string Full name of the file to add
     * @return array
     */
-    protected function _addFile(array &$map, $file) {
-
+    protected function _addFile(array &$map, $file)
+    {
         // add new image
         $png = imagecreatefrompng($file);
         $thisImage = array(
@@ -239,7 +243,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
             'mtime' => filemtime($file)
         );
         $map['images'][$file] = $thisImage;
-
     }    
 
     /**
@@ -248,8 +251,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param array Map
     * @return array Metadata about images
     */
-    protected function _compress(array &$map) {
-
+    protected function _compress(array &$map)
+    {
         $metadata = $this->_loadMetadata($map);
 
         // start with top left
@@ -273,7 +276,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         $metadata['height'] = $height;
 
         return $metadata;
-
     }    
 
     /**
@@ -282,8 +284,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param array Map
     * @return array Metadata and image copies
     */
-    protected function _loadMetadata(array &$map) {
-
+    protected function _loadMetadata(array &$map)
+    {
         $metadata = array();
         $metadata['images'] = array();
 
@@ -308,7 +310,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         }    
 
         return $metadata;
-
     }    
 
     /**
@@ -317,8 +318,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
     * @param array Map
     * @return string PNG
     */
-    protected function _buildPNG(array &$map) {
-
+    protected function _buildPNG(array &$map)
+    {
         // compress the map to remove white spaces
         $metadata = $this->_compress($map);
 
@@ -332,10 +333,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
 
         // copy all images to the holder, in proper places
         foreach ($map['images'] as $id=>&$img) {
-        
             // copy new image to the holder
             imagecopy($holder, $metadata['images'][$id], $img['x'], $img['y'], 0, 0, $img['width'], $img['height']);
-
         }
 
         ob_start();
@@ -351,7 +350,6 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper {
         ob_end_clean();
 
         return $pngContent;
-
     }    
 
 }

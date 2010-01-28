@@ -3,10 +3,13 @@
 require_once 'AbstractTestCase.php';
 
 if (!class_exists('BuildException', false)) {
-    class BuildException extends Exception { }
+    class BuildException extends Exception
+    {
+        // ...
+    }
 }
 
-class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase 
+class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase
 {
     
     public function testSimpleScenarioWorks() 
@@ -25,9 +28,11 @@ class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase
         mkdir($destDir);
     
         // create phpcs report
-        $result = shell_exec('/usr/local/bin/phpcs --report=xml ' . 
+        $result = shell_exec(
+            '/usr/local/bin/phpcs --report=xml ' . 
             escapeshellarg($srcDir) .
-            ' >' . escapeshellarg($xml));
+            ' >' . escapeshellarg($xml)
+        );
         $this->assertTrue(!$result, $result);
     
         require_once 'FaZend/Application/Phing/CodeSnifferReport.php';

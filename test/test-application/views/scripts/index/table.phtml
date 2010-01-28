@@ -4,7 +4,7 @@
  
 <p>Table 1:</p>
 
-<?echo $this->htmlTable('test1')
+<?php echo $this->htmlTable('test1')
 
     // hide column - don't show it
     ->hideColumn('id')
@@ -30,16 +30,24 @@
     // add simple converters
     ->addConverter('email', 'string')
     ->addConverter('password', '->isMe()')
-    ->addConverter('password', 'callback', create_function(
-        '$value, $row',
-        'return $value ? "yes" : "no";'
-    ))
+    ->addConverter(
+        'password', 
+        'callback', 
+        create_function(
+            '$value, $row',
+            'return $value ? "yes" : "no";'
+        )
+    )
     
     ->addFormatter('email', true, 'color:red')
-    ->addFormatter('email', 'callback', create_function(
-        '$value, $row',
-        'return strlen($value) > 3 ? "color:green" : false;'
-    ))
+    ->addFormatter(
+        'email', 
+        'callback', 
+        create_function(
+            '$value, $row',
+            'return strlen($value) > 3 ? "color:green" : false;'
+        )
+    )
         
     // option
     ->addOption('approve', 'id', 'id', array('controller'=>'index', 'action'=>'index'))
@@ -61,15 +69,16 @@
 
     // data source
     ->setPaginator($this->paginator)
-
 ?>
+
+<?php echo $this->paginator?>
 
 <p>Table 2:</p>
 
-<?echo $this->htmlTable('test2')
+<?php echo $this->htmlTable('test2')
     ->setPaginator($this->paginator)
     ?>
 
-<? assert($this->htmlTable('test1')->getSum('id')); ?>
-Summary of ID column: <?=$this->htmlTable('test1')->getSum('id')?>
+<?php assert($this->htmlTable('test1')->getSum('id')); ?>
+Summary of ID column: <?php echo $this->htmlTable('test1')->getSum('id')?>
 

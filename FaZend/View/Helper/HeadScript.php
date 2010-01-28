@@ -25,7 +25,8 @@ require_once 'FaZend/View/Helper/HeadScript.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
+class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript
+{
 
     /**
      * Compress all scripts into one text
@@ -39,8 +40,8 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
      * @param boolean We don't touch this parameter, just pass it to the parent
      * @return string
      */
-    public function toString($indent = null) {
-
+    public function toString($indent = null)
+    {
         // get the existing container, from the parent class
         $container = $this->getContainer();
 
@@ -80,7 +81,6 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 
         // parent class will output the new structure of <SCRIPT> blocks
         return parent::toString($indent);
-
     }
 
 }

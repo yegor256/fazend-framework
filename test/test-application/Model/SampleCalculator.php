@@ -20,16 +20,19 @@
  * @package application
  * @subpackage Model
  */
-class Model_SampleCalculator {
+class Model_SampleCalculator
+{
     
-    function getBigValue($base, $pow) {
+    function getBigValue($base, $pow)
+    {
         if (FaZend_Metric::calculate())
             return $this->metricValue;
 
         return pow($base, $pow);
     }
 
-    function getDependentValue() {
+    function getDependentValue()
+    {
         if (FaZend_Metric::calculate())
             return $this->metricValue;
 
@@ -37,7 +40,8 @@ class Model_SampleCalculator {
         return rand();
     }
 
-    function getParentValue() {
+    function getParentValue()
+    {
         if (FaZend_Metric::calculate())
             return $this->metricValue;
 

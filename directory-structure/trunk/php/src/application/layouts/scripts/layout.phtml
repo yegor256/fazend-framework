@@ -1,4 +1,4 @@
-<?
+<?php
     $this->headMeta()
         ->appendHttpEquiv('expires', 'Wed, 26 Feb 1997 08:21:57 GMT')
         ->appendHttpEquiv('pragma', 'no-cache')
@@ -8,18 +8,18 @@
 
     $this->includeCSS('global.css');
 
-?><?=$this->doctype()?>
+?><?php echo $this->doctype()?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-    <?=$this->headTitle()?>
-    <?=$this->headMeta()?>
-    <?=$this->headLink()?>
-    <?=$this->headStyle()?>
+    <?php echo $this->headTitle()?>
+    <?php echo $this->headMeta()?>
+    <?php echo $this->headLink()?>
+    <?php echo $this->headStyle()?>
 </head> 
 <body>
 
     <div>
-    <?= $this->layout()->content ?>
+    <?php echo  $this->layout()->content ?>
     </div>
 
 </body>

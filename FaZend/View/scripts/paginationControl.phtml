@@ -16,7 +16,7 @@
     
     <!-- Previous page link -->
     <?php if (isset($this->previous)): ?>
-        <a href="<?= $this->url(array('page'=>$this->previous));?>">prev</a> 
+        <a href="<?php echo  $this->url(array('page'=>$this->previous));?>">prev</a> 
     <?php else: ?>
         <span style="color: grey;">prev</span>
     <?php endif; ?>
@@ -26,9 +26,9 @@
     <!-- Numbered page links -->
     <?php foreach ($this->pagesInRange as $page): ?>
         <?php if ($page != $this->current): ?>
-            <a href="<?=$this->url(array('page'=>$page));?>"><?=$page;?></a>
+            <a href="<?php echo $this->url(array('page'=>$page));?>"><?php echo $page;?></a>
         <?php else: ?>
-            [<?= $page; ?>]
+            [<?php echo  $page; ?>]
         <?php endif; ?>
         &#32;
     <?php endforeach; ?>
@@ -37,9 +37,9 @@
 
     <!-- Next page link -->
     <?php if (isset($this->next)): ?>
-        <a href="<?= $this->url(array('page'=>$this->next));?>">next</a>
+        <a href="<?php echo  $this->url(array('page'=>$this->next));?>">next</a>
     <?php else: ?>
         <span style="color: grey;">next</span>
     <?php endif; ?>
     </div>
-<?php endif; ?>
+<?php endif;

@@ -15,7 +15,7 @@
 
 /* global wrapper */
 div.wrapper {
-    width: <?=FaZend_Pan_Ui_Mockup::WIDTH?>px;
+    width: <?php echo FaZend_Pan_Ui_Mockup::WIDTH?>px;
     clear: both;
     margin: 10px auto 20px auto;
     position: relative;
@@ -51,8 +51,8 @@ div.header {
 
 /* global wrapper */
 div.page {
-    border: 1px solid <?=FaZend_Image::getCssColor('border')?>;
-    padding: <?=FaZend_Pan_Ui_Mockup::INDENT?>px;
+    border: 1px solid <?php echo FaZend_Image::getCssColor('border')?>;
+    padding: <?php echo FaZend_Pan_Ui_Mockup::INDENT?>px;
     position: relative;
     min-height: 400px;
 }
@@ -66,15 +66,15 @@ div.page {
 
     /* broken link */
     div.page span.broken {
-        border-bottom: 1px dotted <?=FaZend_Image::getCssColor('error')?>;
+        border-bottom: 1px dotted <?php echo FaZend_Image::getCssColor('error')?>;
         cursor: pointer;
     }
 
     /* SUBMIT button at the end of the form */
     div.page span.submit {
         padding: 4px;
-        border: 2px solid <?=FaZend_Image::getCssColor('mockup.button.border')?>;
-        background: <?=FaZend_Image::getCssColor('mockup.button')?>;
+        border: 2px solid <?php echo FaZend_Image::getCssColor('mockup.button.border')?>;
+        background: <?php echo FaZend_Image::getCssColor('mockup.button')?>;
     }
 
     /* list of all active actor */
@@ -94,14 +94,14 @@ div.page {
         }
 
         div.page div.actors li.pic {
-            background: transparent url('<?=$this->viewFile("ui/actor.gif")?>');
+            background: transparent url('<?php echo $this->viewFile("ui/actor.gif")?>');
             display: inline-block;
             width: 13px;
             height: 20px;
         }
 
         div.page div.actors li.picActive {
-            background: transparent url('<?=$this->viewFile("ui/actorActive.gif")?>');
+            background: transparent url('<?php echo $this->viewFile("ui/actorActive.gif")?>');
             width: 25px;
             height: 39px;
         }

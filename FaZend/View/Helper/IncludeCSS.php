@@ -22,17 +22,19 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper {
+class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper
+{
 
     /**
      * Include a CSS file as a link
      *
      * @return void
      */
-    public function includeCSS($script) {
-
-        $this->getView()->headLink()->appendStylesheet($this->getView()->url(array('css'=>$script), 'css', true, false));
-
+    public function includeCSS($script)
+    {
+        $this->getView()->headLink()->appendStylesheet(
+            $this->getView()->url(array('css'=>$script), 'css', true, false)
+        );
     }
 
 }

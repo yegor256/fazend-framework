@@ -11,7 +11,7 @@
  *
 -->
  
-<?
+<?php
     $this->headTitle('analysis model');
     $this->includeCSS('ui.css');
     $this->includeCSS('analysis.css');
@@ -21,45 +21,46 @@
 
     <div class="header">
         <div class="path">
-            <? $sectors = explode(FaZend_Pan_Analysis_Diagram::SEPARATOR, $this->diagram->getName()); ?>
-            <? foreach (array_slice($sectors, 0, -1) as $i=>$sector): ?><a
-                href="<?=$this->url(array('diagram'=>
+            <?php $sectors = explode(FaZend_Pan_Analysis_Diagram::SEPARATOR, $this->diagram->getName()); ?>
+            <?php foreach (array_slice($sectors, 0, -1) as $i=>$sector): ?><a
+                href="<?php echo $this->url(array('diagram'=>
                 implode(FaZend_Pan_Analysis_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
                 FaZend_Pan_Analysis_Diagram::SEPARATOR . 
-                $sectors[count($sectors)-1]), 'analysis')?>"><?=$sector?></a
-                ><?=FaZend_Pan_Analysis_Diagram::SEPARATOR?><? endforeach; ?><?=$sectors[count($sectors)-1]?>
+                $sectors[count($sectors)-1]), 'analysis')?>"><?php echo $sector?></a
+                ><?php echo FaZend_Pan_Analysis_Diagram::SEPARATOR?><?php endforeach; 
+                ?><?php echo $sectors[count($sectors)-1]?>
         </div>
     </div>
 
     <div class="page">
         
         <div class="types">
-            <? foreach (FaZend_Pan_Analysis_Diagram::getTypes() as $type): ?>
+            <?php foreach (FaZend_Pan_Analysis_Diagram::getTypes() as $type): ?>
                 <div class="type">
-                    <img src="<?=$this->viewFile('analysis/types/' . $type . '.png')?>" />
+                    <img src="<?php echo $this->viewFile('analysis/types/' . $type . '.png')?>" />
                     <br/>
-                    <? if ($this->diagram->getType() == $type): ?>
-                        <b><?=$type?></b>
-                    <? else: ?>
-                        <a href="<?=$this->url(array('diagram'=>$this->diagram->getAnotherType($type)), 'analysis')?>"
-                            ><?=$type?></a>
-                    <? endif; ?>
+                    <?php if ($this->diagram->getType() == $type): ?>
+                        <b><?php echo $type?></b>
+                    <?php else: ?>
+                        <a href="<?php echo $this->url(array('diagram'=>$this->diagram->getAnotherType($type)), 'analysis')?>"
+                            ><?php echo $type?></a>
+                    <?php endif; ?>
                 </div>
-            <? endforeach; ?>
+            <?php endforeach; ?>
         </div>
         
         <div class="components"><ul>
-            <? foreach ($this->diagram->getComponentsToShow() as $component): ?>    
-                <li><a href="<?=$this->url(array('diagram'=>$component->getDiagramName($this->diagram->getType())), 'analysis')?>"
-                    ><?=$component->getName()?></a></li>
-            <? endforeach; ?>
+            <?php foreach ($this->diagram->getComponentsToShow() as $component): ?>    
+                <li><a href="<?php echo $this->url(array('diagram'=>$component->getDiagramName($this->diagram->getType())), 'analysis')?>"
+                    ><?php echo $component->getName()?></a></li>
+            <?php endforeach; ?>
         </ul></div>
 
         <object 
             style="overflow: auto;"
-            data="<?=$this->url(array('action'=>'svg', 'diagram'=>$this->diagram->getName()), 'analysis')?>"
-            width="<?=FaZend_Pan_Analysis_Diagram::WIDTH?>" 
-            height="<?=FaZend_Pan_Analysis_Diagram::HEIGHT?>" 
+            data="<?php echo $this->url(array('action'=>'svg', 'diagram'=>$this->diagram->getName()), 'analysis')?>"
+            width="<?php echo FaZend_Pan_Analysis_Diagram::WIDTH?>" 
+            height="<?php echo FaZend_Pan_Analysis_Diagram::HEIGHT?>" 
             type="image/svg+xml" 
             />
             

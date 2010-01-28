@@ -14,19 +14,14 @@ class FaZend_LogTest extends AbstractTestCase
     public function testObserverWorks()
     {
         FaZend_Log::getInstance()
-
             // try to add a new one
             ->addWriter('Memory', 'test')
-
             // delete this one
             ->removeWriter('test')
-
             // add new named one and delete it right now
             ->addWriter('Memory', 'testWriter')
             ->removeWriter('testWriter')
-
-            ->addWriter('Memory', 'test')
-            ;
+            ->addWriter('Memory', 'test');
 
         $writer = FaZend_Log::getInstance()->getWriter('test');
     }

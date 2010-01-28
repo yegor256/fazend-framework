@@ -21,7 +21,8 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_NiceUrl {
+class FaZend_View_Helper_NiceUrl
+{
 
     const DELIMITER = '-';
 
@@ -31,13 +32,13 @@ class FaZend_View_Helper_NiceUrl {
      * @param string Parameter for URL
      * @param string Suffix to add, if necessary
      * @return string
+     * @todo How about UTF-8?
      */
-    public function niceUrl($str, $suffix = '.html') {
-
+    public function niceUrl($str, $suffix = '.html')
+    {
         // replace anything strange, and compress it into a nice URL
         return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
             preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . $suffix;
-
     }
 
 }

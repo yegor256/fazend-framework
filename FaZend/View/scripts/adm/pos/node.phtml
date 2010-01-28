@@ -12,29 +12,29 @@
 -->
 
 <li>
-<b><?=$this->label?></b> 
-    <a href="<?=$this->url(array(
+<b><?php echo $this->label?></b> 
+    <a href="<?php echo $this->url(array(
         'action'=>'pos', 
-        'object'=>$this->node->ps()->id), 'adm', true)?>">v<?=$this->node->ps()->version?></a>: 
-    <?=$this->node->ps()->type?>
+        'object'=>$this->node->ps()->id), 'adm', true)?>">v<?php echo $this->node->ps()->version?></a>: 
+    <?php echo $this->node->ps()->type?>
 
 <ul>
-<? foreach ($this->node->ps()->properties as $name): ?>
-    <? if (substr($name, 0, strlen(FaZend_Pos_Properties::ARRAY_PREFIX)) == FaZend_Pos_Properties::ARRAY_PREFIX): ?>
-        <? $label = '[' . substr($name, strlen(FaZend_Pos_Properties::ARRAY_PREFIX)) . ']' ?>
-    <? else: ?>
-        <? $label = $name ?>
-    <? endif; ?>
-    <? if ($this->node->$name instanceof FaZend_Pos_Abstract): ?>
-        <?=$this->partial('adm/pos/node.phtml', array(
+<?php foreach ($this->node->ps()->properties as $name): ?>
+    <?php if (substr($name, 0, strlen(FaZend_Pos_Properties::ARRAY_PREFIX)) == FaZend_Pos_Properties::ARRAY_PREFIX): ?>
+        <?php $label = '[' . substr($name, strlen(FaZend_Pos_Properties::ARRAY_PREFIX)) . ']' ?>
+    <?php else: ?>
+        <?php $label = $name ?>
+    <?php endif; ?>
+    <?php if ($this->node->$name instanceof FaZend_Pos_Abstract): ?>
+        <?php echo $this->partial('adm/pos/node.phtml', array(
             'node' => $this->node->$name,
             'label' => $label))?>    
-    <? elseif (is_scalar($this->node->$name)): ?>
-        <li><?=$label?>: <?=$this->node->$name?></li>
-    <? else: ?>
-        <li><?=$label?>: <?=get_class($this->node->$name)?></li>
-    <? endif; ?>
-<? endforeach; ?>
+    <?php elseif (is_scalar($this->node->$name)): ?>
+        <li><?php echo $label?>: <?php echo $this->node->$name?></li>
+    <?php else: ?>
+        <li><?php echo $label?>: <?php echo get_class($this->node->$name)?></li>
+    <?php endif; ?>
+<?php endforeach; ?>
 </ul>
 
 </li>

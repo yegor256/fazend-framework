@@ -11,7 +11,7 @@
  *
 -->
 
-<?
+<?php
     $this->headMeta()
         ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
         
@@ -21,35 +21,35 @@
     
     $this->includeCSS('fazend.css');
 
-?><?= $this->doctype() ?>
+?><?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-    <?=$this->headTitle()?>
-    <?=$this->headMeta()?>
-    <?=$this->headLink()?>
-    <?=$this->headStyle()?>
+    <?php echo $this->headTitle()?>
+    <?php echo $this->headMeta()?>
+    <?php echo $this->headLink()?>
+    <?php echo $this->headStyle()?>
 </head> 
 <body>
 
     <div class="logo">
 
-        <a href='<?=$this->url(array('controller'=>'index', 'action'=>'index'), 'default', true)?>'
+        <a href='<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), 'default', true)?>'
             class="logo"
-            style="<?=$this->squeezePNG('logo.png')?>"></a><br/>
+            style="<?php echo $this->squeezePNG('logo.png')?>"></a><br/>
 
-        <?=$this->action('login', 'user')?>
+        <?php echo $this->action('login', 'user')?>
 
     </div>
     
     <div class="wrapper">
 
-        <?=$this->flashMessage()?>
+        <?php echo $this->flashMessage()?>
 
-        <?=$this->layout()->content?>
+        <?php echo $this->layout()->content?>
 
     </div>
 
-    <?=$this->googleAnalytics()?>
-    <?=$this->headScript() ?>
+    <?php echo $this->googleAnalytics()?>
+    <?php echo $this->headScript() ?>
 </body>
 </html>

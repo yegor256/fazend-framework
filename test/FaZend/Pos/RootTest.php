@@ -2,14 +2,14 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_Pos_RootTest extends AbstractTestCase 
+class FaZend_Pos_RootTest extends AbstractTestCase
 {
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->_user = FaZend_User::register( 'test2', 'test2' );
+        $this->_user = FaZend_User::register('test2', 'test2');
         FaZend_Pos_Properties::setUserId($this->_user->__id);
         FaZend_Pos_Properties::cleanPosMemory(true, false);
     }
@@ -28,8 +28,11 @@ class FaZend_Pos_RootTest extends AbstractTestCase
         FaZend_Pos_Properties::root()->car199->bike = new Model_Pos_Bike();
         FaZend_Pos_Properties::cleanPosMemory(true, false);
         $bike = FaZend_Pos_Properties::root()->car199->bike;
-        $this->assertEquals(3, Model_Pos_Root::$initCounter, 
-            'Root was initialized more times than expected (' . Model_Pos_Root::$initCounter . ' times), why?');
+        $this->assertEquals(
+            3, 
+            Model_Pos_Root::$initCounter, 
+            'Root was initialized more times than expected (' . Model_Pos_Root::$initCounter . ' times), why?'
+        );
     }
     
     public function testInitializationOfSubObjectsWorksFine()
@@ -46,8 +49,10 @@ class FaZend_Pos_RootTest extends AbstractTestCase
         FaZend_Pos_Properties::cleanPosMemory(true, false);
         $root = FaZend_Pos_Properties::root();
         
-        $this->assertTrue($root->car897 instanceof Model_Pos_Car, 
-            'Car object was not retrieved: ' . gettype($root->car897));
+        $this->assertTrue(
+            $root->car897 instanceof Model_Pos_Car, 
+            'Car object was not retrieved: ' . gettype($root->car897)
+        );
     }
 
     public function testMultipleInstantiationOfRootDoesntCreateObjects()

@@ -11,7 +11,7 @@
  *
 -->
 
-<?
+<?php
     $this->headTitle($this->script);
     $this->includeCSS('ui.css');
 ?>
@@ -20,15 +20,15 @@
 
     <div class="header">
         <div class="actor">
-            <?=$this->actor?>
+            <?php echo $this->actor?>
         </div>
 
         <div class="path">
-            <?=$this->script?>
+            <?php echo $this->script?>
         </div>
 
         <div class="link">
-            <a href="<?=$this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>" 
+            <a href="<?php echo $this->url(array('action'=>'mockup', 'id'=>$this->script), 'ui', true, false)?>" 
                 title="View this mock-up as image (PNG)">PNG</a>
         </div>
     </div>
@@ -36,16 +36,16 @@
     <div class="page">
         
         <div class="nav">
-            <?=$this->navigation()->menu()
+            <?php echo $this->navigation()->menu()
                 ->setMaxDepth(2)
                 ->setRenderParents(true)?>
         </div>
 
         <div class="actors">
-            <?=$this->actors?>
+            <?php echo $this->actors?>
         </div>
 
-        <?=$this->page?>
+        <?php echo $this->page?>
     </div>
 
 </div>

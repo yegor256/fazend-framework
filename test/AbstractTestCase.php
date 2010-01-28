@@ -16,10 +16,16 @@
 
 // you should have Zend checked out from truck
 // in the directory ../../zend-trunk
-set_include_path(implode(PATH_SEPARATOR, array(
-    realpath(dirname(__FILE__) . '/../../zend-trunk'),
-    realpath(dirname(__FILE__) . '/..'),
-    get_include_path())));
+set_include_path(
+    implode(
+        PATH_SEPARATOR, 
+        array(
+            realpath(dirname(__FILE__) . '/../../zend-trunk'),
+            realpath(dirname(__FILE__) . '/..'),
+            get_include_path()
+        )
+    )
+);
 
 // these settings are specific for the testing environment in FaZend
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));

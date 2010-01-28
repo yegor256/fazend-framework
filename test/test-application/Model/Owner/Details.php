@@ -21,9 +21,11 @@
  * @package application
  * @subpackage Model
  */
-class Model_Owner_Details extends FaZend_StdObject {
+class Model_Owner_Details extends FaZend_StdObject
+{
 
-    public function __toString() {
+    public function __toString()
+    {
         return "name: " . $this->name;
     }
 

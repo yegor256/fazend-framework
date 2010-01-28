@@ -21,14 +21,16 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_ShowBytes {
+class FaZend_View_Helper_ShowBytes
+{
 
     /**
      * Show size
      *
      * @return string
      */
-    public function showBytes($size) {
+    public function showBytes($size)
+    {
         return self::show($size);
     }
 
@@ -37,8 +39,8 @@ class FaZend_View_Helper_ShowBytes {
      *
      * @return string
      */
-    public static function show($size) {
-
+    public static function show($size)
+    {
         switch (true) {
             case($size < 1024*5):
                 return $size.'bytes';

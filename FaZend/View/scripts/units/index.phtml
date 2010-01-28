@@ -11,7 +11,7 @@
  *
 -->
 
-<?
+<?php
     $this->includeCSS('units.css');
 
     $this->includeJQuery();
@@ -22,39 +22,40 @@
 
 <div class="wrapper">
 
-    <? $latest = ''; ?>
+    <?php $latest = ''; ?>
 
-    <? foreach ($this->tests as $test): ?>
+    <?php foreach ($this->tests as $test): ?>
 
-        <? foreach (($sectors = array_slice(explode('/', $test), 0, -1)) as $id=>$sector): ?>
+        <?php foreach (($sectors = array_slice(explode('/', $test), 0, -1)) as $id=>$sector): ?>
 
-            <? $title = implode('/', array_slice($sectors, 0, $id+1)); ?>
+            <?php $title = implode('/', array_slice($sectors, 0, $id+1)); ?>
 
-            <? if (strpos($latest, $title) !== false) continue; ?>
+            <?php if (strpos($latest, $title) !== false) continue; ?>
 
-            <span style="margin-left: <?=substr_count($title, '/') * 20?>px;"><?=$sector?></span>
+            <span style="margin-left: <?php echo substr_count($title, '/') * 20?>px;"><?php echo $sector?></span>
             <br/>
 
-        <? endforeach; ?>
+        <?php endforeach; ?>
 
-        <? $md5 = 'x' . md5($test); ?>
+        <?php $md5 = 'x' . md5($test); ?>
 
         <span class="unit"
-            style="margin-left: <?=substr_count($test, '/') * 20?>px;"
-            id="<?=$md5?>"
-            title="<?=$this->escape($test)?>"
-            onclick="run($('#<?=$md5?>'), $('#log_<?=$md5?>'), '<?=$test?>');"><?=$this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
+            style="margin-left: <?php echo substr_count($test, '/') * 20?>px;"
+            id="<?php echo $md5?>"
+            title="<?php echo $this->escape($test)?>"
+            onclick="run($('#<?php echo $md5?>'), $('#log_<?php echo $md5?>'), '<?php echo $test?>');"
+            ><?php echo $this->escape(ltrim(substr($test, strrpos($test, '/')), '/'))?></span>
             
         <span class="unitlog" 
-            id="log_<?=$md5?>"
-            onclick="stop('<?=$test?>');"
+            id="log_<?php echo $md5?>"
+            onclick="stop('<?php echo $test?>');"
             title="stop it now"></span>
 
         <br/>
 
-        <? $latest = $test; ?>
+        <?php $latest = $test; ?>
 
-    <? endforeach; ?>
+    <?php endforeach; ?>
 
 </div>
 

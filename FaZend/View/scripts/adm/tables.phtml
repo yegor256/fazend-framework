@@ -11,21 +11,26 @@
  *
 -->
 
-<?=$this->render('adm/_menu.phtml')?>
+<?php echo $this->render('adm/_menu.phtml')?>
 
-<h1>Content of DB tables<?=$this->table ? ' [' . $this->table . ']' : false?></h1>
+<h1>Content of DB tables<?php echo $this->table ? ' [' . $this->table . ']' : false?></h1>
 
-<p>table: <select onChange="window.location = '<?=$this->url(array('action'=>'tables', 'table'=>''), 'adm', true)?>/' + this.options[this.selectedIndex].text;">
-    <? foreach ($this->tables as $table): ?>
+<p>table: <select onChange="window.location = 
+    '<?php echo $this->url(array('action'=>'tables', 'table'=>''), 'adm', true)?>/' + 
+    this.options[this.selectedIndex].text;">
+    <?php foreach ($this->tables as $table): ?>
 
-        <option name="<?=$table?>" <?=$this->table == $table ? 'selected="selected"' : false?>><?=$table?></option>
+        <option 
+            name="<?php echo $table?>" 
+            <?php echo $this->table == $table ? 'selected="selected"' : false?>
+            ><?php echo $table?></option>
 
-    <? endforeach; ?>
-</select><?=$this->table ? '&nbsp;' . count($this->retrieve->fetchAll()) . ' total' : false?></p>
+    <?php endforeach; ?>
+</select><?php echo $this->table ? '&nbsp;' . count($this->retrieve->fetchAll()) . ' total' : false?></p>
 
-<? if ($this->table): ?>
+<?php if ($this->table): ?>
 
-    <? 
+    <?php 
     try {
         
         $customScript = 'adm/' . strtolower($this->table) . '.phtml';
@@ -35,13 +40,13 @@
     ?>
 
         <p style="color: red;">If you want to customize this view, 
-        just create [<tt><?=$customScript?></tt>] file in your view scripts directory.</p>
+        just create [<tt><?php echo $customScript?></tt>] file in your view scripts directory.</p>
 
-    <? } ?>
+    <?php } ?>
 
-    <?=$this->htmlTable()
+    <?php echo $this->htmlTable()
         ->setPaginator($this->paginator)?>
 
-    <p><?=$this->paginator?></p>
+    <p><?php echo $this->paginator?></p>
 
-<? endif; ?>
+<?php endif; ?>

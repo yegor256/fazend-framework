@@ -11,40 +11,43 @@
  *
 -->
 
-<?=$this->render('adm/_menu.phtml')?>
+<?php echo $this->render('adm/_menu.phtml')?>
 
 <h1>SqueezePNG files</h1>
 
 <p>
-    Holder: <tt><?=($path = $this->squeezePNG()->getImagePath())?></tt> (<?=file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
-    Map file: <tt><?=($mapfile = $this->squeezePNG()->getMapPath())?></tt> (<?=file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
-    Url: <tt><?=$this->squeezePNG()->url()?></tt>
+    Holder: <tt><?php echo ($path = $this->squeezePNG()->getImagePath())?></tt> 
+        (<?php echo file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
+    Map file: <tt><?php echo ($mapfile = $this->squeezePNG()->getMapPath())?></tt> 
+        (<?php echo file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
+    Url: <tt><?php echo $this->squeezePNG()->url()?></tt>
 </p>    
 
-<img src="<?=$this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
+<img src="<?php echo $this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
 
-<? $map = $this->squeezePNG()->loadMap()?>
+<?php $map = $this->squeezePNG()->loadMap()?>
 
-<? if (isset($map['images'])): ?>
+<?php if (isset($map['images'])): ?>
 
-    <p>Squeezed images in the holder (<a href="<?=$this->url(array('reload'=>true))?>">reload</a>):</p>
+    <p>Squeezed images in the holder (<a href="<?php echo $this->url(array('reload'=>true))?>">reload</a>):</p>
 
     <ul>
-    <? $totalSize = 0; ?>
-    <? foreach ($map['images'] as $id=>$img): ?>
-        <? $totalSize += ($size = filesize($id));?>
+    <?php $totalSize = 0; ?>
+    <?php foreach ($map['images'] as $id=>$img): ?>
+        <?php $totalSize += ($size = filesize($id));?>
 
         <li>
-            <?=basename($id)?>: <?=$img['width']?>x<?=$img['height']?>, <?=$size?>bytes
+            <?php echo basename($id)?>: 
+                <?php echo $img['width']?>x<?php echo $img['height']?>, <?php echo $size?>bytes
         </li>    
 
-    <? endforeach; ?>
+    <?php endforeach; ?>
     </ul>
 
-    <p>Total size: <?=$totalSize?>bytes</p>
+    <p>Total size: <?php echo $totalSize?>bytes</p>
 
-<? endif; ?>    
+<?php endif; ?>    
 
 <p><a href="#" onclick="document.getElementById('pre').style.display = 'block';">show content of the map file</a></p>
 
-<pre id='pre' style="display: none; border: 1px solid gray;"><?=print_r($map, true)?></pre>
+<pre id='pre' style="display: none; border: 1px solid gray;"><?php echo print_r($map, true)?></pre>

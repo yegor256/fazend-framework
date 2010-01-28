@@ -18,7 +18,7 @@
  * Form to show
  *
  * <code>
- * <?=$this->forma()
+ * <?php echo $this->forma()
  *    ->addBehavior('forward', 'index', 'index')
  *    ->addField('text')
  *        ->fieldLabel('My text:')

@@ -267,6 +267,17 @@ class FaZend_Bo_Money
         $this->_points /= $money;
         return $this;
     }
+    
+    /**
+     * Inverse the sign of the amount, from PLUS to MINUS, and vice versa
+     *
+     * @return $this
+     */
+    public function inverse() 
+    {
+        $this->_points = -$this->_points;
+        return $this;
+    }
 
     /**
      * Current value is GREATER than provided one?

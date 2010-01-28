@@ -1,6 +1,6 @@
 <?php
 
-class Injector extends FaZend_Test_Injector 
+class Injector extends FaZend_Test_Injector
 {
 
     protected function _injectPos() 

@@ -11,21 +11,30 @@
  *
 -->
 
-<? if (!FaZend_User::isLoggedIn()): ?>
+<?php if (!FaZend_User::isLoggedIn()): ?>
 
-    <a href="#_self" onclick="document.getElementById('lf').style.display = 'block'; document.getElementById('lf').loginEmail.focus(); return false;">login</a> |
+    <a href="#_self" 
+        onclick="document.getElementById('lf').style.display = 'block'; 
+            document.getElementById('lf').loginEmail.focus(); 
+            return false;"
+        >login</a> |
 
-    <a href="<?=$this->url(array('action'=>'register'), 'user', true)?>">create account</a>
+    <a href="<?php echo $this->url(array('action'=>'register'), 'user', true)?>">create account</a>
 
-    <div id="lf" <?=(($this->form->email->getValue() || $this->form->pwd->getValue()) ? false : ' style="display: none;"')?>>
-            <?=$this->form?>
+    <div id="lf" 
+        <?php echo (($this->form->email->getValue() || $this->form->pwd->getValue()) ? 
+            false : 
+            ' style="display: none;"')?>
+        ><?php echo $this->form?>
     </div>
 
-<? else: ?>
+<?php else: ?>
 
-    <?=$this->escape(FaZend_User::getCurrentUser()->email)?><br/>
+    <?php echo $this->escape(FaZend_User::getCurrentUser()->email)?><br/>
 
-    <a href="<?=$this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>">settings</a> |
-    <a href="<?=$this->url(array('action'=>'logout'), 'user', true)?>">logout</a>
+    <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>"
+        >settings</a> |
+    <a href="<?php echo $this->url(array('action'=>'logout'), 'user', true)?>"
+        >logout</a>
 
-<? endif; ?>
+<?php endif; ?>

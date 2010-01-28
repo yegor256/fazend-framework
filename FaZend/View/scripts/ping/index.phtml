@@ -11,7 +11,11 @@
  *
 -->
 
-<? foreach(scandir(FAZEND_PATH . '/View/scripts/ping') as $file): ?>
-<? $matches = array(); if (!preg_match('/^(.*)\.phtml$/', $file, $matches)) continue; ?>
-<?=$matches[1] . "\n"?>
-<? endforeach; ?>
+<?php
+
+foreach(scandir(FAZEND_PATH . '/View/scripts/ping') as $file) {
+    $matches = array(); 
+    if (!preg_match('/^(.*)\.phtml$/', $file, $matches)) 
+        continue;
+    echo $matches[1] . "\n";   
+}

@@ -30,8 +30,10 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
     public function testClassMappingWorks()
     {
         $owner = Model_Owner::create('peter');
-        $this->assertTrue($owner->created instanceof Zend_Date, 
-            "CREATED is of invalid type: " . gettype($owner->created));
+        $this->assertTrue(
+            $owner->created instanceof Zend_Date, 
+            "CREATED is of invalid type: " . gettype($owner->created)
+        );
     }
 
     public function testRetrieveWorks()
@@ -47,9 +49,11 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
     public function testDynamicBindingWorks()
     {
         Model_Owner::create('john');
-        $cnt = count(Model_Owner::retrieve()
-            ->where('name = :name OR name = :name')
-            ->fetchAll(array('name' => 'john')));
+        $cnt = count(
+            Model_Owner::retrieve()
+                ->where('name = :name OR name = :name')
+                ->fetchAll(array('name' => 'john'))
+        );
         $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
         
         $list = Model_Owner::retrieve()
@@ -130,8 +134,10 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $owner = new Model_Owner(132);
         $product = new Model_Product(10);
         
-        $this->assertTrue($owner === $product->owner, 
-            "Objects are different, but they should be the same");
+        $this->assertTrue(
+            $owner === $product->owner, 
+            "Objects are different, but they should be the same"
+        );
     }
 
 }

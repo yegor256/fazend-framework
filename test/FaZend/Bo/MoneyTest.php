@@ -28,12 +28,20 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
     public function testWeCanCreateClassInDifferentWay($value, $origPoints, $currency)
     {
         $money = new FaZend_Bo_Money($value);
-        $this->assertTrue($money instanceof FaZend_Bo_Money,
-            "Format can't be parsed: '{$value}', why?");
-        $this->assertEquals($origPoints, $money->origPoints,
-            "Invalid conversion of {$value}, why?");
-        $this->assertEquals($currency, $money->currency->getShortName(),
-            "Invalid currency in {$value}, why?");
+        $this->assertTrue(
+            $money instanceof FaZend_Bo_Money,
+            "Format can't be parsed: '{$value}', why?"
+        );
+        $this->assertEquals(
+            $origPoints, 
+            $money->origPoints,
+            "Invalid conversion of {$value}, why?"
+        );
+        $this->assertEquals(
+            $currency, 
+            $money->currency->getShortName(),
+            "Invalid currency in {$value}, why?"
+        );
     }
 
     public function testWeCanDoArithmeticOperations()
@@ -81,6 +89,13 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
     {
         $money = new FaZend_Bo_Money('100 USD');
         $money->div(0);
+    }
+
+    public function testSimpleMethodsWorkProperly()
+    {
+        $money = new FaZend_Bo_Money('100 USD');
+        $money->inverse();
+        $this->assertEquals(-100, $money->usd);
     }
 
 }

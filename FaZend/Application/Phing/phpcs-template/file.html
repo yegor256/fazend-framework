@@ -1,13 +1,13 @@
 <?php include dirname(__FILE__) . '/header.html'; ?>
 
 <? if ($vars['quality']->revision): ?>
-    <p>Revision <a href="#"><?=$vars['quality']->revision?></a>, commited by <?=$vars['quality']->author?><br/>
-        <?=$vars['quality']->log?></p>
+    <p>Revision <a href="#"><?php echo $vars['quality']->revision?></a>, commited by <?php echo $vars['quality']->author?><br/>
+        <?php echo $vars['quality']->log?></p>
 <? endif; ?>
     
-<p><?=$vars['quality']->lines?> lines,
-    <?=$vars['quality']->errors?> errors,
-    <?=$vars['quality']->warnings?> warnings
+<p><?php echo $vars['quality']->lines?> lines,
+    <?php echo $vars['quality']->errors?> errors,
+    <?php echo $vars['quality']->warnings?> warnings
     </p>
     
 <? 
@@ -39,17 +39,17 @@ foreach ($vars['info']->children() as $err) {
     <? foreach (file($vars['source']) as $id=>$line): ?>
         <? $lineNo = $id+1 ?>
         <tr><th
-            <?=(isset($errors[$lineNo]) ? " rowspan='2' class='errors'" : false)?>
-            ><?=$lineNo?></th><td
-            <?=(isset($errors[$lineNo]) ? " class='errors'" : false)?>
-            ><?=htmlspecialchars($line)?></td></tr>
+            <?php echo (isset($errors[$lineNo]) ? " rowspan='2' class='errors'" : false)?>
+            ><?php echo $lineNo?></th><td
+            <?php echo (isset($errors[$lineNo]) ? " class='errors'" : false)?>
+            ><?php echo htmlspecialchars($line)?></td></tr>
      
         <? if (isset($errors[$lineNo])): ?>
             <tr><td class="comment">
             <? foreach (array('error', 'warning') as $type): ?>
                 <? if (isset($errors[$lineNo][$type])): ?>
                     <? foreach ($errors[$lineNo][$type] as $err): ?>
-                        <span class="<?=$type?>"><?=htmlspecialchars($err)?></span><br/>
+                        <span class="<?php echo $type?>"><?php echo htmlspecialchars($err)?></span><br/>
                     <? endforeach; ?>
                 <? endif; ?>
             <? endforeach; ?>

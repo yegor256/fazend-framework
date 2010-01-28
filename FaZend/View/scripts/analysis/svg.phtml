@@ -1,12 +1,14 @@
-<?='<?xml version="1.0" encoding="utf-8" ?>'?>
-<?='<?xml-stylesheet'?> type="text/css" href="<?=$this->url(array('css'=>'uml.css'), 'css', true, false)?>" <?='?>'?> 
+<?php echo '<?xml version="1.0" encoding="utf-8" ?>'?>
+<?php echo '<?xml-stylesheet'?> 
+    type="text/css" 
+    href="<?php echo $this->url(array('css'=>'uml.css'), 'css', true, false)?>" <?php echo '?>'?> 
 <svg xmlns="http://www.w3.org/2000/svg" 
     version="1.1" 
-    xmlns:xlink="<?=FaZend_Pan_Analysis_Component_Abstract::XLINK_NS?>"
-    width="<?=FaZend_Pan_Analysis_Diagram::WIDTH?>px"
-    height="<?=FaZend_Pan_Analysis_Diagram::HEIGHT?>px"
+    xmlns:xlink="<?php echo FaZend_Pan_Analysis_Component_Abstract::XLINK_NS?>"
+    width="<?php echo FaZend_Pan_Analysis_Diagram::WIDTH?>px"
+    height="<?php echo FaZend_Pan_Analysis_Diagram::HEIGHT?>px"
     viewBox="0 0 100 100">
     
-<?=$this->svg?>
+<?php echo $this->svg?>
         
 </svg>

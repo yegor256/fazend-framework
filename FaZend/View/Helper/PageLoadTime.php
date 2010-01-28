@@ -22,7 +22,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
+class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
+{
 
     /**
      * Show the time in seconds of the page loading
@@ -31,8 +32,8 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
      *
      * @return string Time in seconds, properly formatted
      */
-    public function pageLoadTime() {
-
+    public function pageLoadTime()
+    {
          // this variable is set in FaZend/Application/index.php
          global $startTime; 
 
@@ -81,7 +82,6 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper {
          }
 
          return $html;
-
      }
 
 }

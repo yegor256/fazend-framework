@@ -40,15 +40,6 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     protected $__ps = null;
     
     /**
-     * Pos ID used for serialization only
-     *
-     * @var integer
-     * @see __sleep()
-     * @see __wakeup()
-     **/
-    protected $__posId = null;
-
-    /**
      * Constructor, you CAN'T override it!
      *
      * If you need to setup some initial (!) behavior, you should use init()
@@ -65,7 +56,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         foreach ($rc->getProperties() as $property) {
             if ($property->isStatic())
                 continue;
-            if (!in_array($property->getName(), array('__ps', '__posId'))) {
+            if ($property->getName() !== '__ps') {
                 FaZend_Exception::raise(
                     'FaZend_Pos_Abstract_ExplicitPropertyFound',
                     "You're not allowed to explicitly declare properties in POS classes, " .
@@ -132,7 +123,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public final function ps(FaZend_Pos_Properties $ps = null, $throwException = true, $clean = false)
     {
         if ($ps instanceof FaZend_Pos_Properties)
-            $this->__ps = $ps;
+            $this->__ps = $ps->id;
             
         if (is_null($this->__ps)) {
             if (!$throwException)
@@ -154,7 +145,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             return null;
         }
             
-        return $this->__ps;
+        return FaZend_Pos_Properties::factoryByid($this->__ps);
     }
 
     /**
@@ -358,7 +349,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             );
         }
 
-        if (!isset($this->__posId) || !$this->__posId) {
+        if (empty($this->__ps)) {
             FaZend_Exception::raise(
                 'FaZend_Pos_UnserializationFailure',
                 "Object of class " . get_class($this) . " wasn't properly serialized",
@@ -370,16 +361,16 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         // Now we should recover its "parent", in order to make it attached
         // to the POS structure. This operation will be done recursively, until
         // the ROOT is reached.
-        FaZend_Pos_Properties::recoverById($this, $this->__posId);
+        FaZend_Pos_Properties::recoverById($this, $this->__ps);
     }
 
     /**
      * Called before serialize()
      *
-     * @return void
+     * @return array List of properties to serialize
      * @see http://php.net/manual/en/language.oop5.magic.php
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function __sleep() 
     {
         if ($this instanceof FaZend_Pos_Root) {
@@ -391,11 +382,10 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         }
 
         // We should validate, maybe we already serialized this object before?
-        if (is_null($this->__posId)) {
+        if (is_null($this->__ps)) {
             // We're trying to save the object. There could be an error, if the
             // object is NOT yet in POS.
             try {
-                $this->__posId = $this->ps()->id;
                 $this->ps()->save();
             } catch (FaZend_Pos_LostObjectException $e) {
                 FaZend_Exception::raise(
@@ -406,7 +396,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             } 
         }
         
-        return array('__posId');
+        return array('__ps');
     }
 
 }

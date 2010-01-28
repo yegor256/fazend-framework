@@ -20,18 +20,17 @@
  * @package application
  * @subpackage Cli
  */
-class Sub extends FaZend_Cli_Abstract {
+class Sub extends FaZend_Cli_Abstract
+{
 
     /**
      * Executor of a command-line command
      *
      * @return string
      */
-    public function execute() {
-
+    public function execute()
+    {
         return 'sub works';
-
     }
-    
 
 }

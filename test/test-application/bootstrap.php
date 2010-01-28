@@ -24,7 +24,7 @@ define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
  * @package application
  */
 class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
-{ 
+{
 
     protected function _initDbData()
     {
@@ -33,19 +33,15 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
 
         FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'Zend_Date');
 
-        $adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $queries = array(
+            'insert into owner values (132, "john smith", null)',
+            'insert into product values (10, "car", 132)',
+            'insert into car values ("bmw", "750iL")',
+            'insert into boat values (1, "boat", "super 8")',
+        );
 
-        $adapter->query(
-            'insert into owner values (132, "john smith", null)');
-
-        $adapter->query(
-            'insert into product values (10, "car", 132)');
-
-        $adapter->query(
-            'insert into car values ("bmw", "750iL")');
-
-        $adapter->query(
-            'insert into boat values (1, "boat", "super 8")');
+        foreach ($queries as $query)
+            Zend_Db_Table_Abstract::getDefaultAdapter()->query($query);
     }
     
     protected function _initForma() 

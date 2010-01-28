@@ -22,7 +22,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
+class FaZend_View_Helper_StripCSS extends FaZend_View_Helper
+{
 
     /**
      * Strip CSS and include it into HEAD section of the layout
@@ -30,15 +31,14 @@ class FaZend_View_Helper_StripCSS extends FaZend_View_Helper {
      * @param string CSS content
      * @return void
      */
-    public function stripCSS($script) {
-
+    public function stripCSS($script)
+    {
         $content = $this->getView()->render($script);
 
         $filter = new FaZend_View_Filter_CssCompressor();
         $content = $filter->filter($content);
 
         $this->getView()->headStyle($content);
-
     }
 
 }

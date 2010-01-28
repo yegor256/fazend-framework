@@ -2,7 +2,8 @@
 
 require_once 'AbstractTestCase.php';
 
-class FaZend_ValidatorTest extends AbstractTestCase {
+class FaZend_ValidatorTest extends AbstractTestCase
+{
 
     public function testSimpleScenarioWorks()
     {

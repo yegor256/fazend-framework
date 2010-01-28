@@ -20,20 +20,18 @@
  * @package application
  * @subpackage Cli
  */
-class OSVersion extends FaZend_Cli_Abstract {
+class OSVersion extends FaZend_Cli_Abstract
+{
 
     /**
      * Executor of a command-line command
      *
      * @return string
      */
-    public function execute() {
-
+    public function execute()
+    {
         $sub = $this->_callCli('Sub');
-        
         return $sub . shell_exec('ver');
-
     }
-    
 
 }

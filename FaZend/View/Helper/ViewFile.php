@@ -20,7 +20,8 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_ViewFile extends FaZend_View_Helper {
+class FaZend_View_Helper_ViewFile extends FaZend_View_Helper
+{
 
     /**
      * File in views/files directory
@@ -28,13 +29,12 @@ class FaZend_View_Helper_ViewFile extends FaZend_View_Helper {
      * @param string Path of the file, from /public directory
      * @return string URL of the file
      */
-    public function viewFile($file) {
-
+    public function viewFile($file)
+    {
         //trim the file name (just in case)
         $file = trim($file);
 
         return $this->getView()->url(array('file'=>$file), 'file', true, false);
-
     }
 
 }

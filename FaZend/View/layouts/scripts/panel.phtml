@@ -11,44 +11,50 @@
  *
 -->
 
-<?
+<?php
 $this->headMeta()
     ->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
 
 $this->includeCSS('fazend.css');
 
-?><?= $this->doctype() ?>
+?><?php echo  $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>  
-    <?=$this->headTitle()?>
-    <?=$this->headMeta()?>
-    <?=$this->headLink()?>
-    <?=$this->headStyle()?>
+    <?php echo $this->headTitle()?>
+    <?php echo $this->headMeta()?>
+    <?php echo $this->headLink()?>
+    <?php echo $this->headStyle()?>
 </head> 
 <body>
 
     <div class="hdr">
-        <? if (APPLICATION_ENV !== 'production'): ?>
-            <a href="<?=$this->url(array('action'=>'index', 'id'=>'index/index'), 'ui', true, false)?>">UI Modeller</a> &middot;
-            <a href="<?=$this->url(array(), 'analysis', true, false)?>">Analysis Model</a> &middot;
-            <a href="<?=$this->url(array('action'=>'index'), 'units', true, false)?>">Unit Tests</a> &middot;
-            <a href="<?=$this->url(array(), 'dbmap', true, false)?>">DB Mapper</a> &middot;
-        <? endif; ?>
-        <a href="<?=$this->url(array(), 'adm', true, false)?>">Admin Area</a>
+        <?php if (APPLICATION_ENV !== 'production'): ?>
+            <a href="<?php echo $this->url(array('action'=>'index', 'id'=>'index/index'), 'ui', true, false)?>"
+                >UI Modeller</a> &middot;
+            <a href="<?php echo $this->url(array(), 'analysis', true, false)?>"
+                >Analysis Model</a> &middot;
+            <a href="<?php echo $this->url(array('action'=>'index'), 'units', true, false)?>"
+                >Unit Tests</a> &middot;
+            <a href="<?php echo $this->url(array(), 'dbmap', true, false)?>"
+                >DB Mapper</a> &middot;
+        <?php endif; ?>
+        <a href="<?php echo $this->url(array(), 'adm', true, false)?>">Admin Area</a>
 
-        <?=WEBSITE_URL?>
+        <?php echo WEBSITE_URL?>
     </div>
     
     <div class="content">
-        <?=$this->flashMessage()?>
-        <?=$this->layout()->content?>
+        <?php echo $this->flashMessage()?>
+        <?php echo $this->layout()->content?>
     </div>
 
     <div class="btm">
-        (c) <?=FaZend_Properties::get()->name?>/Zend <?=Zend_Version::VERSION?>/FaZend <?=FaZend_Version::VERSION?>, 
-        rev.<?=FaZend_Revision::get()?>, <?=$this->pageLoadTime()?>
+        (c) <?php echo FaZend_Properties::get()->name?>/Zend 
+            <?php echo Zend_Version::VERSION?>/FaZend 
+            <?php echo FaZend_Version::VERSION?>, 
+        rev.<?php echo FaZend_Revision::get()?>, <?php echo $this->pageLoadTime()?>
     </div>
 
-    <?=$this->headScript() ?>
+    <?php echo $this->headScript() ?>
 </body>
 </html>

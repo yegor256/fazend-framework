@@ -20,22 +20,17 @@
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_LongLine {
+class FaZend_View_Helper_LongLine
+{
 
     /**
      * Cut the line to a required length
      *
      * @return string
      */
-    public function longLine($line, $length) {
-
-        // if it's short enough - just return it
-        if (strlen($line) < $length)
-            return $line;
-
-        // cut the end
-        return substr($line, 0, $length-3) . '...';    
-
+    public function longLine($line, $length = 50)
+    {
+        return cutLongLine($line, $length);
     }
 
 }

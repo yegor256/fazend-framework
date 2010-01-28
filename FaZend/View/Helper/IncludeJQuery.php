@@ -23,7 +23,8 @@ require_once 'FaZend/View/Helper.php';
  * @package View
  * @subpackage Helper
  */
-class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper {
+class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper
+{
 
     const JQUERY_PATH = 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js';
 
@@ -32,10 +33,9 @@ class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper {
      *
      * @return void
      */
-    public function includeJQuery() {
-
+    public function includeJQuery()
+    {
         $this->getView()->headScript()->appendFile(self::JQUERY_PATH);
-
     }
 
 }
