@@ -37,8 +37,18 @@ class FaZend_View_Helper_NiceUrl
     public function niceUrl($str, $suffix = '.html')
     {
         // replace anything strange, and compress it into a nice URL
-        return trim(preg_replace('/' . preg_quote(self::DELIMITER). '+/', self::DELIMITER, 
-            preg_replace('/[^\w\d]/', self::DELIMITER, ucwords($str))), self::DELIMITER) . $suffix;
+        return trim(
+            preg_replace(
+                '/' . preg_quote(self::DELIMITER). '+/', 
+                self::DELIMITER, 
+                preg_replace(
+                    '/[^\w\d]/', 
+                    self::DELIMITER, 
+                    ucwords($str)
+                )
+            ), 
+            self::DELIMITER
+        ) . $suffix;
     }
 
 }

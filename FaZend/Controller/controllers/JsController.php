@@ -22,15 +22,16 @@ require_once 'FaZend/Controller/Action.php';
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  * @package controllers
  */
-class Fazend_JsController extends FaZend_Controller_Action {
+class Fazend_JsController extends FaZend_Controller_Action
+{
 
     /**
      * Show one Java Script
      * 
      * @return string
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         // if it's absent
         //if (!file_exists($script = APPLICATION_PATH . '/views/scripts/js/' . $this->_getParam('script')) &&
         //    !file_exists($script = FAZEND_PATH . '/View/scripts/js/' . $this->_getParam('script')))
@@ -50,7 +51,7 @@ class Fazend_JsController extends FaZend_Controller_Action {
         $this->view->setFilter(null);
 
         $this->_helper->viewRenderer($this->_getParam('script'));
-
     }    
+    
 }
 

@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Diagram
  */
-abstract class FaZend_Pan_Analysis_Diagram_Abstract {
+abstract class FaZend_Pan_Analysis_Diagram_Abstract
+{
 
     /**
      * Name of the diagram
@@ -42,7 +43,8 @@ abstract class FaZend_Pan_Analysis_Diagram_Abstract {
      * @param string Name of the diagram, like 'System.Model.User.part-of'
      * @return void
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $this->_name = $name;
         
         $exp = explode(FaZend_Pan_Analysis_Diagram::SEPARATOR, $name);
@@ -57,7 +59,8 @@ abstract class FaZend_Pan_Analysis_Diagram_Abstract {
      *
      * @return string Name of the diagram
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -66,7 +69,8 @@ abstract class FaZend_Pan_Analysis_Diagram_Abstract {
      *
      * @return string Type of the diagram
      */
-    public function getType() {
+    public function getType()
+    {
         return substr(strrchr($this->_name, FaZend_Pan_Analysis_Diagram::SEPARATOR), 1);
     }
 
@@ -76,7 +80,8 @@ abstract class FaZend_Pan_Analysis_Diagram_Abstract {
      * @param string Type of the diagram
      * @return string Name of the diagram
      */
-    public function getAnotherType($type) {
+    public function getAnotherType($type)
+    {
         $name = $this->getName();
         $name = substr($name, 0, strrpos($name, FaZend_Pan_Analysis_Diagram::SEPARATOR)+1) . $type;
         return $name;
@@ -87,7 +92,8 @@ abstract class FaZend_Pan_Analysis_Diagram_Abstract {
      *
      * @return FaZend_Pan_Analysis_Component_Abstract[]
      */
-    public function getComponentsToShow() {
+    public function getComponentsToShow()
+    {
         return $this->_component;
     }
     

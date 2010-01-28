@@ -48,25 +48,21 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript
         // create new container, where new <SCRIPT> blocks will be placed
         $new = new Zend_View_Helper_Placeholder_Container();
 
-        foreach($container as $id=>$script) {
+        foreach ($container as $id=>$script) {
             // so we meet new text script
             if (($script->type == 'text/javascript') && empty($script->attributes['src']) && !empty($script->source)) {
-                
                 if (!isset($aggregator))
                     $aggregator = $script;
                 else    
                     $aggregator->source .= $container->getSeparator() . $script->source;    
 
                 continue;
-
-            // we had some texts before    
+                // we had some texts before    
             }
             
             if (isset($aggregator)) {
-                
                 $new[] = $aggregator;
                 unset($aggregator);
-
             }
 
             $new[] = $script;

@@ -21,22 +21,22 @@ require_once 'FaZend/Controller/Action.php';
  * 
  * @package controllers
  */
-class Fazend_PingController extends FaZend_Controller_Action {
+class Fazend_PingController extends FaZend_Controller_Action
+{
 
     /**
      * We always reply with text/plain
      *
      * @return void
      */
-    public function preDispatch() {
-
+    public function preDispatch()
+    {
         $this->getResponse()->setHeader('Content-type', 'text/plain');
         $this->_helper->layout->disableLayout();
         $this->view->setFilter(null);
 
         // no limit in time execution
         set_time_limit(0);
-
     }
 
     /**
@@ -44,9 +44,8 @@ class Fazend_PingController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function indexAction() {
-
-
+    public function indexAction()
+    {
     }
 
     /**
@@ -54,12 +53,11 @@ class Fazend_PingController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function backupAction() {
-
+    public function backupAction()
+    {
         $backup = new FaZend_Backup();
         $backup->execute();
         $this->view->log = $backup->getLog();
-
     }
 
 }

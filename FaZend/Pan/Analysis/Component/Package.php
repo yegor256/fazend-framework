@@ -49,36 +49,57 @@ class FaZend_Pan_Analysis_Component_Package extends FaZend_Pan_Analysis_Componen
         
         return 
         
-        self::makeSvg('rect', array(
-            'x' => $cornerX,
-            'y' => $cornerY,
-            'width' => $width,
-            'height' => $height,
-            'fill' => '#' . FaZend_Image::UML_FILL,
-            'stroke' => '#' . FaZend_Image::UML_BORDER,
-            'stroke-width' => $line)) .
+        self::makeSvg(
+            'rect', 
+            array(
+                'x' => $cornerX,
+                'y' => $cornerY,
+                'width' => $width,
+                'height' => $height,
+                'fill' => '#' . FaZend_Image::UML_FILL,
+                'stroke' => '#' . FaZend_Image::UML_BORDER,
+                'stroke-width' => $line
+            )
+        ) .
             
-        self::makeSvg('rect', array(
-            'x' => $cornerX,
-            'y' => $cornerY - $font,
-            'width' => $font * 3,
-            'height' => $font,
-            'fill' => '#' . FaZend_Image::UML_FILL,
-            'stroke' => '#' . FaZend_Image::UML_BORDER,
-            'stroke-width' => $line)) .
+        self::makeSvg(
+            'rect', 
+            array(
+                'x' => $cornerX,
+                'y' => $cornerY - $font,
+                'width' => $font * 3,
+                'height' => $font,
+                'fill' => '#' . FaZend_Image::UML_FILL,
+                'stroke' => '#' . FaZend_Image::UML_BORDER,
+                'stroke-width' => $line
+            )
+        ) .
 
-        self::makeSvg('a', array(
-            'target' => '_parent',
-            'xlink:href' => $view->url(array(
-                'action' => 'index', 
-                'diagram' => $this->getDiagramName($type)), 'analysis'),
-            'xlink:title' => $this->getFullName()),
-            self::makeSvg('text', array(
-                'x' => $cornerX + $font,
-                'y' => $cornerY + $font * 2,
-                'class' => 'text',
-                'font-family' => 'Verdana',
-                'font-size' => $font), $title));
+        self::makeSvg(
+            'a', 
+            array(
+                'target' => '_parent',
+                'xlink:href' => $view->url(
+                    array(
+                        'action' => 'index', 
+                        'diagram' => $this->getDiagramName($type)
+                    ), 
+                    'analysis'
+                ),
+                'xlink:title' => $this->getFullName()
+            ),
+            self::makeSvg(
+                'text',
+                array(
+                    'x' => $cornerX + $font,
+                    'y' => $cornerY + $font * 2,
+                    'class' => 'text',
+                    'font-family' => 'Verdana',
+                    'font-size' => $font
+                ), 
+                $title
+            )
+        );
     }
 
 }

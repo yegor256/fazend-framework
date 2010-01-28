@@ -20,39 +20,47 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement {
+class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement
+{
 
     /**
      * Draw in PNG
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $txt = $this->_parse($this->value);
 
         // calulate the width of the text inside the button
-        list($width, ) = FaZend_Image::getTextDimensions($txt, 
+        list($width, ) = FaZend_Image::getTextDimensions(
+            $txt, 
             FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
-            $this->_mockup->getImage()->getFont('mockup.content'));
+            $this->_mockup->getImage()->getFont('mockup.content')
+        );
 
         // white rectangle
-        $this->_mockup->getImage()->imagefilledrectangle( 
+        $this->_mockup->getImage()->imagefilledrectangle(
             FaZend_Pan_Ui_Mockup::INDENT, $y, 
             FaZend_Pan_Ui_Mockup::INDENT + $width, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE*2, 
-            $this->_mockup->getImage()->getColor('mockup.button'));
+            $this->_mockup->getImage()->getColor('mockup.button')
+        );
 
         // border
-        $this->_mockup->getImage()->imagerectangle( 
+        $this->_mockup->getImage()->imagerectangle(
             FaZend_Pan_Ui_Mockup::INDENT, $y, 
             FaZend_Pan_Ui_Mockup::INDENT + $width, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE*2, 
-            $this->_mockup->getImage()->getColor('mockup.button.border'));
+            $this->_mockup->getImage()->getColor('mockup.button.border')
+        );
 
         // text inside the field
-        $this->_mockup->getImage()->imagettftext(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+        $this->_mockup->getImage()->imagettftext(
+            FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
             FaZend_Pan_Ui_Mockup::INDENT + 3, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $txt);
+            $txt
+        );
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 3;
     }
@@ -62,7 +70,8 @@ class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         $button = $this->_htmlLink($this->header, '<span class="submit">' . $this->_parse($this->value). '</span>');
 
         if ($this->_alignedStyle)

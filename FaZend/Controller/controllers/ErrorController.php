@@ -101,14 +101,19 @@ class Fazend_ErrorController extends FaZend_Controller_Action
             FaZend_Email::create('fazendException.tmpl')
                 ->set('toEmail', FaZend_Properties::get()->errors->email)
                 ->set('toName', 'Admin of ' . $siteName)
-                ->set('subject', $siteName . ' internal PHP error, rev.' . 
+                ->set(
+                    'subject', 
+                    $siteName . ' internal PHP error, rev.' . 
                     FaZend_Revision::get() . 
-                    (isset($_SERVER['REQUEST_URI']) ? ', ' . $_SERVER['REQUEST_URI'] : false))
-                ->set('text', 
+                    (isset($_SERVER['REQUEST_URI']) ? ', ' . $_SERVER['REQUEST_URI'] : false)
+                )
+                ->set(
+                    'text', 
                     get_class($errors->exception) . ': ' . $errors->exception->getMessage() . "\n\n" .
                     implode("\n", $lines) . "\n\n" .
                     print_r($errors->request->getParams(), true) . "\n\n" .
-                    $errors->exception->getTraceAsString())
+                    $errors->exception->getTraceAsString()
+                )
                 ->set('errorCode', $errorCode)
                 ->send();
                 

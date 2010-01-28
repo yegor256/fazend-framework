@@ -66,7 +66,7 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
 
         // convert masked tags
         $masked = array();
-        foreach($tagsToMask as $tag) {
+        foreach ($tagsToMask as $tag) {
             $matches = array();
             preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match) {

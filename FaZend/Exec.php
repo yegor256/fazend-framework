@@ -251,7 +251,8 @@ class FaZend_Exec extends FaZend_StdObject
             $fileName = self::_fileName($id, $suffix);
             $files .= 
                 "{$suffix}: '{$fileName}': " . 
-                (file_exists($fileName) ? filesize($fileName) . 'bytes, ' . FaZend_Date::make(filemtime($fileName)) : 'no file') .
+                (file_exists($fileName) ? filesize($fileName) . 'bytes, ' . 
+                FaZend_Date::make(filemtime($fileName)) : 'no file') .
                 "\n";
         }
         

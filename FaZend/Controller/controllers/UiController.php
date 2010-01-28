@@ -19,21 +19,21 @@
  *
  * @package controllers
  */
-class Fazend_UiController extends FaZend_Controller_Panel {
+class Fazend_UiController extends FaZend_Controller_Panel
+{
 
     /**
      * Sanity check before dispatching
      *
      * @return void
      */
-    public function preDispatch() {
-        
+    public function preDispatch()
+    {
         // sanity check
         if (APPLICATION_ENV == 'production')
             $this->_redirectFlash('UI controller is not allowed in production environment', 'restrict', 'login');
         
         parent::preDispatch();
-
     }
 
     /**
@@ -41,8 +41,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         if ($this->_hasParam('id'))
             $script = $this->_getParam('id');
         else
@@ -65,10 +65,10 @@ class Fazend_UiController extends FaZend_Controller_Panel {
 
         $this->view->actors = '<ul>';
         foreach (FaZend_Pan_Ui_Navigation::getInstance()->getActors() as $a) {
-
             // this actor is NOT active
             if ($a != $actor) {
-                $a = '<a href="' . $this->view->url(array('action'=>'actor', 'id'=>$script . ':' . $a), 'ui', true, false) . 
+                $a = '<a href="' . 
+                    $this->view->url(array('action'=>'actor', 'id'=>$script . ':' . $a), 'ui', true, false) . 
                     '" title="Toggle to ' . $a . '\'s view point">' . $a . '</a>';
             }
 
@@ -76,7 +76,6 @@ class Fazend_UiController extends FaZend_Controller_Panel {
                 '"></li><li class="actor' . ($a == $actor ? ' active' : false) . '">' . $a . '</li>';
         }
         $this->view->actors .= '</ul>';
-
     }
 
     /**
@@ -84,12 +83,10 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function mockupAction() {
-
+    public function mockupAction()
+    {
         $mockup = new FaZend_Pan_Ui_Mockup($this->_getParam('id'));
-
         $this->_returnPNG($mockup->png());
-
     }
 
     /**
@@ -97,8 +94,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function actorAction() {
-
+    public function actorAction()
+    {
         list($script, $actor) = explode(':', $this->_getParam('id'));
 
         // this script should go to next Action
@@ -113,7 +110,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
             // first we try to find HOME, and then any other page
             $pages = array_merge(
                 FaZend_Pan_Ui_Navigation::getInstance()->discover()->findAllBy('class', 'home'),
-                FaZend_Pan_Ui_Navigation::getInstance()->discover()->findAllBy('type', 'action'));
+                FaZend_Pan_Ui_Navigation::getInstance()->discover()->findAllBy('type', 'action')
+            );
 
             // go through the list of pages trying to find one that is allowed for the given actor
             foreach ($pages as $page) {
@@ -125,14 +123,12 @@ class Fazend_UiController extends FaZend_Controller_Panel {
 
             if ($script)
                 $this->_setParam('id', $script);
-
         }
 
         if ($script)
             $this->_setActor($actor);
 
         $this->_forward('index');
-
     }
 
     /**
@@ -141,7 +137,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      * @param FaZend_Pan_Ui_Mockup
      * @return string
      */
-    protected function _getActor(FaZend_Pan_Ui_Mockup $mockup) {
+    protected function _getActor(FaZend_Pan_Ui_Mockup $mockup)
+    {
         $actor = $this->_getNamespace()->actor;
         if (!$actor)
             $actor = FaZend_Pan_Ui_Navigation::ANONYMOUS;
@@ -169,7 +166,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      * @param string Name of the actor
      * @return void
      */
-    protected function _setActor($actor) {
+    protected function _setActor($actor)
+    {
         $this->_getNamespace()->actor = $actor;
     }
 
@@ -178,7 +176,8 @@ class Fazend_UiController extends FaZend_Controller_Panel {
      *
      * @return Zend_Session_Namespace
      */
-    protected function _getNamespace() {
+    protected function _getNamespace()
+    {
         return new Zend_Session_Namespace('ui');
     }
 

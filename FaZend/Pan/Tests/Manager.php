@@ -20,7 +20,8 @@
  * @package Pan
  * @subpackage Tests
  */
-class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
+class FaZend_Pan_Tests_Manager extends FaZend_StdObject
+{
 
     /**
      * Instance of the class
@@ -41,7 +42,8 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
      *
      * @return FaZend_Test_Manager
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$_instance)) {
             self::$_instance = new FaZend_Pan_Tests_Manager();
         }
@@ -54,7 +56,8 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
      *
      * @return void
      */
-    protected function __construct() {
+    protected function __construct()
+    {
         $this->_location = realpath(APPLICATION_PATH . '/../../test');
     }
 
@@ -65,7 +68,8 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
      *
      * @return string[]
      */
-    public function getTests() {
+    public function getTests()
+    {
         return $this->_getTests();
     }
 
@@ -75,7 +79,8 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
      * @param string Name of the unit test file
      * @return FaZend_Pan_Tests_Runner
      */
-    public function factory($name) {
+    public function factory($name)
+    {
         return new FaZend_Pan_Tests_Runner($name);
     }
         
@@ -85,11 +90,10 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
      * @param string Directory name, after $this->_location
      * @return string[]
      */
-    public function _getTests($path = '.') {
-
+    public function _getTests($path = '.')
+    {
         $result = array();
         foreach (glob($this->_location . '/' . $path . '/*') as $file) {
-
             $matches = array();
             $filePath = $path . '/' . basename($file);
 
@@ -107,7 +111,6 @@ class FaZend_Pan_Tests_Manager extends FaZend_StdObject {
 
         // return the list of files, recursively
         return $result;
-
     }
 
 }

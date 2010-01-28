@@ -20,14 +20,16 @@
  * @package AnalysisModeller
  * @subpackage Diagram
  */
-class FaZend_Pan_Analysis_Diagram_Partof extends FaZend_Pan_Analysis_Diagram_Abstract {
+class FaZend_Pan_Analysis_Diagram_Partof extends FaZend_Pan_Analysis_Diagram_Abstract
+{
 
     /**
      * Get list of components to show on this diagram, besides the central component
      *
      * @return FaZend_Pan_Analysis_Component_Abstract[]
      */
-    public function getComponentsToShow() {
+    public function getComponentsToShow()
+    {
         $list = array();
         foreach ($this->_component as $component) {
             if (!($component instanceof FaZend_Pan_Analysis_Component_Class))
@@ -43,7 +45,8 @@ class FaZend_Pan_Analysis_Diagram_Partof extends FaZend_Pan_Analysis_Diagram_Abs
      * @param Zend_View Instance of view to use for rendering
      * @return string
      */
-    public function svg(Zend_View $view) {
+    public function svg(Zend_View $view)
+    {
         $svg = '';
         
         $centerX = 40;
@@ -63,14 +66,17 @@ class FaZend_Pan_Analysis_Diagram_Partof extends FaZend_Pan_Analysis_Diagram_Abs
                 $x = $centerX + $radius * sin(deg2rad($angle));
                 $y = $centerY + $radius * cos(deg2rad($angle));
                 
-                $svg .= FaZend_Pan_Analysis_Component_Abstract::makeSvg('line', array(
-                    'x1' => $centerX,
-                    'y1' => $centerY,
-                    'x2' => $x,
-                    'y2' => $y,
-                    'stroke' => '#' . FaZend_Image::UML_BORDER,
-                    'stroke-width' => FaZend_Pan_Analysis_Component::STROKE_WIDTH,
-                    ));
+                $svg .= FaZend_Pan_Analysis_Component_Abstract::makeSvg(
+                    'line', 
+                    array(
+                        'x1' => $centerX,
+                        'y1' => $centerY,
+                        'x2' => $x,
+                        'y2' => $y,
+                        'stroke' => '#' . FaZend_Image::UML_BORDER,
+                        'stroke-width' => FaZend_Pan_Analysis_Component::STROKE_WIDTH,
+                    )
+                );
                 
                 $svg .= $component->svg($view, 'partof', $x, $y);
                 $angle += $delta;

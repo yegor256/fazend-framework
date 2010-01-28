@@ -19,7 +19,8 @@
  *
  * @package Image
  */
-class FaZend_Image {
+class FaZend_Image
+{
 
     // brand colors of fazend, don't change them
 
@@ -56,7 +57,8 @@ class FaZend_Image {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -64,7 +66,8 @@ class FaZend_Image {
      *
      * @return void
      */
-    public function disableDrawing() {
+    public function disableDrawing()
+    {
         $this->_enabled = false;
     }
 
@@ -73,7 +76,8 @@ class FaZend_Image {
      *
      * @return void
      */
-    public function enableDrawing() {
+    public function enableDrawing()
+    {
         $this->_enabled = true;
     }
 
@@ -82,8 +86,8 @@ class FaZend_Image {
      *
      * @return void
      */
-    public function setDimensions($width, $height) {
-
+    public function setDimensions($width, $height)
+    {
         // create an image
         $this->_image = imagecreatetruecolor($width, $height);
         
@@ -97,10 +101,11 @@ class FaZend_Image {
         $label = imagecreatefrompng(FAZEND_PATH . '/Image/images/label.png');
 
         // put the label onto the image
-        $this->imagecopy($label, 
+        $this->imagecopy(
+            $label, 
             $width - imagesx($label) - 1, $height - imagesy($label) - 1, 
-            0, 0, imagesx($label), imagesy($label));
-
+            0, 0, imagesx($label), imagesy($label)
+        );
     }
 
     /**
@@ -109,13 +114,18 @@ class FaZend_Image {
      * @return void
      * @throws FaZend_Image_NoDimensionsSet
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (!$this->_enabled)
             return;
 
         // sanity check
-        if (!isset($this->_image))
-            FaZend_Exception::raise('FaZend_Image_NoDimensionsSet', 'First you should call FaZend_Image::setDimensions()');
+        if (!isset($this->_image)) {
+            FaZend_Exception::raise(
+                'FaZend_Image_NoDimensionsSet', 
+                'First you should call FaZend_Image::setDimensions()'
+            );
+        }
 
         array_unshift($args, $this->_image);
         
@@ -127,7 +137,8 @@ class FaZend_Image {
      *
      * @var string Binary PNG
      */
-    public function png() {
+    public function png()
+    {
         // return the PNG content
         ob_start();
         imagepng($this->_image);
@@ -172,7 +183,8 @@ class FaZend_Image {
      * @param string Mnemo code of the color
      * @return string
      */
-    public static function getCssColor($mnemo) {
+    public static function getCssColor($mnemo)
+    {
         if (!isset(self::$_colors[$mnemo]))
             $mnemo = 'error';
         return '#' . self::$_colors[$mnemo];
@@ -184,12 +196,14 @@ class FaZend_Image {
      * @param string Mnemo code of the color
      * @return int
      */
-    public function getColor($mnemo) {
+    public function getColor($mnemo)
+    {
         $color = self::getCssColor($mnemo);
-        return $this->imagecolorallocate( 
+        return $this->imagecolorallocate(
             hexdec('0x' . $color{1} . $color{2}), 
             hexdec('0x' . $color{3} . $color{4}), 
-            hexdec('0x' . $color{5} . $color{6}));
+            hexdec('0x' . $color{5} . $color{6})
+        );
     }
 
     /**
@@ -199,7 +213,8 @@ class FaZend_Image {
      * @var string
      * @todo Implement it properly
      */
-    public static function getFont($mnemo) {
+    public static function getFont($mnemo)
+    {
         return FAZEND_PATH . '/Image/fonts/arial.ttf';
     }
     
@@ -208,7 +223,8 @@ class FaZend_Image {
      *
      * @return array (width, height)
      **/
-    public static function getTextDimensions($text, $fontSize = 10, $fontMnemo = 'default') {
+    public static function getTextDimensions($text, $fontSize = 10, $fontMnemo = 'default')
+    {
         if (function_exists('imagettfbbox')) {
             $bbox = imagettfbbox($fontSize, 0, self::getFont($fontMnemo), $text);
             return array(abs($bbox[4]), abs($bbox[5]));

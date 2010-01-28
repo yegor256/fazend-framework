@@ -22,14 +22,16 @@ if (defined('APPLICATION_ENV') && APPLICATION_ENV !== 'production')
  *
  * @package Application
  */
-class FaZendErrorHandler {
+class FaZendErrorHandler
+{
     
     /**
      * undocumented function
      *
      * @return void
      **/
-    public static function handle($errno, $errstr, $errfile, $errline) {
+    public static function handle($errno, $errstr, $errfile, $errline)
+    {
         $errorType = array (
             E_ERROR             => 'ERROR',
             E_WARNING           => 'WARNING',
@@ -53,7 +55,6 @@ class FaZendErrorHandler {
         $message = "{$errorType[$errno]} {$errstr}, file: {$errfile} ({$errline})";
 
         echo $message . "\n";
-
     }
     
 }

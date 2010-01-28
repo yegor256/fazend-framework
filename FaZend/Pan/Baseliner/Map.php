@@ -169,8 +169,10 @@ class FaZend_Pan_Baseliner_Map
                 $callback = '->isExists()';
                 break;
             default:
-                FaZend_Exception::raise('FaZend_Pan_Baseliner_Map_InvalidTag',
-                    "Method '$method' is not applicable to a file");
+                FaZend_Exception::raise(
+                    'FaZend_Pan_Baseliner_Map_InvalidTag',
+                    "Method '$method' is not applicable to a file"
+                );
         }
         
         $this->_addRule(
@@ -200,8 +202,10 @@ class FaZend_Pan_Baseliner_Map
                 $callback = "->isInstanceOf($params[0])";
                 break;
             default:
-                FaZend_Exception::raise('FaZend_Pan_Baseliner_Map_InvalidTag',
-                    "Method '$method' is not applicable to a class");
+                FaZend_Exception::raise(
+                    'FaZend_Pan_Baseliner_Map_InvalidTag',
+                    "Method '$method' is not applicable to a class"
+                );
         }
         
         $this->_addRule(
@@ -228,8 +232,10 @@ class FaZend_Pan_Baseliner_Map
                 $callback = '->isExists()';
                 break;
             default:
-                FaZend_Exception::raise('FaZend_Pan_Baseliner_Map_InvalidTag',
-                    "Method '$method' is not applicable to a function");
+                FaZend_Exception::raise(
+                    'FaZend_Pan_Baseliner_Map_InvalidTag',
+                    "Method '$method' is not applicable to a function"
+                );
         }
         
         $this->_addRule(
@@ -256,8 +262,10 @@ class FaZend_Pan_Baseliner_Map
                 $callback = '->isExists()';
                 break;
             default:
-                FaZend_Exception::raise('FaZend_Pan_Baseliner_Map_InvalidTag',
-                    "Method '$method' is not applicable to a method");
+                FaZend_Exception::raise(
+                    'FaZend_Pan_Baseliner_Map_InvalidTag',
+                    "Method '$method' is not applicable to a method"
+                );
         }
         
         $this->_addRule(
@@ -281,7 +289,7 @@ class FaZend_Pan_Baseliner_Map
             'type' => $type,
             'constructor' => $constructor,
             'callback' => $callback,
-            );
+        );
     }
 
 }

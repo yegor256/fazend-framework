@@ -33,14 +33,16 @@ require_once 'FaZend/Controller/Action.php';
  *
  * @package controllers
  */
-class Fazend_UserController extends FaZend_Controller_Action {
+class Fazend_UserController extends FaZend_Controller_Action
+{
 
     /**
      * Register new account
      *
      * @return void
      */
-    public function registerAction() {
+    public function registerAction()
+    {
         if (FaZend_User::isLoggedIn())
             return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
@@ -70,9 +72,11 @@ class Fazend_UserController extends FaZend_Controller_Action {
         }    
 
         try {
-            
-            $user = FaZend_User::register($form->email->getValue(), $form->password->getValue(), $data);
-
+            $user = FaZend_User::register(
+                $form->email->getValue(), 
+                $form->password->getValue(), 
+                $data
+            );
         } catch (Zend_Db_Statement_Exception $e) {
 
             $form->email->addError("The user is already registered, try another email ({$e->getMessage()})");
@@ -95,7 +99,8 @@ class Fazend_UserController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function remindAction() {
+    public function remindAction()
+    {
         if (FaZend_User::isLoggedIn()) 
             return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
 
@@ -129,7 +134,8 @@ class Fazend_UserController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function logoutAction() {
+    public function logoutAction()
+    {
         if (!FaZend_User::isLoggedIn())
             return $this->_redirectFlash('You are not logged in yet', 'notfound', 'error');
 
@@ -144,7 +150,8 @@ class Fazend_UserController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function loginAction() {
+    public function loginAction()
+    {
         $form = FaZend_Form::create('Login', $this->view);
 
         $pwdLabel = $form->pwd->getLabel();
@@ -157,7 +164,6 @@ class Fazend_UserController extends FaZend_Controller_Action {
             return;
 
         try {
-
             $user = FaZend_User::findByEmail($form->email->getValue());
 
             if (!$user->isGoodPassword($form->pwd->getValue())) {
@@ -168,15 +174,15 @@ class Fazend_UserController extends FaZend_Controller_Action {
                 if (method_exists($this, 'loggedAction'))
                     $this->_helper->redirector->gotoSimple('logged');
             }
-
         } catch (FaZend_User_NotFoundException $e) {
-
             $form->email->addError('The user is not found');
-
         }
 
         if ($form->pwd->hasErrors() || $form->email->hasErrors()) {
-            $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}' title='remind password by email?'>remind?</a>)");
+            $form->pwd->setLabel(
+                $pwdLabel . 
+                "&#32;(<a href='{$remindUrl}' title='remind password by email?'>remind?</a>)"
+            );
         }
     }    
 

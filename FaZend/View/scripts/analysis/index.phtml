@@ -23,17 +23,22 @@
         <div class="path">
             <?php $sectors = explode(FaZend_Pan_Analysis_Diagram::SEPARATOR, $this->diagram->getName()); ?>
             <?php foreach (array_slice($sectors, 0, -1) as $i=>$sector): ?><a
-                href="<?php echo $this->url(array('diagram'=>
-                implode(FaZend_Pan_Analysis_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
-                FaZend_Pan_Analysis_Diagram::SEPARATOR . 
-                $sectors[count($sectors)-1]), 'analysis')?>"><?php echo $sector?></a
+                href="<?php 
+                echo $this->url(
+                    array(
+                        'diagram'=>
+                        implode(FaZend_Pan_Analysis_Diagram::SEPARATOR, array_slice($sectors, 0, $i+1)) . 
+                        FaZend_Pan_Analysis_Diagram::SEPARATOR . 
+                        $sectors[count($sectors)-1]
+                    ), 
+                    'analysis'
+                )?>"><?php echo $sector?></a
                 ><?php echo FaZend_Pan_Analysis_Diagram::SEPARATOR?><?php endforeach; 
                 ?><?php echo $sectors[count($sectors)-1]?>
         </div>
     </div>
 
     <div class="page">
-        
         <div class="types">
             <?php foreach (FaZend_Pan_Analysis_Diagram::getTypes() as $type): ?>
                 <div class="type">
@@ -42,7 +47,11 @@
                     <?php if ($this->diagram->getType() == $type): ?>
                         <b><?php echo $type?></b>
                     <?php else: ?>
-                        <a href="<?php echo $this->url(array('diagram'=>$this->diagram->getAnotherType($type)), 'analysis')?>"
+                        <a href="<?php 
+                        echo $this->url(
+                            array('diagram'=>$this->diagram->getAnotherType($type)), 
+                            'analysis'
+                        )?>"
                             ><?php echo $type?></a>
                     <?php endif; ?>
                 </div>
@@ -51,8 +60,11 @@
         
         <div class="components"><ul>
             <?php foreach ($this->diagram->getComponentsToShow() as $component): ?>    
-                <li><a href="<?php echo $this->url(array('diagram'=>$component->getDiagramName($this->diagram->getType())), 'analysis')?>"
-                    ><?php echo $component->getName()?></a></li>
+                <li><a href="<?php echo 
+                $this->url(
+                    array('diagram'=>$component->getDiagramName($this->diagram->getType())), 
+                    'analysis'
+                )?>"><?php echo $component->getName()?></a></li>
             <?php endforeach; ?>
         </ul></div>
 

@@ -20,21 +20,21 @@
  * @package Pan
  * @subpackage Analysis
  */
-class Fazend_AnalysisController extends FaZend_Controller_Panel {
+class Fazend_AnalysisController extends FaZend_Controller_Panel
+{
 
     /**
      * Sanity check before dispatching
      *
      * @return void
      */
-    public function preDispatch() {
-        
+    public function preDispatch()
+    {
         // sanity check
         if (APPLICATION_ENV == 'production')
             $this->_redirectFlash('Analysis controller is not allowed in production environment', 'restrict', 'login');
         
         parent::preDispatch();
-
     }
 
     /**
@@ -42,10 +42,9 @@ class Fazend_AnalysisController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function indexAction() {
-        
+    public function indexAction()
+    {
         $diagram = $this->view->diagram = FaZend_Pan_Analysis_Diagram::factory($this->_getParam('diagram'));
-
     }
     
     /**
@@ -53,8 +52,8 @@ class Fazend_AnalysisController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function svgAction() {
-
+    public function svgAction()
+    {
         $diagram = FaZend_Pan_Analysis_Diagram::factory($this->_getParam('diagram'));
         
         $this->_helper->layout->disableLayout();
@@ -64,7 +63,6 @@ class Fazend_AnalysisController extends FaZend_Controller_Panel {
             ->setHeader('Content-type', 'text/xml');
             
         $this->view->svg = $diagram->svg($this->view);
-
     }
     
 }

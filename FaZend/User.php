@@ -21,7 +21,7 @@
  *
  * @package User
  */
-class FaZend_User extends FaZend_Db_Table_ActiveRow_user 
+class FaZend_User extends FaZend_Db_Table_ActiveRow_user
 {
 
     /**
@@ -255,8 +255,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         return self::retrieve()
             ->where('email = ?', $email)
             ->setRowClass(self::$_rowClass)
-            ->fetchRow()
-            ;
+            ->fetchRow();
     }
 
     /**
@@ -268,7 +267,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     {
         if (!self::isLoggedIn())
             return false;
-        return self::getCurrentUser()->__id == $this->__id;
+        return strval(self::getCurrentUser()) === strval($this);
     }
         
     /**

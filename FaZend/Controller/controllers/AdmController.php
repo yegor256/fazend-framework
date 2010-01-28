@@ -159,7 +159,8 @@ class Fazend_AdmController extends FaZend_Controller_Panel
      *
      * @return void
      */
-    public function posAction() {
+    public function posAction()
+    {
         if (!FaZend_Pos_Root::exists())
             return $this->_redirectFlash('POS does not exist', 'index');
             

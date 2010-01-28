@@ -19,7 +19,8 @@
  *
  * @package controllers
  */
-class Fazend_LoginController extends FaZend_Controller_Action {
+class Fazend_LoginController extends FaZend_Controller_Action
+{
 
     /**
      * Session cache
@@ -31,8 +32,8 @@ class Fazend_LoginController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function loginAction() {
-
+    public function loginAction()
+    {
         $form = $this->view->form = new FaZend_Form();
         
         $email = new Zend_Form_Element_Text('email');
@@ -58,7 +59,6 @@ class Fazend_LoginController extends FaZend_Controller_Action {
         }
         
         return $this->_helper->redirector->gotoSimple('index', 'adm', 'fazend');
-
     }
 
     /**
@@ -66,7 +66,8 @@ class Fazend_LoginController extends FaZend_Controller_Action {
      *
      * @return void
      */
-    public function restrictAction() {
+    public function restrictAction()
+    {
     }
 
     /**
@@ -74,7 +75,8 @@ class Fazend_LoginController extends FaZend_Controller_Action {
      *
      * @return boolean
      **/
-    public static function isLoggedIn() {
+    public static function isLoggedIn()
+    {
         return !empty(self::_session()->user);
     }
 
@@ -88,10 +90,15 @@ class Fazend_LoginController extends FaZend_Controller_Action {
      * @return boolean
      * @throws LoginException If fails
      **/
-    public static function logIn($email, $password) {
+    public static function logIn($email, $password)
+    {
         $accessFile = APPLICATION_PATH . '/deploy/access.txt';
-        if (!@file_exists($accessFile))
-            FaZend_Exception::raise('LoginException', "Access control file is absent, refer to admin");
+        if (!@file_exists($accessFile)) {
+            FaZend_Exception::raise(
+                'LoginException', 
+                "Access control file is absent, refer to admin"
+            );
+        }
      
         $count = 0;
         $lines = @file($accessFile);
@@ -108,15 +115,22 @@ class Fazend_LoginController extends FaZend_Controller_Action {
                 continue;
                     
             // wrong password?
-            if ($matches[2] != md5($password))
-                FaZend_Exception::raise('LoginException', "Wrong password (" . str_repeat('*', strlen($password)) . "), try again");
+            if ($matches[2] != md5($password)) {
+                FaZend_Exception::raise(
+                    'LoginException', 
+                    "Wrong password (" . str_repeat('*', strlen($password)) . "), try again"
+                );
+            }
 
             // everything is fine, we should log him in
             self::_session()->user = $email;
             return true;
         }
 
-        FaZend_Exception::raise('LoginException', "The email is not found in ACL ($count)");
+        FaZend_Exception::raise(
+            'LoginException', 
+            "The email is not found in ACL ($count)"
+        );
     }
 
     /**
@@ -124,7 +138,8 @@ class Fazend_LoginController extends FaZend_Controller_Action {
      *
      * @return Zend_Session_Namespace
      **/
-    protected static function _session() {
+    protected static function _session()
+    {
         if (!isset(self::$_session))
             self::$_session = new Zend_Session_Namespace('fz');
         return self::$_session;

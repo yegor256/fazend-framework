@@ -21,19 +21,19 @@ require_once 'FaZend/Controller/Action.php';
  * 
  * @package controllers
  */
-class Fazend_RobotsController extends FaZend_Controller_Action {
+class Fazend_RobotsController extends FaZend_Controller_Action
+{
 
     /**
      * Show the file
      *
      * @return void
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         $this->getResponse()->setHeader('Content-type', 'text/plain');
         $this->_helper->layout->disableLayout();
         $this->view->setFilter(null);
-
     }
 
 }

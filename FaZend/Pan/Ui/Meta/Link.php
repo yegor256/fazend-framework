@@ -20,31 +20,37 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     /**
      * Draw 
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $txt = $this->_parse($this->label);
 
         list($textWidth, ) = FaZend_Image::getTextDimensions(
             $txt,
             FaZend_Pan_Ui_Meta_Text::FONT_SIZE,
-            $this->_mockup->getImage()->getFont('mockup.content'));
+            $this->_mockup->getImage()->getFont('mockup.content')
+        );
 
-        $this->_mockup->getImage()->imagettftext(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+        $this->_mockup->getImage()->imagettftext(
+            FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
             FaZend_Pan_Ui_Mockup::INDENT, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.link'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $txt);
+            $txt
+        );
 
         $this->_mockup->getImage()->imageline(
             FaZend_Pan_Ui_Mockup::INDENT, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE + 1, 
             FaZend_Pan_Ui_Mockup::INDENT + $textWidth, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE + 1, 
-            $this->_mockup->getImage()->getColor('mockup.link'));
+            $this->_mockup->getImage()->getColor('mockup.link')
+        );
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
     }
@@ -54,7 +60,8 @@ class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         return '<p>' . $this->_htmlLink($this->destination, $this->_parse($this->label)) . '</p>';
     }
 

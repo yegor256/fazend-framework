@@ -21,22 +21,22 @@ require_once 'FaZend/Controller/Action.php';
  * 
  * @package controllers
  */
-class Fazend_SqueezeController extends FaZend_Controller_Action {
+class Fazend_SqueezeController extends FaZend_Controller_Action
+{
 
     /**
      * Show the holder of all squeezed images
      *
      * @return void
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         $file = $this->view->squeezePNG()->getImagePath();
             if (!file_exists($file))
             return $this->_redirectFlash("file [{$file}] is not found");
 
         // return PNG as static (!) image    
         $this->_returnPNG(file_get_contents($file), false);
-
     }
 
 }

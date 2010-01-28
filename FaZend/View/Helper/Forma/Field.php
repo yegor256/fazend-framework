@@ -269,15 +269,26 @@ abstract class FaZend_View_Helper_Forma_Field
         $element->setDecorators(array())
             ->addDecorator('ViewHelper')
             ->addDecorator('Errors')
-            ->addDecorator('HtmlTag', array(
-                'tag'=>'dd'));
+            ->addDecorator(
+                'HtmlTag', 
+                array(
+                    'tag'=>'dd'
+                )
+            );
 
         if (isset($this->_label)) {
-            $element->setLabel($this->_label .
-                ($this->_required ? "<span style='color:red;'>*</span>" : false) . ':')
-                ->addDecorator('Label', array(
-                    //'tag'=>'dt',
-                    'escape'=>false));
+            $element
+                ->setLabel(
+                    $this->_label .
+                    ($this->_required ? "<span style='color:red;'>*</span>" : false) . ':'
+                )
+                ->addDecorator(
+                    'Label', 
+                    array(
+                        //'tag'=>'dt',
+                        'escape'=>false
+                    )
+                );
         }
 
         if (isset($this->_value))

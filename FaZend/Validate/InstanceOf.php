@@ -19,7 +19,8 @@
  *
  * @package Validate
  */
-class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
+class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract
+{
 
     const INVALID = 'invalid';
 
@@ -50,7 +51,8 @@ class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
      * @param  string Name of the parent class/iface
      * @return void
      */
-    public function __construct($parent) {
+    public function __construct($parent)
+    {
         $this->setParent($parent);
     }
 
@@ -59,7 +61,8 @@ class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
      *
      * @return string
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->_parent;
     }
 
@@ -69,7 +72,8 @@ class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
      * @param  string The parent
      * @return Zend_Validate_Regex Provides a fluent interface
      */
-    public function setParent($parent) {
+    public function setParent($parent)
+    {
         $this->_parent = (string) $parent;
         return $this;
     }
@@ -82,7 +86,8 @@ class FaZend_Validate_InstanceOf extends Zend_Validate_Abstract {
      * @param  string $value
      * @return boolean
      */
-    public function isValid($value) {
+    public function isValid($value)
+    {
         if (!($value instanceof $this->_parent)) {
             $this->_error(self::INVALID);
             return false;

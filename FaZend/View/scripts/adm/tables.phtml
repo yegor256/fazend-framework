@@ -42,11 +42,12 @@
         <p style="color: red;">If you want to customize this view, 
         just create [<tt><?php echo $customScript?></tt>] file in your view scripts directory.</p>
 
-    <?php } ?>
+    <?php 
+    }
 
-    <?php echo $this->htmlTable()
+        echo $this->htmlTable()
         ->setPaginator($this->paginator)?>
 
     <p><?php echo $this->paginator?></p>
 
-<?php endif; ?>
+<?php endif;

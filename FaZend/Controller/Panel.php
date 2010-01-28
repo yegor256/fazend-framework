@@ -22,7 +22,8 @@ require_once 'FaZend/Controller/controllers/LoginController.php';
  *
  * @package Controller
  */
-class FaZend_Controller_Panel extends FaZend_Controller_Action {
+class FaZend_Controller_Panel extends FaZend_Controller_Action
+{
 
     /**
      * Change the layout and process authentication
@@ -30,8 +31,8 @@ class FaZend_Controller_Panel extends FaZend_Controller_Action {
      * @link http://framework.zend.com/manual/en/zend.auth.adapter.http.html
      * @return void
      */
-    public function preDispatch() {
-
+    public function preDispatch()
+    {
         // no login in testing/development environment
         if ((APPLICATION_ENV === 'production') && !Fazend_LoginController::isLoggedIn())
             return $this->_forward('login', 'login', 'fazend');
@@ -40,7 +41,6 @@ class FaZend_Controller_Panel extends FaZend_Controller_Action {
         $layout = Zend_Layout::getMvcInstance();
         $layout->setViewScriptPath(FAZEND_PATH . '/View/layouts/scripts');
         $layout->setLayout('panel');
-
     }
     
 }

@@ -96,7 +96,10 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      */
     protected function _getOptions($preg = '//')
     {
-        return array_intersect_key($this->_options, array_flip(preg_grep($preg, array_keys($this->_options))));
+        return array_intersect_key(
+            $this->_options, 
+            array_flip(preg_grep($preg, array_keys($this->_options)))
+        );
     }
 
     /**
@@ -109,7 +112,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         list($width, ) = FaZend_Image::getTextDimensions(
             str_repeat("test\n", 10),
             $fontSize, 
-            $fontFile);
+            $fontFile
+        );
         return $width/10;
     }
 
@@ -134,38 +138,51 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                 switch ($matches[1][$id]) {
                     // random name of a person
                     case 'name':
-                        $replacer = array_rand(array_flip(array(
-                            'John Smith',
-                            'Angela Johnson',
-                            'Pamela Peterson',
-                            'Vincenze Scavolini',
-                            'Manuela Orlando',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'John Smith',
+                                    'Angela Johnson',
+                                    'Pamela Peterson',
+                                    'Vincenze Scavolini',
+                                    'Manuela Orlando',
+                                )
+                            )
+                        );
                         break;
                         
                     // random label (title, name of something, etc.)
                     case 'label':
-                        $replacer = array_rand(array_flip(array(
-                            'Alpha Green',
-                            'Mega Star',
-                            'World Extra',
-                            'Edwards Universe',
-                            'Ultra Senior',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'Alpha Green',
+                                    'Mega Star',
+                                    'World Extra',
+                                    'Edwards Universe',
+                                    'Ultra Senior',
+                                )
+                            )
+                        );
                         break;
 
                     // random email address
                     case 'email':
-                        $replacer = array_rand(array_flip(array('john', 'pam', 'n', 't'))) . rand(100, 999) . '@example.com';
+                        $replacer = array_rand(array_flip(array('john', 'pam', 'n', 't'))) . 
+                        rand(100, 999) . '@example.com';
                         break;
                         
                     // name of the company
                     case 'company':
-                        $replacer = array_rand(array_flip(array(
-                            'John & John Ltd.',
-                            'Vittorio Brothers Inc.',
-                            'William & Sons, Co.',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'John & John Ltd.',
+                                    'Vittorio Brothers Inc.',
+                                    'William & Sons, Co.',
+                                )
+                            )
+                        );
                         break;
                         
                     // date in the past
@@ -181,73 +198,117 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
                         
                     // country name
                     case 'country':
-                        $replacer = array_rand(array_flip(array(
-                            'United States',
-                            'Germany',
-                            'Canada',
-                            'Switzerland',
-                            'Russian Federation',
-                            'Japan',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'United States',
+                                    'Germany',
+                                    'Canada',
+                                    'Switzerland',
+                                    'Russian Federation',
+                                    'Japan',
+                                )
+                            )
+                        );
                         break;
 
                     // random city name
                     case 'city':
-                        $replacer = array_rand(array_flip(array(
-                            'New York', 'San Francisco', 'Milan', 'Munich', 'Berlin', 'Toronto', 'Tokyo'
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'New York', 
+                                    'San Francisco', 
+                                    'Milan', 
+                                    'Munich', 
+                                    'Berlin', 
+                                    'Toronto', 
+                                    'Tokyo'
+                                )
+                            )
+                        );
                         break;
 
                     // random address
                     case 'address':
-                        $replacer = array_rand(array_flip(array(
-                            rand(1, 9) . 'th Street, ' . rand(10, 99),
-                            rand(10, 99) . '/' . rand(1, 9) . ' Via Giuseppe Mercalli',
-                            rand(10, 99) . ', ft.' . rand(1, 9) . ', ' . rand(1, 9) . 'th Avenue',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    rand(1, 9) . 'th Street, ' . rand(10, 99),
+                                    rand(10, 99) . '/' . rand(1, 9) . ' Via Giuseppe Mercalli',
+                                    rand(10, 99) . ', ft.' . rand(1, 9) . ', ' . rand(1, 9) . 'th Avenue',
+                                )
+                            )
+                        );
                         break;
 
                     // random currency
                     // @todo replace it with Zend_Locale call
                     case 'currency':
-                        $replacer = array_rand(array_flip(array('USD', 'EUR', 'GBP', 'CHF')));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'USD', 
+                                    'EUR', 
+                                    'GBP', 
+                                    'CHF'
+                                )
+                            )
+                        );
                         break;
 
                     // random phone name
                     case 'phone':
-                        $replacer = array_rand(array_flip(array(
-                            '(' . rand(100, 999) . ') ' . rand(100, 999) . '-' . rand(1000, 9999),
-                            '+' . rand(10, 99) . ' ' . rand(100, 999) . rand(100, 999) . '-' . rand(1000, 9999),
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    '(' . rand(100, 999) . ') ' . rand(100, 999) . '-' . rand(1000, 9999),
+                                    '+' . rand(10, 99) . ' ' . rand(100, 999) . rand(100, 999) . '-' . rand(1000, 9999),
+                                )
+                            )
+                        );
                         break;
 
                     // random ZIP code
                     case 'zip':
-                        $replacer = array_rand(array_flip(array(
-                            rand(10000, 99999),
-                            'SR' . rand(100, 999) . ' ' . rand(10, 99), 
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    rand(10000, 99999),
+                                    'SR' . rand(100, 999) . ' ' . rand(10, 99), 
+                                )
+                            )
+                        );
                         break;
 
                     // random SWIFT code
                     case 'swift':
-                        $replacer = array_rand(array_flip(array(
-                            'NYABABAB'
-                            )));
+                        $replacer = array_rand(array_flip(array('NYABABAB')));
                         break;
 
                     // random bank name
                     case 'bank':
-                        $replacer = array_rand(array_flip(array(
-                            'Bank Of New York', 'Bank Of America', 'ING', 'Bank Of Cyprus',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'Bank Of New York', 
+                                    'Bank Of America', 
+                                    'ING', 
+                                    'Bank Of Cyprus',
+                                )
+                            )
+                        );
                         break;
 
                     // random IBAN code
                     case 'iban':
-                        $replacer = array_rand(array_flip(array(
-                            'NY' . rand(10, 99) . 'ABCD' . rand(10000, 99999) . ' 0000000' . '12345678901',
-                            )));
+                        $replacer = array_rand(
+                            array_flip(
+                                array(
+                                    'NY' . rand(10, 99) . 'ABCD' . rand(10000, 99999) . ' 0000000' . '12345678901',
+                                )
+                            )
+                        );
                         break;
                         
                     default:
@@ -290,7 +351,8 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
             if (preg_match('/([^%]%[^%0-9sdf])/', $txt, $matches)) {
                 FaZend_Exception::raise(
                     'FaZend_Pan_Ui_Meta_InvalidMeta',
-                    "All '%' symbols should be escaped, as for sprintf() in '{$this->_mockup->getScript()}': '{$txt}' ({$matches[1]})"
+                    "All '%' symbols should be escaped, as for sprintf() in " . 
+                    "'{$this->_mockup->getScript()}': '{$txt}' ({$matches[1]})"
                 );
             }
 
@@ -316,9 +378,11 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         if (!FaZend_Pan_Ui_Navigation::getInstance()->getAcl()->has($script))
             return '<span class="broken" title="Script ' . $script . ' is absent">' . $label . '</span>';
 
-        return '<a href="' . $this->_mockup->getView()->url(array('action'=>'index', 'id'=>$script), 'ui', true, false). 
-            '" title="' . $script . '">' . 
-            $label. '</a>';
+        return 
+        '<a href="' . 
+        $this->_mockup->getView()->url(array('action'=>'index', 'id'=>$script), 'ui', true, false) . 
+        '" title="' . $script . '">' . 
+        $label. '</a>';
     }
 
 }

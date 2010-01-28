@@ -20,21 +20,26 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Actor extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Actor extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     /**
      * Draw 
      *
      * @return int Height
      */
-    public function draw($y) {}
+    public function draw($y)
+    {
+        // ...
+    }
 
     /**
      * Convert to HTML
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         return '';
     }
 

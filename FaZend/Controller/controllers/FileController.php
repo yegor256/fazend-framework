@@ -21,14 +21,16 @@ require_once 'FaZend/Controller/Action.php';
  *
  * @package controllers
  */
-class Fazend_FileController extends FaZend_Controller_Action {
+class Fazend_FileController extends FaZend_Controller_Action
+{
 
     /**
      * Show one file
      * 
      * @return void
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 

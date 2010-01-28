@@ -19,7 +19,8 @@
  *
  * @package Validate
  */
-class FaZend_Validate_Type extends Zend_Validate_Abstract {
+class FaZend_Validate_Type extends Zend_Validate_Abstract
+{
 
     const INVALID = 'invalid';
     const WRONG_TYPE = 'wrongType';
@@ -52,7 +53,8 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @param  string Name of the type class/iface
      * @return void
      */
-    public function __construct($type) {
+    public function __construct($type)
+    {
         $this->setType($type);
     }
 
@@ -61,7 +63,8 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      *
      * @return string
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->_type;
     }
 
@@ -71,7 +74,8 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @param  string The type
      * @return Zend_Validate_Regex Provides a fluent interface
      */
-    public function setType($type) {
+    public function setType($type)
+    {
         $this->_type = (string) $type;
         return $this;
     }
@@ -91,7 +95,8 @@ class FaZend_Validate_Type extends Zend_Validate_Abstract {
      * @param mixed $value
      * @return boolean
      */
-    public function isValid($value) {
+    public function isValid($value)
+    {
         switch (strtolower($this->_type)) {
             
             case 'array':

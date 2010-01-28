@@ -44,11 +44,16 @@ defined('ZEND_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-set_include_path(implode(PATH_SEPARATOR, array(
-    realpath(APPLICATION_PATH . '/../library'),
-    realpath(FAZEND_PATH . '/..'),
-    get_include_path(),
-)));
+set_include_path(
+    implode(
+        PATH_SEPARATOR, 
+        array(
+            realpath(APPLICATION_PATH . '/../library'),
+            realpath(FAZEND_PATH . '/..'),
+            get_include_path(),
+        )
+    )
+);
 
 // small simple and nice PHP functions
 require_once 'FaZend/Application/functions.php';
@@ -76,8 +81,16 @@ $application->bootstrap();
 
 // you can redefine it later, if you wish
 // now we define the site URL, without the leading WWW
-if (!defined('WEBSITE_URL'))
-    define('WEBSITE_URL', 'http://' . preg_replace('/^www\./i', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'));
+if (!defined('WEBSITE_URL')) {
+    define(
+        'WEBSITE_URL', 
+        'http://' . preg_replace(
+            '/^www\./i', 
+            '', 
+            isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'
+        )
+    );
+}  
 
 // this flag could disable application execution
 if (!defined('FAZEND_DONT_RUN')) {

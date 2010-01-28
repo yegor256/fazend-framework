@@ -44,8 +44,10 @@ class BaselineTest extends FaZend_Test_TestCase
                 
             $map = new FaZend_Pan_Baseliner_Map(APPLICATION_PATH, $path);
             $map->load($path);
-            $this->assertTrue($validator->validate($map), 
-                "Validation failed for {$file}");
+            $this->assertTrue(
+                $validator->validate($map), 
+                "Validation failed for {$file}"
+            );
         }
     }
 

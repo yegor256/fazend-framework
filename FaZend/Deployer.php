@@ -47,14 +47,18 @@ class FaZend_Deployer
      *
      * @param Zend_Config Configuration parameters
      * @return void
+     * @throws FaZend_Deployer_InvalidConfig
      */
     public static function getInstance(Zend_Config $config = null) 
     {
         if (!isset(self::$_instance)) {
-            if (is_null($config))
-                FaZend_Exception::raise('FaZend_Deployer_InvalidConfig', 
+            if (is_null($config)) {
+                FaZend_Exception::raise(
+                    'FaZend_Deployer_InvalidConfig', 
                     "First time getInstance() should be called with valid config",
-                    self::EXCEPTION_CLASS);
+                    self::EXCEPTION_CLASS
+                );
+            }
 
             self::$_instance = new FaZend_Deployer($config);
         }
@@ -109,7 +113,10 @@ class FaZend_Deployer
 
             try {
                 // get full list of existing(!) tables in Db
-                $tables = array_map(create_function('$a', 'return strtolower($a);'), $this->_db()->listTables());
+                $tables = array_map(
+                    create_function('$a', 'return strtolower($a);'), 
+                    $this->_db()->listTables()
+                );
             
                 // get full list of files
                 $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
@@ -137,8 +144,11 @@ class FaZend_Deployer
                     FaZend_Email::create('fazendDeployerException.tmpl')
                         ->set('toEmail', FaZend_Properties::get()->errors->email)
                         ->set('toName', 'admin')
-                        ->set('subject', parse_url(WEBSITE_URL, PHP_URL_HOST) . 
-                            ' database deployment exception, rev.' . FaZend_Revision::get())
+                        ->set(
+                            'subject', 
+                            parse_url(WEBSITE_URL, PHP_URL_HOST) . 
+                            ' database deployment exception, rev.' . FaZend_Revision::get()
+                        )
                         ->set('text', $exception->getMessage())
                         ->send()
                         ->logError();
@@ -185,6 +195,7 @@ class FaZend_Deployer
      *
      * @param string Name of the table
      * @return array[]
+     * @throws FaZend_Deployer_SqlFileNotFound
      */
     public function getTableInfo($table) 
     {
@@ -196,8 +207,10 @@ class FaZend_Deployer
                     return $this->_sqlInfo(file_get_contents($dir . '/' . $file));
         }
 
-        FaZend_Exception::raise('FaZend_Deployer_SqlFileNotFound', 
-            "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS);
+        FaZend_Exception::raise(
+            'FaZend_Deployer_SqlFileNotFound', 
+            "File '<num> {$table}.sql' not found in '{$dir}'", self::EXCEPTION_CLASS
+        );
     }
 
     /**
@@ -299,12 +312,16 @@ class FaZend_Deployer
      */
     protected function _sqlInfo($sql) 
     {
-        $sql = preg_replace(array(
-            '/\-\-.*?\n/', // kill comments
-            '/[\n\t\r]/', // no special chars
-            '/\s+/', // compress spaces
-            '/`/', // remove backticks
-            ), ' ', $sql . "\n");
+        $sql = preg_replace(
+            array(
+                '/\-\-.*?\n/', // kill comments
+                '/[\n\t\r]/', // no special chars
+                '/\s+/', // compress spaces
+                '/`/', // remove backticks
+            ), 
+            ' ', 
+            $sql . "\n"
+        );
 
         // no double spaces
         $sql = trim($sql);
@@ -313,7 +330,8 @@ class FaZend_Deployer
         if (!preg_match('/^create (?:table|view)?/i', $sql))
             FaZend_Exception::raise(
                 'FaZend_Deployer_WrongFormat', 
-                "Every SQL file should start with 'create table' or 'create view', we get this: '" . cutLongLine($sql, 50) . "'",
+                "Every SQL file should start with 'create table' or 'create view', ".
+                "we get this: '" . cutLongLine($sql, 50) . "'",
                 self::EXCEPTION_CLASS
             );
 
@@ -326,7 +344,11 @@ class FaZend_Deployer
         $columnsText = trim(substr($columnsText, 0, strrpos($columnsText, ')'))) . ', ';
 
         $matches = array();
-        preg_match_all('/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s[\"\'](.*?)[\'\"])?\,/i', $columnsText, $matches);
+        preg_match_all(
+            '/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s[\"\'](.*?)[\'\"])?\,/i', 
+            $columnsText, 
+            $matches
+        );
 
         $info = array();
         foreach ($matches[0] as $id=>$column) {
@@ -342,7 +364,11 @@ class FaZend_Deployer
             }
 
             // process foreign keys
-            if (preg_match('/^(?:constraint\s.*?\s)?foreign\skey\s\(\s?(.*?)\s?\)\sreferences\s(.*?)\s\(\s?(.*?)\s?\)\s(.*)/i', $column, $key)) {
+            if (preg_match(
+                '/^(?:constraint\s.*?\s)?foreign\skey\s\(\s?(.*?)\s?\)\sreferences\s(.*?)\s\(\s?(.*?)\s?\)\s(.*)/i', 
+                $column, 
+                $key
+            )) {
                 $info[$key[1]]['FK'] = 1;
                 $info[$key[1]]['FK_TABLE'] = trim($key[2]);
                 $info[$key[1]]['FK_COLUMN'] = trim($key[3]);
@@ -405,14 +431,16 @@ class FaZend_Deployer
      */
     protected function _clearSql($file) 
     {
-        return trim(preg_replace(
-            array(
-                '/\-\-.*/',
-                '/[\n\r\t]/'
-            ), 
-            ' ', // replace with spaces
-            "\n" . file_get_contents($file)
-        ));
+        return trim(
+            preg_replace(
+                array(
+                    '/\-\-.*/',
+                    '/[\n\r\t]/'
+                ), 
+                ' ', // replace with spaces
+                "\n" . file_get_contents($file)
+            )
+        );
     }
 
 }

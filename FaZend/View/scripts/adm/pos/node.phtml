@@ -13,9 +13,15 @@
 
 <li>
 <b><?php echo $this->label?></b> 
-    <a href="<?php echo $this->url(array(
-        'action'=>'pos', 
-        'object'=>$this->node->ps()->id), 'adm', true)?>">v<?php echo $this->node->ps()->version?></a>: 
+    <a href="<?php 
+    echo $this->url(
+        array(
+            'action'=>'pos', 
+            'object'=>$this->node->ps()->id
+        ), 
+        'adm', 
+        true
+    )?>">v<?php echo $this->node->ps()->version?></a>: 
     <?php echo $this->node->ps()->type?>
 
 <ul>
@@ -26,9 +32,14 @@
         <?php $label = $name ?>
     <?php endif; ?>
     <?php if ($this->node->$name instanceof FaZend_Pos_Abstract): ?>
-        <?php echo $this->partial('adm/pos/node.phtml', array(
-            'node' => $this->node->$name,
-            'label' => $label))?>    
+        <?php 
+        echo $this->partial(
+            'adm/pos/node.phtml', 
+            array(
+                'node' => $this->node->$name,
+                'label' => $label
+            )
+        )?>    
     <?php elseif (is_scalar($this->node->$name)): ?>
         <li><?php echo $label?>: <?php echo $this->node->$name?></li>
     <?php else: ?>

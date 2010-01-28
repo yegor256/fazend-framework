@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-abstract class FaZend_Pan_Ui_Meta_FormElement extends FaZend_Pan_Ui_Meta_Abstract {
+abstract class FaZend_Pan_Ui_Meta_FormElement extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     /**
      * Field is visible in TWO columns (name of field, field)
@@ -34,7 +35,8 @@ abstract class FaZend_Pan_Ui_Meta_FormElement extends FaZend_Pan_Ui_Meta_Abstrac
      *
      * @return this
      */
-    public function setAlignedStyle($style = true) {
+    public function setAlignedStyle($style = true)
+    {
         $this->_alignedStyle = $style;
         return $this;
     }

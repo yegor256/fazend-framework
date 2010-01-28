@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     const FONT_SIZE = 14;
 
@@ -29,22 +30,29 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $txt = $this->_parse($this->label);
 
         // get dimensions
         list($textWidth, ) = FaZend_Image::getTextDimensions(
             $txt,
             self::FONT_SIZE,
-            $this->_mockup->getImage()->getFont('mockup.content'));
+            $this->_mockup->getImage()->getFont('mockup.content')
+        );
 
         $scale = $textWidth/(FaZend_Pan_Ui_Mockup::WIDTH - FaZend_Pan_Ui_Mockup::INDENT*2);
         $txt = wordwrap($txt, strlen($txt) / $scale);
 
-        $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_Pan_Ui_Mockup::INDENT, $y + self::FONT_SIZE, 
+        $this->_mockup->getImage()->imagettftext(
+            self::FONT_SIZE, 
+            0, 
+            FaZend_Pan_Ui_Mockup::INDENT, 
+            $y + self::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $txt);
+            $txt
+        );
 
         return (substr_count($txt, "\n") + 1) * self::FONT_SIZE * 1.6 + self::FONT_SIZE;
     }
@@ -54,8 +62,10 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
-        return '<p' . ($this->bold ? ' style="font-weight:bold;"' : false) . '>' . nl2br($this->_parse($this->label)) . '</p>';
+    public function html()
+    {
+        return '<p' . ($this->bold ? ' style="font-weight:bold;"' : false) . '>' . 
+        nl2br($this->_parse($this->label)) . '</p>';
     }
 
 }

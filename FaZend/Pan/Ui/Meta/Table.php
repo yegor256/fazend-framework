@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     const FONT_SIZE = 12; // font size to use
 
@@ -31,8 +32,10 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
-        $html = '<p><div style="display: inline-block; background:' . FaZend_Image::getCssColor ('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
+    public function html()
+    {
+        $html = '<p><div style="display: inline-block; background:' . 
+        FaZend_Image::getCssColor('mockup.table.grid') . ';"><table cellpadding="0" cellspacing="1">';
 
         $columns = $this->_getOptions('/^column.*/');
         $options = $this->_getOptions('/^option.*/');
@@ -79,7 +82,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
 
         $html .= '</table></div>';
 
-        if($this->paginator) {
+        if ($this->paginator) {
             $html .= '<br/><span style="cursor:pointer;" title="Pages">' . self::PAGINATOR . '</span>';
         }
         
@@ -93,7 +96,8 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return int Height
      */
-    public function draw($top) {
+    public function draw($top)
+    {
         // calculate the height of one line of text
         $lineHeight = $this->_getLineHeight(self::FONT_SIZE, $this->_mockup->getImage()->getFont('mockup.content'));
 
@@ -116,26 +120,35 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
 
             // filled header
             $this->_mockup->getImage()->imagefilledrectangle(
-                $details['x'] - 2, $y, 
-                $details['x'] + $details['widthPixels'] - 2, $y + $lineHeight, 
-                $this->_mockup->getImage()->getColor('mockup.table.header.background')); 
+                $details['x'] - 2, 
+                $y, 
+                $details['x'] + $details['widthPixels'] - 2, 
+                $y + $lineHeight, 
+                $this->_mockup->getImage()->getColor('mockup.table.header.background')
+            ); 
 
             $txt = $this->_parse($details['title']);
-            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, 
+            $this->_mockup->getImage()->imagettftext(
+                self::FONT_SIZE, 0, 
                 $details['x'], 
                 $y + $lineHeight - 3, // because (x,y) in text is at the left-bottom corner
                 $this->_mockup->getImage()->getColor('mockup.table.header'), 
                 $this->_mockup->getImage()->getFont('mockup.content'), 
-                $txt);
+                $txt
+            );
         }
 
         $y += $lineHeight;
 
         for ($i=0; $i<=$this->totalLines; $i++) {
-
             // horizontal line
-            $this->_mockup->getImage()->imageline($leftMargin, $y,
-                $rightMargin, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
+            $this->_mockup->getImage()->imageline(
+                $leftMargin, 
+                $y,
+                $rightMargin, 
+                $y, 
+                $this->_mockup->getImage()->getColor('mockup.table.grid')
+            ); 
 
             // just draw the bottom horizontal line
             if ($i == $this->totalLines)
@@ -143,20 +156,28 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
 
             $height = 1; 
             foreach ($columns as $details) {
-
                 $txt = $this->_parse($details['mask']);
 
-                $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->_mockup->getImage()->getFont('mockup.content'), $txt);
+                // @todo we should replace it!
+                $bbox = imagettfbbox(
+                    self::FONT_SIZE, 
+                    0, 
+                    $this->_mockup->getImage()->getFont('mockup.content'), 
+                    $txt
+                );
 
                 $scale = 1.1 * $bbox[4]/$details['widthPixels'];
                 $txt = wordwrap($txt, strlen($txt) / $scale, "\n", true);
 
-                $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, 
+                $this->_mockup->getImage()->imagettftext(
+                    self::FONT_SIZE, 
+                    0, 
                     $details['x'], 
                     $y + $lineHeight, // because (x,y) in text is at the left-bottom corner
                     $this->_mockup->getImage()->getColor('mockup.content'), 
                     $this->_mockup->getImage()->getFont('mockup.content'), 
-                    $txt);
+                    $txt
+                );
 
                 $height = max($height, substr_count($txt, "\n") + 1);
             }
@@ -170,14 +191,22 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
         foreach ($columns as $details)
             $xs[] = $details['x'] - 2;
         $xs[] = end($xs) + $details['widthPixels'];
-        foreach ($xs as $x)
-            $this->_mockup->getImage()->imageline($x, $top, $x, $y, $this->_mockup->getImage()->getColor('mockup.table.grid')); 
+        foreach ($xs as $x) {
+            $this->_mockup->getImage()->imageline(
+                $x, $top, 
+                $x, $y, 
+                $this->_mockup->getImage()->getColor('mockup.table.grid')
+            ); 
+        }
 
-        if($this->paginator) {
-            $this->_mockup->getImage()->imagettftext(self::FONT_SIZE * 0.9, 0, FaZend_Pan_Ui_Mockup::INDENT, $y + self::FONT_SIZE * 1.2, 
+        if ($this->paginator) {
+            $this->_mockup->getImage()->imagettftext(
+                self::FONT_SIZE * 0.9, 0, 
+                FaZend_Pan_Ui_Mockup::INDENT, $y + self::FONT_SIZE * 1.2, 
                 $this->_mockup->getImage()->getColor('mockup.link'), 
                 $this->_mockup->getImage()->getFont('mockup.content'), 
-                self::PAGINATOR);
+                self::PAGINATOR
+            );
             $y += self::FONT_SIZE * 1.2;
         }
 
@@ -193,11 +222,16 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @param integer Width of the column in letters
      * @return $this
      */
-    public function addColumn($name, $mask, $width) {
-        $this->__set('column' . $name, array(
-            'title'=>$name,
-            'mask'=>$mask, 
-            'width'=>$width));
+    public function addColumn($name, $mask, $width)
+    {
+        $this->__set(
+            'column' . $name, 
+            array(
+                'title'=>$name,
+                'mask'=>$mask, 
+                'width'=>$width
+            )
+        );
         return $this;
     }
 
@@ -209,10 +243,15 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Optional parameter of the link (visible for end-user)
      * @return $this
      */
-    public function addOption($name, $link = false, $header = null) {
-        $this->__set('option' . $name, array(
-            'title' => (is_null($header) ? $name : $header),
-            'link' => $link));
+    public function addOption($name, $link = false, $header = null)
+    {
+        $this->__set(
+            'option' . $name, 
+            array(
+                'title' => (is_null($header) ? $name : $header),
+                'link' => $link
+            )
+        );
         return $this;
     }
 
@@ -223,7 +262,8 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Optional name of the VIEW script to link to
      * @return $this
      */
-    public function addLink($name, $link = false) {
+    public function addLink($name, $link = false)
+    {
         $details = $this->__get('column' . $name);
         $details['link'] = $link;
         $this->__set('column' . $name, $details);
@@ -236,7 +276,8 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Name of the column to become sortable
      * @return this
      */
-    public function addSorter($name) {
+    public function addSorter($name)
+    {
         $details = $this->__get('column' . $name);
         $details['sorter'] = true;
         $this->__set('column' . $name, $details);

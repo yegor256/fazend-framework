@@ -134,7 +134,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         parent::save();
         // inject this object into flyweight
-        FaZend_Flyweight::inject($this, $this->__id);
+        FaZend_Flyweight::inject($this, intval(strval($this)));
     }
 
     /**
@@ -165,7 +165,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __toString()
     {
-        return (string)$this->__id;
+        return (string)$this->__get('__id');
     }
 
     /**
@@ -307,7 +307,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         $this->_loadLiveData();
 
         if ($value instanceof Zend_Db_Table_Row) {
-            $value = $value->__id;
+            $value = intval(strval($value));
         }
 
         return parent::__set($name, $value);
@@ -340,8 +340,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             // because we will end up in new table automatic creation by the table loader
             FaZend_Exception::raise(
                 preg_match('/^FaZend_/', get_class($this)) ? 
-                    'FaZend_Db_Table_NotFoundException' : 
-                    get_class($this) . '_NotFoundException', // exception class name
+                'FaZend_Db_Table_NotFoundException' : 
+                get_class($this) . '_NotFoundException', // exception class name
                 get_class($this) . " not found (ID: {$this->_preliminaryKey})", // description of the exception
                 'FaZend_Db_Table_NotFoundException'  // parent class of the exception
             );

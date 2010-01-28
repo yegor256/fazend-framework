@@ -20,6 +20,6 @@
  * @package Pan
  * @subpackage Analysis
  */
-class FaZend_Pan_Ui_Facade {
-
+class FaZend_Pan_Ui_Facade
+{
 }

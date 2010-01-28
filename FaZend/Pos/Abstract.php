@@ -37,7 +37,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @var FaZend_Pos_Properties
      */
-    protected $__ps = null;
+    private $_ps = null;
     
     /**
      * Constructor, you CAN'T override it!
@@ -123,9 +123,9 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
     public final function ps(FaZend_Pos_Properties $ps = null, $throwException = true, $clean = false)
     {
         if ($ps instanceof FaZend_Pos_Properties)
-            $this->__ps = $ps->id;
+            $this->_ps = $ps->id;
             
-        if (is_null($this->__ps)) {
+        if (is_null($this->_ps)) {
             if (!$throwException)
                 return null;
                 
@@ -141,11 +141,11 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         }
         // clean it, see FaZend_Pos_Properties::cleanPosMemory()
         if ($clean) {
-            unset($this->__ps);
+            unset($this->_ps);
             return null;
         }
             
-        return FaZend_Pos_Properties::factoryByid($this->__ps);
+        return FaZend_Pos_Properties::factoryByid($this->_ps);
     }
 
     /**
@@ -349,7 +349,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             );
         }
 
-        if (empty($this->__ps)) {
+        if (empty($this->_ps)) {
             FaZend_Exception::raise(
                 'FaZend_Pos_UnserializationFailure',
                 "Object of class " . get_class($this) . " wasn't properly serialized",
@@ -361,7 +361,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         // Now we should recover its "parent", in order to make it attached
         // to the POS structure. This operation will be done recursively, until
         // the ROOT is reached.
-        FaZend_Pos_Properties::recoverById($this, $this->__ps);
+        FaZend_Pos_Properties::recoverById($this, $this->_ps);
     }
 
     /**
@@ -382,7 +382,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         }
 
         // We should validate, maybe we already serialized this object before?
-        if (is_null($this->__ps)) {
+        if (is_null($this->_ps)) {
             // We're trying to save the object. There could be an error, if the
             // object is NOT yet in POS.
             try {

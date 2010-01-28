@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     /**
      * Form is visible in TWO columns (name of field, field)
@@ -34,7 +35,8 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $fields = $this->_getOptions('/^field.*/');
 
         $height = 0;
@@ -50,7 +52,8 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         $fields = $this->_getOptions('/^field.*/');
 
         $html = '';
@@ -70,7 +73,8 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return this
      */
-    public function setAlignedStyle($style = true) {
+    public function setAlignedStyle($style = true)
+    {
         $this->_alignedStyle = $style;
         return $this;
     }
@@ -84,7 +88,8 @@ class FaZend_Pan_Ui_Meta_Form extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Header to show, if different from $name
      * @return this
      */
-    public function addField($name, $type, $value, $header = false) {
+    public function addField($name, $type, $value, $header = false)
+    {
         $type = 'FaZend_Pan_Ui_Meta_Form' . ucfirst($type);
 
         if (is_null($header))

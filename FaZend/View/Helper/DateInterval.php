@@ -59,7 +59,7 @@ class FaZend_View_Helper_DateInterval
 
             // more than 2 days we shouw days    
             case $hoursDifference > 48:
-                $hours = round(fmod ($hoursDifference, 24));
+                $hours = round(fmod($hoursDifference, 24));
                 return $sign . round($hoursDifference/24) . 'days' . ($hours ? "&nbsp;{$hours}hrs" : '');
 
             // more than 5 hours - we should hours    
@@ -68,7 +68,7 @@ class FaZend_View_Helper_DateInterval
 
             // more than 1 hour - we should hour+min    
             case $hoursDifference >= 1:
-                $minutes = round(fmod ($hoursDifference, 1) * 60);
+                $minutes = round(fmod($hoursDifference, 1) * 60);
                 return $sign . floor($hoursDifference) . 'hrs' . ($minutes ? "&nbsp;{$minutes}min" : '');    
 
             // otherwise just minutes    

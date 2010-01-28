@@ -19,14 +19,16 @@
  *
  * @package Date
  */
-class FaZend_Date extends Zend_Date {
+class FaZend_Date extends Zend_Date
+{
 
     /**
      * Create Zend_Date object on-fly
      *
      * @return FaZend_Date
      **/
-    public static function make($time) {
+    public static function make($time)
+    {
         return new FaZend_Date($time);
     }
 
@@ -37,7 +39,8 @@ class FaZend_Date extends Zend_Date {
      * @param Zend_Date|mixed End date
      * @return boolean
      **/
-    public function isBetween($start, $end) {
+    public function isBetween($start, $end)
+    {
         return (($this->isEarlier($end) || $this->equals($end)) && 
             ($this->isLater($start) || $this->equals($start)));
     }

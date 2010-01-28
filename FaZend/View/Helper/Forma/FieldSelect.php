@@ -21,7 +21,8 @@ require_once 'FaZend/View/Helper/Forma/Field.php';
  *
  * @package Model_Form
  */
-class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Field {
+class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Field
+{
 
     /**
      * List of options
@@ -36,7 +37,8 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
      * @param string Name of the element
      * @return Zend_Form_Element
      */
-    protected function _getFormElement($name) {
+    protected function _getFormElement($name)
+    {
         return new Zend_Form_Element_Select($name);
     }
 
@@ -46,7 +48,8 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
      * @param Zend_Form_Element The element to configure
      * @return void
      */
-    protected function _configureFormElement(Zend_Form_Element $element) {
+    protected function _configureFormElement(Zend_Form_Element $element)
+    {
         parent::_configureFormElement($element);
         // $element->setAttrib('class', 'btn');
 
@@ -60,7 +63,8 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
      * @param boolean Shall we sort the options?
      * @return void
      */
-    protected function _setOptions(array $options, $sort = false) {
+    protected function _setOptions(array $options, $sort = false)
+    {
         $this->_options = $options;
         if ($sort)
             asort($this->_options);

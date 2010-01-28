@@ -19,7 +19,8 @@
  *
  * @package Validate
  */
-class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
+class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract
+{
 
     const INVALID = 'invalid';
 
@@ -50,7 +51,8 @@ class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
      * @param  string Name of the prefix class/iface
      * @return void
      */
-    public function __construct($prefix) {
+    public function __construct($prefix)
+    {
         $this->setPrefix($prefix);
     }
 
@@ -59,7 +61,8 @@ class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
      *
      * @return string
      */
-    public function getPrefix() {
+    public function getPrefix()
+    {
         return $this->_prefix;
     }
 
@@ -69,7 +72,8 @@ class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
      * @param  string The prefix
      * @return Zend_Validate_Regex Provides a fluent interface
      */
-    public function setPrefix($prefix) {
+    public function setPrefix($prefix)
+    {
         $this->_prefix = (string) $prefix;
         return $this;
     }
@@ -83,7 +87,8 @@ class FaZend_Validate_NotStartWith extends Zend_Validate_Abstract {
      * @param  string $value
      * @return boolean
      */
-    public function isValid($value) {
+    public function isValid($value)
+    {
         if (strpos($value, $this->_prefix) === 0) {
             $this->_error(self::INVALID);
             return false;

@@ -56,8 +56,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
             ->where('fzPartOf.name = ?', $name)
             ->where('fzPartOf.parent = ?', strval($parent->ps()->id))
             ->setRowClass('FaZend_Pos_Model_Object')
-            ->fetchRow()
-            ;
+            ->fetchRow();
     }
 
     /**
@@ -71,8 +70,7 @@ class FaZend_Pos_Model_Object extends FaZend_Db_Table_ActiveRow_fzObject
             return self::retrieve()
                 ->where('id = 1')
                 ->setRowClass('FaZend_Pos_Model_Object')
-                ->fetchRow()
-                ;
+                ->fetchRow();
         } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
             $root = new self();
             $root->class = 'FaZend_Pos_Root';

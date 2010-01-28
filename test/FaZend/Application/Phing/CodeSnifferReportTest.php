@@ -3,10 +3,10 @@
 require_once 'AbstractTestCase.php';
 
 if (!class_exists('BuildException', false)) {
-    class BuildException extends Exception
-    {
-        // ...
-    }
+class BuildException extends Exception
+{
+    // ...
+}
 }
 
 class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase

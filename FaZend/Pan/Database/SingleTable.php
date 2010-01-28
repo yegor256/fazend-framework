@@ -19,7 +19,8 @@
  *
  * @package Deployer
  */
-class FaZend_Pan_Database_SingleTable {
+class FaZend_Pan_Database_SingleTable
+{
 
     const PADDING = 30; // white space width around the table
     const ENTITY_PADDING = 8;
@@ -49,7 +50,8 @@ class FaZend_Pan_Database_SingleTable {
      * @param string Name of the table
      * @return void
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $this->_name = $name;
     }
 
@@ -58,7 +60,8 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return void
      */
-    public function png() {
+    public function png()
+    {
         $x = self::PADDING;
         $y = self::PADDING + FaZend_Pan_Database_MapTable::TITLE_SIZE;
 
@@ -67,7 +70,8 @@ class FaZend_Pan_Database_SingleTable {
             FaZend_Pan_Database_MapTable::TITLE_SIZE, 0, $x, $y, 
             $this->_getImage()->getColor('table.title'), 
             FaZend_Image::getFont('table.title'), 
-            $this->_name);
+            $this->_name
+        );
 
         // return the PNG content
         return $this->_getImage()->png();
@@ -75,13 +79,15 @@ class FaZend_Pan_Database_SingleTable {
         list($titleWidth, ) = FaZend_Image::getTextDimensions(
             $this->_name, 
             FaZend_Pan_Database_MapTable::TITLE_SIZE, 
-            FaZend_Image::getFont('table.title'));
+            FaZend_Image::getFont('table.title')
+        );
 
         // underline the title
         $this->_getImage()->imageline(
             $x, $y + 1, 
             $x + $titleWidth + 10, $y + 1, 
-            $this->_getImage()->getColor('table.title'));
+            $this->_getImage()->getColor('table.title')
+        );
 
         $y += 3 + FaZend_Pan_Database_MapTable::TITLE_SIZE;
 
@@ -91,19 +97,27 @@ class FaZend_Pan_Database_SingleTable {
             preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
             $this->_getImage()->imagettftext(
-                FaZend_Pan_Database_MapTable::COLUMN_SIZE, 0, $x, $y, 
+                FaZend_Pan_Database_MapTable::COLUMN_SIZE, 
+                0, 
+                $x, 
+                $y, 
                 $this->_getImage()->getColor('table.column'), 
                 FaZend_Image::getFont('table.column'), 
-                FaZend_Pan_Database_MapTable::formatColumnTitle($column));
+                FaZend_Pan_Database_MapTable::formatColumnTitle($column)
+            );
 
             $y += FaZend_Pan_Database_MapTable::COLUMN_SIZE+2;
 
             if (!empty($column['COMMENT'])) {
                 $this->_getImage()->imagettftext(
-                    FaZend_Pan_Database_MapTable::COMMENT_SIZE, 0, $x+10, $y, 
+                    FaZend_Pan_Database_MapTable::COMMENT_SIZE, 
+                    0, 
+                    $x+10, 
+                    $y, 
                     $this->_getImage()->getColor('table.comment'), 
                     FaZend_Image::getFont('table.comment'), 
-                    cutLongLine($column['COMMENT'], self::MAX_COMMENT_LENGTH));
+                    cutLongLine($column['COMMENT'], self::MAX_COMMENT_LENGTH)
+                );
                 $y += FaZend_Pan_Database_MapTable::COMMENT_SIZE+2;
             }
 
@@ -124,7 +138,8 @@ class FaZend_Pan_Database_SingleTable {
      * @param int Y-coordinate to draw
      * @return void
      */
-    public function _drawUML($x, $y) {
+    public function _drawUML($x, $y)
+    {
         $entities = $this->_findEntities();
 
         // intitial coordinates
@@ -142,7 +157,6 @@ class FaZend_Pan_Database_SingleTable {
         $this->_drawEntity($center, $centerX, $centerY);
 
         foreach ($entities as $entity) {
-
             // calculate coordinates
             $x = round($centerX + $radius * cos(deg2rad($angle)));
             $y = round($centerY + $radius * sin(deg2rad($angle)));
@@ -150,7 +164,6 @@ class FaZend_Pan_Database_SingleTable {
             $this->_drawEntity($entity, $x, $y);
 
             $angle += $angleDelta;
-
         }
 
         foreach ($entities as $entity)
@@ -170,28 +183,33 @@ class FaZend_Pan_Database_SingleTable {
      * @param Entity
      * @return void
      */
-    public function _drawEntity($entity, $x, $y) {
+    public function _drawEntity($entity, $x, $y)
+    {
         // get width and height of the text to draw
         list($textWidth, $textHeight) = FaZend_Image::getTextDimensions(
             $entity->title,
             FaZend_Pan_Database_MapTable::TITLE_SIZE,
-            FaZend_Image::getFont('table.title'));
+            FaZend_Image::getFont('table.title')
+        );
 
         $this->_getImage()->imagettftext(
             FaZend_Pan_Database_MapTable::TITLE_SIZE, 0, 
             $x, $y + $textHeight, 
             $this->_getImage()->getColor('table.title'), 
             FaZend_Image::getFont('table.title'), 
-            $entity->title);
+            $entity->title
+        );
 
         $x = $x - self::ENTITY_PADDING;
         $y = $y - self::ENTITY_PADDING;
         $width = $textWidth + self::ENTITY_PADDING*2;
         $height = $textHeight + self::ENTITY_PADDING*2;
 
-        $this->_getImage()->imagerectangle($x, $y, 
+        $this->_getImage()->imagerectangle(
+            $x, $y, 
             $x + $width, $y + $height,
-            $this->_getImage()->getColor('table.title'));
+            $this->_getImage()->getColor('table.title')
+        );
 
         $this->_locations[$entity->title] = FaZend_StdObject::create()
             ->set('x', $x)
@@ -206,23 +224,28 @@ class FaZend_Pan_Database_SingleTable {
      * @param Entity
      * @return void
      */
-    public function _drawLink($entity) {
+    public function _drawLink($entity)
+    {
         $center = $this->_locations[$this->_name];
         $leaf = $this->_locations[$entity->name];
 
         list($centerX, $centerY) = self::_calculateBorder(
             $center->x + $center->width/2, $center->y + $center->height/2, 
             $leaf->x + $leaf->width/2, $leaf->y + $leaf->height/2,
-            $center->width, $center->height);
+            $center->width, $center->height
+        );
 
         list($leafX, $leafY) = self::_calculateBorder(
             $leaf->x + $leaf->width/2, $leaf->y + $leaf->height/2, 
             $center->x + $center->width/2, $center->y + $center->height/2, 
-            $leaf->width, $leaf->height);
+            $leaf->width, $leaf->height
+        );
 
-        $this->_getImage()->imageline($centerX, $centerY,
+        $this->_getImage()->imageline(
+            $centerX, $centerY,
             $leafX, $leafY, 
-            $this->_getImage()->getColor('table.column'));
+            $this->_getImage()->getColor('table.column')
+        );
 
         $polygon = 
             ($entity->out ? 
@@ -230,11 +253,15 @@ class FaZend_Pan_Database_SingleTable {
                 array_merge(array($leafX, $leafY), self::_calculateArrow($centerX, $centerY, $leafX, $leafY)));
 
         if ($entity->composition) {
-            $this->_getImage()->imagefilledpolygon($polygon, 4,
-                $this->_getImage()->getColor('table.column'));
+            $this->_getImage()->imagefilledpolygon(
+                $polygon, 4,
+                $this->_getImage()->getColor('table.column')
+            );
         } else {
-            $this->_getImage()->imagefilledpolygon($polygon, 4,
-                $this->_getImage()->getColor('background'));
+            $this->_getImage()->imagefilledpolygon(
+                $polygon, 4,
+                $this->_getImage()->getColor('background')
+            );
         }
 
         $this->_putMark($centerX, $centerY, $leafX, $leafY, $entity->leafText);
@@ -250,21 +277,30 @@ class FaZend_Pan_Database_SingleTable {
      * @param int Dest y
      * @return void
      */
-    public function _putMark($x1, $y1, $x2, $y2, $mark) {
+    public function _putMark($x1, $y1, $x2, $y2, $mark)
+    {
         $x = (($x2 - $x1 <= 0) ? -1 : 0.3);
         $y = (($y2 - $y1 <= 0) ? 1.4 : -0.2);
 
         if (abs(($y2 - $y1)/($x2 - $x1)) < 0.5)
             $x = (($x2 - $x1 <= 0) ? 1 : -1);
 
-        $bbox = imagettfbbox(FaZend_Pan_Database_MapTable::COMMENT_SIZE, 0, FaZend_Image::getFont('table.column'), $mark);
+        // @todo change it
+        $bbox = imagettfbbox(
+            FaZend_Pan_Database_MapTable::COMMENT_SIZE, 
+            0, 
+            FaZend_Image::getFont('table.column'), 
+            $mark
+        );
 
-        $this->_getImage()->imagettftext(FaZend_Pan_Database_MapTable::COMMENT_SIZE, 0, 
+        $this->_getImage()->imagettftext(
+            FaZend_Pan_Database_MapTable::COMMENT_SIZE, 0, 
             $x2 + $x * abs($bbox[2]) + $x * FaZend_Pan_Database_MapTable::COMMENT_SIZE, 
             $y2 + $y * FaZend_Pan_Database_MapTable::COMMENT_SIZE, 
             $this->_getImage()->getColor('table.column'), 
             FaZend_Image::getFont('table.column'), 
-            $mark);
+            $mark
+        );
     }
 
     /**
@@ -272,7 +308,8 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return array
      */
-    public function _findEntities() {
+    public function _findEntities()
+    {
         $tables = array();
         foreach (FaZend_Deployer::getInstance()->getTables() as $table)
             $tables[$table] = FaZend_Deployer::getInstance()->getTableInfo($table);
@@ -298,9 +335,7 @@ class FaZend_Pan_Database_SingleTable {
         }
 
         foreach ($tables as $table=>$info) {
-
             foreach ($info as $column) {
-
                 if (empty($column['FK']))
                     continue;
 
@@ -315,9 +350,7 @@ class FaZend_Pan_Database_SingleTable {
                     ->set('composition', !empty($column['FK_COMPOSITION']))
                     ->set('centerText', empty($column['NULL']) ? '1' : '0..1')
                     ->set('leafText', '*');
-
             }
-
         }
 
         return $entities;
@@ -328,9 +361,9 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return FaZend_Image
      */
-    protected function _getImage() {
+    protected function _getImage()
+    {
         if (!isset($this->_image)) {
-            
             // create image
             $this->_image = new FaZend_Image();
 
@@ -352,18 +385,28 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return array
      */
-    protected function _getDimensions() {
+    protected function _getDimensions()
+    {
         $info = $this->_getInfo();
 
         $width = 0;
-        foreach ($info as $column)
-            $width = max($width, strlen($column['COMMENT']), strlen(FaZend_Pan_Database_MapTable::formatColumnTitle($column)));
+        foreach ($info as $column) {
+            $width = max(
+                $width, 
+                strlen($column['COMMENT']), strlen(FaZend_Pan_Database_MapTable::formatColumnTitle($column))
+            );
+        }
 
         return array(
-            self::PADDING * 2 + $width * FaZend_Pan_Database_MapTable::COLUMN_SIZE * 0.6 + self::ENTITIES_WIDTH, // width
+            self::PADDING * 2 + $width * FaZend_Pan_Database_MapTable::COLUMN_SIZE * 0.6 
+            + self::ENTITIES_WIDTH, // width
             self::PADDING * 2 
-                + max(count($info) * (FaZend_Pan_Database_MapTable::COLUMN_SIZE + FaZend_Pan_Database_MapTable::COMMENT_SIZE + 4)
-                + FaZend_Pan_Database_MapTable::TITLE_SIZE + 3, self::ENTITIES_WIDTH) // height
+            + max(
+                count($info)
+                * (FaZend_Pan_Database_MapTable::COLUMN_SIZE + FaZend_Pan_Database_MapTable::COMMENT_SIZE + 4)
+                + FaZend_Pan_Database_MapTable::TITLE_SIZE + 3, 
+                self::ENTITIES_WIDTH
+            ) // height
         );
     }
 
@@ -372,7 +415,8 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return void
      */
-    public function _getInfo() {
+    public function _getInfo()
+    {
         if (!isset($this->_info))
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
@@ -383,13 +427,14 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return array
      */
-    protected static function _calculateArrow($x1, $y1, $x2, $y2) {    
+    protected static function _calculateArrow($x1, $y1, $x2, $y2)
+    {
         $dX = $x1 - $x2;
         $dY = $y1 - $y2;
 
-        $Z = sqrt($dX*$dX + $dY*$dY);
+        $z = sqrt($dX*$dX + $dY*$dY);
 
-        $sinAlpha = $dX / $Z;
+        $sinAlpha = $dX / $z;
         $alpha = asin($sinAlpha);
 
         if ($dY < 0)
@@ -412,7 +457,8 @@ class FaZend_Pan_Database_SingleTable {
      *
      * @return array
      */
-    protected static function _calculateBorder($x1, $y1, $x2, $y2, $width, $height) {
+    protected static function _calculateBorder($x1, $y1, $x2, $y2, $width, $height)
+    {
         $dY = abs($y1 - $y2);
         $dX = abs($x1 - $x2);
 

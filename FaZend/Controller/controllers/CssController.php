@@ -21,15 +21,16 @@ require_once 'FaZend/Controller/Action.php';
  * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  * @package controllers
  */
-class Fazend_CssController extends FaZend_Controller_Action {
+class Fazend_CssController extends FaZend_Controller_Action
+{
 
     /**
      * Show one Java Script
      * 
      * @return string
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         // if it's absent
         //if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
         //    $this->_redirectFlash('path not found');
@@ -50,8 +51,7 @@ class Fazend_CssController extends FaZend_Controller_Action {
             $this->view->addFilter('CssCompressor');
 
         $this->_helper->viewRenderer($this->_getParam('css'));
-
-
     }    
+
 }
 

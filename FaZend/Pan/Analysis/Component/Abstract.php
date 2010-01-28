@@ -53,7 +53,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      * @param string Name of the component
      * @return void
      */
-    public function __construct(FaZend_Pan_Analysis_Component_Abstract $parent = null, $name)
+    public function __construct(FaZend_Pan_Analysis_Component_Abstract $parent = null, $name = null)
     {
         $this->_parent = $parent;
         $this->_name = $name;
@@ -140,8 +140,10 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
         foreach ($this as $component)
             if ($component->getName() == $name)
                 return $component;
-        FaZend_Exception::raise('FaZend_Pan_Analysis_Component_NotFound', 
-            "Component not found: '{$this->getName()}'::find('{$name}')");
+        FaZend_Exception::raise(
+            'FaZend_Pan_Analysis_Component_NotFound', 
+            "Component not found: '{$this->getName()}'::find('{$name}')"
+        );
     }
 
     /**
@@ -172,7 +174,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
         return str_replace(
             FaZend_Pan_Analysis_Component::SEPARATOR,
             FaZend_Pan_Analysis_Diagram::SEPARATOR,
-            $this->getFullName()) . FaZend_Pan_Analysis_Diagram::SEPARATOR . $type;
+            $this->getFullName()
+        ) . FaZend_Pan_Analysis_Diagram::SEPARATOR . $type;
     }
 
     /**
@@ -240,14 +243,32 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     protected function _relocate(Reflector $reflector)
     {
         $doc = $reflector->getDocblock();
-        if (false !== $doc->getTag('category'))
-            $this->_moveTo($this->_parent->make('category', trim($doc->getTag('category')->getDescription(), "\r\t\n ")));
+        if (false !== $doc->getTag('category')) {
+            $this->_moveTo(
+                $this->_parent->make(
+                    'category', 
+                    trim($doc->getTag('category')->getDescription(), "\r\t\n ")
+                )
+            );
+        }
             
-        if (false !== $doc->getTag('package'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('package')->getDescription(), "\r\t\n ")));
+        if (false !== $doc->getTag('package')) {
+            $this->_moveTo(
+                $this->_parent->make(
+                    'package', 
+                    trim($doc->getTag('package')->getDescription(), "\r\t\n ")
+                )
+            );
+        }
 
-        if (false !== $doc->getTag('subpackage'))
-            $this->_moveTo($this->_parent->make('package', trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")));
+        if (false !== $doc->getTag('subpackage')) {
+            $this->_moveTo(
+                $this->_parent->make(
+                    'package', 
+                    trim($doc->getTag('subpackage')->getDescription(), "\r\t\n ")
+                )
+            );
+        }
     }
     
     /**

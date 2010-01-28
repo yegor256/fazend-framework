@@ -146,9 +146,13 @@ final class FaZend_Validator
         } catch (Zend_Validate_Exception $e) {
             
             if (!isset($message)) {
-                $message = implode('; ', array_merge(
-                    $e->getMessage() ? array($e->getMessage()) : array(),
-                    $validator->getMessages()));
+                $message = implode(
+                    '; ', 
+                    array_merge(
+                        $e->getMessage() ? array($e->getMessage()) : array(),
+                        $validator->getMessages()
+                    )
+                );
             }
                 
             FaZend_Exception::raise(

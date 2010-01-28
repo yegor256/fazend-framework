@@ -326,7 +326,7 @@ class FaZend_Pos_Properties
         FaZend_Pos_Model_Object $fzObject
     ) 
     {
-        return self::$_instances[$fzObject->__id] = new $class($object, $fzObject);
+        return self::$_instances[intval(strval($fzObject))] = new $class($object, $fzObject);
     }
     
     /**
@@ -903,7 +903,7 @@ class FaZend_Pos_Properties
         // Maybe we found an object, which already exists in memory? This is
         // the ID of the object in fzObject, and we should search the list
         // of existing instances of PROPERTIES for it.
-        $id = intval($fzObject->__id);
+        $id = intval(strval($fzObject));
 
         // If it exists, we REPLACE the current one by existing one, in the object.
         if (isset(self::$_instances[$id])) {

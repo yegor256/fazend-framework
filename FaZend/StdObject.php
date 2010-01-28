@@ -21,14 +21,16 @@
  *
  * @package StdObject
  */
-class FaZend_StdObject {
+class FaZend_StdObject
+{
 
     /**
      * Simple static creator
      *
      * @return FaZend_StdObject
      */
-    public static function create() {
+    public static function create()
+    {
         return new FaZend_StdObject();
     }
 
@@ -37,7 +39,8 @@ class FaZend_StdObject {
      *
      * @return FaZend_StdObject
      */
-    public function set($property, $value) {
+    public function set($property, $value)
+    {
         $this->$property = $value;
         return $this;    
     }
@@ -50,8 +53,8 @@ class FaZend_StdObject {
      *
      * @return value|false
      */
-    public function __get($property) {
-
+    public function __get($property)
+    {
         // try this method, if it exists
         if (!property_exists($this, $property) && method_exists($this, $methodName = '_get' . ucfirst($property)))
             return call_user_func(array($this, $methodName));
@@ -62,20 +65,23 @@ class FaZend_StdObject {
 
         // otherwise - return property
         return $this->$property;
-        
     }
 
     /**
      * Get the property which is protected
      *
      * @return value|false
+     * @throws FaZend_StdObject_MissedMethod
+     * @throws FaZend_StdObject_MissedProperty
      */
-    public function __call($method, $args) {
-
+    public function __call($method, $args)
+    {
         $matches = array();
         if (!preg_match('/^(get|set)(.+)$/', $method, $matches)) {
-            FaZend_Exception::raise('FaZend_StdObject_MissedMethod', 
-                "Method '{$method}' is not defined in " . get_class($this));
+            FaZend_Exception::raise(
+                'FaZend_StdObject_MissedMethod', 
+                "Method '{$method}' is not defined in " . get_class($this)
+            );
         }
 
         $property = $matches[2];
@@ -90,9 +96,10 @@ class FaZend_StdObject {
             return $this;
         }
 
-        FaZend_Exception::raise('FaZend_StdObject_MissedProperty', 
-            "Property '{$property}' is not defined in " . get_class($this));
-
+        FaZend_Exception::raise(
+            'FaZend_StdObject_MissedProperty', 
+            "Property '{$property}' is not defined in " . get_class($this)
+        );
     }
 
     /**
@@ -100,8 +107,8 @@ class FaZend_StdObject {
      *
      * @return string
      */
-    protected function _serialize() {
-
+    protected function _serialize()
+    {
         $properties = array();
 
         foreach ($this as $name=>$value) {
@@ -109,7 +116,6 @@ class FaZend_StdObject {
         }
 
         return serialize($properties);
-
     }
 
     /**
@@ -118,13 +124,12 @@ class FaZend_StdObject {
      * @param string Serialized array
      * @return void
      */
-    protected function _unserialize($str) {
-
+    protected function _unserialize($str)
+    {
         $properties = unserialize($str);
         foreach ($properties as $name=>$value) {
             $this->$name = $value;
         }
-
     }
 
 }

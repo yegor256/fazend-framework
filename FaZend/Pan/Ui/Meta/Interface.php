@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-interface FaZend_Pan_Ui_Meta_Interface {
+interface FaZend_Pan_Ui_Meta_Interface
+{
 
     /**
      * Draw on the image

@@ -20,6 +20,6 @@
  * @package Pan
  * @subpackage Database
  */
-class FaZend_Pan_Database_Facade {
-
+class FaZend_Pan_Database_Facade
+{
 }

@@ -31,7 +31,7 @@ class PingFaZend extends Task
      *
      * @var string
      */
-    protected $url = false;
+    protected $_url = false;
 
     /**
      * Initiator (when the build.xml sees the task)
@@ -50,7 +50,7 @@ class PingFaZend extends Task
      */
     public function main()
     {
-        if (!$this->url) {
+        if (!$this->_url) {
             $this->Log("Nothing to ping, live.home is not specified in properties");
             return;
         }
@@ -62,9 +62,9 @@ class PingFaZend extends Task
         if (!$curl)
             throw new BuildException(curl_error($curl));    
 
-        curl_setopt ($curl, CURLOPT_URL, $this->url);
-        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt ($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_URL, $this->_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
         $response = curl_exec($curl);
 
         if (!$response)
@@ -83,7 +83,7 @@ class PingFaZend extends Task
      */
     public function seturl($url)
     {
-        $this->url = $url;
+        $this->_url = $url;
     }
     
 }

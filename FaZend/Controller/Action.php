@@ -103,7 +103,13 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      * @param array List of parameters (associative array)
      * @return void
      */    
-    protected function _redirectFlash($message, $action = 'index', $controller = null, $module = null, array $params = array())
+    protected function _redirectFlash(
+        $message, 
+        $action = 'index', 
+        $controller = null, 
+        $module = null, 
+        array $params = array()
+    )
     {
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
         if ($action !== false)

@@ -21,15 +21,16 @@ require_once 'Zend/Paginator.php';
  *
  * @package Paginator 
  */
-class FaZend_Paginator extends Zend_Paginator {
+class FaZend_Paginator extends Zend_Paginator
+{
 
     /**
      * Add paginator to the view
      *
      * @return void
      */
-    public static function addPaginator($iterator, Zend_View $view, $page, $name = 'paginator') {
-
+    public static function addPaginator($iterator, Zend_View $view, $page, $name = 'paginator')
+    {
         // if it's an object right after fetchAll(), we should
         // treat is properly and get SELECT from it
         if ($iterator instanceof FaZend_Db_RowsetWrapper)
@@ -49,7 +50,6 @@ class FaZend_Paginator extends Zend_Paginator {
 
         // and save into View
         $view->$name = $paginator;
-
     }
 
 }

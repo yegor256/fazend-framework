@@ -20,7 +20,8 @@
  * @package Pan
  * @subpackage Tests
  */
-class FaZend_Pan_Tests_Runner {
+class FaZend_Pan_Tests_Runner
+{
 
     /**
      * Unique name of the test
@@ -41,13 +42,11 @@ class FaZend_Pan_Tests_Runner {
      *
      * @return void
      */
-    public function __construct($name) {
-        
+    public function __construct($name)
+    {
         $this->_name = $name;
-
         // create Exec (or link to the existing one)
         $this->_exec = FaZend_Exec::factory($this->_name);
-
     }
 
     /**
@@ -58,8 +57,8 @@ class FaZend_Pan_Tests_Runner {
      * @param string Name of the unit test file
      * @return array
      */
-    public function run() {
-        
+    public function run()
+    {
         // if it's not running yet - start it now
         $this->_initializeExec();
 
@@ -68,7 +67,6 @@ class FaZend_Pan_Tests_Runner {
 
         // get result and return it
         return $this->result();
-
     }
 
     /**
@@ -77,7 +75,8 @@ class FaZend_Pan_Tests_Runner {
      * @param string Name of the unit test file
      * @return void
      */
-    public function stop() {
+    public function stop()
+    {
         $this->_exec->stop();
     }    
 
@@ -86,8 +85,8 @@ class FaZend_Pan_Tests_Runner {
      *
      * @return array
      */
-    public function result() {
-
+    public function result()
+    {
         // fill the resulting array
         $result = array(
             'output' => $this->_exec->getCmd() . "\n" . $this->_exec->output(),
@@ -105,7 +104,6 @@ class FaZend_Pan_Tests_Runner {
         }
 
         return $result;
-
     }
         
     /**
@@ -113,21 +111,26 @@ class FaZend_Pan_Tests_Runner {
      *
      * @return void
      */
-    public function _initializeExec() {
-
+    public function _initializeExec()
+    {
         $this->_exec->bootstrap = tempnam(TEMP_PATH, 'fz');
         $this->_exec->testdox = tempnam(TEMP_PATH, 'fz');
         $this->_exec->metrics = tempnam(TEMP_PATH, 'fz');
         $this->_exec->log = tempnam(TEMP_PATH, 'fz');
 
         // we pass ENV to the testing environment
-        file_put_contents($this->_exec->bootstrap, 
-            '<?php defined("APPLICATION_ENV") or define("APPLICATION_ENV", "' . APPLICATION_ENV . '"); define("TESTING_RUNNING", true);');
+        file_put_contents(
+            $this->_exec->bootstrap, 
+            '<?php defined("APPLICATION_ENV") or define("APPLICATION_ENV", "' . 
+            APPLICATION_ENV . '"); define("TESTING_RUNNING", true);'
+        );
         
         // phpUnit cmd line
         $cmd =
             'phpunit --verbose --stop-on-failure' . 
-            ' -d "include_path=' . escapeshellarg(ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library')) . '"' .
+            ' -d "include_path=' . escapeshellarg(
+                ini_get('include_path') . PATH_SEPARATOR . realpath(APPLICATION_PATH . '/../library')
+            ) . '"' .
             ' --log-xml ' . escapeshellarg($this->_exec->log) .
             ' --bootstrap ' . escapeshellarg($this->_exec->bootstrap) .
             ' --testdox-text ' . escapeshellarg($this->_exec->testdox) .
@@ -155,13 +158,12 @@ class FaZend_Pan_Tests_Runner {
      * @param FaZend_Exec
      * @return void
      */
-    public function _deinitializeExec() {
-
+    public function _deinitializeExec()
+    {
         @unlink($this->_exec->bootstrap);
         @unlink($this->_exec->log);
         @unlink($this->_exec->testdox);
         @unlink($this->_exec->metrics);
-        
     }
 
     /**
@@ -171,13 +173,12 @@ class FaZend_Pan_Tests_Runner {
      * @param array Resulting info for JSON
      * @return array
      */
-    public function _grabResult(array &$result) {
-
+    public function _grabResult(array &$result)
+    {
         $result['testdox'] = (file_exists($this->_exec->testdox) ? 
             @file_get_contents($this->_exec->testdox) : 'just started (' . $this->_name . ')');
 
         if (file_exists($this->_exec->log) && file_get_contents($this->_exec->log)) {
-
             // process XML report from phpUnit
             $xml = simplexml_load_file($this->_exec->log);
             foreach ($xml->testsuite->children() as $tc) {
@@ -195,7 +196,6 @@ class FaZend_Pan_Tests_Runner {
                 'errors' => (int)$xml->testsuite->attributes()->errors,
                 'time' => (float)$xml->testsuite->attributes()->time,
             );
-
         }
 
         // show small report
@@ -204,18 +204,20 @@ class FaZend_Pan_Tests_Runner {
                 ($this->_exec->getPid() ? ' (' . sprintf('%d', $this->_exec->getPid()) . ')' : false);
             
             // if it's a failure - red it
-            if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors'])
-                $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
+            if (!isset($result['suite']) || $result['suite']['failures'] || $result['suite']['errors']) {
+                $result['spanlog'] = '<span style="color: #' . 
+                FaZend_Image::BRAND_RED . '">' . $result['spanlog'] . '</span>';
             // if success - green it
-            elseif (!$result['suite']['failures'] && !$result['suite']['errors'])
-                $result['spanlog'] = '<span style="color: #' . FaZend_Image::BRAND_GREEN . '">' . $result['spanlog'] . '</span>';
+            } elseif (!$result['suite']['failures'] && !$result['suite']['errors']) {
+                $result['spanlog'] = '<span style="color: #' . 
+                FaZend_Image::BRAND_GREEN . '">' . $result['spanlog'] . '</span>';
+            }
 
         } else {
             $result['spanlog'] = false;
         }
 
         $result['protocol'] = $result['testdox'];
-
     }
 
 }

@@ -185,8 +185,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     {
         if (!is_null($name)) {
             if (isset($this->_fields[$name])) {
-                FaZend_Exception::raise('FaZend_View_Helper_Forma_FieldAlreadyExists', 
-                    "Field '{$name}' already exists in the form");
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_FieldAlreadyExists', 
+                    "Field '{$name}' already exists in the form"
+                );
             }
             return $name;
         }

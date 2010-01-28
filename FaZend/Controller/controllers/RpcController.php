@@ -20,14 +20,16 @@
  * @package Pan
  * @subpackage Rpc
  */
-class Fazend_RpcController extends FaZend_Controller_Panel {
+class Fazend_RpcController extends FaZend_Controller_Panel
+{
 
     /**
      * Sanity check before dispatching
      *
      * @return void
      */
-    public function preDispatch() {
+    public function preDispatch()
+    {
         // sanity check
         if (APPLICATION_ENV == 'production')
             $this->_redirectFlash('XML RPC controller is not allowed in production environment', 'restrict', 'login');
@@ -40,7 +42,8 @@ class Fazend_RpcController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 

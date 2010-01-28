@@ -20,6 +20,6 @@
  * @package Pan
  * @subpackage Tests
  */
-class FaZend_Pan_Tests_Facade {
-
+class FaZend_Pan_Tests_Facade
+{
 }

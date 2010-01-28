@@ -59,7 +59,8 @@
  *
  * @package Metric
  */
-class FaZend_Metric {
+class FaZend_Metric
+{
 
     /**
      * Associative array of metrics running now
@@ -97,7 +98,8 @@ class FaZend_Metric {
      *
      * @return void
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -123,8 +125,8 @@ class FaZend_Metric {
      * @param string Name of the variable to be set inside $this->_class, if metric is found
      * @return FaZend_Metric
      */
-    public static function calculate($variableName = 'metricValue') {
-
+    public static function calculate($variableName = 'metricValue')
+    {
         // create new metric class instance and configure it
         $metric = new FaZend_Metric();
 
@@ -174,7 +176,8 @@ class FaZend_Metric {
      * @return void
      * @see dependsOn()
      */
-    public static function time($interval) {
+    public static function time($interval)
+    {
         // ...
     }
 
@@ -212,7 +215,8 @@ class FaZend_Metric {
      * @param string Name of resource (unique in the storage!)
      * @return void
      */
-    public static function dependsOn($resource) {
+    public static function dependsOn($resource)
+    {
         // ...
     }
 
@@ -223,7 +227,8 @@ class FaZend_Metric {
      * @return void
      * @see dependsOn()
      */
-    public static function destroyResource($resource) {
+    public static function destroyResource($resource)
+    {
         // ...
     }
 
@@ -234,7 +239,8 @@ class FaZend_Metric {
      * @return void
      * @see _uniqueID()
      */
-    public static function destroyByRegexp($regexp) {
+    public static function destroyByRegexp($regexp)
+    {
         // ...
     }
 
@@ -244,7 +250,8 @@ class FaZend_Metric {
      * @param instance Instance of some class, the calculator
      * @return FaZend_Metric
      */
-    protected function _setClass($class) {
+    protected function _setClass($class)
+    {
         $this->_class = $class;
         return $this;
     }
@@ -254,7 +261,8 @@ class FaZend_Metric {
      *
      * @return class
      */
-    protected function _getClass() {
+    protected function _getClass()
+    {
         return $this->_class;
     }
 
@@ -263,7 +271,8 @@ class FaZend_Metric {
      *
      * @return FaZend_Metric
      */
-    protected function _setMethod($method) {
+    protected function _setMethod($method)
+    {
         $this->_method = $method;
         return $this;
     }
@@ -273,7 +282,8 @@ class FaZend_Metric {
      *
      * @return string
      */
-    protected function _getMethod() {
+    protected function _getMethod()
+    {
         return $this->_method;
     }
 
@@ -283,7 +293,8 @@ class FaZend_Metric {
      * @param array Numbered array of function parameters
      * @return FaZend_Metric
      */
-    protected function _setArguments($args) {
+    protected function _setArguments($args)
+    {
         $this->_args = $args;
         return $this;
     }
@@ -293,7 +304,8 @@ class FaZend_Metric {
      *
      * @return string|array|value...
      */
-    protected function _load() {
+    protected function _load()
+    {
         //...
     }
 
@@ -302,7 +314,8 @@ class FaZend_Metric {
      *
      * @return void
      */
-    protected function _save($value) {
+    protected function _save($value)
+    {
         //...
 
         // return the value, just saved to cache
@@ -314,7 +327,8 @@ class FaZend_Metric {
      *
      * @return boolean
      */
-    protected function _exists() {
+    protected function _exists()
+    {
         //...
         return false;
     }
@@ -339,8 +353,8 @@ class FaZend_Metric {
      *
      * @return value
      */
-    protected function _calculate() {
-
+    protected function _calculate()
+    {
         // to protect against an endless recursive call of one and the same
         // metric we should set this flag and reset it right after
         // the calculation is done
@@ -350,7 +364,6 @@ class FaZend_Metric {
 
         // return what we've just calculated
         return $value;
-
     }
 
     /**
@@ -358,7 +371,8 @@ class FaZend_Metric {
      *
      * @return boolean
      */
-    protected function _isCalculatingNow() {
+    protected function _isCalculatingNow()
+    {
         return isset(self::$_calculatingNow[$this->_uniqueId()]);
     }
 
@@ -371,7 +385,8 @@ class FaZend_Metric {
      *
      * @return string
      */
-    protected function _uniqueId() {
+    protected function _uniqueId()
+    {
         return get_class($this->_class) . '::' . $this->_method . '()';
     }
 

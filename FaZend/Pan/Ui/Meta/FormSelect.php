@@ -23,53 +23,63 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
+class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement
+{
 
     /**
      * Draw in PNG
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $txt = $this->_parse($this->value);
 
         $width = FaZend_Pan_Ui_Meta_Text::FONT_SIZE * min(25, strlen($txt) + 3);
 
         // element header
-        $this->_mockup->getImage()->imagettftext(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+        $this->_mockup->getImage()->imagettftext(
+            FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
             FaZend_Pan_Ui_Mockup::INDENT, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $this->_parse($this->header) . ':');
+            $this->_parse($this->header) . ':'
+        );
 
         $y += FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
 
         // white rectangle
-        $this->_mockup->getImage()->imagefilledrectangle( 
+        $this->_mockup->getImage()->imagefilledrectangle(
             FaZend_Pan_Ui_Mockup::INDENT, $y, 
             FaZend_Pan_Ui_Mockup::INDENT + $width, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE*2, 
-            $this->_mockup->getImage()->getColor('mockup.input'));
+            $this->_mockup->getImage()->getColor('mockup.input')
+        );
 
         // border
-        $this->_mockup->getImage()->imagerectangle( 
+        $this->_mockup->getImage()->imagerectangle(
             FaZend_Pan_Ui_Mockup::INDENT, $y, 
             FaZend_Pan_Ui_Mockup::INDENT + $width, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE*2, 
-            $this->_mockup->getImage()->getColor('mockup.input.border'));
+            $this->_mockup->getImage()->getColor('mockup.input.border')
+        );
 
         // triangle
-        $this->_mockup->getImage()->imagefilledpolygon( 
+        $this->_mockup->getImage()->imagefilledpolygon(
             array(
                 FaZend_Pan_Ui_Mockup::INDENT + $width - 16, $y + 8, 
                 FaZend_Pan_Ui_Mockup::INDENT + $width - 4, $y + 8,
                 FaZend_Pan_Ui_Mockup::INDENT + $width - 10, $y + 18), 
-            3, $this->_mockup->getImage()->getColor('mockup.input.border'));
+            3, 
+            $this->_mockup->getImage()->getColor('mockup.input.border')
+        );
 
         // text inside the field
-        $this->_mockup->getImage()->imagettftext(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+        $this->_mockup->getImage()->imagettftext(
+            FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
             FaZend_Pan_Ui_Mockup::INDENT + 3, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $txt);
+            $txt
+        );
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 5;
     }
@@ -79,7 +89,8 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         $header = $this->_parse($this->header);
 
         $list = $this->value;

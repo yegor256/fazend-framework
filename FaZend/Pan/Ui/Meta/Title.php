@@ -20,7 +20,8 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     const FONT_SIZE = 22;
 
@@ -29,15 +30,19 @@ class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return int Height
      */
-    public function draw($y) {
-
-        $this->_mockup->getImage()->imagettftext(self::FONT_SIZE, 0, FaZend_Pan_Ui_Mockup::INDENT, $y + self::FONT_SIZE, 
+    public function draw($y)
+    {
+        $this->_mockup->getImage()->imagettftext(
+            self::FONT_SIZE, 
+            0, 
+            FaZend_Pan_Ui_Mockup::INDENT, 
+            $y + self::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content.title'), 
             $this->_mockup->getImage()->getFont('mockup.content.title'), 
-            $this->_parse($this->label));
+            $this->_parse($this->label)
+        );
 
         return self::FONT_SIZE * 2;
-
     }
 
     /**
@@ -45,7 +50,8 @@ class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         return '<h1>' . nl2br($this->_parse($this->label)) . '</h1>';
     }
 

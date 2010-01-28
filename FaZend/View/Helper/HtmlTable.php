@@ -427,7 +427,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
             $resultTRs[] = 
                 "\t<tr class='" . 
-                (fmod (count($resultTRs), 2) ? 'even' : 'odd') .
+                (fmod(count($resultTRs), 2) ? 'even' : 'odd') .
                 "' onmouseover='this.className=\"highlight\"' onmouseout='this.className=\"" .
                 (fmod(count($resultTRs), 2) ? 'even' : 'odd') . 
                 "\"'{$this->_formatColumnStyle(false, null, $rowOriginal)}>\n";
@@ -625,11 +625,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             if (!is_callable($param))
                 continue;
             if (is_array($param)) {
-                $param = call_user_func_array($param, array(
-                    'name'=>$link->name,
-                    'row'=>$row,
-                    'key'=>$key
-                ));
+                $param = call_user_func_array(
+                    $param, 
+                    array(
+                        'name' => $link->name,
+                        'row' => $row,
+                        'key' => $key
+                    )
+                );
             } else {
                 $param = $param($link->name, $row);
             }
@@ -784,7 +787,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                         if (!is_object($value)) {
                             FaZend_Exception::raise(
                                 'FaZend_View_Helper_Forma_InvalidFormatter', 
-                                "The value in column '{$name}' is not an object, can't apply '{$formatter['condition']}' to it"
+                                "The value in column '{$name}' is not an object, " .
+                                "can't apply '{$formatter['condition']}' to it"
                             );
                         }
                         eval("\$result = \$value{$formatter['condition']};");

@@ -76,6 +76,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      *
      * @param string Name of the method to call (suffix only, without '_init')
      * @return void
+     * @throws FaZend_Application_Resource_Fazend_InvalidMethod
      **/
     protected function _boot($name)
     {
@@ -83,9 +84,12 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             return;
         $method = '_init' . $name;
         
-        if (!method_exists($this, $method))
-            FaZend_Exception('FaZend_Application_Resource_Fazend_InvalidMethod', 
-                "Can't find '{$method}'");
+        if (!method_exists($this, $method)) {
+            FaZend_Exception(
+                'FaZend_Application_Resource_Fazend_InvalidMethod', 
+                "Can't find '{$method}'"
+            );
+        }
                 
         $this->$method();
         $this->_booted[$name] = true;
@@ -144,11 +148,15 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             $front->throwExceptions(true);
 
         // setup error plugin
-        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
-            'module' => 'fazend',
-            'controller' => 'error',
-            'action' => 'error'
-        )));
+        $front->registerPlugin(
+            new Zend_Controller_Plugin_ErrorHandler(
+                array(
+                    'module' => 'fazend',
+                    'controller' => 'error',
+                    'action' => 'error'
+                )
+            )
+        );
     }
         
     /**
@@ -234,7 +242,10 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         foreach ($appRoutes->routes as $name=>$routeConfig) {
 
             // is it a custom controller?
-            if (file_exists(APPLICATION_PATH . '/controllers/' . ucfirst($routeConfig->defaults->controller) . 'Controller.php')) {
+            if (file_exists(
+                APPLICATION_PATH . '/controllers/' . 
+                ucfirst($routeConfig->defaults->controller) . 'Controller.php'
+            )) {
                 $routeConfig->defaults->module = 'default';
             }
 

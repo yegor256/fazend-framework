@@ -483,7 +483,10 @@ class FaZend_Pos_AbstractTest extends AbstractTestCase
         // one item should be there, by the key ITEM and value = bike
         foreach ($car as $name=>$value) {
             $this->assertEquals('item', $name, 'Item name is not correct, why?');
-            $this->assertTrue($value instanceof Model_Pos_Bike, 'Value is not loaded, why? Class: ' . get_class($value));
+            $this->assertTrue(
+                $value instanceof Model_Pos_Bike, 
+                'Value is not loaded, why? Class: ' . get_class($value)
+            );
             $this->assertEquals('test', $value['code'], 'Bike CODE is lost in array item, why?');
         }
     }

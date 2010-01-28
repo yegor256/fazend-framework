@@ -76,14 +76,16 @@ class FaZend_Pan_Ui_Mockup
         list($textWidth, $textHeight) = FaZend_Image::getTextDimensions(
             $title,
             self::TITLE_FONT_SIZE,
-            $this->getImage()->getFont('mockup.title'));
+            $this->getImage()->getFont('mockup.title')
+        );
             
         $this->getImage()->imagettftext(
             self::TITLE_FONT_SIZE, 0, 
             $width - $textWidth - 3, -$textHeight, 
             $this->getImage()->getColor('mockup.title'), 
             $this->getImage()->getFont('mockup.title'), 
-            $title);
+            $title
+        );
 
         // draw all mockup's elements
         $this->_draw();
@@ -138,9 +140,9 @@ class FaZend_Pan_Ui_Mockup
      *
      * @return FaZend_Image
      */
-    public function getImage() {
+    public function getImage()
+    {
         if (!isset($this->_image)) {
-
             // create it
             $this->_image = new FaZend_Image();
 
@@ -150,7 +152,6 @@ class FaZend_Pan_Ui_Mockup
             // create new image
             $this->_image->setDimensions($width, $height);
         }
-
         return $this->_image;
     }
 
@@ -159,7 +160,8 @@ class FaZend_Pan_Ui_Mockup
      *
      * @return string[]
      */
-    public function getActors() {
+    public function getActors()
+    {
         $actors = array();
 
         foreach ($this->_getMetas() as $meta)
@@ -174,7 +176,8 @@ class FaZend_Pan_Ui_Mockup
      *
      * @return int
      */
-    protected function _draw() {
+    protected function _draw()
+    {
         // start from top
         $y = self::INDENT;
 
@@ -192,22 +195,20 @@ class FaZend_Pan_Ui_Mockup
      *
      * @return FaZend_Pan_Ui_Meta_Interface[]
      */
-    protected function _getMetas() {
+    protected function _getMetas()
+    {
         if (isset($this->_metas))
             return $this->_metas;
 
         $metas = array();
-
         $scriptFile = APPLICATION_PATH . '/views/scripts/' . $this->_script . '.phtml';
 
         if (file_exists($scriptFile)) {
-
             $html = preg_replace('/[\n\t\r\s]/', ' ', file_get_contents($scriptFile));
 
             $matches = array();
             preg_match_all('/\<\!\-\-\s?\@(\w+)\(((?:\(.*?\)|.)*?)\)(.*?)\-\-\>/', $html, $matches);
             foreach ($matches[0] as $id=>$match) {
-
                 $className = 'FaZend_Pan_Ui_Meta_' . ucfirst($matches[1][$id]);
 
                 $meta = new $className($this);
@@ -221,11 +222,9 @@ class FaZend_Pan_Ui_Mockup
                     eval('$meta ' . $matches[3][$id] . ';');
                     
                 $metas[] = $meta;
-
             }
 
         }
-
         return $this->_metas = $metas;
     }
 
@@ -234,7 +233,8 @@ class FaZend_Pan_Ui_Mockup
      *
      * @return array Dimensions of the image (width, height)
      */
-    protected function _getDimensions() {
+    protected function _getDimensions()
+    {
         // the image should NOT draw anything, just calculate the parameter
         $this->getImage()->disableDrawing();
         $height = $this->_draw();

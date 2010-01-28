@@ -19,21 +19,21 @@
  *
  * @package controllers
  */
-class Fazend_UnitsController extends FaZend_Controller_Panel {
+class Fazend_UnitsController extends FaZend_Controller_Panel
+{
 
     /**
      * Sanity check before dispatching
      *
      * @return void
      */
-    public function preDispatch() {
-        
+    public function preDispatch()
+    {
         // sanity check
         if (APPLICATION_ENV == 'production')
             $this->_redirectFlash('Units controller is not allowed in production environment', 'restrict', 'login');
         
         parent::preDispatch();
-
     }
 
     /**
@@ -41,10 +41,9 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function indexAction() {
-
+    public function indexAction()
+    {
         $this->view->tests = FaZend_Pan_Tests_Manager::getInstance()->getTests();
-
     }
 
     /**
@@ -52,10 +51,11 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function runAction() {
-
-        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->run());
-
+    public function runAction()
+    {
+        $this->_returnJSON(
+            FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->run()
+        );
     }
 
     /**
@@ -63,10 +63,11 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function routineAction() {
-
-        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->result());
-
+    public function routineAction()
+    {
+        $this->_returnJSON(
+            FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->result()
+        );
     }
 
     /**
@@ -74,10 +75,11 @@ class Fazend_UnitsController extends FaZend_Controller_Panel {
      *
      * @return void
      */
-    public function stopAction() {
-
-        $this->_returnJSON(FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->stop());
-
+    public function stopAction()
+    {
+        $this->_returnJSON(
+            FaZend_Pan_Tests_Manager::getInstance()->factory($this->getRequest()->getPost('name'))->stop()
+        );
     }
 
 }

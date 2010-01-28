@@ -22,7 +22,8 @@
  *
  * @package UiModeller
  */
-class FaZend_Pan_Ui_Navigation {
+class FaZend_Pan_Ui_Navigation
+{
 
     const ANONYMOUS = 'anonymous';
     const DEFAULT_SCRIPT = 'index/index';
@@ -60,7 +61,8 @@ class FaZend_Pan_Ui_Navigation {
      *
      * @return void
      */
-    protected function __construct() {
+    protected function __construct()
+    {
         $this->_acl = new Zend_Acl();
 
         $this->_acl->deny();
@@ -72,7 +74,8 @@ class FaZend_Pan_Ui_Navigation {
      *
      * @return FaZend_Pan_Ui_Navigation
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$_instance))
             self::$_instance = new FaZend_Pan_Ui_Navigation();
         return self::$_instance;
@@ -85,15 +88,14 @@ class FaZend_Pan_Ui_Navigation {
      * @param string Script name, like 'index/settings'
      * @return void
      */
-    public function discover($script = null) {
-
+    public function discover($script = null)
+    {
         $this->_discover();
 
         if (!is_null($script))
             $this->_setActiveScript($script);
 
         return $this->_container;
-
     }
 
     /**
@@ -101,9 +103,9 @@ class FaZend_Pan_Ui_Navigation {
      *
      * @return Zend_Acl
      */
-    public function getAcl() {
+    public function getAcl()
+    {
         $this->discover();
-
         return $this->_acl;
     }
 
@@ -112,9 +114,9 @@ class FaZend_Pan_Ui_Navigation {
      *
      * @return string[]
      */
-    public function getActors() {
+    public function getActors()
+    {
         $this->discover();
-
         return $this->_actors;
     }
 
@@ -124,8 +126,8 @@ class FaZend_Pan_Ui_Navigation {
      * @param Zend_Navigation
      * @return void
      */
-    protected function _discover() {
-
+    protected function _discover()
+    {
         if (isset($this->_container))
             return $this->_container;
 
@@ -145,18 +147,19 @@ class FaZend_Pan_Ui_Navigation {
                 continue;
 
             // create and add new page to the current collection
-            $section = new Zend_Navigation_Page_Uri(array(
-                'label' => $controller,
-                'title' => $controller,
-                'type' => 'controller',
-            ));
+            $section = new Zend_Navigation_Page_Uri(
+                array(
+                    'label' => $controller,
+                    'title' => $controller,
+                    'type' => 'controller',
+                )
+            );
 
             // list of actors who CAN access this controller
             $actors = array();
 
             // full list of actions
             foreach (glob(APPLICATION_PATH . '/views/scripts/' . $controller . '/*') as $action) {
-
                 // filter out 
                 if (!preg_match('/\.phtml$/', $action))
                     continue;
@@ -167,16 +170,21 @@ class FaZend_Pan_Ui_Navigation {
                 $label = $controller . '/' . $action;
 
                 // create and add new page to the current collection
-                $page = new Zend_Navigation_Page_Uri(array(
-                    'label' => $action,
-                    'title' => $label,
-                    'uri' => Zend_Registry::getInstance()->view->url(array('action'=>'index', 'id'=>$label), 'ui', true, false),
-                    'resource' => $label,
-                    'type' => 'action',
-                ));
+                $page = new Zend_Navigation_Page_Uri(
+                    array(
+                        'label' => $action,
+                        'title' => $label,
+                        'uri' => Zend_Registry::getInstance()->view
+                        ->url(array('action'=>'index', 'id'=>$label), 'ui', true, false),
+                        'resource' => $label,
+                        'type' => 'action',
+                    )
+                );
 
                 // get the file
-                $content = file_get_contents(APPLICATION_PATH . '/views/scripts/' . $controller . '/' . $action . '.phtml');
+                $content = file_get_contents(
+                    APPLICATION_PATH . '/views/scripts/' . $controller . '/' . $action . '.phtml'
+                );
 
                 $matches = array();
                 if (preg_match_all('/<!--\s?\@actor\s?\([\"\'](.*?)[\'\"]\)/', $content, $matches)) {
@@ -210,7 +218,6 @@ class FaZend_Pan_Ui_Navigation {
         }
 
         return $this->_container;
-
     }
 
     /**
@@ -219,7 +226,8 @@ class FaZend_Pan_Ui_Navigation {
      * @param string Script name, like 'index/settings'
      * @return void
      */
-    protected function _setActiveScript($script) {
+    protected function _setActiveScript($script)
+    {
         $this->_container->findOneBy('resource', $script)->active = true;
     }
 
@@ -230,8 +238,8 @@ class FaZend_Pan_Ui_Navigation {
      * @param string Script
      * @return string name of actor
      */
-    protected function _allow($actor, $script) {
-
+    protected function _allow($actor, $script)
+    {
         // create a role if it is absent
         if (!$this->_acl->hasRole($actor)) {
             $this->_acl->addRole(new Zend_Acl_Role($actor));
@@ -246,7 +254,6 @@ class FaZend_Pan_Ui_Navigation {
         $this->_acl->allow($actor, $script);
 
         return $actor;
-
     }
 
 }

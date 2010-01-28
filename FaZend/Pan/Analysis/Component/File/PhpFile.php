@@ -20,7 +20,8 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Component_File {
+class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Component_File
+{
 
     /**
      * Reconfigure class according to reflection information

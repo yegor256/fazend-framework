@@ -19,7 +19,8 @@
  *
  * @package Log
  */
-class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
+class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock
+{
 
     /**
      * Formatter
@@ -33,7 +34,8 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_formatter = new Zend_Log_Formatter_Simple();
     }
 
@@ -42,7 +44,8 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
      *
      * @return boolean
      */
-    public function isEmpty() {
+    public function isEmpty()
+    {
         return count($this->events) == 0;
     }
 
@@ -51,7 +54,8 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock {
      *
      * @return string
      */
-    public function getLog() {
+    public function getLog()
+    {
         $log = '';
         foreach ($this->events as $event)
             $log .= $this->_formatter->format($event);

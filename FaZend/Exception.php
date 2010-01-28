@@ -19,7 +19,8 @@
  *
  * @package Exception
  */
-class FaZend_Exception extends Exception {
+class FaZend_Exception extends Exception
+{
 
     /**
      * Creates exception class on fly
@@ -34,15 +35,14 @@ class FaZend_Exception extends Exception {
      * @param string Message to be sent inside this class
      * @return boolean
      */
-    public static function raise($class, $message = false, $parent = 'Zend_Exception') {
-
+    public static function raise($class, $message = false, $parent = 'Zend_Exception')
+    {
         // exception class should either exist or should
         // be dynamically created
         self::_declareClass($class, $parent);
 
         // throw this class as exception
         throw new $class($message);
-
     }
 
     /**
@@ -52,8 +52,8 @@ class FaZend_Exception extends Exception {
      * @param string Parent class
      * @return void
      */
-    public static function _declareClass($class, $parent = 'Zend_Exception') {
-
+    public static function _declareClass($class, $parent = 'Zend_Exception')
+    {
         if (class_exists($class, false))
             return;
             
@@ -74,7 +74,6 @@ class FaZend_Exception extends Exception {
 
         // dynamically declare this class
         eval("class {$class} extends {$parent} {};");    
-
     }
 
 }

@@ -18,9 +18,13 @@
 <?php else: ?>
 
     <ul style="line-height: 1.3em;">
-    <?php echo $this->partial('adm/pos/node.phtml', array(
-        'node' => FaZend_Pos_Properties::root(), 
-        'label' => 'root'))?>
+    <?php 
+    echo $this->partial(
+        'adm/pos/node.phtml', array(
+            'node' => FaZend_Pos_Properties::root(), 
+            'label' => 'root'
+        )
+    )?>
     </ul>
     
-<?php endif; ?>
+<?php endif;

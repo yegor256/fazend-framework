@@ -74,43 +74,68 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
         
         return 
         
-        self::makeSvg('rect', array(
-            'x' => $cornerX,
-            'y' => $cornerY,
-            'width' => $width,
-            'height' => $height,
-            'fill' => '#' . FaZend_Image::UML_FILL,
-            'stroke' => '#' . FaZend_Image::UML_BORDER,
-            'stroke-width' => $line)) .
+        self::makeSvg(
+            'rect', 
+            array(
+                'x' => $cornerX,
+                'y' => $cornerY,
+                'width' => $width,
+                'height' => $height,
+                'fill' => '#' . FaZend_Image::UML_FILL,
+                'stroke' => '#' . FaZend_Image::UML_BORDER,
+                'stroke-width' => $line
+            )
+        ) .
             
-        self::makeSvg('line', array(
-            'x1' => $cornerX,
-            'y1' => $cornerY + $font * 2.5,
-            'x2' => $cornerX + $width,
-            'y2' => $cornerY + $font * 2.5,
-            'stroke' => '#' . FaZend_Image::UML_BORDER,
-            'stroke-width' => $line)) .
+        self::makeSvg(
+            'line', 
+            array(
+                'x1' => $cornerX,
+                'y1' => $cornerY + $font * 2.5,
+                'x2' => $cornerX + $width,
+                'y2' => $cornerY + $font * 2.5,
+                'stroke' => '#' . FaZend_Image::UML_BORDER,
+                'stroke-width' => $line
+            )
+        ) .
 
-        self::makeSvg('line', array(
-            'x1' => $cornerX,
-            'y1' => $cornerY + $font * 3,
-            'x2' => $cornerX + $width,
-            'y2' => $cornerY + $font * 3,
-            'stroke' => '#' . FaZend_Image::UML_BORDER,
-            'stroke-width' => $line)) .
+        self::makeSvg(
+            'line', 
+            array(
+                'x1' => $cornerX,
+                'y1' => $cornerY + $font * 3,
+                'x2' => $cornerX + $width,
+                'y2' => $cornerY + $font * 3,
+                'stroke' => '#' . FaZend_Image::UML_BORDER,
+                'stroke-width' => $line
+            )
+        ) .
 
-        self::makeSvg('a', array(
-            'target' => '_parent',
-            'xlink:href' => $view->url(array(
-                'action' => 'index', 
-                'diagram' => $this->getDiagramName($type)), 'analysis'),
-            'xlink:title' => $this->getFullName()),
-            self::makeSvg('text', array(
-                'x' => $cornerX + $font,
-                'y' => $cornerY + $font * 2,
-                'class' => 'text',
-                'font-family' => 'Verdana',
-                'font-size' => $font), $title));
+        self::makeSvg(
+            'a', 
+            array(
+                'target' => '_parent',
+                'xlink:href' => $view->url(
+                    array(
+                        'action' => 'index', 
+                        'diagram' => $this->getDiagramName($type)
+                    ), 
+                    'analysis'
+                ),
+                'xlink:title' => $this->getFullName()
+            ),
+            self::makeSvg(
+                'text', 
+                array(
+                    'x' => $cornerX + $font,
+                    'y' => $cornerY + $font * 2,
+                    'class' => 'text',
+                    'font-family' => 'Verdana',
+                    'font-size' => $font
+                ), 
+                $title
+            )
+        );
     }
 
 }

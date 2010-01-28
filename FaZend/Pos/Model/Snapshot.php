@@ -56,8 +56,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
             ->where('fzObject = ?', strval($fzObject))
             ->order('version DESC')
             ->setRowClass('FaZend_Pos_Model_Snapshot')
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -74,8 +73,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
             ->order('version DESC')
             ->setRowClass('FaZend_Pos_Model_Snapshot')
             ->limit(1)
-            ->fetchRow()
-            ;
+            ->fetchRow();
     }
 
     /**
@@ -105,14 +103,16 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
     protected static function _getNextVersion(FaZend_Pos_Model_Object $fzObject)
     {
         $row = self::retrieve(false)
-            ->from('fzSnapshot', array(
-                'ver' => new Zend_Db_Expr('MAX(version)+1')
-                ))
+            ->from(
+                'fzSnapshot', 
+                array(
+                    'ver' => new Zend_Db_Expr('MAX(version)+1')
+                )
+            )
             ->where('fzObject = ?', strval($fzObject))
             ->group('fzObject')
             ->setSilenceIfEmpty()
-            ->fetchRow()
-            ;
+            ->fetchRow();
 
         if (empty($row)) {
             return 1;

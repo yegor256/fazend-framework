@@ -20,7 +20,8 @@
  * @see http://framework.zend.com/manual/en/zend.db.table.html
  * @package Properties
  */
-class FaZend_Properties {
+class FaZend_Properties
+{
 
     /**
      * All properties
@@ -34,7 +35,8 @@ class FaZend_Properties {
      *
      * @return void
      */
-    public static function setOptions(Zend_Config $config) {
+    public static function setOptions(Zend_Config $config)
+    {
         self::$_options = $config;
     }
 
@@ -43,7 +45,8 @@ class FaZend_Properties {
      *
      * @return Zend_Config
      */
-    public static function get() {
+    public static function get()
+    {
         return self::$_options;
     }
 

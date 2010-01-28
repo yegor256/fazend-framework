@@ -25,7 +25,8 @@
  * @todo Logging procedure refactor for FaZend_Log usage 
  * @todo Zend_Config should be used more effectively, especially for default values
  */
-class FaZend_Backup {
+class FaZend_Backup
+{
 
     /**
      * Internal list of log messages
@@ -319,7 +320,7 @@ class FaZend_Backup {
         if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir))
             $this->    _log("Failed to go to {$this->_getConfig()->ftp->dir}", true);    
 
-        $this->_log("Current directory in FTP: ".ftp_pwd ($ftp));    
+        $this->_log("Current directory in FTP: " . ftp_pwd($ftp));    
 
         if (!@ftp_put($ftp, $object, $file, FTP_BINARY))    
             $this->_log("Failed to upload " . $this->_nice($file), true);    
@@ -366,13 +367,13 @@ class FaZend_Backup {
         if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir))
             return $this->_log("Failed to go to {$this->_getConfig()->ftp->dir}");    
 
-        $this->_log("Current directory in FTP: ".ftp_pwd ($ftp));    
+        $this->_log("Current directory in FTP: " . ftp_pwd($ftp));    
 
         $files = @ftp_nlist($ftp, '.');    
         if (!$files)
             $this->_log("Failed to get nlist from FTP", true);    
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $lastModified = @ftp_mdtm($ftp, $file);
             if ($lastModified == -1) {
                 $this->_log("Failed to get mdtm from '$file'");    
@@ -437,12 +438,15 @@ class FaZend_Backup {
 
         $files = $this->getS3Files();
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $info = $this->getS3FileInfo($file);
 
             if ($info['mtime'] < $minTime) {
                 $this->_getS3()->removeObject($bucket . '/' . $file);
-                $this->_log("File $file removed from S3, since it's expired (over {$this->_getConfig()->S3->age} days)");
+                $this->_log(
+                    "File $file removed from S3, since it's " . 
+                    "expired (over {$this->_getConfig()->S3->age} days)"
+                );
             }    
         }
     }

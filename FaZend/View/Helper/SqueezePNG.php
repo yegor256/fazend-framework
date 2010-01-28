@@ -169,12 +169,14 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
         if (!isset($map['images'][$file]))
             return self::FAILURE;
 
-        return sprintf("background:url(" . $this->url() . 
+        return sprintf(
+            "background:url(" . $this->url() . 
             ") no-repeat;width:%dpx;height:%dpx;background-position:%dpx %dpx;display:inline-block;",
             $map['images'][$file]['width'],
             $map['images'][$file]['height'],
             -$map['images'][$file]['x'],
-            -$map['images'][$file]['y']);
+            -$map['images'][$file]['y']
+        );
     }
 
     /**

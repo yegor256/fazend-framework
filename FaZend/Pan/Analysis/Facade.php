@@ -63,7 +63,7 @@ class FaZend_Pan_Analysis_Facade
                 'fullName' => $sub->getFullName(),
                 'type' => $sub->getType(),
                 'traces' => $sub->getTraces(),
-                );
+            );
             $this->_derive($sub, $list);
         }
     }

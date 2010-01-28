@@ -20,38 +20,45 @@
  * @package UiModeller
  * @subpackage Mockup
  */
-class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
+class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract
+{
 
     /**
      * Draw in PNG image
      *
      * @return int Height
      */
-    public function draw($y) {
+    public function draw($y)
+    {
         $links = $this->_getOptions('/^link.*/');
 
         $x = FaZend_Pan_Ui_Mockup::INDENT;
 
         foreach ($links as $link) {
-
             $txt = $this->_parse($link['header']);
 
-            $bbox = imagettfbbox(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
-                $this->_mockup->getImage()->getFont('mockup.content'), $txt);
+            // @todo replace it 
+            $bbox = imagettfbbox(
+                FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+                $this->_mockup->getImage()->getFont('mockup.content'), 
+                $txt
+            );
 
-            $this->_mockup->getImage()->imagettftext(FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
+            $this->_mockup->getImage()->imagettftext(
+                FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 0, 
                 $x, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
                 $this->_mockup->getImage()->getColor('mockup.link'), 
                 $this->_mockup->getImage()->getFont('mockup.content'), 
-                $txt);
+                $txt
+            );
 
             $this->_mockup->getImage()->imageline(
                 $x, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE + 1, 
                 $x + $bbox[4], $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE + 1, 
-                $this->_mockup->getImage()->getColor('mockup.link'));
+                $this->_mockup->getImage()->getColor('mockup.link')
+            );
 
             $x += $bbox[4] + FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
-
         }
 
         return FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
@@ -62,7 +69,8 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
      *
      * @return string HTML image of the element
      */
-    public function html() {
+    public function html()
+    {
         $links = $this->_getOptions('/^link.*/');
 
         $hrefs = array();
@@ -80,11 +88,15 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract {
      * @param string Name of VIEW script to link here
      * @return this
      */
-    public function addLink($name, $header, $link = false) {
-        $this->__set('link' . $name, array(
-            'header' => $header,
-            'link' => $link,
-            ));
+    public function addLink($name, $header, $link = false)
+    {
+        $this->__set(
+            'link' . $name, 
+            array(
+                'header' => $header,
+                'link' => $link,
+            )
+        );
         return $this;
     }
 

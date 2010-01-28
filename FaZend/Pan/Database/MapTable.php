@@ -19,7 +19,8 @@
  *
  * @package Deployer
  */
-class FaZend_Pan_Database_MapTable {
+class FaZend_Pan_Database_MapTable
+{
 
     const WIDTH = 200; // maximum width of one table, in pixels
 
@@ -53,7 +54,8 @@ class FaZend_Pan_Database_MapTable {
      *
      * @return void
      */
-    public function __construct($name, FaZend_Image $image) {
+    public function __construct($name, FaZend_Image $image)
+    {
         $this->_name = $name;
         $this->_image = $image;
     }
@@ -63,7 +65,8 @@ class FaZend_Pan_Database_MapTable {
      *
      * @return var
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if ($name === 'size')
             return count($this->_getInfo());
 
@@ -77,7 +80,8 @@ class FaZend_Pan_Database_MapTable {
      * @param array Column details
      * @return string Text
      */
-    public static function formatColumnTitle($column) {
+    public static function formatColumnTitle($column)
+    {
         $matches = array();
         preg_match('/^(\w+\s?(?:\(\d+\))?)/i', $column['DATA_TYPE'], $matches);
 
@@ -92,7 +96,8 @@ class FaZend_Pan_Database_MapTable {
      * @param int Vertical axis of top left corner
      * @return int Height in pixels
      */
-    public function draw($x, $y) {
+    public function draw($x, $y)
+    {
         $top = $y;
         $y += self::TITLE_SIZE;
 
@@ -102,20 +107,29 @@ class FaZend_Pan_Database_MapTable {
             $x, $y, 
             $this->_image->getColor('table.title'), 
             FaZend_Image::getFont('table.title'), 
-            $this->_name);
+            $this->_name
+        );
 
-        list($width, ) = FaZend_Image::getTextDimensions($this->_name, self::TITLE_SIZE, FaZend_Image::getFont('table.title'));
+        list($width, ) = FaZend_Image::getTextDimensions(
+            $this->_name, 
+            self::TITLE_SIZE, 
+            FaZend_Image::getFont('table.title')
+        );
 
         $this->_image->imageline($x, $y+1, $x+$width+10, $y+1, $this->_image->getColor('table.title'));
 
         $y += 3 + self::TITLE_SIZE;
 
         foreach ($this->_getInfo() as $column) {
-      
-            $this->_image->imagettftext(self::COLUMN_SIZE, 0, $x, $y, 
+            $this->_image->imagettftext(
+                self::COLUMN_SIZE, 
+                0, 
+                $x, 
+                $y, 
                 $this->_image->getColor('table.column'), 
                 FaZend_Image::getFont('table.column'), 
-                self::formatColumnTitle($column));
+                self::formatColumnTitle($column)
+            );
 
             $y += self::COLUMN_SIZE+2;
 
@@ -123,17 +137,21 @@ class FaZend_Pan_Database_MapTable {
                 $comments = explode("\n", wordwrap(cutLongLine($column['COMMENT'], 80), 30, "\n", true));
 
                 foreach ($comments as $comment) {
-                    $this->_image->imagettftext(self::COMMENT_SIZE, 0, $x+10, $y, 
+                    $this->_image->imagettftext(
+                        self::COMMENT_SIZE, 
+                        0, 
+                        $x+10, 
+                        $y, 
                         $this->_image->getColor('table.comment'), 
                         FaZend_Image::getFont('table.comment'), 
-                        $comment);
+                        $comment
+                    );
                     $y += self::COMMENT_SIZE+2;
                 }
                 $y += 2;
             }
 
         }
-
         return $y - $top;
     }
 
@@ -142,7 +160,8 @@ class FaZend_Pan_Database_MapTable {
      *
      * @return void
      */
-    public function _getInfo() {
+    public function _getInfo()
+    {
         if (!isset($this->_info))
             $this->_info = FaZend_Deployer::getInstance()->getTableInfo($this->_name);
         return $this->_info;
@@ -153,7 +172,8 @@ class FaZend_Pan_Database_MapTable {
      *
      * @return int
      */
-    public function _getHeight() {
+    public function _getHeight()
+    {
         // the image should NOT draw anything, just calculate the parameter
         $this->_image->disableDrawing();
         $height = $this->draw(0, 0);
