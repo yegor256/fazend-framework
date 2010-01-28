@@ -37,7 +37,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * 
      * @var FaZend_Pos_Properties
      */
-    private $_ps = null;
+    protected $_ps = null;
     
     /**
      * Constructor, you CAN'T override it!
@@ -56,7 +56,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         foreach ($rc->getProperties() as $property) {
             if ($property->isStatic())
                 continue;
-            if ($property->getName() !== '__ps') {
+            if ($property->getName() !== '_ps') {
                 FaZend_Exception::raise(
                     'FaZend_Pos_Abstract_ExplicitPropertyFound',
                     "You're not allowed to explicitly declare properties in POS classes, " .
@@ -396,7 +396,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             } 
         }
         
-        return array('__ps');
+        return array('_ps');
     }
 
 }
