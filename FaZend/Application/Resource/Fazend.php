@@ -304,14 +304,17 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      */
     protected function _initTableCache() 
     {
-        $cache = Zend_Cache::factory('Core', new FaZend_Cache_Backend_Memory(),
+        $cache = Zend_Cache::factory(
+            'Core', 
+            new FaZend_Cache_Backend_Memory(),
             array(
                 'caching' => true,
                 'lifetime' => null, // forever 
                 'cache_id_prefix' => FaZend_Properties::get()->name . '_' . FaZend_Revision::get(),
                 'automatic_serialization' => true
             ),
-            array());
+            array()
+        );
              
         // metadata cacher
         // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching    
@@ -330,7 +333,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
             return;
 
         // plugin cache
-        // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html#zend.loader.pluginloader.performance.example
+        // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
         $classFileIncCache = TEMP_PATH . '/'. FaZend_Properties::get()->name . '-includeCache.php';
 
         // this may happen if we start from a different process
@@ -404,10 +407,15 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         }
 
         // make sure that directory with test is includeable
-        set_include_path(implode(PATH_SEPARATOR, array(
-            realpath(APPLICATION_PATH . '/../../test'),
-            get_include_path(),
-        )));
+        set_include_path(
+            implode(
+                PATH_SEPARATOR, 
+                array(
+                    realpath(APPLICATION_PATH . '/../../test'),
+                    get_include_path(),
+                )
+            )
+        );
         
         $injectorPhp = APPLICATION_PATH . '/../../test/injector/Injector.php';
         if (!file_exists($injectorPhp))
