@@ -132,6 +132,17 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $this->_behaviors[] = new $className($args);
         return $this;
     }
+    
+    /**
+     * Set form ACTION URL
+     *
+     * @param string URL to set
+     * @return void
+     */
+    public function setFormAction($url) 
+    {
+        $this->_form->setAction($url);
+    }
 
     /**
      * Converts it to HTML
@@ -306,13 +317,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         
         // maybe this element is absent in the form?
         if (!isset($this->_form->$name)) {
-            if ($param->isOptional())
+            if ($param->isOptional()) {
                 return $param->getDefaultValue();
-            else
+            } else {
                 FaZend_Exception::raise(
                     'FaZend_View_Helper_Forma_ParamNotFound',
                     "Field '{$name}' not found in forma, but is required by the action"
                 );
+            }
         }
 
         // get the value of this element from the form
