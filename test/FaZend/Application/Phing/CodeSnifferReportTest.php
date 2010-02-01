@@ -16,13 +16,12 @@ class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase
     {
         // we need this message since the operations below
         // might take some good time.
-        logg('CodeSnifferReport testing started, wait 30-40sec...');
-        
-        //$xml = tempnam(TEMP_PATH, 'phpcs');
-        $xml = 'test.xml';
+        $xml = tempnam(TEMP_PATH, 'phpcs');
         $srcDir = APPLICATION_PATH . '/Model';
         $destDir = $xml . '-output';
     
+        logg('CodeSnifferReport testing started into {$destDir}, wait 30-40sec...');
+        
         // remove the directory before everything
         shell_exec('rm -rf ' . escapeshellarg($destDir));
         mkdir($destDir);

@@ -304,6 +304,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      */
     protected function _initTableCache() 
     {
+        // @todo when this ticket is resolved: http://framework.zend.com/issues/browse/ZF-8991
         // $cache = Zend_Cache::factory(
         //     'Core', 
         //     new FaZend_Cache_Backend_Memory(),
