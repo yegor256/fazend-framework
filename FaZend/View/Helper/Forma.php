@@ -137,11 +137,12 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * Set form ACTION URL
      *
      * @param string URL to set
-     * @return void
+     * @return $this
      */
     public function setFormAction($url) 
     {
         $this->_form->setAction($url);
+        return $this;
     }
 
     /**
