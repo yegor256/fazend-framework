@@ -131,6 +131,18 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             ->where('1 = 1')
             ->where('2 = 2')
             ->delete();
+        $this->assertEquals(0, count(FaZend_Db_Table_ActiveRow_car::retrieve()->fetchAll()));
+    }
+    
+    public function testUpdateRowsetWorks()
+    {
+         Model_Owner::retrieve()
+            ->where('1 = 1')
+            ->where('2 = 2')
+            ->update(array('name' => 'test'));
+            
+        $owner = new Model_Owner(132);
+        $this->assertEquals('test', $owner->name);
     }
     
     public function testFlyweightProperlyAllocateObjects()

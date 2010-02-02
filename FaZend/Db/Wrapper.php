@@ -254,11 +254,35 @@ class FaZend_Db_Wrapper
      * </code>
      *
      * @return FaZend_Db_RowsetWrapper
+     * @see Zend_Db_Table_Abstract::delete()
      */
     public function delete() 
     {
         $wheres = $this->select()->getPart(Zend_Db_Select::WHERE);
         $this->table()->delete(implode('', $wheres));
+    }
+
+    /**
+     * Update everything selected
+     *
+     * You can use it like this:
+     *
+     * <code>
+     * public static function renameDocuments(Model_User $user) {
+     *     self::retrieve()
+     *         ->where('user = ?', $user)
+     *         ->update(array('name' => new Zend_Db_Expr('UPPER(name)')));
+     * }
+     * </code>
+     *
+     * @param array Column-value pairs
+     * @return FaZend_Db_RowsetWrapper
+     * @see Zend_Db_Table_Abstract::update()
+     */
+    public function update(array $changes) 
+    {
+        $wheres = $this->select()->getPart(Zend_Db_Select::WHERE);
+        $this->table()->update($changes, implode('', $wheres));
     }
 
     /**
@@ -270,7 +294,10 @@ class FaZend_Db_Wrapper
      */
     public function __call($name, array $args) 
     {
-        $this->_select = call_user_func_array(array($this->select(), $name), $args);
+        $this->_select = call_user_func_array(
+            array($this->select(), $name), 
+            $args
+        );
         return $this;
     }
 
