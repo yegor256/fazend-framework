@@ -29,6 +29,15 @@
  */
 class FaZend_Bo_Money
 {
+    
+    const POINT_WEIGHT = 10000;
+
+    /**
+     * Default currency short name
+     *
+     * @var string
+     */
+    protected static $_defaultCurrency = 'USD';
 
     /**
      * The value, in points, in original currency (NOT in USD!)
@@ -45,6 +54,19 @@ class FaZend_Bo_Money
      * @var Zend_Currency
      */
     protected $_currency;
+
+    /**
+     * Currency to set
+     *
+     * @param string|Zend_Currency The currency to use as default
+     * @return void
+     */
+    public static function setDefaultCurrency($currency) 
+    {
+        if ($currency instanceof Zend_Currency)
+            $currency = $currency->getShortName();
+        self::$_defaultCurrency = strval($currency);
+    }
 
     /**
      * Constructor
@@ -87,7 +109,7 @@ class FaZend_Bo_Money
      */
     public static function convertFromPoints($points) 
     {
-        return self::factory($points / 10000);
+        return self::factory($points / self::POINT_WEIGHT);
     }
 
     /**
@@ -99,7 +121,7 @@ class FaZend_Bo_Money
      */
     public function set($value)
     {
-        $currency = 'USD';
+        $currency = self::$_defaultCurrency;
         $value = (string)$value;
         
         if ($value && !is_numeric($value)) {
@@ -133,15 +155,16 @@ class FaZend_Bo_Money
         }
         
         // we should implement it properly
-        $this->_currency = FaZend_Flyweight::factory('Zend_Currency', 'en_US', $currency)
-            ->setFormat(
-                array(
-                    'precision' => 2, // cents to show
-                    'display' => Zend_Currency::USE_SHORTNAME,
-                    'position' => Zend_Currency::RIGHT
-                )
-            );
-        $this->_points = (int)($value * 10000);
+        $this->_currency = 
+        FaZend_Flyweight::factory('Zend_Currency', 'en_US', $currency)
+        ->setFormat(
+            array(
+                'precision' => 2, // cents to show
+                'display' => Zend_Currency::USE_SHORTNAME,
+                'position' => Zend_Currency::RIGHT
+            )
+        );
+        $this->_points = (int)($value * self::POINT_WEIGHT);
     }
 
     /**
@@ -151,7 +174,7 @@ class FaZend_Bo_Money
      */
     public function __toString()
     {
-        return $this->_currency->toCurrency($this->_points / 10000);
+        return $this->_currency->toCurrency($this->original);
     }
 
     /**
@@ -165,13 +188,13 @@ class FaZend_Bo_Money
     {
         switch ($name) {
             case 'usd':
-                return $this->_getPoints() / 10000;
+                return $this->_getPoints() / self::POINT_WEIGHT;
             case 'cents':
                 return $this->_getPoints() / 100;
             case 'points':
                 return $this->_getPoints();
             case 'original':
-                return $this->_points / 10000;
+                return $this->_points / self::POINT_WEIGHT;
             case 'origCents':
                 return $this->_points / 100;
             case 'origPoints':
@@ -337,6 +360,7 @@ class FaZend_Bo_Money
      * @param Zend_Currency Currency to work with
      * @return float
      * @todo Implement through www.foxrate.org
+     * @throws FaZend_Bo_Money_UnknownCurrency
      */
     protected function _getRate(Zend_Currency $currency)
     {
@@ -379,7 +403,7 @@ class FaZend_Bo_Money
                 break;
         
             default:
-                $money *= 10000;
+                $money *= self::POINT_WEIGHT;
                 break;
         }
     }
