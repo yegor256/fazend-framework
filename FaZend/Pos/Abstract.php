@@ -338,6 +338,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * @return void
      * @see http://php.net/manual/en/language.oop5.magic.php
      * @throws FaZend_Pos_Exception If something goes wrong with the object
+     * @throws FaZend_Pos_RootUnserializationProhibited
+     * @throws FaZend_Pos_UnserializationFailure
      **/
     public function __wakeup() 
     {
@@ -370,6 +372,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * @return array List of properties to serialize
      * @see http://php.net/manual/en/language.oop5.magic.php
      * @throws FaZend_Pos_Exception If something goes wrong with the object
+     * @throws FaZend_Pos_RootSerializationProhibited
+     * @throws FaZend_Pos_SerializationProhibited
      */
     public function __sleep() 
     {
@@ -396,6 +400,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             } 
         }
         
+        assert(!empty($this->_ps));
         return array('_ps');
     }
 
