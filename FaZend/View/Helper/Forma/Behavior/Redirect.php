@@ -33,6 +33,12 @@ class FaZend_View_Helper_Forma_Behavior_Redirect extends FaZend_View_Helper_Form
      */
     public function run(&$html, $log)
     {
+        // no parameter mean that we should redirect to the CURRENT page
+        if (empty($this->_args)) {
+            return Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
+                ->gotoUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri());
+        }
+        
         // redirect to the given address
         call_user_func_array(
             array(
