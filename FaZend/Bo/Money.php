@@ -280,6 +280,18 @@ class FaZend_Bo_Money
         $this->_points = -$this->_points;
         return $this;
     }
+    
+    /**
+     * This value equals to the given one?
+     *
+     * @param FaZend_Bo_Money|mixed Another value
+     * @return boolean
+     */
+    public function equalsTo($money) 
+    {
+        $this->_normalize($money);
+        return $this->_points == $money;
+    }
 
     /**
      * Current value is GREATER than provided one?

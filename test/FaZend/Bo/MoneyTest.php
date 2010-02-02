@@ -51,7 +51,7 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $this->assertEquals(100, $money->add(new FaZend_Bo_Money('-1 USD'))->usd);
         
         $this->assertEquals(99, $money->sub('1 USD')->usd);
-        $this->assertEquals(100, $money->sub(-1)->usd);
+        $this->assertTrue($money->sub(-1)->equalsTo('100 USD'));
         
         $this->assertEquals(200, $money->mul(2)->usd);
         $this->assertEquals(40, $money->div(5)->usd);
