@@ -240,17 +240,23 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function __get($name)
     {
         // you should not access ID field directly!
-        if (strtolower($name) == 'id')
-            trigger_error('ID should not be directly accesses in ' . get_class($this), E_USER_WARNING);
+        if (strtolower($name) == 'id') {
+            trigger_error(
+                'ID should not be directly accesses in ' . get_class($this), 
+                E_USER_WARNING
+            );
+        }
 
         // system field
-        if (strtolower($name) == '__id')
+        if (strtolower($name) == '__id') {
             $name = 'id';
+        }
 
         // if we are interested in just ID and data are not loaded yet
         // we just return the ID, that's it
-        if ($name === 'id' && isset($this->_preliminaryKey))
+        if ($name === 'id' && isset($this->_preliminaryKey)) {
             return intval($this->_preliminaryKey);
+        }
 
         // make sure the class has live data from DB
         $this->_loadLiveData();
@@ -260,8 +266,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // maybe we're getting the value for the second time, 
         // and it was already calculated before and stored
         // in toArray()
-        if (!is_scalar($value))
+        if (!is_scalar($value) && !is_null($value)) {
             return $value;
+        }
 
         foreach (self::$_mapping as $regex=>$class) {
             if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
