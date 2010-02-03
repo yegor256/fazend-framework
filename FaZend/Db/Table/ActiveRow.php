@@ -315,7 +315,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             if (self::$_latestCallTime < microtime(true) - 1) {
                 // we should ping the DB here to avoid lost connections
                 // @see http://framework.zend.com/issues/browse/ZF-9072
-                Zend_Db_Table::getDefaultAdapter()->query('--');
+                // this code in Mysqli leads to:
+                //Mysqli prepare error: This command is not supported in the prepared statement protocol yet
+                // Zend_Db_Table::getDefaultAdapter()->query('--');
                 self::$_latestCallTime = microtime(true);
             }
         }
