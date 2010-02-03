@@ -26,7 +26,10 @@ class FaZend_Pan_Analysis_Facade
     /**
      * Get full list of components, as a hierarchy
      *
-     * @return array
+     * Every element in the array is just a "string" name of the
+     * component, not a component itself.
+     *
+     * @return string[]
      **/
     public function getComponents()
     {
@@ -37,9 +40,13 @@ class FaZend_Pan_Analysis_Facade
     }
 
     /**
-     * Get full list of components, as a plain list
+     * Get full list of components, as an array of arrays
      *
-     * @return array
+     * Every element of the list is an array, with elements named
+     * according to our internal principle.
+     *
+     * @return array[]
+     * @see _derive() To understand the content of every component
      **/
     public function getComponentsList()
     {

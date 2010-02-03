@@ -26,7 +26,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
     /**
-     * Name of the component, like 'User' or 'AccessController'
+     * Name of the component, like 'User' or 'AccessController', without parent
      *
      * @var string
      */
@@ -126,7 +126,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     {
         if (!$this->_parent)
             return $this->getName();
-        return $this->_parent->getFullName() . FaZend_Pan_Analysis_Component::SEPARATOR . $this->getName();
+        return $this->_parent->getFullName() . 
+        FaZend_Pan_Analysis_Component::SEPARATOR . $this->getName();
     }
     
     /**
@@ -137,9 +138,10 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      */
     public function find($name)
     {
-        foreach ($this as $component)
+        foreach ($this as $component) {
             if ($component->getName() == $name)
                 return $component;
+        }
         FaZend_Exception::raise(
             'FaZend_Pan_Analysis_Component_NotFound', 
             "Component not found: '{$this->getName()}'::find('{$name}')"
@@ -274,13 +276,16 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     /**
      * Convert tags from docblock to traces
      *
+     * @param Zend_Reflection_Docblock phpDoc block to parse
      * @return void
+     * @see $this->_traces
      **/
     protected function _convertTagsToTraces(Zend_Reflection_Docblock $docblock) 
     {
         $this->_traces = array();
-        foreach ($docblock->getTags('see') as $tag)
+        foreach ($docblock->getTags('see') as $tag) {
             $this->_traces[] = $tag->getDescription();
+        }
     }
     
 }

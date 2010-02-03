@@ -50,6 +50,5 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
     public function svg(Zend_View $view, $type, $x, $y)
     {
     }
-    
 
 }

@@ -304,22 +304,22 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      */
     protected function _initTableCache() 
     {
-        // @todo when this ticket is resolved: http://framework.zend.com/issues/browse/ZF-8991
-        // $cache = Zend_Cache::factory(
-        //     'Core', 
-        //     new FaZend_Cache_Backend_Memory(),
-        //     array(
-        //         'caching' => true,
-        //         'lifetime' => null, // forever 
-        //         'cache_id_prefix' => FaZend_Properties::get()->name . '_' . FaZend_Revision::get(),
-        //         'automatic_serialization' => true
-        //     ),
-        //     array()
-        // );
-        //      
-        // // metadata cacher
-        // // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching    
-        // Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+        //@todo when this ticket is resolved: http://framework.zend.com/issues/browse/ZF-8991
+        $cache = Zend_Cache::factory(
+            'Core', 
+            new FaZend_Cache_Backend_Memory(),
+            array(
+                'caching' => true,
+                'lifetime' => null, // forever 
+                'cache_id_prefix' => FaZend_Properties::get()->name . '_' . FaZend_Revision::get(),
+                'automatic_serialization' => true
+            ),
+            array()
+        );
+             
+        // metadata cacher
+        // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching    
+        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
     }    
 
     /**
