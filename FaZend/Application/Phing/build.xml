@@ -247,7 +247,12 @@
     </target>    
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <if><istrue value="${to.phpcs}" /><then>
+        <if><and>
+            <istrue value="${to.phpcs}" />
+            <not>
+                <isset property="to.unit" />
+            </not>
+        </and><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <exec command="phpcs 
                 -n
