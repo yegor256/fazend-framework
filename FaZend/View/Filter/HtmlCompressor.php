@@ -25,7 +25,8 @@ require_once 'Zend/Filter/Interface.php';
 class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
 {
     
-    const MASK_PREFIX = 'mask-';
+    const MASK_PREFIX = '*+-Op)87*6-*6gTT97';
+    const MASK_SUFFIX = '0(j(99)hgGH6%4~-0H';
     
     /**
      * List of regex for replacements
@@ -62,7 +63,8 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
             'pre', 
             'script', 
             'style', 
-            'textarea');
+            'textarea'
+        );
 
         // convert masked tags
         $masked = array();
@@ -70,16 +72,26 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
             $matches = array();
             preg_match_all('/\<' . $tag . '(.*?)\>(.*?)\<\/' . $tag . '\>/msi', $html, $matches);
             foreach ($matches[0] as $id=>$match) {
-                $html = str_replace($match, self::MASK_PREFIX . $tag . $id, $html);
+                $html = str_replace($match, self::MASK_PREFIX . $tag . $id . self::MASK_SUFFIX, $html);
                 $masked[$tag . $id] = $match;
             }
         }   
 
         // compress HTML
-        $html = trim(preg_replace(array_keys(self::$_replacer), self::$_replacer, $html));
+        $html = trim(
+            preg_replace(
+                array_keys(self::$_replacer), 
+                self::$_replacer, 
+                $html
+            )
+        );
 
         // deconvert masked tags from
-        preg_match_all('/' . preg_quote(self::MASK_PREFIX, '/'). '(\w+\d+)/', $html, $matches);
+        preg_match_all(
+            '/' . preg_quote(self::MASK_PREFIX, '/') . '(\w+\d+)' . preg_quote(self::MASK_SUFFIX, '/') . '/', 
+            $html, 
+            $matches
+        );
         foreach ($matches[0] as $id=>$match)
             if (isset($masked[$matches[1][$id]]))
                 $html = str_replace($match, $masked[$matches[1][$id]], $html); 

@@ -4,6 +4,12 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->_compressor = new FaZend_View_Filter_HtmlCompressor();
+    }
     
     public static function providerHtml()
     {
@@ -33,16 +39,27 @@ class FaZend_View_Filter_HtmlCompressorTest extends AbstractTestCase
             ),
         );
     }
-    
-    public function testCompressesFine ($html, $result)
+
+    /**
+     * @dataProvider providerHtml
+     */
+    public function testCompressesFine($html, $result)
     {
-        $compressor = new FaZend_View_Filter_HtmlCompressor();
-        $new = $compressor->filter($html);
+        $new = $this->_compressor->filter($html);
         $this->assertEquals(
             $result, 
             $new, 
             "Incorrect HTML compression of [{$html}], got this: [{$new}], expected: [{$result}]"
         );
+    }
+    
+    public function testManyIdenticalTagsAreParsedProperly()
+    {
+        $html = '';
+        for ($i=0; $i<100; $i++)
+            $html .= "<pre>$i</pre>";
+        $filtered = $this->_compressor->filter($html);
+        $this->assertEquals($html, $filtered);
     }
 
 }
