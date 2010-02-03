@@ -20,7 +20,7 @@ class FaZend_Application_Phing_CodeSnifferReportTest extends AbstractTestCase
         $srcDir = APPLICATION_PATH . '/Model';
         $destDir = $xml . '-output';
     
-        logg('CodeSnifferReport testing started into {$destDir}, wait 30-40sec...');
+        logg("CodeSnifferReport testing started into {$destDir}, wait 30-40sec...");
         
         // remove the directory before everything
         shell_exec('rm -rf ' . escapeshellarg($destDir));

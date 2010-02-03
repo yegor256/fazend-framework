@@ -108,15 +108,22 @@ class FaZend_Flyweight
     {
         $id = '';
         foreach ($args as $arg) {
-            if (is_scalar($arg)) {
-                // kill this SPECIAL symbol from scalar arguments
-                $arg = str_replace('.', '\.', $arg);
-            } elseif (is_array($arg)) { 
-                $arg = self::_makeId($arg);
-            } else {
-                $arg = '.' . spl_object_hash($arg);
+            switch (true) {
+                case is_scalar($arg):
+                    // kill this SPECIAL symbol from scalar arguments
+                    $arg = 'S:' . str_replace(',', '\,', $arg);
+                    break;
+                case is_array($arg):
+                    $arg = 'A:' . self::_makeId($arg);
+                    break;
+                case is_null($arg):
+                    $arg = 'NULL';
+                    break;
+                default:
+                    $arg = 'O:' . spl_object_hash($arg);
+                    break;
             }
-            $id .= '.' . $arg;
+            $id .= ',' . $arg;
         }
         return $id;
     }

@@ -47,6 +47,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     protected static $_mapping = array();
 
     /**
+     * Time when the latest call has been made
+     *
+     * @var int
+     */
+    protected static $_latestCallTime = null;
+
+    /**
      * Internal holder of ROW id, until the data array is filled
      *
      * @return int|string
@@ -281,21 +288,36 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             break;
         }
                 
+        // We are trying to understand what is the class to be
+        // used for this column, if it is necessary
         if (!isset($rowClass)) {
             if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
                 // try to find this class and LOAD it if possible
                 $rowClass = 'Model_' . ucfirst($name);
-                if (!class_exists($rowClass))
+                if (!class_exists($rowClass)) {
                     $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
+                }
             }
         }
 
+        // Here we do the type casting, if it is required, implementing
+        // the core mechanism of ORM. Flyweight is used in order to avoid
+        // instantiating of multiple PHP objects for the same row in the
+        // database
         if (isset($rowClass)) {
             // return new $rowClass(is_numeric($value) ? intval($value) : $value);
             $value = FaZend_Flyweight::factory(
                 $rowClass, 
                 is_numeric($value) ? intval($value) : $value
             );
+            
+            // If the latest call has been completed later than a second ago
+            if (self::$_latestCallTime < microtime(true) - 1) {
+                // we should ping the DB here to avoid lost connections
+                // @see http://framework.zend.com/issues/browse/ZF-9072
+                Zend_Db_Table::getDefaultAdapter()->query('--');
+                self::$_latestCallTime = microtime(true);
+            }
         }
 
         return $value;
