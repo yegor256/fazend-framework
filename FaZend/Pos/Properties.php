@@ -236,6 +236,17 @@ class FaZend_Pos_Properties
     {
         return self::$_rootClass;
     }
+    
+    /**
+     * Remove everything from POS structure
+     *
+     * @return void
+     */
+    public static function cleanOut() 
+    {
+        FaZend_Pos_Model_Object::retrieve()
+            ->delete();
+    }
 
     /**
      * Get root object, the main object of the entire POS tree
