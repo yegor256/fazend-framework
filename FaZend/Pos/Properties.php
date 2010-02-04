@@ -227,6 +227,17 @@ class FaZend_Pos_Properties
     }
 
     /**
+     * Get the name of root class
+     *
+     * @return string
+     * @see self::setRootClass()
+     */
+    public static function getRootClass() 
+    {
+        return self::$_rootClass;
+    }
+
+    /**
      * Get root object, the main object of the entire POS tree
      *
      * @return FaZend_Pos_Abstract

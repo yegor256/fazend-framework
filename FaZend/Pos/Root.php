@@ -32,7 +32,7 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
         try {
             FaZend_Pos_Model_Object::findRoot();
             return true;
-        } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
