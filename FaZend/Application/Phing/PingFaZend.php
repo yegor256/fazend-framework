@@ -69,7 +69,7 @@ class PingFaZend extends Task
         curl_setopt($curl, CURLOPT_HEADER, 0);
         $response = curl_exec($curl);
 
-        if (!$response)
+        if (!$response) {
             $this->Log('CURL error: ' . curl_error($curl));    
             return;
         }
