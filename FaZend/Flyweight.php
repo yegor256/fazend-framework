@@ -123,7 +123,7 @@ class FaZend_Flyweight
                     $arg = 'O:' . spl_object_hash($arg);
                     break;
             }
-            $id .= ',' . $arg;
+            $id .= ($id ? ',' : false) . $arg;
         }
         return $id;
     }
