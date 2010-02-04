@@ -403,5 +403,16 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
         assert(!empty($this->_ps));
         return array('_ps');
     }
+    
+    /**
+     * Magic method to be called after cloning
+     *
+     * @return void
+     * @link http://php.net/manual/en/language.oop5.cloning.php
+     */
+    public function __clone() 
+    {
+        $this->_ps = null;
+    }
 
 }
