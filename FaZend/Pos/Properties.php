@@ -306,7 +306,7 @@ class FaZend_Pos_Properties
      * @param boolean Save everything into DB first?
      * @param boolean Shall we ignore serialization problems?
      * @return void
-     * @throws FaZend_Pos_SerializationProhibited
+     * @see saveAll()
      */
     public static function cleanPosMemory($saveAll = true, $ignoreExceptions = false) 
     {
@@ -314,17 +314,7 @@ class FaZend_Pos_Properties
             return;
             
         if ($saveAll) {
-            foreach (self::$_instances as $property) {
-                try {
-                    $property->save(false);
-                } catch (FaZend_Pos_SerializationProhibited $e) {
-                    if ($ignoreExceptions) {
-                        FaZend_Log::err(get_class($e) . ': ' . $e->getMessage());
-                    } else {
-                        throw $e;
-                    }
-                }
-            }
+            self::saveAll($ignoreExceptions);
         }
             
         foreach (self::$_instances as $id=>$instance) {
@@ -332,6 +322,31 @@ class FaZend_Pos_Properties
             unset(self::$_instances[$id]);
         }
         self::$_root = null;
+    }
+    
+    /**
+     * Save all POS elements to DB
+     *
+     * @param boolean Shall we ignore serialization problems?
+     * @return void
+     * @throws FaZend_Pos_SerializationProhibited
+     */
+    public static function saveAll($ignoreExceptions = false) 
+    {
+        if (is_null(self::$_root))
+            return;
+            
+        foreach (self::$_instances as $property) {
+            try {
+                $property->save(false);
+            } catch (FaZend_Pos_SerializationProhibited $e) {
+                if ($ignoreExceptions) {
+                    FaZend_Log::err(get_class($e) . ': ' . $e->getMessage());
+                } else {
+                    throw $e;
+                }
+            }
+        }
     }
     
     /**
