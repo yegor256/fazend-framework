@@ -271,7 +271,7 @@
                 checkreturn="true" 
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped, since to.phpcs is FALSE" />    
+            <echo msg="Skipped, since [to.phpcs] is FALSE or [to.unit] is set" />    
         </else></if>
     </target>
 
