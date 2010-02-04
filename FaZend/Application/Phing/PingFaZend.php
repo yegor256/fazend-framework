@@ -59,8 +59,10 @@ class PingFaZend extends Task
 
         $curl = curl_init();
 
-        if (!$curl)
-            throw new BuildException(curl_error($curl));    
+        if (!$curl) {
+            $this->Log('CURL error: ' . curl_error($curl)); 
+            return;
+        }   
 
         curl_setopt($curl, CURLOPT_URL, $this->_url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -68,8 +70,9 @@ class PingFaZend extends Task
         $response = curl_exec($curl);
 
         if (!$response)
-            throw new BuildException(curl_error($curl));    
-        
+            $this->Log('CURL error: ' . curl_error($curl));    
+            return;
+        }
         curl_close($curl);
 
         $this->Log("Response (" . strlen($response). "bytes): \n{$response}");
