@@ -46,6 +46,12 @@
         <if><not><isset property="to.coverage" /></not><then>
             <property name="to.coverage" value="false" /></then></if>
 
+        <if><not><isset property="to.sniffer" /></not><then>
+            <property name="to.sniffer" value="true" /></then></if>
+
+        <if><not><isset property="to.phpdoc" /></not><then>
+            <property name="to.phpdoc" value="true" /></then></if>
+
         <if><not><isset property="to.phpcs" /></not><then>
             <property name="to.phpcs" value="false" /></then></if>
 
@@ -270,7 +276,10 @@
     </target>
 
     <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
-        <if><istrue value="${to.deploy}" /><then>
+        <if><and>
+            <istrue value="${to.deploy}" />
+            <istrue value="${to.sniffer}" />
+        </and><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <mkdir dir="${project.basedir}/reports/phpcs" />
             <exec command="phpcs 
@@ -357,7 +366,10 @@
     </target>
 
     <target name="doc" description="Create phpDoc documentation and deploy it" >
-        <if><istrue value="${to.deploy}" /><then>
+        <if><and>
+            <istrue value="${to.deploy}" />
+            <istrue value="${to.phpdoc}" />
+        </and><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
             <mkdir dir="${project.basedir}/build/api" />
