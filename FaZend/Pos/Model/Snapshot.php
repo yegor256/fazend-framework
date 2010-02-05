@@ -39,6 +39,7 @@ class FaZend_Pos_Model_Snapshot extends FaZend_Db_Table_ActiveRow_fzSnapshot
         $fzSnapshot->properties = $properties;
         $fzSnapshot->alive = true;
         $fzSnapshot->baselined = false;
+        $fzSnapshot->updated = Zend_Date::now()->getIso();
         $fzSnapshot->save();
 
         return $fzSnapshot;
