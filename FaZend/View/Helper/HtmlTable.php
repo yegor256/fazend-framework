@@ -816,7 +816,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     }
                     $styles[] = call_user_func_array(
                         $formatter['style'], 
-                        array($value, $row)
+                        array($value, $row, $this)
                     );
                     break;
 
