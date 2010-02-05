@@ -45,7 +45,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      *
      * @var array
      */
-    protected $_injections = array();
+    protected $_injectedColumns = array();
 
     /**
      * List of options defined by set..()
@@ -67,6 +67,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @var string[]
      */
     protected $_columnsToShow;
+    
+    /**
+     * List of injected variables
+     *
+     * @var array
+     * @see setInjection()
+     * @see getInjection()
+     */
+    protected $_injections = array();
 
     /**
      * Instances of this class, in case we nee many tables in one page
@@ -109,6 +118,39 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         }
 
         return $html;
+    }
+
+    /**
+     * Inject a variable
+     *
+     * @param string Name of the injection
+     * @param mixed Variable to use
+     * @return $this
+     * @uses $this->_injections
+     */
+    public function setInjection($name, $variable) 
+    {
+        $this->_injections[$name] = $variable;
+        return $this;
+    }
+
+    /**
+     * Retrieve an injected variable
+     *
+     * @param string Name of the injection
+     * @return mixed
+     * @throws FaZend_View_Helper_HtmlTable_InjectionNotFoundException
+     * @uses $this->_injections
+     */
+    public function getInjection($name) 
+    {
+        if (!isset($this->_injections[$name])) {
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_HtmlTable_InjectionNotFoundException', 
+                "Injection '{$name}' not found"
+            );
+        }
+        return $this->_injections[$name];
     }
 
     /**
@@ -238,7 +280,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             );
         }
 
-        $this->_injections[$column] = $predecessor;
+        $this->_injectedColumns[$column] = $predecessor;
         return $this;
     }
 
@@ -409,7 +451,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             }
 
             // inject columns
-            foreach ($this->_injections as $injectedColumn=>$predecessor) {
+            foreach ($this->_injectedColumns as $injectedColumn=>$predecessor) {
                 // sanity check
                 if (!is_object($rowOriginal))
                     break;
