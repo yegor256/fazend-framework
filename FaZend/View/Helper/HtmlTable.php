@@ -429,10 +429,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      */
     protected function _render()
     {
-        // if no data in the paginator
-        if (!count($this->_paginator))
-            return $this->_noDataMessage;
-
         $resultTRs = array();
         $resultTDs = array();
         $options = array();
@@ -541,6 +537,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
             $resultTDs[] = $tds;
         }
+        
+        // if no data in the paginator
+        if (!count($resultTDs))
+            return $this->_noDataMessage;
 
         // build the header using the last ROW information
         $header = "\t<tr>\n";
