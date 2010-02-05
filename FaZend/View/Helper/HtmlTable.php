@@ -782,7 +782,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $style[] = $formatter['style'];
                     break;
 
-                case strpos($formatter['condition'], '->') === 0:
+                case is_string($formatter['condition']) && strpos($formatter['condition'], '->') === 0:
                     if (!is_null($value)) {
                         if (!is_object($value)) {
                             FaZend_Exception::raise(
@@ -807,7 +807,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                         $styles[] = $result;
                     break;
 
-                case $formatter['condition'] === 'callback':
+                case is_string($formatter['condition']) && ($formatter['condition'] === 'callback'):
                     if (!is_callable($formatter['style'])) {
                         FaZend_Exception::raise(
                             'FaZend_View_Helper_Forma_InvalidFormatter', 
