@@ -171,7 +171,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         
         // if the form was NOT completed yet - just show it
         if (!$completed)
-            return "<p>{$html}</p>";
+            return $html;
 
         // if no behaviors were specified, we use the default one
         if (!count($this->_behaviors))
