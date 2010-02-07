@@ -200,7 +200,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      */
     public static function register($email, $password, array $data = array()) 
     {
-        $user = new FaZend_User();
+        $className = self::$_rowClass;
+        $user = new $className();
+        
         $user->email = strtolower($email);
         $user->password = $password;
 
