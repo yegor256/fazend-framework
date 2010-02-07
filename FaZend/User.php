@@ -67,6 +67,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     public static function setRowClass($className) 
     {
         self::$_rowClass = $className;
+        self::$_loggedIn = null;
     }
 
     /**
@@ -216,13 +217,11 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         // the email will be sent. otherwise the exception will come from FaZend_Email
         // and we skip this process
         try {
-
             // send email to admin, with one variable inside
             // the template should use it like $this->user
             FaZend_Email::create('adminNewUserRegistered.tmpl')
                 ->set('user', $user)
                 ->send();
-
         } catch (FaZend_Email_NoTemplate $e) {
             // don't do anything        
         }
@@ -230,7 +229,6 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         // now we will try send an email to the user, telling him/her
         // about successful registration of the account
         try {
-
             // send email to admin, with one variable inside
             // the template should use it like $this->user
             FaZend_Email::create('AccountRegistered.tmpl')
@@ -238,11 +236,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
                 ->set('toName', $user->email)
                 ->set('user', $user)
                 ->send();
-
         } catch (FaZend_Email_NoTemplate $e) {
             // don't do anything        
         }
-
         return $user;    
     }
 
