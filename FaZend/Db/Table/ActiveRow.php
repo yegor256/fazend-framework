@@ -270,6 +270,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         // get raw value from Zend_Db_Table_Row
         $value = parent::__get($name);
+        
+        // NULL is null, just return it and that's it
+        if (is_null($value)) {
+            return $value;
+        }
+        
         // maybe we're getting the value for the second time, 
         // and it was already calculated before and stored
         // in toArray()
