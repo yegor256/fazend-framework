@@ -67,6 +67,13 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      */
     public static function setRowClass($className) 
     {
+        // Don't do anything if the values are equal
+        if (self::$_rowClass == $className) {
+            return;
+        }
+        
+        // We should not allow to change the name of the class
+        // when the user is logged in
         if (!is_null(self::$_loggedIn)) {
             FaZend_Exception::raise(
                 'FaZend_User_InvalidRequestException', 
