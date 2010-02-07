@@ -26,6 +26,11 @@ define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
 class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
 {
 
+    /**
+     * Initialize DB schema
+     *
+     * @return void
+     */
     protected function _initDbData()
     {
         $this->bootstrap('db');
@@ -44,12 +49,28 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
             Zend_Db_Table_Abstract::getDefaultAdapter()->query($query);
     }
     
+    /**
+     * Initialize forma() helper
+     *
+     * @return void
+     */
     protected function _initForma() 
     {
         FaZend_View_Helper_Forma_Field::addPluginDir(
             'Helper_Forma_FieldDate',
             realpath(APPLICATION_PATH . '/helpers/Forma')
         );
+    }
+
+    /**
+     * Initialize FaZend_User class
+     *
+     * @return void
+     */
+    public function _initUserClass() 
+    {
+        $this->bootstrap('Fazend');
+        FaZend_User::setRowClass('Model_User');
     }
 
 }

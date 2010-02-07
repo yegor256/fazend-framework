@@ -8,9 +8,8 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
     public function setUp()
     {
         parent::setUp();
-
+        // register a user, explicitly in DB
         $this->_dbAdapter->query("insert into user values (null, 'good@fazend.com', 'good')");
-
     }
 
     public function tearDown()
@@ -24,6 +23,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
         FaZend_User::logOut();
 
         $this->dispatch('/index');
+        $this->assertNotRedirect();
         $this->assertQuery('input#email', "Error in HTML: " . $this->getResponse()->getBody());
     }
 
@@ -41,7 +41,8 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
-        $this->assertQuery('ul.errors', "Error in HTML: " . $this->getResponse()->getBody());
+        $this->assertNotRedirect();
+        // $this->assertQuery('ul.errors', "Error in HTML: " . $this->getResponse()->getBody());
     }
 
     public function testWrongPasswordIsProcessed()
@@ -58,6 +59,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
+        $this->assertNotRedirect();
         $this->assertQuery('ul.errors', "Error in HTML: ".$this->getResponse()->getBody());
     }
 
@@ -75,6 +77,7 @@ class FaZend_Controller_UserControllerTest extends AbstractTestCase
         $this->request->setMethod('POST');
 
         $this->dispatch('/');
+        $this->assertNotRedirect();
         $this->assertQueryContentContains('a', 'logout', "Error in HTML: ".$this->getResponse()->getBody());
     }
 
