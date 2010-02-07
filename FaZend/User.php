@@ -63,11 +63,17 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      * @param string Name of the class
      * @return void
      * @see self::$_rowClass
-     **/
+     * @throws FaZend_User_InvalidRequestException
+     */
     public static function setRowClass($className) 
     {
+        if (!is_null(self::$_loggedIn)) {
+            FaZend_Exception::raise(
+                'FaZend_User_InvalidRequestException', 
+                'You cannot set rowClass when user is logged in'
+            );
+        }
         self::$_rowClass = $className;
-        self::$_loggedIn = null;
     }
 
     /**
