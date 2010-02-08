@@ -39,15 +39,14 @@ class FaZend_View_Helper_DateInterval
             );
         }
         
-        $hoursDifference = Zend_Date::now()->sub($time)->getTimestamp() / (60 * 60);    
-
-        // we can't compare future and past...
-        if ($hoursDifference < 0)
+        $now = Zend_Date::now();
+        if ($now->isEarlier($time)) {
+            $hoursDifference = $now->sub($time)->getTimestamp() / (60 * 60);    
+            $sign = '';
+        } else {
+            $hoursDifference = $time->sub($now)->getTimestamp() / (60 * 60);    
             $sign = '-';
-        else
-            $sign = '';    
-
-        $hoursDifference = abs($hoursDifference);
+        }
 
         switch (true) {
             // more than 24months days - we show years
