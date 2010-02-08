@@ -32,7 +32,7 @@ class FaZend_View_Helper_DateInterval
      */
     public function dateInterval(Zend_Date $time)
     {
-        if (!($time instanceof $time)) {
+        if (!($time instanceof Zend_Date)) {
             FaZend_Exception::raise(
                 'FaZend_View_Helper_DateInterval_InvalidDateException',
                 'Only instance of Zend_Date is accepted for dateInterval()'
@@ -41,17 +41,19 @@ class FaZend_View_Helper_DateInterval
         
         $now = Zend_Date::now();
         if ($now->isEarlier($time)) {
-            $hoursDifference = $now->sub($time)->getTimestamp() / (60 * 60);    
+            $diff = $now->sub($time);    
             $sign = '';
         } else {
-            $hoursDifference = $time->sub($now)->getTimestamp() / (60 * 60);    
+            $diff = $time->sub($now);    
             $sign = '-';
         }
+
+        $hoursDifference = abs($diff->getTimestamp() / (60 * 60));    
 
         switch (true) {
             // more than 24months days - we show years
             case $hoursDifference > 24 * 30 * 24:
-                $years = $hoursDifference/(24*30*12);
+                $years = $hoursDifference / (24 * 30 * 12);
                 return _t(
                     '%s%syears',
                     $sign,
@@ -63,7 +65,7 @@ class FaZend_View_Helper_DateInterval
                 return _t(
                     '%s%smonths',
                     $sign,
-                    self::_mod($hoursDifference/(24*30))
+                    self::_mod($hoursDifference / (24 * 30))
                 );
 
             // more than 14days - we show weeks
@@ -71,7 +73,7 @@ class FaZend_View_Helper_DateInterval
                 return _t(
                     '%s%sweeks',
                     $sign,
-                    self::_mod($hoursDifference/(24*7))
+                    self::_mod($hoursDifference / (24 * 7))
                 );
 
             // more than 2 days we shouw days    
@@ -80,7 +82,7 @@ class FaZend_View_Helper_DateInterval
                 return _t(
                     '%s%sdays%s',
                     $sign,
-                    round($hoursDifference/24)
+                    round($hoursDifference / 24)
                 ) . 
                 ($hours ? 
                     '&nbsp;' . _t(
