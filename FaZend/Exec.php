@@ -146,10 +146,11 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param string Command to execute
      * @param string|null Directory to run it in
+     * @param string|null The result you expect to get, will be returned in testing mode
      * @return string
      * @throws FaZend_Exec_ChdirFailureException
      */
-    public static function exec($cmd, $dir = null) 
+    public static function exec($cmd, $dir = null, $expectedResult = null) 
     {
         if (!is_null($dir) && !self::$_isTesting) {
             $cwd = getcwd();
@@ -164,7 +165,7 @@ class FaZend_Exec extends FaZend_StdObject
         if (!self::$_isTesting) {
             $result = shell_exec($cmd);
         } else {
-            $result = '...';
+            $result = $expectedResult;
         }
         
         if (self::$_isVerbose) {
@@ -184,6 +185,8 @@ class FaZend_Exec extends FaZend_StdObject
                 );
             }
         }
+        
+        return $result;
     }
 
     /**
