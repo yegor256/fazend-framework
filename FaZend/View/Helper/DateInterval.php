@@ -40,7 +40,7 @@ class FaZend_View_Helper_DateInterval
         }
         
         $now = Zend_Date::now();
-        if ($now->isEarlier($time)) {
+        if ($now->isLater($time)) {
             $diff = $now->sub($time);    
             $sign = '';
         } else {
