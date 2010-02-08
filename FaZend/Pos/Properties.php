@@ -776,7 +776,7 @@ class FaZend_Pos_Properties
                 cutLongLine($this->_fzSnapshot->properties, 90) .
             "\n    version: " . $this->_fzSnapshot->version .
                 ($this->_ignoreVersions ? ' (version control suppressed)' : false) .
-            "\n    updated: " . $this->_fzSnapshot->updated .
+            "\n    updated: " . $this->_fzSnapshot->updated->getIso() .
             "\n    editor: " . $this->_fzSnapshot->user
             : '    NULL') . "\n";
         
