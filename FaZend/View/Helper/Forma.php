@@ -297,6 +297,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 // and the result is false
                 $result = false;
             }
+        } else {
+            $result = true;
         }
 
         // save log into INPUT variable, by reference (see function definition above)
