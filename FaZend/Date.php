@@ -25,11 +25,23 @@ class FaZend_Date extends Zend_Date
     /**
      * Create Zend_Date object on-fly
      *
+     * @param sting|mixed
      * @return FaZend_Date
-     **/
+     */
     public static function make($time)
     {
         return new FaZend_Date($time);
+    }
+    
+    /**
+     * Make an object of class, using ISO-8601 string
+     *
+     * @param sting
+     * @return FaZend_Date
+     */
+    public static function makeIso($time) 
+    {
+        return new FaZend_Date($time, Zend_Date::ISO_8601);
     }
 
     /**
