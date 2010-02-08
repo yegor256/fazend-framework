@@ -170,12 +170,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $html = strval($this->_form->__toString());
         
         // if the form was NOT completed yet - just show it
-        if (!$completed)
+        if (!$completed) {
             return $html;
+        }
 
         // if no behaviors were specified, we use the default one
-        if (!count($this->_behaviors))
+        if (!count($this->_behaviors)) {
             $this->addBehavior('showLog');
+        }
         
         // run them all one by one
         foreach ($this->_behaviors as $behavior) {
@@ -241,57 +243,60 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             }
         }
 
-        // get callback params from the clicked button
-        list($class, $method) = $this->_fields[$submit->getName()]->action;
+        // if ACTION is specified in the submit button
+        if ($this->_fields[$submit->getName()]->action) {
+            // get callback params from the clicked button
+            list($class, $method) = $this->_fields[$submit->getName()]->action;
 
-        // prepare method calling params for this button/callback
-        $rMethod = new ReflectionMethod($class, $method);
-        $mnemos = array();
+            // prepare method calling params for this button/callback
+            $rMethod = new ReflectionMethod($class, $method);
+            $mnemos = array();
 
-        try {
-            // run through all required paramters. required by method
-            foreach ($rMethod->getParameters() as $param) {
-                // get value of this parameter from form
-                $methodArgs[$param->name] = $this->_getFormParam($param);
-                // this is necessary for logging (see below)
-                switch (true) {
-                    case is_bool($methodArgs[$param->name]):
-                        $mnemo = $methodArgs[$param->name] ? 'TRUE' : 'FALSE';
-                        break;
-                    case is_scalar($methodArgs[$param->name]):
-                        $mnemo = "'" . cutLongLine($methodArgs[$param->name]) . "'";
-                        break;
-                    case is_object($methodArgs[$param->name]):
-                        $mnemo = get_class($methodArgs[$param->name]);
-                        break;
-                    case is_null($methodArgs[$param->name]):
-                        $mnemo = 'NULL';
-                        break;
-                    default:
-                        $mnemo = '???';
-                        break;
+            try {
+                // run through all required paramters. required by method
+                foreach ($rMethod->getParameters() as $param) {
+                    // get value of this parameter from form
+                    $methodArgs[$param->name] = $this->_getFormParam($param);
+                    // this is necessary for logging (see below)
+                    switch (true) {
+                        case is_bool($methodArgs[$param->name]):
+                            $mnemo = $methodArgs[$param->name] ? 'TRUE' : 'FALSE';
+                            break;
+                        case is_scalar($methodArgs[$param->name]):
+                            $mnemo = "'" . cutLongLine($methodArgs[$param->name]) . "'";
+                            break;
+                        case is_object($methodArgs[$param->name]):
+                            $mnemo = get_class($methodArgs[$param->name]);
+                            break;
+                        case is_null($methodArgs[$param->name]):
+                            $mnemo = 'NULL';
+                            break;
+                        default:
+                            $mnemo = '???';
+                            break;
+                    }
+                    $mnemos[] = $mnemo;
                 }
-                $mnemos[] = $mnemo;
-            }
 
-            // log this operation
-            logg(
-                "Calling %s::%s(%s)",
-                $rMethod->getDeclaringClass()->name,
-                $method,
-                implode(', ', $mnemos)
-            );
+                // log this operation
+                logg(
+                    "Calling %s::%s(%s)",
+                    $rMethod->getDeclaringClass()->name,
+                    $method,
+                    implode(', ', $mnemos)
+                );
 
-            // execute the target method
-            $return = call_user_func_array(array($class, $method), $methodArgs);
+                // execute the target method
+                $return = call_user_func_array(array($class, $method), $methodArgs);
             
-            // it's done, if we're here and no exception has been thrown
-            $result = true;
-        } catch (Exception $e) {
-            // add error message to the submit button we pressed
-            $submit->addError($e->getMessage());
-            // and the result is false
-            $result = false;
+                // it's done, if we're here and no exception has been thrown
+                $result = true;
+            } catch (Exception $e) {
+                // add error message to the submit button we pressed
+                $submit->addError($e->getMessage());
+                // and the result is false
+                $result = false;
+            }
         }
 
         // save log into INPUT variable, by reference (see function definition above)
