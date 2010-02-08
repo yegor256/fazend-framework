@@ -1052,7 +1052,7 @@ class FaZend_Pos_Properties
     protected function _getUpdated()
     {
         $this->_attachToPos();
-        return new Zend_Date($this->_fzSnapshot->updated);
+        return new Zend_Date($this->_fzSnapshot->updated, Zend_Date::ISO_8601);
     }
 
     /**
