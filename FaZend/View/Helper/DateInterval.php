@@ -24,16 +24,18 @@ class FaZend_View_Helper_DateInterval
 {
 
     /**
-     * Show interval between now and the given date
+     * Show interval between now and the given date in the past(!)
      *
      * @param int|Zend_Date Date/time value, in seconds
      * @return string
      */
     public function dateInterval($time)
     {
-        $compared = time();
-
-        $hoursDifference = ($compared - $time) / (60*60);    
+        if (!$time instanceof Zend_Date) {
+            $time = new Zend_Date($time);
+        }
+        
+        $hoursDifference = Zend_Date::now()->sub($time) / (60 * 60);    
 
         // we can't compare future and past...
         if ($hoursDifference < 0)
@@ -47,33 +49,72 @@ class FaZend_View_Helper_DateInterval
             // more than 24months days - we show years
             case $hoursDifference > 24 * 30 * 24:
                 $years = $hoursDifference/(24*30*12);
-                return $sign . self::_mod($years) . 'years';
+                return _t(
+                    '%s%syears',
+                    $sign,
+                    self::_mod($years)
+                );
 
             // more than 60 days - we show months
             case $hoursDifference > 24 * 60:
-                return $sign . self::_mod($hoursDifference/(24*30)) . 'months';
+                return _t(
+                    '%s%smonths',
+                    $sign,
+                    self::_mod($hoursDifference/(24*30))
+                );
 
             // more than 14days - we show weeks
             case $hoursDifference > 24 * 14:
-                return $sign . self::_mod($hoursDifference/(24*7)) . 'weeks';
+                return _t(
+                    '%s%sweeks',
+                    $sign,
+                    self::_mod($hoursDifference/(24*7))
+                );
 
             // more than 2 days we shouw days    
             case $hoursDifference > 48:
                 $hours = round(fmod($hoursDifference, 24));
-                return $sign . round($hoursDifference/24) . 'days' . ($hours ? "&nbsp;{$hours}hrs" : '');
+                return _t(
+                    '%s%sdays%s',
+                    $sign,
+                    round($hoursDifference/24)
+                ) . 
+                ($hours ? 
+                    '&nbsp;' . _t(
+                        '%dhrs',
+                        $hours
+                    ) : 
+                false);
 
             // more than 5 hours - we should hours    
             case $hoursDifference > 5:
-                return $sign . round($hoursDifference) . 'hrs';    
+                return _t(
+                    '%s%shrs',
+                    $sign,
+                    round($hoursDifference)
+                );    
 
             // more than 1 hour - we should hour+min    
             case $hoursDifference >= 1:
                 $minutes = round(fmod($hoursDifference, 1) * 60);
-                return $sign . floor($hoursDifference) . 'hrs' . ($minutes ? "&nbsp;{$minutes}min" : '');    
+                return _t(
+                    '%s%shrs',
+                    $sign,
+                    floor($hoursDifference)
+                ) . ($minutes ? 
+                    '&nbsp;' . _t(
+                        '%dmin',
+                        $minutes
+                    ) : 
+                false);
 
             // otherwise just minutes    
             default:
-                return $sign . round($hoursDifference * 60) . 'min';
+                return _t(
+                    '%s%smin',
+                    $sign,
+                    round($hoursDifference * 60)
+                );
         }
     }
 
