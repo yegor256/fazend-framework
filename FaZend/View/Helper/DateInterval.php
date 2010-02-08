@@ -26,16 +26,20 @@ class FaZend_View_Helper_DateInterval
     /**
      * Show interval between now and the given date in the past(!)
      *
-     * @param int|Zend_Date Date/time value, in seconds
+     * @param Zend_Date Date/time 
      * @return string
+     * @throws FaZend_View_Helper_DateInterval_InvalidDateException
      */
-    public function dateInterval($time)
+    public function dateInterval(Zend_Date $time)
     {
-        if (!$time instanceof Zend_Date) {
-            $time = new Zend_Date($time);
+        if (!($time instanceof $time)) {
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_DateInterval_InvalidDateException',
+                'Only instance of Zend_Date is accepted for dateInterval()'
+            );
         }
         
-        $hoursDifference = Zend_Date::now()->sub($time) / (60 * 60);    
+        $hoursDifference = Zend_Date::now()->sub($time)->getTimestamp() / (60 * 60);    
 
         // we can't compare future and past...
         if ($hoursDifference < 0)
