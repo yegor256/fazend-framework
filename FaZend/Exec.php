@@ -140,6 +140,51 @@ class FaZend_Exec extends FaZend_StdObject
     {
         return new FaZend_Exec($name, $cmd);
     }
+    
+    /**
+     * Synchronous call, gateway to shell_exec()
+     *
+     * @param string Command to execute
+     * @param string|null Directory to run it in
+     * @return string
+     * @throws FaZend_Exec_ChdirFailureException
+     */
+    public static function exec($cmd, $dir = null) 
+    {
+        if (!is_null($dir) && !self::$_isTesting) {
+            $cwd = getcwd();
+            if (false === @chdir($dir)) {
+                FaZend_Exception::raise(
+                    'FaZend_Exec_ChdirFailureException', 
+                    "Can't change directory to '{$dir}'"
+                );
+            }
+        }
+
+        if (!self::$_isTesting) {
+            $result = shell_exec($cmd);
+        } else {
+            $result = '...';
+        }
+        
+        if (self::$_isVerbose) {
+            logg(
+                'exec: "%s", result (%d bytes): %s',
+                $cmd,
+                strlen($result),
+                cutLongLine($result)
+            );
+        }
+
+        if (!is_null($dir) && !self::$_isTesting) {
+            if (false === @chdir($cwd)) {
+                FaZend_Exception::raise(
+                    'FaZend_Exec_ChdirFailureException', 
+                    "Can't change directory back to '{$cwd}'"
+                );
+            }
+        }
+    }
 
     /**
      * Get output of currently running task, if it's running
@@ -200,14 +245,16 @@ class FaZend_Exec extends FaZend_StdObject
     public function execute()
     {
         // if the task IS running now - just return it's output
-        if ($this->isRunning())
+        if ($this->isRunning()) {
             return $this->output();
+        }
             
         $id = self::_uniqueId($this->_name);
             
         // maybe it was executed already and we should NOT re-run it again
-        if (!$this->_cycled && (self::_output($id) !== false))
+        if (!$this->_cycled && (self::_output($id) !== false)) {
             return $this->output();
+        }
                                 
         // serialize and save all local variables
         $dataFile = self::_fileName($id, self::DATA_SUFFIX);
