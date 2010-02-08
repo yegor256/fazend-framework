@@ -780,7 +780,7 @@ class FaZend_Pos_Properties
             "\n    editor: " . $this->_fzSnapshot->user
             : '    NULL') . "\n";
         
-        $text .= "Properties:\n";
+        $text .= "Properties (" . count($this->_properties) . "):\n";
         
         if (!count($this->_properties))
             $text .= "    none\n";
