@@ -252,7 +252,6 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
             try {
                 // run through all required paramters. required by method
-                $args = array();
                 foreach ($inputs as $input) {
                     // get value of this parameter from form
                     $args[$input] = $this->_getFormParam($input);
