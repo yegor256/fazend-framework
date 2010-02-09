@@ -59,6 +59,21 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * @return int|string
      */
     private $_preliminaryKey;
+    
+    /**
+     * Ignore NULL values and treat them as normal values
+     *
+     * By default when NULL value is received from the DB, it is 
+     * NEVER converted to any type, but returned as NULL in PHP. When
+     * this property is set to TRUE, such behavior will be changed.
+     * NULL values will be treated as regular data, and type casting
+     * will be performed.
+     *
+     * @var boolean
+     * @see __get()
+     * @see setIgnoreNull()
+     */
+    protected $_ignoreNull = false;
 
     /**
      * Add new mapping
@@ -130,6 +145,18 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // and create internal data array with empty values
         // for all columns
         $this->_data = array_fill_keys($info['cols'], null);
+    }
+    
+    /**
+     * Ignore NULL values, and treat them as regular data
+     *
+     * @param boolean Shall we ignore NULL values?
+     * @return $this
+     */
+    public function setIgnoreNull($ignoreNull = true) 
+    {
+        $this->_ignoreNull = $ignoreNull;
+        return $this;
     }
     
     /**
@@ -277,10 +304,19 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         if (!is_scalar($value) && !is_null($value)) {
             return $value;
         }
+        
+        // NULL received. We shall either return it as NULL
+        // or ignore and continue to type casting
+        if (is_null($value) && !$this->_ignoreNull) {
+            return null;
+        }
 
+        // We're trying to find a class of explicit mapping/casting
+        // and convert $value to this class
         foreach (self::$_mapping as $regex=>$class) {
-            if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name))
+            if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name)) {
                 continue;
+            }
             $rowClass = $class;
             if (is_array($class)) {
                 eval("\$value = {$class[0]}::{$class[1]}(\$value);");

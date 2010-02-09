@@ -51,7 +51,13 @@ class FaZend_Db_Wrapper
     /**
      * Keep silence and return FALSE if fetchRow doesn't find anything
      *
+     * Normal behavior of fetchRow() is to TRY to fetch a row and 
+     * throw an exception if nothing found in the DB. When $_silenceIfEmpty
+     * is set there won't be any exception, but FALSE will be returned.
+     *
      * @var boolean
+     * @see setSilenceIfEmpty()
+     * @see fetchRow()
      */
     private $_silenceIfEmpty = false;
 
