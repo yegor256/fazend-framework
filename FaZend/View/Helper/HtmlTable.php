@@ -780,7 +780,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         foreach ($this->_column($name)->formatters as $formatter) {
             $style = $formatter['condition']->call($value, $row, $this);
             if (is_bool($style)) {
-                $styles[] = $formatter['style'];
+                if ($style) {
+                    $styles[] = $formatter['style'];
+                }
             } else {
                 $styles[] = $style;
             }
