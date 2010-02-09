@@ -2,6 +2,12 @@
 
 require_once 'AbstractTestCase.php';
 
+class Foo
+{
+    public static function one($a) { return $a; }
+    public function two($a) { return $a; }
+}
+
 class FaZend_CallbackTest extends AbstractTestCase
 {
     
@@ -27,6 +33,18 @@ class FaZend_CallbackTest extends AbstractTestCase
         $this->assertTrue(
             FaZend_Callback::factory('new Zend_Date(${a1});')->call('10 June 2010')
             instanceof Zend_Date
+        );
+    }
+    
+    public function testMethodCallbackWorks()
+    {
+        $this->assertEquals(
+            't', 
+            FaZend_Callback::factory(array('Foo', 'one'))->call('t')
+        );
+        $this->assertEquals(
+            'ee',
+            FaZend_Callback::factory(array(new Foo(), 'two'))->call('ee')
         );
     }
     
