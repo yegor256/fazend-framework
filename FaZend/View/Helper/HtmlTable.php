@@ -197,17 +197,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     /**
      * Add converter to the column
      *
-     * @param string Column name, case sensitive
-     * @param string Converter class name
-     * @param string|null Converter method
+     * If FALSE provided instead of $column name, this converter will
+     * try to convert the entire row, and if the result is FALSE the
+     * row will be ignored
+     *
+     * @param string|false Column name, case sensitive, or FALSE if it relates to ROW
+     * @param mixed Callback
      * @return FaZend_View_Helper_HtmlTable
+     * @see FaZend_Callback
      */
-    public function addConverter($column, $class, $method = null)
+    public function addConverter($column, $callback)
     {
-        $this->_column($column)->converters[] = array(
-            'type' => $class,
-            'method' => $method,
-        );
+        $this->_column($column)->converters[] = FaZend_Callback::factory($callback);
         return $this;
     }
 
@@ -215,14 +216,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * Add formatter to the column (or to the row)
      *
      * @param string|false Column name, case sensitive, or FALSE if it relates to ROW
-     * @param string Condition
+     * @param mixed Callback
      * @param string|null Style
      * @return FaZend_View_Helper_HtmlTable
      */
-    public function addFormatter($column, $condition, $style = null)
+    public function addFormatter($column, $callback, $style = null)
     {
         $this->_column($column)->formatters[] = array(
-            'condition' => $condition,
+            'condition' => FaZend_Callback::factory($callback),
             'style' => $style,
         );
         return $this;
@@ -368,7 +369,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      */
     public function skipOption($title, $callback)
     {
-        $this->_option($title)->skip = $callback;
+        $this->_option($title)->skip = FaZend_Callback::factory($callback);
         return $this;
     }
 
@@ -474,39 +475,22 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             foreach ($row as $title=>$value) {
                 $column = $this->_column($title);
                 // summarize column values
-                if ($column->sum)
+                if ($column->sum) {
                     $column->sumValue += $value;
+                }
 
                 // maybe we should show only some particular columns
-                if (!$this->_isVisible($title))
+                if (!$this->_isVisible($title)) {
                     continue;
+                }
 
                 // convert value, if necessary
                 $value = $this->_convertColumnValue($title, $value, $rowOriginal);
 
-                // parse the value of this TD    
-                if ($column->parser) {
-                    $parser = $column->parser;
-                    $value = $parser($value, $rowOriginal);
-                }    
-
-                // parse the value of this TD with helper
-                if ($column->helper) {
-                    $helper = $column->helper;
-                    $value = $this->getView()->$helper($value);
-                }
-
-                // sanity check
-                if (!is_string($value))
-                    $value = (string)$value;
-
-                // strip HTML tags    
-                if (!$column->rawHtml)
-                    $value = htmlspecialchars($value);
-
                 // attach link to the TD
-                if ($column->link)
+                if ($column->link) {
                     $value = $this->_resolveLink($column->link, $value, $rowOriginal, $key);
+                }
 
                 // append CSS style
                 $tds[$title] = "\t\t<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>{$value}";
@@ -515,22 +499,22 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             if (count($this->_options)) {
                 $optString = "\t\t<td>";
                 foreach ($this->_options as $option) {
-
                     // skip the option
                     if ($option->skip) {
-                        $skip = $option->skip;
-                        if ($skip($rowOriginal))
+                        if ($option->skip->call($rowOriginal)) {
                             continue;
+                        }
                     }    
 
                     // build the <A HREF> link for this option
                     $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $rowOriginal, $key);
 
                     // attach this option to the particular column    
-                    if ($option->toColumn)    
+                    if ($option->toColumn) {
                         $tds[$option->toColumn] .= $optLink;
-                    else
+                    } else {
                         $optString .= $optLink;    
+                    }
                 }
                 $options[] = $optString;    
             }    
@@ -539,24 +523,28 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         }
         
         // if no data in the paginator
-        if (!count($resultTDs))
+        if (!count($resultTDs)) {
             return $this->_noDataMessage;
+        }
 
         // build the header using the last ROW information
         $header = "\t<tr>\n";
         foreach ($row as $title=>$value) {
-            if (!$this->_isVisible($title))
+            if (!$this->_isVisible($title)) {
                 continue;
+            }
 
             // rename the column
-            if ($this->_column($title)->title)    
+            if ($this->_column($title)->title) {
                 $title = $this->_column($title)->title;
+            }
 
             $header .= "\t\t<th>{$title}</th>\n";
         }    
 
-        if (count($this->_options))
+        if (count($this->_options)) {
             $header .= "\t\t<th>" . _t('Options') . "</th>\n";
+        }
       
         $header .= "\t</tr>\n";
 
@@ -731,78 +719,32 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      **/
     protected function _convertColumnValue($name, $value, $row)
     {
-        foreach ($this->_column($name)->converters as $converter) {
-            // maybe scalar type is expected?    
-            switch (strtolower($converter['type'])) {
-                case 'integer':
-                    $value = intval($value);
-                    continue;
-                case 'bool':
-                case 'boolean':
-                    $value = (bool)$value;
-                    continue;
-                case 'float':
-                    $value = (float)$value;
-                    continue;
-                case 'string':
-                    $value = strval($value);
-                    continue;
-                    
-                case 'callback':
-                    if (!is_callable($converter['method'])) {
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidConverter', 
-                            "Provided callback for '{$name}' is not callable"
-                        );
-                    }
-                    $value = call_user_func_array(
-                        $converter['method'], 
-                        array($value, $row)
-                    );
-                    continue;
-                
-                default:
-                    $class = $converter['type'];
-                    
-                    if (strpos($class, '->') === 0) {
-                        if (!is_object($value)) {
-                            FaZend_Exception::raise(
-                                'FaZend_View_Helper_Forma_InvalidConverter', 
-                                "Value of column '{$name}' is not an object"
-                            );
-                        }
-                        eval("\$value = \$value{$class};");
-                        continue;
-                    }
-                    
-                    if (!class_exists($class)) {
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidConverter', 
-                            "Class '{$class}' is unknown"
-                        );
-                    }
-
-                    if (empty($converter['method'])) {
-                        $value = new $class($value);
-                        continue;
-                    }
-
-                    if (!method_exists($class, $converter['method'])) {
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidConverter', 
-                            "Method '{$converter['method']}' is absent in $class"
-                        );
-                    }
-
-                    $value = call_user_func_array(
-                        array(
-                            $class,
-                            $converter['method']
-                        ), array($value)
-                    );
-                    break;
-            }
+        $column = $this->_column($name);
+        foreach ($column->converters as $converter) {
+            $value = $converter->call($value, $row);
         }
+
+        // parse the value of this TD    
+        if ($column->parser) {
+            $value = $column->parser->call($value, $rowOriginal);
+        }    
+
+        // parse the value of this TD with helper
+        if ($column->helper) {
+            $helper = $column->helper;
+            $value = $this->getView()->$helper($value);
+        }
+
+        // sanity check
+        if (!is_string($value)) {
+            $value = (string)$value;
+        }
+
+        // strip HTML tags    
+        if (!$column->rawHtml) {
+            $value = htmlspecialchars($value);
+        }
+
         return $value;
     }
     
@@ -819,58 +761,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     {
         $styles = array();
         foreach ($this->_column($name)->formatters as $formatter) {
-            switch (true) {
-                case is_bool($formatter['condition']):
-                    $style[] = $formatter['style'];
-                    break;
-
-                case is_string($formatter['condition']) && strpos($formatter['condition'], '->') === 0:
-                    if (!is_null($value)) {
-                        if (!is_object($value)) {
-                            FaZend_Exception::raise(
-                                'FaZend_View_Helper_Forma_InvalidFormatter', 
-                                "The value in column '{$name}' is not an object, " .
-                                "can't apply '{$formatter['condition']}' to it"
-                            );
-                        }
-                        eval("\$result = \$value{$formatter['condition']};");
-                    } else {
-                        if (!is_object($row)) {
-                            FaZend_Exception::raise(
-                                'FaZend_View_Helper_Forma_InvalidFormatter', 
-                                "The row is not an object, can't apply '{$formatter['condition']}' to it"
-                            );
-                        }
-                        eval("\$result = \$row{$formatter['condition']};");
-                    }
-                    if (is_bool($result) && $result)
-                        $styles[] = $formatter['style'];
-                    else
-                        $styles[] = $result;
-                    break;
-
-                case is_string($formatter['condition']) && ($formatter['condition'] === 'callback'):
-                    if (!is_callable($formatter['style'])) {
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidFormatter', 
-                            "Callback for {$name} is not callable"
-                        );
-                    }
-                    $styles[] = call_user_func_array(
-                        $formatter['style'], 
-                        array($value, $row, $this)
-                    );
-                    break;
-
-                case is_string($formatter['condition']):
-                    $styles[] = $formatter['condition'];
-                    break;
-
-                default:
-                    FaZend_Exception::raise(
-                        'FaZend_View_Helper_Forma_InvalidFormatter', 
-                        "Condition in formatter for '{$name}' is not parseable"
-                    );
+            $style = $formatter['condition']->call($value, $row, $this);
+            if (is_bool($style)) {
+                $styles[] = $formatter['style'];
+            } else {
+                $styles[] = $style;
             }
         }
         

@@ -32,17 +32,6 @@ class FaZend_Date extends Zend_Date
     {
         return new FaZend_Date($time);
     }
-    
-    /**
-     * Make an object of class, using ISO-8601 string
-     *
-     * @param sting
-     * @return FaZend_Date
-     */
-    public static function makeIso($time) 
-    {
-        return new FaZend_Date($time, Zend_Date::ISO_8601);
-    }
 
     /**
      * Current date is between these two dates (including them!)?
