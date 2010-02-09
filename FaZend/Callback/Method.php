@@ -30,7 +30,7 @@ class FaZend_Callback_Method extends FaZend_Callback
      */
     protected function _call(array $args)
     {
-        list($class, $method) = $args;
+        list($class, $method) = $this->_data;
         return call_user_func_array(array($class, $method), $args);
     }
 
