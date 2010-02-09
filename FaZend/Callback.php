@@ -35,6 +35,14 @@ abstract class FaZend_Callback
      * @var boolean
      */
     protected $_verbose = false;
+    
+    /**
+     * Set of injected values/objects
+     *
+     * @var array
+     * @see inject()
+     */
+    protected $_injected = array();
 
     /**
      * Construct the class
@@ -57,6 +65,29 @@ abstract class FaZend_Callback
     {
         $this->_verbose = $verbose;
         return $this;
+    }
+    
+    /**
+     * Inject some value
+     *
+     * @param mixed Value to inject
+     * @return $this
+     */
+    public function inject($value) 
+    {
+        $this->_injected['i' . (count($this->_injected) + 1)] = $value;
+        return $this;
+    }
+    
+    /**
+     * Already has injected value?
+     *
+     * @param string Name of injected var, like "i1", "i2", etc
+     * @return void
+     */
+    public function hasInjected($name) 
+    {
+        return isset($this->_injected[$name]);
     }
     
     /**

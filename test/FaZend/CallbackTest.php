@@ -62,5 +62,15 @@ class FaZend_CallbackTest extends AbstractTestCase
         );
     }
 
+    public function testInjectionsWork()
+    {
+        $this->assertEquals(
+            'tt250', 
+            FaZend_Callback::factory('"${1}${i1}"')
+            ->inject(250)
+            ->call('tt')
+        );
+    }
+
 }
         
