@@ -168,8 +168,9 @@ abstract class FaZend_View_Helper_Forma_Field
      */
     public function __call($method, $args)
     {
-        if (strpos($method, 'field') !== 0)
+        if (strpos($method, 'field') !== 0) {
             return call_user_func_array(array($this->_helper, $method), $args);
+        }
 
         // ->fieldRequired(...) will be converted to _setRequired(...)
         $func = '_set' . substr($method, 5);
@@ -181,7 +182,6 @@ abstract class FaZend_View_Helper_Forma_Field
         }
             
         call_user_func_array(array($this, $func), $args);
-
         return $this;
     }
 
@@ -210,7 +210,6 @@ abstract class FaZend_View_Helper_Forma_Field
     public function deriveValue(Zend_Form_Element $element)
     {
         $value = $element->getValue();
-        
         foreach ($this->_converters as $converter) {
             $value = $converter->call($value);
         }
@@ -250,11 +249,13 @@ abstract class FaZend_View_Helper_Forma_Field
                 );
         }
 
-        if (isset($this->_value))
+        if (isset($this->_value)) {
             $element->setValue($this->_value);
+        }
 
-        if ($this->_required)
+        if ($this->_required) {
             $element->setRequired(true);
+        }
 
         foreach ($this->_attribs as $name=>$value) {
             $element->setAttrib($name, $value);
