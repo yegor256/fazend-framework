@@ -212,48 +212,7 @@ abstract class FaZend_View_Helper_Forma_Field
         $value = $element->getValue();
         
         foreach ($this->_converters as $converter) {
-            // maybe scalar type is expected?    
-            switch (strtolower($converter['type'])) {
-                case 'integer':
-                    $value = intval($value);
-                    continue;
-                case 'bool':
-                case 'boolean':
-                    $value = (bool)$value;
-                    continue;
-                case 'float':
-                    $value = (float)$value;
-                    continue;
-                case 'string':
-                    $value = strval($value);
-                    continue;
-                default:
-                    $class = $converter['type'];
-                    if (!class_exists($class))
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidConverter', 
-                            "Class '{$class}' is unknown"
-                        );
-
-                    if (empty($converter['method'])) {
-                        $value = new $class($value);
-                        continue;
-                    }
-
-                    if (!method_exists($class, $converter['method']))
-                        FaZend_Exception::raise(
-                            'FaZend_View_Helper_Forma_InvalidConverter', 
-                            "Method '{$converter['method']}' is absent in $class"
-                        );
-
-                    $value = call_user_func_array(
-                        array(
-                            $class,
-                            $converter['method']
-                        ), array($value)
-                    );
-                    break;
-            }
+            $value = $converter->call($value);
         }
         return $value;
     }
