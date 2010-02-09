@@ -345,17 +345,13 @@ abstract class FaZend_View_Helper_Forma_Field
     /**
      * Set type to be used in conversion
      *
-     * @param string Type name
-     * @param string Method name to use for conversion
+     * @param callback
      * @return $this
      * @uses $_converters
      */
-    protected function _setConverter($type, $method = null)
+    protected function _setConverter($callback)
     {
-        $this->_converters[] = array(
-            'type' => $type,
-            'method' => $method
-        );
+        $this->_converters[] = FaZend_Callback::factory($callback);
         return $this;
     }
 
