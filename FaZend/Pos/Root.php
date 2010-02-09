@@ -48,12 +48,12 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
         
         FaZend_Db_Table_ActiveRow::addMapping(
             '/^fzSnapshot\.fzObject|fzPartOf\.(?:parent|kid)$/', 
-            'new FaZend_Pos_Model_Object(${1})'
+            'new FaZend_Pos_Model_Object(${a1})'
         );
         
         FaZend_Db_Table_ActiveRow::addMapping(
             '/^fzSnapshot\.updated$/', 
-            'new Zend_Date(${1}, Zend_Date::ISO_8601)'
+            'new Zend_Date(${a1}, Zend_Date::ISO_8601)'
         );
     
         $this->ps(
