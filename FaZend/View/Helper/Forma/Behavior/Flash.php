@@ -34,26 +34,9 @@ class FaZend_View_Helper_Forma_Behavior_Flash extends FaZend_View_Helper_Forma_B
      */
     public function run(&$html, $log)
     {
-        foreach ($this->_args as &$arg) {
-            if (!preg_match_all('/\{(\w+)\}/', $arg, $matches))
-                continue;
-            foreach ($matches[1] as $id=>$match) {
-                if (!isset($this->_methodArgs[$match])) {
-                    FaZend_Exception::raise(
-                        'FaZend_View_Helper_Forma_Behavior_Flash_InvalidMnemo',
-                        "Mnemo '{$match}' is not found in form"
-                    );
-                }
-                $arg = str_replace(
-                    $matches[0][$id], 
-                    "\$this->_methodArgs['$match']", 
-                    $arg
-                );
-                eval("\$arg = $arg;");
-            }
-        }
+        // build FLASH message
+        $message = FaZend_Callback::factory($this->_args[0])->call($this->_methodArgs);
         
-        $message = call_user_func_array('sprintf', $this->_args);
         Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
             ->setNamespace('FaZend_Messages')->addMessage($message);
     }
