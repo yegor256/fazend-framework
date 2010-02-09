@@ -35,7 +35,13 @@ class FaZend_View_Helper_Forma_Behavior_Flash extends FaZend_View_Helper_Forma_B
     public function run(&$html, $log)
     {
         // build FLASH message
-        $message = FaZend_Callback::factory($this->_args[0])->call($this->_methodArgs);
+        $message = call_user_func_array(
+            array(
+                FaZend_Callback::factory($this->_args[0]),
+                'call'
+            ),
+            $this->_methodArgs
+        );
         
         Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
             ->setNamespace('FaZend_Messages')->addMessage($message);
