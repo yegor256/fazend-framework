@@ -533,7 +533,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         }
 
         // build the header using the last ROW information
-        $header = "\t<tr>\n";
+        $header = "\t<tr><!-- header -->\n";
         foreach ($row as $title=>$value) {
             if (!$this->_isVisible($title)) {
                 continue;
@@ -547,6 +547,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             $header .= "\t\t<th>{$title}</th>\n";
         }    
 
+        // add header column for OPTIONS
         if (count($this->_options)) {
             $header .= "\t\t<th>" . _t('Options') . "</th>\n";
         }
@@ -609,13 +610,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     {
         // maybe we should show only some particular columns
         if ($this->_columnsToShow) {
-            if (!in_array($column, $this->_columnsToShow))
+            if (!in_array($column, $this->_columnsToShow)) {
                 return false;
+            }
         }
 
         // skip the column
-        if ($this->_column($column)->hidden)
+        if ($this->_column($column)->hidden) {
             return false;
+        }
 
         return true;
     }
