@@ -36,7 +36,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('db');
         $this->bootstrap('Deployer');
 
-        FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'Zend_Date');
+        FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'new Zend_Date(${1})');
 
         $queries = array(
             'insert into owner values (132, "john smith", null)',

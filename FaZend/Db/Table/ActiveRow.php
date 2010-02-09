@@ -43,6 +43,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @var string
      * @see addMapping()
+     * @see FaZend_Callback
      */
     protected static $_mapping = array();
 
@@ -79,13 +80,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Add new mapping
      *
      * @param string Regular expression to match, e.g. "/user\.project/"
-     * @param string Class name, e.g. "Model_Entities_Project"
+     * @param callback
      * @return void
      * @see self::$_mapping
      */
-    public static function addMapping($regex, $class) 
+    public static function addMapping($regex, $callback) 
     {
-        self::$_mapping[$regex] = $class;
+        self::$_mapping[$regex] = FaZend_Callback::factory($callback);
     }
 
     /**
@@ -313,16 +314,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         // We're trying to find a class of explicit mapping/casting
         // and convert $value to this class
-        foreach (self::$_mapping as $regex=>$class) {
+        foreach (self::$_mapping as $regex=>$callback) {
             if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name)) {
                 continue;
             }
-            $rowClass = $class;
-            if (is_array($class)) {
-                eval("\$value = {$class[0]}::{$class[1]}(\$value);");
-                return $value;
-            }
-            break;
+            return $callback->call(is_numeric($value) ? intval($value) : $value);
         }
                 
         // We are trying to understand what is the class to be
