@@ -39,7 +39,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
      */
     public function getInputs()
     {
-        if (!preg_match_all('/\$\{(i?\d+)\}/', $this->_data, $matches)) {
+        if (!preg_match_all('/\$\{([ia]?\d+)\}/', $this->_data, $matches)) {
             return 0;
         }
         return array_unique($matches[1]);
@@ -57,7 +57,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
         array_unshift($args, false);
         
         // replace ${1}, ${2}, etc with arguments provided
-        $eval = preg_replace('/\$\{(\d+)\}/', '$args[${1}]', $this->_data);
+        $eval = preg_replace('/\$\{(a\d+)\}/', '$args[${1}]', $this->_data);
         
         // replace ${i1}, ${i2}, etc with injected variables
         $eval = preg_replace('/\$\{(i\d+)\}/', '{$this->_injected["${1}"]}', $eval);
