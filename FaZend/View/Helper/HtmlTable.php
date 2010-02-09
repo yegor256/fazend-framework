@@ -447,6 +447,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $row = array('column'=>$rowOriginal);
             }
 
+            // convert ROW, if necessary. skip the ROW if false returned
+            if (!$this->_convertColumnValue(false, true, $rowOriginal)) {
+                continue;
+            }
+
             // inject columns
             foreach ($this->_injectedColumns as $injectedColumn=>$predecessor) {
                 // sanity check
@@ -711,7 +716,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     /**
      * Convert value of the column
      *
-     * @param string Name of the column
+     * @param string|false Name of the column
      * @param string Current value of the column
      * @param mixed Original row we're working with
      * @return mixed
@@ -735,14 +740,16 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             $value = $this->getView()->$helper($value);
         }
 
-        // sanity check
-        if (!is_string($value)) {
-            $value = (string)$value;
-        }
+        if ($name !== false) {
+            // sanity check
+            if (!is_string($value)) {
+                $value = (string)$value;
+            }
 
-        // strip HTML tags    
-        if (!$column->rawHtml) {
-            $value = htmlspecialchars($value);
+            // strip HTML tags    
+            if (!$column->rawHtml) {
+                $value = htmlspecialchars($value);
+            }
         }
 
         return $value;
