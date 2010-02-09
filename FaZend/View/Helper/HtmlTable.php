@@ -435,6 +435,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         $options = array();
 
         foreach ($this->_paginator as $key=>$rowOriginal) {
+            // convert ROW, if necessary. skip the ROW if false returned
+            if (!$this->_convertColumnValue(false, true, $rowOriginal)) {
+                continue;
+            }
+
             // prepare one row for rendering
             if (is_array($rowOriginal)) {
                 $row = $rowOriginal;
@@ -447,34 +452,32 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $row = array('column'=>$rowOriginal);
             }
 
-            // convert ROW, if necessary. skip the ROW if false returned
-            if (!$this->_convertColumnValue(false, true, $rowOriginal)) {
-                continue;
-            }
-
             // inject columns
             foreach ($this->_injectedColumns as $injectedColumn=>$predecessor) {
                 // sanity check
-                if (!is_object($rowOriginal))
+                if (!is_object($rowOriginal)) {
                     break;
+                }
                 
                 // if it's a method - call it
-                if ($injectedColumn == '__key')
+                if ($injectedColumn == '__key') {
                     $injectedValue = $key;
-                elseif (method_exists($rowOriginal, $injectedColumn))
+                } elseif (method_exists($rowOriginal, $injectedColumn)) {
                     $injectedValue = $rowOriginal->$injectedColumn();
-                else
+                } else {
                     $injectedValue = $rowOriginal->$injectedColumn;
+                }
 
                 $this->_inject($row, $injectedColumn, $predecessor, $injectedValue);
             }
 
-            $resultTRs[] = 
-                "\t<tr class='" . 
-                (fmod(count($resultTRs), 2) ? 'even' : 'odd') .
-                "' onmouseover='this.className=\"highlight\"' onmouseout='this.className=\"" .
-                (fmod(count($resultTRs), 2) ? 'even' : 'odd') . 
-                "\"'{$this->_formatColumnStyle(false, null, $rowOriginal)}>\n";
+            $resultTRs[] = sprintf(
+                "\t<tr class='%s' onmouseover='this.className=\"highlight\"' " .
+                "onmouseout='this.className=\"%s\"'%s>\n",
+                (fmod(count($resultTRs), 2) ? 'even' : 'odd'),
+                (fmod(count($resultTRs), 2) ? 'even' : 'odd'),
+                $this->_formatColumnStyle(false, null, $rowOriginal)
+            );
 
             $tds = array();    
             foreach ($row as $title=>$value) {
@@ -498,7 +501,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 }
 
                 // append CSS style
-                $tds[$title] = "\t\t<td{$this->_formatColumnStyle($title, $value, $rowOriginal)}>{$value}";
+                $tds[$title] = sprintf(
+                    "\t\t<td%s>%s",
+                    $this->_formatColumnStyle($title, $value, $rowOriginal),
+                    $value
+                );
             }    
 
             if (count($this->_options)) {
