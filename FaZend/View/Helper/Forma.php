@@ -165,8 +165,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // show the form again, if it's not filled and completed
         $log = '';
-        $methodArgs = array();
-        $completed = ($this->_form->isFilled() && $this->_process($log, $methodArgs));
+        $args = array();
+        $completed = ($this->_form->isFilled() && $this->_process($log, $args));
         $html = strval($this->_form->__toString());
         
         // if the form was NOT completed yet - just show it
@@ -181,7 +181,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         
         // run them all one by one
         foreach ($this->_behaviors as $behavior) {
-            $behavior->setMethodArgs($methodArgs);
+            $behavior->setMethodArgs($args);
             $behavior->run($html, $log);
         }
             
@@ -223,7 +223,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param array List of params to be passed to method
      * @return boolean Processed without errors?
      */
-    protected function _process(&$log, array &$methodArgs) 
+    protected function _process(&$log, array &$args) 
     {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', spl_object_hash($this));
@@ -246,49 +246,19 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // if ACTION is specified in the submit button
         if ($this->_fields[$submit->getName()]->action) {
             // get callback params from the clicked button
-            list($class, $method) = $this->_fields[$submit->getName()]->action;
-
-            // prepare method calling params for this button/callback
-            $rMethod = new ReflectionMethod($class, $method);
-            $mnemos = array();
+            $inputs = $this->_fields[$submit->getName()]->action->getInputs();
 
             try {
                 // run through all required paramters. required by method
-                foreach ($rMethod->getParameters() as $param) {
+                $args = array();
+                foreach ($inputs as $input) {
                     // get value of this parameter from form
-                    $methodArgs[$param->name] = $this->_getFormParam($param);
-                    // this is necessary for logging (see below)
-                    switch (true) {
-                        case is_bool($methodArgs[$param->name]):
-                            $mnemo = $methodArgs[$param->name] ? 'TRUE' : 'FALSE';
-                            break;
-                        case is_scalar($methodArgs[$param->name]):
-                            $mnemo = "'" . cutLongLine($methodArgs[$param->name]) . "'";
-                            break;
-                        case is_object($methodArgs[$param->name]):
-                            $mnemo = get_class($methodArgs[$param->name]);
-                            break;
-                        case is_null($methodArgs[$param->name]):
-                            $mnemo = 'NULL';
-                            break;
-                        default:
-                            $mnemo = '???';
-                            break;
-                    }
-                    $mnemos[] = $mnemo;
+                    $args[$input] = $this->_getFormParam($input);
                 }
 
-                // log this operation
-                logg(
-                    "Calling %s::%s(%s)",
-                    $rMethod->getDeclaringClass()->name,
-                    $method,
-                    implode(', ', $mnemos)
-                );
+                // make a call
+                $return = $this->_fields[$submit->getName()]->action->call($args);
 
-                // execute the target method
-                $return = call_user_func_array(array($class, $method), $methodArgs);
-            
                 // it's done, if we're here and no exception has been thrown
                 $result = true;
             } catch (Exception $e) {
@@ -314,25 +284,18 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *
      * Retrieve param using POST data and form configuration
      *
-     * @param ReflectionParameter What parameter we are looking for...
+     * @param string What parameter we are looking for...
      * @return mixed|null
      * @throws FaZend_View_Helper_Forma_ParamNotFound
      */
-    protected function _getFormParam(ReflectionParameter $param) 
+    protected function _getFormParam($name) 
     {
-        // this is a name of element in the form, which we expect to send to the method
-        $name = $param->name;
-        
         // maybe this element is absent in the form?
         if (!isset($this->_form->$name)) {
-            if ($param->isOptional()) {
-                return $param->getDefaultValue();
-            } else {
-                FaZend_Exception::raise(
-                    'FaZend_View_Helper_Forma_ParamNotFound',
-                    "Field '{$name}' not found in forma, but is required by the action"
-                );
-            }
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_Forma_ParamNotFound',
+                "Field '{$name}' not found in forma, but is required by the action"
+            );
         }
 
         // get the value of this element from the form

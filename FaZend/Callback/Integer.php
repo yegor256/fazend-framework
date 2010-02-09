@@ -23,6 +23,26 @@ class FaZend_Callback_Integer extends FaZend_Callback
 {
 
     /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return '(int)';
+    }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    public function getInputs()
+    {
+        return array('integer');
+    }
+    
+    /**
      * Calculate and return
      *
      * @param array Array of params

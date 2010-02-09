@@ -39,5 +39,28 @@ class FaZend_CallbackTest extends AbstractTestCase
         );
     }
 
+    public function testInputsAreListedCorrectly()
+    {
+        $this->assertEquals(array('integer'), FaZend_Callback::factory('integer')->getInputs());
+        $this->assertEquals(array('string'), FaZend_Callback::factory('string')->getInputs());
+        $this->assertEquals(array('float'), FaZend_Callback::factory('float')->getInputs());
+        $this->assertEquals(array('boolean'), FaZend_Callback::factory('boolean')->getInputs());
+
+        $this->assertEquals(
+            array('1', 'i1'), 
+            FaZend_Callback::factory('new Zend_Date(${1}, ${i1})')->getInputs()
+        );
+
+        $this->assertEquals(
+            array('a', 'b'), 
+            FaZend_Callback::factory(create_function('$a, $b', 'return false;'))->getInputs()
+        );
+
+        $this->assertEquals(
+            array('money'), 
+            FaZend_Callback::factory(array(new FaZend_Bo_Money(), 'sub'))->getInputs()
+        );
+    }
+
 }
         

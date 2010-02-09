@@ -21,7 +21,61 @@
  */
 class FaZend_Callback_Method extends FaZend_Callback
 {
+    
+    /**
+     * Class or object
+     *
+     * @var string|object
+     */
+    protected $_class;
+    
+    /**
+     * Method
+     *
+     * @var string
+     */
+    protected $_method;
 
+    /**
+     * Construct the class
+     *
+     * @param array Callback
+     * @return void
+     */
+    public function __construct($data)
+    {
+        list($this->_class, $this->_method) = $data;
+    }
+
+    /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return (is_string($this->_class) ? $this->_class : get_class($this->_class)) . 
+        '::' . $this->_method;
+    }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    public function getInputs()
+    {
+        // prepare method calling params for this button/callback
+        $rMethod = new ReflectionMethod($this->_class, $this->_method);
+
+        $inputs = array();
+        // run through all required paramters. required by method
+        foreach ($rMethod->getParameters() as $param) {
+            $inputs[] = $param->name;
+        }
+        return $inputs;
+    }
+    
     /**
      * Calculate and return
      *
@@ -30,7 +84,6 @@ class FaZend_Callback_Method extends FaZend_Callback
      */
     protected function _call(array $args)
     {
-        list($class, $method) = $this->_data;
         return call_user_func_array(array($class, $method), $args);
     }
 

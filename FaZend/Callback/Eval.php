@@ -23,6 +23,29 @@ class FaZend_Callback_Eval extends FaZend_Callback
 {
 
     /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return 'eval';
+    }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    public function getInputs()
+    {
+        if (!preg_match_all('/\$\{(i?\d+)\}/', $this->_data, $matches)) {
+            return 0;
+        }
+        return array_unique($matches[1]);
+    }
+
+    /**
      * Calculate and return
      *
      * @param array Array of params

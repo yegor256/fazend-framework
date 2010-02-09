@@ -30,6 +30,13 @@ abstract class FaZend_Callback
     protected $_data;
 
     /**
+     * Shall we protocol the actions performed?
+     *
+     * @var boolean
+     */
+    protected $_verbose = false;
+
+    /**
      * Construct the class
      *
      * @param string|function|array
@@ -38,6 +45,18 @@ abstract class FaZend_Callback
     private function __construct($data)
     {
         $this->_data = $data;
+    }
+    
+    /**
+     * Set verbose mode
+     *
+     * @param boolean Shall we protocol all calls?
+     * @return $this
+     */
+    public function setVerbose($verbose = true) 
+    {
+        $this->_verbose = $verbose;
+        return $this;
     }
     
     /**
@@ -103,8 +122,57 @@ abstract class FaZend_Callback
     public final function call(/* param, param, ... */) 
     {
         $args = func_get_args();
-        return $this->_call($args);
+        $result = $this->_call($args);
+        
+        if ($this->_verbose) {
+            $mnemos = array();
+
+            foreach ($args as $arg) {
+                // this is necessary for logging (see below)
+                switch (true) {
+                    case is_bool($arg):
+                        $mnemo = $arg ? 'TRUE' : 'FALSE';
+                        break;
+                    case is_scalar($arg):
+                        $mnemo = "'" . cutLongLine($arg) . "'";
+                        break;
+                    case is_object($arg):
+                        $mnemo = get_class($arg);
+                        break;
+                    case is_null($arg):
+                        $mnemo = 'NULL';
+                        break;
+                    default:
+                        $mnemo = '???';
+                        break;
+                }
+                $mnemos[] = $mnemo;
+            }
+
+            // log this operation
+            logg(
+                "Calling %s(%s)",
+                $this->getTitle(),
+                implode(', ', $mnemos)
+            );
+        }
+        
+        return $result;
     }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    abstract public function getInputs();
+    
+    /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    abstract public function getTitle();
     
     /**
      * Calculate and return

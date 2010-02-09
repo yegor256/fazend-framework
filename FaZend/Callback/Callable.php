@@ -23,6 +23,33 @@ class FaZend_Callback_Callable extends FaZend_Callback
 {
 
     /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return 'lambda';
+    }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    public function getInputs()
+    {
+        $rFunction = new ReflectionFunction($this->_data);
+        
+        $inputs = array();
+        // run through all required paramters. required by method
+        foreach ($rFunction->getParameters() as $param) {
+            $inputs[] = $param->name;
+        }
+        return $inputs;
+    }
+    
+    /**
      * Calculate and return
      *
      * @param array Array of params

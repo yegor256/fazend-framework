@@ -23,6 +23,26 @@ class FaZend_Callback_Constant extends FaZend_Callback
 {
 
     /**
+     * Returns a short name of the callback
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return 'const';
+    }
+    
+    /**
+     * Returns an array of inputs expected by this callback
+     *
+     * @return string[]
+     */
+    public function getInputs()
+    {
+        return array();
+    }
+    
+    /**
      * Calculate and return
      *
      * @param array Array of params

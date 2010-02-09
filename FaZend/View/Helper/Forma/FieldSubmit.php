@@ -66,10 +66,11 @@ class FaZend_View_Helper_Forma_FieldSubmit extends FaZend_View_Helper_Forma_Fiel
      *
      * @param callback Validator of the field value
      * @return void
+     * @see FaZend_Callback
      */
-    protected function _setAction($class, $method)
+    protected function _setAction($callback)
     {
-        $this->_action = array($class, $method);
+        $this->_action = FaZend_Callback::factory($callback);
     }
 
 }
