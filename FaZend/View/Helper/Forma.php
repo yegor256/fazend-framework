@@ -258,7 +258,13 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 }
 
                 // make a call
-                $return = $this->_fields[$submit->getName()]->action->call($args);
+                $return = call_user_func_array(
+                    array(
+                        $this->_fields[$submit->getName()]->action, 
+                        'call'
+                    ),
+                    $args
+                );
 
                 // it's done, if we're here and no exception has been thrown
                 $result = true;
