@@ -53,14 +53,11 @@ class FaZend_Callback_Eval extends FaZend_Callback
      */
     protected function _call(array $args)
     {
-        // in order to inject FALSE into the ZERO position
-        array_unshift($args, false);
-        
         // replace ${1}, ${2}, etc with arguments provided
-        $eval = preg_replace('/\$\{(a\d+)\}/', '$args[${1}]', $this->_data);
+        $eval = preg_replace('/\$\{(a\d+)\}/', '$args["${1}"]', $this->_data);
         
         // replace ${i1}, ${i2}, etc with injected variables
-        $eval = preg_replace('/\$\{(i\d+)\}/', '{$this->_injected["${1}"]}', $eval);
+        $eval = preg_replace('/\$\{(i\d+)\}/', '$this->_injected["${1}"]', $eval);
         
         eval('$result = ' . $eval . ';');
         return $result;

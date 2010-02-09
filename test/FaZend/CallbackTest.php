@@ -22,10 +22,10 @@ class FaZend_CallbackTest extends AbstractTestCase
     {
         $this->assertEquals(
             't:1', 
-            FaZend_Callback::factory('sprintf(${1}, ${2})')->call('t:%s', 1)
+            FaZend_Callback::factory('sprintf(${a1}, ${a2})')->call('t:%s', 1)
         );
         $this->assertTrue(
-            FaZend_Callback::factory('new Zend_Date(${1});')->call('10 June 2010')
+            FaZend_Callback::factory('new Zend_Date(${a1});')->call('10 June 2010')
             instanceof Zend_Date
         );
     }
@@ -66,7 +66,7 @@ class FaZend_CallbackTest extends AbstractTestCase
     {
         $this->assertEquals(
             'tt250', 
-            FaZend_Callback::factory('"${1}${i1}"')
+            FaZend_Callback::factory('"{${a1}}{${i1}}"')
             ->inject(250)
             ->call('tt')
         );

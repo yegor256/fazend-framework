@@ -153,6 +153,10 @@ abstract class FaZend_Callback
     public final function call(/* param, param, ... */) 
     {
         $args = func_get_args();
+        foreach ($args as $id=>$arg) {
+            $args['a' . ($id + 1)] = $arg;
+            unset($args[$id]);
+        }
         $result = $this->_call($args);
         
         if ($this->_verbose) {

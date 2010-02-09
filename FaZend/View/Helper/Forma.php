@@ -160,8 +160,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             ->addDecorator('Form');
 
         // add all input elements to the form
-        foreach ($this->_fields as $name=>$field)
+        foreach ($this->_fields as $name=>$field) {
             $this->_form->addElement($field->getFormElement($name));
+        }
 
         // show the form again, if it's not filled and completed
         $log = '';
@@ -209,8 +210,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         $newId = 1;
         foreach ($this->_fields as $id=>$field) {
-            if (preg_match('/^field(\d+)$/', $id, $matches))
+            if (preg_match('/^field(\d+)$/', $id, $matches)) {
                 $newId = (int)$matches[1] + 1;
+            }
         }
 
         return 'field' . $newId;
