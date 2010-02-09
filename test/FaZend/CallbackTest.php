@@ -12,12 +12,12 @@ class FaZend_CallbackTest extends AbstractTestCase
         $this->assertEquals(15.66, FaZend_Callback::factory('float')->call(15.66));
         $this->assertEquals(true, FaZend_Callback::factory('boolean')->call(15));
     }
-
+    
     public function testConstantWorks()
     {
         $this->assertEquals(true, FaZend_Callback::factory(true)->call(15.77));
     }
-
+    
     public function testEvalCallbackWorks()
     {
         $this->assertEquals(
@@ -29,7 +29,7 @@ class FaZend_CallbackTest extends AbstractTestCase
             instanceof Zend_Date
         );
     }
-
+    
     public function testLambdaFunctionCallbackWorks()
     {
         $this->assertEquals(
@@ -38,30 +38,30 @@ class FaZend_CallbackTest extends AbstractTestCase
             ->call('t:%s', 1)
         );
     }
-
+    
     public function testInputsAreListedCorrectly()
     {
         $this->assertEquals(array('integer'), FaZend_Callback::factory('integer')->getInputs());
         $this->assertEquals(array('string'), FaZend_Callback::factory('string')->getInputs());
         $this->assertEquals(array('float'), FaZend_Callback::factory('float')->getInputs());
         $this->assertEquals(array('boolean'), FaZend_Callback::factory('boolean')->getInputs());
-
+    
         $this->assertEquals(
             array('1', 'i1'), 
             FaZend_Callback::factory('new Zend_Date(${1}, ${i1})')->getInputs()
         );
-
+    
         $this->assertEquals(
             array('a', 'b'), 
             FaZend_Callback::factory(create_function('$a, $b', 'return false;'))->getInputs()
         );
-
+    
         $this->assertEquals(
             array('money'), 
             FaZend_Callback::factory(array(new FaZend_Bo_Money(), 'sub'))->getInputs()
         );
     }
-
+    
     public function testInjectionsWork()
     {
         $this->assertEquals(
@@ -69,6 +69,31 @@ class FaZend_CallbackTest extends AbstractTestCase
             FaZend_Callback::factory('"{${a1}}{${i1}}"')
             ->inject(250)
             ->call('tt')
+        );
+    }
+
+    /**
+     * @expectedException FaZend_Callback_Eval_MissedInjectionException
+     */
+    public function testMissedInjectionIsDetected()
+    {
+        $this->assertEquals(
+            'tt250', 
+            FaZend_Callback::factory('"{${a1}}{${i1}}"')
+            ->call('tt')
+        );
+    }
+
+    /**
+     * @expectedException FaZend_Callback_Eval_MissedArgumentException
+     */
+    public function testMissedArgumentIsDetected()
+    {
+        $this->assertEquals(
+            'tt250', 
+            FaZend_Callback::factory('"{${a1}}{${i1}}"')
+            ->inject('222')
+            ->call()
         );
     }
 

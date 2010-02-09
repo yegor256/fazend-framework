@@ -50,15 +50,41 @@ class FaZend_Callback_Eval extends FaZend_Callback
      *
      * @param array Array of params
      * @return mixed
+     * @throws FaZend_Callback_Eval_MissedArgumentException
+     * @throws FaZend_Callback_Eval_MissedInjectionException
      */
     protected function _call(array $args)
     {
-        // replace ${1}, ${2}, etc with arguments provided
+        // replace ${a1}, ${a2}, etc with arguments provided
         $eval = preg_replace('/\$\{(a\d+)\}/', '$args["${1}"]', $this->_data);
+        
+        // validation
+        if (preg_match_all('/\$args\["(a\d+)"\]/', $eval, $matches)) {
+            foreach ($matches[1] as $match) {
+                if (!isset($args[$match])) {
+                    FaZend_Exception::raise(
+                        'FaZend_Callback_Eval_MissedArgumentException',
+                        "Argument '{$match}' is missed for '{$this->_data}'"
+                    );
+                }
+            }
+        }
         
         // replace ${i1}, ${i2}, etc with injected variables
         $eval = preg_replace('/\$\{(i\d+)\}/', '$this->_injected["${1}"]', $eval);
         
+        // validation
+        if (preg_match_all('/\$this->\_injected\["(i\d+)"\]/', $eval, $matches)) {
+            foreach ($matches[1] as $match) {
+                if (!isset($this->_injected[$match])) {
+                    FaZend_Exception::raise(
+                        'FaZend_Callback_Eval_MissedInjectionException',
+                        "Injection '{$match}' is missed for '{$this->_data}'"
+                    );
+                }
+            }
+        }
+
         eval('$result = ' . $eval . ';');
         return $result;
     }
