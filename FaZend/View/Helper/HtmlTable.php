@@ -62,6 +62,13 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     protected $_noDataMessage = 'no data';
 
     /**
+     * Separator between options in special "options" column
+     *
+     * @var string
+     */
+    protected $_optionsSeparator = '&#32;';
+
+    /**
      * Columns to show, if undefined = show all columns
      *
      * @var string[]
@@ -92,12 +99,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     public function htmlTable($name = null)
     {
         // no name means no multi-instance - short and fast scenario
-        if (is_null($name))
+        if (is_null($name)) {
             return $this;
+        }
 
         // initialize this particular table
-        if (!isset(self::$_instances[$name]))
+        if (!isset(self::$_instances[$name])) {
             self::$_instances[$name] = clone $this;
+        }
 
         return self::$_instances[$name];
     }
@@ -114,7 +123,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         try {
             $html = $this->_render();
         } catch (Exception $e) {
-            $html = sprintf('Exception %s: %s', get_class($e), $e->getMessage());
+            $html = sprintf(
+                'Exception %s: %s', 
+                get_class($e), 
+                $e->getMessage()
+            );
         }
 
         return $html;
@@ -128,7 +141,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @return $this
      * @uses $this->_injections
      */
-    public function setInjection($name, $variable) 
+    public function setInjection($name, $variable = false) 
     {
         $this->_injections[$name] = $variable;
         return $this;
@@ -165,32 +178,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     public function setPaginator(Zend_Paginator $paginator)
     {
         $this->_paginator = $paginator;
-        return $this;
-    }
-
-    /**
-     * Set parser for a given column
-     *
-     * @param string Column name, case sensitive
-     * @param callback Function to be called with each row
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function setParser($column, $callback)
-    {
-        $this->_column($column)->parser = $callback;
-        return $this;
-    }
-
-    /**
-     * Set helper for a given column
-     *
-     * @param string Column name, case sensitive
-     * @param string Name of the view helper to apply
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function setParserHelper($column, $helper)
-    {
-        $this->_column($column)->helper = $helper;
         return $this;
     }
 
@@ -242,29 +229,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     }
 
     /**
-     * Ask this helper to calculate sum of this column
-     *
-     * @param string Column name, case sensitive
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function calculateSum($column)
-    {
-        $this->_column($column)->sum = true;
-        return $this;
-    }
-
-    /**
-     * Returns calculated sum for this column
-     *
-     * @param string Column name, case sensitive
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function getSum($column)
-    {
-        return $this->_column($column)->sumValue;
-    }
-
-    /**
      * Add new column
      *
      * @param string Column name, case sensitive
@@ -277,7 +241,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         if ($column == $predecessor) {
             FaZend_Exception::raise(
                 'FaZend_View_Helper_HtmlTable_IllegalParameter', 
-                'Column cannot precede itself'
+                "Column '{$column}' cannot precede itself"
             );
         }
 
@@ -374,19 +338,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     }
 
     /**
-     * Add column style
-     *
-     * @param string Column name, case sensitive
-     * @param string CSS style
-     * @return FaZend_View_Helper_HtmlTable
-     */
-    public function addColumnStyle($column, $style)
-    {
-        $this->_column($column)->style = $style;
-        return $this;
-    }
-
-    /**
      * Set column title
      *
      * @param string Column name, case sensitive
@@ -440,14 +391,16 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 continue;
             }
 
-            // prepare one row for rendering
+            // prepare one row for rendering, converting it to the ARRAY
+            // type, no matter what was the original type.
             if (is_array($rowOriginal)) {
                 $row = $rowOriginal;
             } elseif (is_object($rowOriginal)) {
-                if (method_exists($rowOriginal, 'toArray'))
+                if (method_exists($rowOriginal, 'toArray')) {
                     $row = $rowOriginal->toArray();
-                else
+                } else {
                     $row = array();
+                }
             } else {
                 $row = array('column'=>$rowOriginal);
             }
@@ -482,10 +435,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             $tds = array();    
             foreach ($row as $title=>$value) {
                 $column = $this->_column($title);
-                // summarize column values
-                if ($column->sum) {
-                    $column->sumValue += $value;
-                }
 
                 // maybe we should show only some particular columns
                 if (!$this->_isVisible($title)) {
@@ -519,18 +468,18 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     }    
 
                     // build the <A HREF> link for this option
-                    $optLink = '&#32;' . $this->_resolveLink($option->link, $option->title, $rowOriginal, $key);
+                    $optLink = $this->_optionsSeparator . 
+                    $this->_resolveLink($option->link, $option->title, $rowOriginal, $key);
 
                     // attach this option to the particular column    
                     if ($option->toColumn) {
-                        $tds[$option->toColumn] .= $optLink;
+                        $tds[$option->toColumn] .= ' ' . $optLink;
                     } else {
                         $optString .= $optLink;    
                     }
                 }
                 $options[] = $optString;    
             }    
-
             $resultTDs[] = $tds;
         }
         
@@ -558,7 +507,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         if (count($this->_options)) {
             $header .= "\t\t<th>" . _t('Options') . "</th>\n";
         }
-      
         $header .= "\t</tr>\n";
 
         $html = "\n<table>\n" . $header;
@@ -602,8 +550,9 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      */
     protected function _option($option)
     {
-        if (!isset($this->_options[$option]))
+        if (!isset($this->_options[$option])) {
             $this->_options[$option] = new FaZend_StdObject();
+        }
         return $this->_options[$option];
     }
 
@@ -667,19 +616,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
         // you can specify params as callbacks
         foreach ($params as &$param) {
-            if (!is_callable($param))
-                continue;
-            if (is_array($param)) {
-                $param = call_user_func_array(
-                    $param, 
-                    array(
-                        'name' => $link->name,
-                        'row' => $row,
-                        'key' => $key
-                    )
-                );
-            } else {
-                $param = $param($link->name, $row);
+            if ($param instanceof FaZend_Callback) {
+                $param = $param->call($link->name, $row, $key);
             }
         }
 
@@ -709,17 +647,16 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     protected function _inject(array &$row, $column, $predecessor, $value)
     {
         $result = array();
-
-        if (!$predecessor)
+        if (!$predecessor) {
             $result = array_merge(array($column=>$value), $row);
-        else {
+        } else {
             foreach ($row as $key=>$val) {
                 $result[$key] = $val;
-                if ($key == $predecessor)
+                if ($key == $predecessor) {
                     $result[$column] = $value;
+                }
             }
         }
-
         $row = $result;
     }
 
@@ -736,18 +673,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     {
         $column = $this->_column($name);
         foreach ($column->converters as $converter) {
-            $value = $converter->call($value, $row);
-        }
-
-        // parse the value of this TD    
-        if ($column->parser) {
-            $value = $column->parser->call($value, $rowOriginal);
-        }    
-
-        // parse the value of this TD with helper
-        if ($column->helper) {
-            $helper = $column->helper;
-            $value = $this->getView()->$helper($value);
+            $value = $converter->call($value, $row, $this);
         }
 
         if ($name !== false) {
@@ -787,11 +713,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $styles[] = $style;
             }
         }
-        
-        // add this style, added here by default
-        // @see addColumnStyle()
-        $styles[] = $this->_column($name)->style;
-        
         return count($styles) ? ' style="' . implode(';', $styles) . '"' : '';
     }
 
