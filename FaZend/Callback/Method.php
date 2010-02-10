@@ -81,9 +81,16 @@ class FaZend_Callback_Method extends FaZend_Callback
      *
      * @param array Array of params
      * @return mixed
+     * @throws FaZend_Callback_Method_InvalidMethodException
      */
     protected function _call(array $args)
     {
+        if (!method_exists($this->_class, $this->_method)) {
+            FaZend_Exception::raise(
+                'FaZend_Callback_Method_InvalidMethodException',
+                "Method '{$this->_method}' is not found"
+            );
+        }
         return call_user_func_array(array($this->_class, $this->_method), $args);
     }
 
