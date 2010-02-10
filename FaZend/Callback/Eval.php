@@ -61,7 +61,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
         // validation
         if (preg_match_all('/\$args\["(a\d+)"\]/', $eval, $matches)) {
             foreach ($matches[1] as $match) {
-                if (!isset($args[$match])) {
+                if (!array_key_exists($match, $args)) {
                     FaZend_Exception::raise(
                         'FaZend_Callback_Eval_MissedArgumentException',
                         "Argument '{$match}' is missed for '{$this->_data}'"
@@ -76,7 +76,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
         // validation
         if (preg_match_all('/\$this->\_injected\["(i\d+)"\]/', $eval, $matches)) {
             foreach ($matches[1] as $match) {
-                if (!isset($this->_injected[$match])) {
+                if (!array_key_exists($match, $this->_injected)) {
                     FaZend_Exception::raise(
                         'FaZend_Callback_Eval_MissedInjectionException',
                         "Injection '{$match}' is missed for '{$this->_data}'"
