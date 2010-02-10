@@ -91,7 +91,13 @@ class FaZend_Callback_Method extends FaZend_Callback
                 "Method '{$this->_method}' is not found"
             );
         }
-        return call_user_func_array(array($this->_class, $this->_method), $args);
+        return call_user_func_array(
+            array(
+                $this->_class, 
+                $this->_method
+            ), 
+            $args
+        );
     }
 
 }
