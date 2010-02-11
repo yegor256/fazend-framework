@@ -72,7 +72,7 @@
                 <property name="to.deploy" value="false" />
                 <echo msg="{to.deploy} set to FALSE since it's not a CruiseControl environment" />    
             </else></if>
-        </else></if>
+        </then></if>
 
         <!--
             {to.lint} property explicitly asks the builder to validate
