@@ -158,6 +158,14 @@
             <property name="to.sniffer" value="false" />
             <property name="to.coverage" value="false" />
         </then></if>
+
+        <echo msg="{to.deploy} set to ${to.deploy}">
+        <echo msg="{to.lint} set to ${to.lint}">
+        <echo msg="{to.clean} set to ${to.clean}">
+        <echo msg="{to.coverage} set to ${to.coverage}">
+        <echo msg="{to.sniffer} set to ${to.sniffer}">
+        <echo msg="{to.phpdoc} set to ${to.phpdoc}">
+        <echo msg="{to.phpcs} set to ${to.phpcs}">
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
