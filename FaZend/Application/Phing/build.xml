@@ -298,7 +298,7 @@
             </coverage-report>
         </then></if>
 
-        <if><istrue value="${to.deploy}" /><then>
+        <if><and><istrue value="${to.deploy}" /><istrue value="${to.coverage}" /></and><then>
             <!-- inject revision number into title -->
             <copy file="${coverage.dir}/report/index.html" tofile="${coverage.dir}/report/index.html.orig" />
             <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coverage.dir}/report/index.html.orig &gt; ${coverage.dir}/report/index.html" 
@@ -359,19 +359,21 @@
                 destDir="${project.basedir}/reports/phpcs/report"
                 xmlFile="${project.basedir}/reports/phpcs/index.xml" />
 
-            <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
-            <delete dir="${cc.phpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${cc.phpcs}" />
-            <copy todir="${cc.phpcs}" >
-                <fileset dir="${project.basedir}/reports/phpcs/report" />
-            </copy>
+            <if><istrue value="${to.deploy}" /><then>
+                <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
+                <delete dir="${cc.phpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
+                <mkdir dir="${cc.phpcs}" />
+                <copy todir="${cc.phpcs}" >
+                    <fileset dir="${project.basedir}/reports/phpcs/report" />
+                </copy>
 
-            <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.phpcs}"
-                dir="${ccFacade}"
-                escape="false"
-                checkreturn="true" />
-            <echo msg="Access protection files deployed to PHPCS report directory" />    
+                <!-- create .htaccess and .htpasswd files to protect documentation -->
+                <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.phpcs}"
+                    dir="${ccFacade}"
+                    escape="false"
+                    checkreturn="true" />
+                <echo msg="Access protection files deployed to PHPCS report directory" />    
+            </then></if>
         </then><else>
             <echo msg="Skipped, since it's {to.sniffer} is FALSE" />    
         </else></if>
@@ -435,19 +437,21 @@
             <exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" 
                 passthru="no" />    
         
-            <!-- delete previous documentation from HTTP hosting and copy a new one -->
-            <delete dir="${cc.doc}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${cc.doc}" />
-            <copy todir="${cc.doc}" >
-                <fileset dir="${project.basedir}/build/api" />
-            </copy>
+            <if><istrue value="${to.deploy}" /><then>
+                <!-- delete previous documentation from HTTP hosting and copy a new one -->
+                <delete dir="${cc.doc}" failonerror="true" verbose="false" includeemptydirs="true" />
+                <mkdir dir="${cc.doc}" />
+                <copy todir="${cc.doc}" >
+                    <fileset dir="${project.basedir}/build/api" />
+                </copy>
 
-            <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.doc}"
-                dir="${ccFacade}"
-                escape="false"
-                checkreturn="true" />
-            <echo msg="Access protection files deployed to phpDoc directory" />    
+                <!-- create .htaccess and .htpasswd files to protect documentation -->
+                <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.doc}"
+                    dir="${ccFacade}"
+                    escape="false"
+                    checkreturn="true" />
+                <echo msg="Access protection files deployed to phpDoc directory" />    
+            </then></if>
         </then><else>
             <echo msg="Skipped, since it {to.phpdoc} is FALSE" />    
         </else></if>
