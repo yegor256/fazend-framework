@@ -152,20 +152,20 @@
         <if>
             <isset property="to.unit" />
         <then>
-            <property name="to.deploy" value="false" />
-            <property name="to.phpcs" value="false" />
-            <property name="to.phpdoc" value="false" />
-            <property name="to.sniffer" value="false" />
-            <property name="to.coverage" value="false" />
+            <property name="to.deploy" value="false" override="true" />
+            <property name="to.phpcs" value="false" override="true" />
+            <property name="to.phpdoc" value="false" override="true" />
+            <property name="to.sniffer" value="false" override="true" />
+            <property name="to.coverage" value="false" override="true" />
         </then></if>
 
-        <echo msg="{to.deploy} set to ${to.deploy}" override="true" />
-        <echo msg="{to.lint} set to ${to.lint}" override="true" />
-        <echo msg="{to.clean} set to ${to.clean}" override="true" />
-        <echo msg="{to.coverage} set to ${to.coverage}" override="true" />
-        <echo msg="{to.sniffer} set to ${to.sniffer}" override="true" />
-        <echo msg="{to.phpdoc} set to ${to.phpdoc}" override="true" />
-        <echo msg="{to.phpcs} set to ${to.phpcs}" override="true" />
+        <echo msg="{to.deploy} set to ${to.deploy}" />
+        <echo msg="{to.lint} set to ${to.lint}" />
+        <echo msg="{to.clean} set to ${to.clean}" />
+        <echo msg="{to.coverage} set to ${to.coverage}" />
+        <echo msg="{to.sniffer} set to ${to.sniffer}" />
+        <echo msg="{to.phpdoc} set to ${to.phpdoc}" />
+        <echo msg="{to.phpcs} set to ${to.phpcs}" />
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
