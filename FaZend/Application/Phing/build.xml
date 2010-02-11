@@ -150,7 +150,7 @@
             and reports will be disabled.
         -->
         <if>
-            <not><isset property="to.unit" /></not>
+            <isset property="to.unit" />
         <then>
             <property name="to.deploy" value="false" />
             <property name="to.phpcs" value="false" />
