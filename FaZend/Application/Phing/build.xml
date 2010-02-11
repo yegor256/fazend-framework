@@ -37,27 +37,13 @@
     </target>
 
     <target name="svn" description="Get all necessary information about current build" >
-        <if><not><isset property="to.lint" /></not><then>
-            <property name="to.lint" value="false" /></then></if>
-        
-        <if><not><isset property="to.clean" /></not><then>
-            <property name="to.clean" value="false" /></then></if>
-
-        <if><not><isset property="to.coverage" /></not><then>
-            <property name="to.coverage" value="false" /></then></if>
-
-        <if><not><isset property="to.sniffer" /></not><then>
-            <property name="to.sniffer" value="true" /></then></if>
-
-        <if><not><isset property="to.phpdoc" /></not><then>
-            <property name="to.phpdoc" value="true" /></then></if>
-
-        <if><not><isset property="to.phpcs" /></not><then>
-            <property name="to.phpcs" value="false" /></then></if>
-
-        <if><isset property="to.deploy" /><then>
-            <echo msg="Property [to.deploy] is set by caller: ${to.deploy}" />    
-        </then><else>
+        <!--
+            {to.deploy} asks the builder to deploy everything created to the
+            target directories in the CruiseControl environment.
+        -->
+        <if>
+            <not><isset property="to.deploy" /></not>
+        <then>
             <if><available file="${cc.root}" type="dir" /><then>
                 <!-- this property is used later in order to turn deployment ON -->
                 <property name="to.deploy" value="true" />
@@ -84,16 +70,86 @@
                 <echo msg="SVN revision: ${svn.revision}" />
             </then><else>
                 <property name="to.deploy" value="false" />
-                <echo msg="Skipped, since it's not a continuous integration environment" />    
+                <echo msg="{to.deploy} set to FALSE since it's not a CruiseControl environment" />    
             </else></if>
         </else></if>
+
+        <!--
+            {to.lint} property explicitly asks the builder to validate
+            PHP syntax in all PHP/PHTML/HTML files and stops the process
+            if any problems are found
+        -->
+        <if>
+            <not><isset property="to.lint" /></not>
+        <then>
+            <property name="to.lint" value="${to.deploy}" />
+        </then></if>
+        
+        <!--
+            {to.clean} property asks the builder to clean everything
+            created during building, all reports, temp files, documentation
+            and other information, which is present on the disc
+        -->
+        <if>
+            <not><isset property="to.clean" /></not>
+        <then>
+            <property name="to.clean" value="${to.deploy}" />
+        </then></if>
+
+        <!--
+            {to.coverage} property asks the builder to setup PHP coverage
+            database before running of PHPUnit tests and to create
+            coverage report when all tests are finished. xdebug PHP extension
+            should be loaded in order to use this feature.
+        -->
+        <if>
+            <not><isset property="to.coverage" /></not>
+        <then>
+            <if><isset property="to.unit" /><then>
+                <property name="to.coverage" value="false" />
+            </then><else>
+                <property name="to.coverage" value="${to.deploy}" />
+            </else></if>
+        </then></if>
+
+        <!--
+            {to.sniffer} property asks the builder to create a PHP Code Sniffer
+            report in reports/ directory, after the testing is finished.
+            PHPCS PEAR package should be installed in order to run this task.
+        -->
+        <if>
+            <not><isset property="to.sniffer" /></not>
+        <then>
+            <property name="to.sniffer" value="${to.deploy}" />
+        </then></if>
+
+        <!--
+            {to.phpdoc} asks the builder to build phpDocumentor report when
+            testing is finished. The report is stored in reports/ directory
+            and phpDocumentor is a mandatory component in order to use this target
+        -->
+        <if>
+            <not><isset property="to.phpdoc" /></not>
+        <then>
+            <property name="to.phpdoc" value="${to.deploy}" />
+        </then></if>
+
+        <!--
+            {to.phpcs} asks the builder to validate PHP/PHTML syntax with PHPCS
+            PEAR package and stops building if any errors are found (warnings
+            are ignored). PHPCS package is mandatory to use this task.
+        -->
+        <if>
+            <not><isset property="to.phpcs" /></not>
+        <then>
+            <property name="to.phpcs" value="false" />
+        </then></if>
+
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
-        <if><or>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.lint}" />
-        </or><then>
+        <if><istrue value="${to.lint}" />
+        <then>
             <phplint haltonfailure="yes">
                 <fileset dir="${project.basedir}/src/application">
                     <include name="**/*.php"/>
@@ -102,7 +158,7 @@
                 </fileset>
             </phplint>
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped, since {to.lint} is FALSE" />    
         </else></if>
     </target>
 
@@ -117,10 +173,7 @@
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
         <!-- prepare code coverage db -->
-        <if><or>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.coverage}" />
-        </or><then>
+        <if><istrue value="${to.coverage}" /><then>
             <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
@@ -139,10 +192,7 @@
             </coverage-setup>
         </then></if>
 
-        <if><or>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.coverage}" />
-        </or><then>
+        <if><istrue value="${to.coverage}" /><then>
             <mkdir dir="${project.basedir}/reports/tests" />
             <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
@@ -219,10 +269,7 @@
             <echo msg="Access protection files deployed to phpunit reports directory" />    
         </then></if>
 
-        <if><or>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.coverage}" />
-        </or><then>
+        <if><istrue value="${to.coverage}" /><then>
             <!-- create an HTML report about code coverage -->
             <mkdir dir="${coverage.dir}/report" />
             <coverage-report outfile="${coverage.db}">
@@ -253,12 +300,7 @@
     </target>    
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <if><and>
-            <istrue value="${to.phpcs}" />
-            <not>
-                <isset property="to.unit" />
-            </not>
-        </and><then>
+        <if><istrue value="${to.phpcs}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <exec command="phpcs 
                 -n
@@ -271,15 +313,12 @@
                 checkreturn="true" 
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped, since [to.phpcs] is FALSE or [to.unit] is set" />    
+            <echo msg="Skipped, since {to.phpcs} is FALSE" />    
         </else></if>
     </target>
 
     <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
-        <if><and>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.sniffer}" />
-        </and><then>
+        <if><istrue value="${to.sniffer}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
             <mkdir dir="${project.basedir}/reports/phpcs" />
             <exec command="phpcs 
@@ -313,7 +352,7 @@
                 checkreturn="true" />
             <echo msg="Access protection files deployed to PHPCS report directory" />    
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped, since it's {to.sniffer} is FALSE" />    
         </else></if>
     </target>    
 
@@ -342,7 +381,7 @@
                 destdir="${ftp.destdir}">
             </uploadByFTP>
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped, since {to.deploy} is FALSE" />    
         </else></if>
     </target>
 
@@ -366,10 +405,7 @@
     </target>
 
     <target name="doc" description="Create phpDoc documentation and deploy it" >
-        <if><and>
-            <istrue value="${to.deploy}" />
-            <istrue value="${to.phpdoc}" />
-        </and><then>
+        <if><istrue value="${to.phpdoc}" /><then>
             <!-- delete all previously created documentation -->
             <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
             <mkdir dir="${project.basedir}/build/api" />
@@ -392,7 +428,7 @@
                 checkreturn="true" />
             <echo msg="Access protection files deployed to phpDoc directory" />    
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped, since it {to.phpdoc} is FALSE" />    
         </else></if>
     </target>    
 
@@ -407,7 +443,7 @@
                 </fileset>
             </delete>
         </then><else>
-            <echo msg="Skipped, since [to.clean] is set to false" />    
+            <echo msg="Skipped, since {to.clean} is set to FALSE" />    
         </else></if>
     </target>    
     
