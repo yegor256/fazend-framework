@@ -42,6 +42,13 @@ class FaZend_Email
      * @var Zend_Mail
      */
     protected $_mailer;
+    
+    /**
+     * Attachments to use
+     *
+     * @var Zend_Mime_Part[]
+     */
+    protected $_attachments = array();
 
     /**
      * Saves configuration internally
@@ -162,11 +169,24 @@ class FaZend_Email
      */
     public function get($key) 
     {
-        if (!isset($this->_variables[$key]))
+        if (!isset($this->_variables[$key])) {
             return false;
+        }
         return $this->_variables[$key];
     }
-
+    
+    /**
+     * Attach content as file
+     *
+     * @param Zend_Mime_Part To attach
+     * @return void
+     */
+    public function attach(Zend_Mime_Part $part) 
+    {
+        $this->_attachments[] = $part;
+        return $this;
+    }
+    
     /**
      * Sends the email
      *
@@ -239,8 +259,9 @@ class FaZend_Email
             }
 
             // set all variables to View for rendering
-            foreach ($this->_variables as $key=>$value)
+            foreach ($this->_variables as $key=>$value) {
                 $view->assign($key, $value);
+            }
 
             $body = $view->render($template);
         
@@ -257,8 +278,9 @@ class FaZend_Email
                 }    
 
                 // empty line stops parsing
-                if ($line == '--')
+                if ($line == '--') {
                     break;
+                }
             }    
 
             $body = trim(implode("\n", array_slice($lines, $id+1)), " \n\r");
@@ -268,8 +290,9 @@ class FaZend_Email
 
         // set body of the email
         $signatureFile = $view->getScriptPath('signature.txt');
-        if (file_exists($signatureFile))
+        if (file_exists($signatureFile)) {
             $body .= file_get_contents($signatureFile);
+        }
             
         $mail->setBodyText($body);
 
@@ -278,8 +301,14 @@ class FaZend_Email
 
         // set CC, if required
         if (is_array($this->get('cc'))) {
-            foreach ($this->get('cc') as $email=>$name)
+            foreach ($this->get('cc') as $email=>$name) {
                 $mail->addCc($email, $name);
+            }
+        }
+
+        // add attachments
+        foreach ($this->_attachments as $part) {
+            $mail->addAttachment($part);
         }
 
         // set subject
