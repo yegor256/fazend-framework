@@ -145,6 +145,19 @@
             <property name="to.phpcs" value="false" />
         </then></if>
 
+        <!--
+            {to.unit} may define a mask for the test to run, all other validations
+            and reports will be disabled.
+        -->
+        <if>
+            <not><isset property="to.unit" /></not>
+        <then>
+            <property name="to.deploy" value="false" />
+            <property name="to.phpcs" value="false" />
+            <property name="to.phpdoc" value="false" />
+            <property name="to.sniffer" value="false" />
+            <property name="to.coverage" value="false" />
+        </then></if>
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
