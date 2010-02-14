@@ -12,14 +12,12 @@
     // change the title of the column
     ->setColumnTitle('name', 'User Email')
 
-    // parse the value of the column
-    ->setParser('password', create_function('$value', 'return "***";'))
-
     // change style
-    ->addColumnStyle('name', "width:450px;")
+    ->addFormatter('name', true, "width:450px;")
 
     // ask table to calculate summ of this column
-    ->calculateSum('id')
+    ->setInjection('sum', $sum = new FaZend_Bo_Money())
+    ->addFormatter('name', 'false; ${a3}->getInjection("sum")->add(1)')
 
     // allow raw html in the column
     ->allowRawHtml('password')
@@ -79,6 +77,6 @@
     ->setPaginator($this->paginator)
     ?>
 
-<?php assert($this->htmlTable('test1')->getSum('id')); ?>
-Summary of ID column: <?php echo $this->htmlTable('test1')->getSum('id')?>
+<?php assert($this->htmlTable('test1')->getInjection('sum') instanceof FaZend_Bo_Money); ?>
+Summary of ID column: <?php echo $this->htmlTable('test1')->getInjection('sum')?>
 

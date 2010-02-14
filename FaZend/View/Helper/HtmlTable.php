@@ -208,16 +208,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             $iterator = new ArrayIterator($iterator);
         }
         
-        $paginatorName = 'pg' . $this->_name;
-        
-        FaZend_Paginator::addPaginator(
+        $paginator = FaZend_Paginator::addPaginator(
             $iterator, 
             $this->getView(), 
             $pageNo,
-            $paginatorName
+            'pg' . $this->_name
         );
-
-        $paginator = $this->getView()->paginatorName;
 
         $paginator->setItemCountPerPage($perPage);
         return $this->setPaginator($paginator);

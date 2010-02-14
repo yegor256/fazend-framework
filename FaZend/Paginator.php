@@ -27,18 +27,23 @@ class FaZend_Paginator extends Zend_Paginator
     /**
      * Add paginator to the view
      *
-     * @return void
+     * @param mixed Holder of data to paginate
+     * @param Zend_View View to inject this paginator into
+     * @param integer Current page number to set
+     * @param string Name of variable to inject into VIEW
+     * @return FaZend_Paginator
      */
     public static function addPaginator($iterator, Zend_View $view, $page, $name = 'paginator')
     {
         // if it's an object right after fetchAll(), we should
         // treat is properly and get SELECT from it
-        if ($iterator instanceof FaZend_Db_RowsetWrapper)
+        if ($iterator instanceof FaZend_Db_RowsetWrapper) {
             $adapter = new Zend_Paginator_Adapter_DbTableSelect($iterator->select());
-        else
+        } else {
             // otherwise we think of it as of normal
             // data iterator
             $adapter = new Zend_Paginator_Adapter_Iterator($iterator);
+        }
 
         // we create new paginator
         $paginator = new FaZend_Paginator($adapter);
@@ -49,7 +54,7 @@ class FaZend_Paginator extends Zend_Paginator
         $paginator->setCurrentPageNumber($page);
 
         // and save into View
-        $view->$name = $paginator;
+        return $view->$name = $paginator;
     }
 
 }
