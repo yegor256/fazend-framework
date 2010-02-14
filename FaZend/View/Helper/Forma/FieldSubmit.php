@@ -27,7 +27,7 @@ class FaZend_View_Helper_Forma_FieldSubmit extends FaZend_View_Helper_Forma_Fiel
     /**
      * Action to call when clicked
      *
-     * @var callback
+     * @var FaZend_Callback
      */
     protected $_action;
 
@@ -53,10 +53,11 @@ class FaZend_View_Helper_Forma_FieldSubmit extends FaZend_View_Helper_Forma_Fiel
         parent::_configureFormElement($element);
         // $element->setAttrib('class', 'btn');
 
-        if (isset($this->_value))
+        if (isset($this->_value)) {
             $label = $this->_value;
-        else
+        } else {
             $label = 'Submit';
+        }
 
         $element->setLabel($label);
     }

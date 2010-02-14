@@ -27,6 +27,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 {
 
     /**
+     * Name of the table
+     *
+     * @var string|false
+     * @see __construct()
+     */
+    protected $_name = false;
+
+    /**
      * Paginator to be used
      *
      * @var Zend_Paginator
@@ -106,6 +114,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         // initialize this particular table
         if (!isset(self::$_instances[$name])) {
             self::$_instances[$name] = clone $this;
+            self::$_instances[$name]->_name = $name;
         }
 
         return self::$_instances[$name];
@@ -173,12 +182,45 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * method the helper won't display anything
      *
      * @param Zend_Paginator Data holder to render
-     * @return FaZend_View_Helper_HtmlTable
+     * @return $this
      */
     public function setPaginator(Zend_Paginator $paginator)
     {
         $this->_paginator = $paginator;
         return $this;
+    }
+
+    /**
+     * Set iterator with the data
+     *
+     * Saves data source into helper, to be rendered. Without this
+     * method the helper won't display anything
+     *
+     * @param Iterator|mixed Data to render
+     * @param integer Page number to render
+     * @param integer Elements per page
+     * @return $this
+     * @see setPaginator()
+     */
+    public function setIterator($iterator, $pageNo = 1, $perPage = 25)
+    {
+        if (!($iterator instanceof Iterator)) {
+            $iterator = new ArrayIterator($iterator);
+        }
+        
+        $paginatorName = 'pg' . $this->_name;
+        
+        FaZend_Paginator::addPaginator(
+            $iterator, 
+            $this->getView(), 
+            $pageNo,
+            $paginatorName
+        );
+
+        $paginator = $this->getView()->paginatorName;
+
+        $paginator->setItemCountPerPage($perPage);
+        return $this->setPaginator($paginator);
     }
 
     /**
