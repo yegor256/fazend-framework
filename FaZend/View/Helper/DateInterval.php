@@ -40,12 +40,12 @@ class FaZend_View_Helper_DateInterval
         }
         
         $now = Zend_Date::now();
-        if ($now->isLater($time)) {
-            $diff = $now->sub($time);    
-            $sign = '';
-        } else {
+        if ($now->isEarlier($time)) {
             $diff = $time->sub($now);    
             $sign = '-';
+        } else {
+            $diff = $now->sub($time);    
+            $sign = '';
         }
 
         $hoursDifference = abs($diff->getTimestamp() / (60 * 60));    
