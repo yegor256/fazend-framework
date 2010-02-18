@@ -32,8 +32,9 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field
      **/
     public function deriveValue(Zend_Form_Element $element)
     {
-        if ($element->isReceived())
+        if ($element->isReceived()) {
             return $element->getFileName();
+        }
         return null;
     }
 
@@ -61,8 +62,7 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field
             ->setDecorators(array())
             ->addDecorator('File')
             ->addDecorator('HtmlTag', array('tag'=>'dd'))
-            ->addDecorator('Label', array('escape' => false))
-            ->setAttrib('class', 'file');
+            ->addDecorator('Label', array('escape' => false));
     }
 
 }

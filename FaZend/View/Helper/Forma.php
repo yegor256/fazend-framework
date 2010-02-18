@@ -43,6 +43,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     protected static $_instances = array();
 
     /**
+     * List of label suffixes
+     *
+     * @var string
+     * @see setLabelSuffixes()
+     */
+    protected static $_labelSuffixes = array();
+
+    /**
      * Form to render
      *
      * @var Zend_Form
@@ -62,6 +70,51 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @var FaZend_View_Helper_Forma_Behavior_Abstract
      **/
     protected $_behaviors = array();
+
+    /**
+     * Set list of suffixes to be used in fieldLabel()
+     *
+     * You should call this method in your bootstrap and provide an
+     * array of suffixes you might use for your labels. Normally you
+     * configure TRUE/FALSE suffixes for required/non-required fields,
+     * for example:
+     *
+     * <code>
+     * FaZend_View_Helper_Forma::setLabelSuffixes(
+     *   array(
+     *     true => '<span style="color:red">*:</span>',
+     *     false => ':',
+     *   )
+     * );
+     * </code>
+     * 
+     * Then, in your view script you add a label to the field, providing
+     * the index of the suffix (FALSE is used by default), e.g.:
+     *
+     * <code>
+     * <?=$this->forma()
+     *   ->addField('text', 'email')
+     *     ->fieldLabel('Your email', true)
+     *   ?>
+     * </code>
+     *
+     * @param array List of suffixes
+     * @return void
+     */
+    public static function setLabelSuffixes(array $labelSuffixes) 
+    {
+        self::$_labelSuffixes = $labelSuffixes;
+    }
+    
+    /**
+     * Get label suffixes
+     *
+     * @return array
+     */
+    public static function getLabelSuffixes() 
+    {
+        return self::$_labelSuffixes;
+    }
 
     /**
      * Builds the object

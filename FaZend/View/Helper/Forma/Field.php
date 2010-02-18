@@ -44,13 +44,6 @@ abstract class FaZend_View_Helper_Forma_Field
     protected $_attribs = array();
 
     /**
-     * Is it required?
-     *
-     * @var boolean
-     */
-    protected $_required = true;
-
-    /**
      * Label above the element
      *
      * @var string
@@ -63,20 +56,6 @@ abstract class FaZend_View_Helper_Forma_Field
      * @var string
      */
     protected $_value;
-
-    /**
-     * Help below the element
-     *
-     * @var string
-     */
-    protected $_help;
-
-    /**
-     * Value validators
-     *
-     * @var array
-     */
-    protected $_validators = array();
 
     /**
      * Converters
@@ -194,8 +173,9 @@ abstract class FaZend_View_Helper_Forma_Field
     public function __get($name)
     {
         $method = '_get' . ucfirst($name);
-        if (method_exists($this, $method))
+        if (method_exists($this, $method)) {
             return $this->$method();
+        }
         return $this->{'_' . $name};
     }
 
@@ -236,10 +216,7 @@ abstract class FaZend_View_Helper_Forma_Field
 
         if (isset($this->_label)) {
             $element
-                ->setLabel(
-                    $this->_label .
-                    ($this->_required ? "<span style='color:red;'>*</span>" : false) . ':'
-                )
+                ->setLabel($this->_label)
                 ->addDecorator(
                     'Label', 
                     array(
@@ -251,10 +228,6 @@ abstract class FaZend_View_Helper_Forma_Field
 
         if (isset($this->_value)) {
             $element->setValue($this->_value);
-        }
-
-        if ($this->_required) {
-            $element->setRequired(true);
         }
 
         foreach ($this->_attribs as $name=>$value) {
@@ -274,23 +247,17 @@ abstract class FaZend_View_Helper_Forma_Field
      * Setter, to add label to the field
      *
      * @param string Label to show above the field
+     * @param mixed Index of the suffix, from FaZend_View_Helper_Forma::$_labelSuffixes
      * @return $this
+     * @see FaZend_View_Helper_Forma::setLabelSuffixes
      */
-    protected function _setLabel($label)
+    protected function _setLabel($label, $suffix = false)
     {
         $this->_label = $label;
-        return $this;
-    }
-
-    /**
-     * Setter, to add help message to the field
-     *
-     * @param string Help to show below the field
-     * @return $this
-     */
-    protected function _setHelp($help)
-    {
-        $this->_help = $help;
+        $suffixes = FaZend_View_Helper_Forma::getLabelSuffixes();
+        if (array_key_exists($suffix, $suffixes)) {
+            $this->_label . $suffixes[$suffix];
+        }
         return $this;
     }
 
@@ -307,18 +274,6 @@ abstract class FaZend_View_Helper_Forma_Field
     }
 
     /**
-     * This field is required
-     *
-     * @param boolean Is it required?
-     * @return $this
-     */
-    protected function _setRequired($required = true)
-    {
-        $this->_required = $required;
-        return $this;
-    }
-
-    /**
      * Set new HTML attribute
      *
      * @param string Attribute name
@@ -328,18 +283,6 @@ abstract class FaZend_View_Helper_Forma_Field
     protected function _setAttrib($attrib, $value)
     {
         $this->_attribs[$attrib] = $value;
-        return $this;
-    }
-
-    /**
-     * Set new validator
-     *
-     * @param callback Validator of the field value
-     * @return $this
-     */
-    protected function _setValidator($validator)
-    {
-        $this->_validators[] = $validator;
         return $this;
     }
 

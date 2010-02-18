@@ -2,10 +2,16 @@
 
 require_once 'AbstractTestCase.php';
 
-class Foo
+class CallbackFoo
 {
-    public static function one($a) { return $a; }
-    public function two($a) { return $a; }
+    public static function one($a)
+    {
+        return $a;
+    }
+    public function two($a)
+    {
+        return $a;
+    }
 }
 
 class FaZend_CallbackTest extends AbstractTestCase
@@ -40,11 +46,11 @@ class FaZend_CallbackTest extends AbstractTestCase
     {
         $this->assertEquals(
             't', 
-            FaZend_Callback::factory(array('Foo', 'one'))->call('t')
+            FaZend_Callback::factory(array('CallbackFoo', 'one'))->call('t')
         );
         $this->assertEquals(
             'ee',
-            FaZend_Callback::factory(array(new Foo(), 'two'))->call('ee')
+            FaZend_Callback::factory(array(new CallbackFoo(), 'two'))->call('ee')
         );
     }
     
