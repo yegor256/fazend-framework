@@ -32,7 +32,7 @@
 
     <!-- main task, executed by the project -->
     <target name="main" 
-        depends="svn, lint, phpcs, test, deploy, sniffer, doc, ping, clean"
+        depends="svn, lint, phpcs, phpmd, test, deploy, sniffer, doc, ping, clean"
         description="Validate, compile, deploy and clean">
     </target>
 
@@ -145,6 +145,16 @@
             <property name="to.phpcs" value="false" />
         </then></if>
 
+        <!--
+            {to.phpmd} property explicitly asks the builder to validate
+            PHP code quality with PHP Mess Detector
+        -->
+        <if>
+            <not><isset property="to.phpmd" /></not>
+        <then>
+            <property name="to.phpmd" value="false" />
+        </then></if>
+        
         <!--
             {to.unit} may define a mask for the test to run, all other validations
             and reports will be disabled.
@@ -335,6 +345,18 @@
                 passthru="true" />
         </then><else>
             <echo msg="Skipped, since {to.phpcs} is FALSE" />    
+        </else></if>
+    </target>
+
+    <target name="phpmd" description="PHP Mess Detection">
+        <if><istrue value="${to.phpmd}" /><then>
+            <exec command="phpmd 
+                --extensions='php,phtml'
+                ${project.basedir}/src/application
+                text
+                codesize,unusedcode" />
+        </then><else>
+            <echo msg="Skipped, since {to.phpmd} is FALSE" />    
         </else></if>
     </target>
 
