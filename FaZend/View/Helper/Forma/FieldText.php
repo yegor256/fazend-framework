@@ -32,6 +32,9 @@ class FaZend_View_Helper_Forma_FieldText extends FaZend_View_Helper_Forma_Field
      */
     protected function _getFormElement($name)
     {
+        if (isset($this->_attribs['type']) && ($this->_attribs['type'] == 'password')) {
+            return new Zend_Form_Element_Password($name);
+        }
         return new Zend_Form_Element_Text($name);
     }
 
