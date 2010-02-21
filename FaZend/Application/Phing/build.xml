@@ -354,7 +354,10 @@
                 --extensions='php,phtml'
                 text
                 ${project.basedir}/src/application
-                codesize,unusedcode" />
+                codesize,unusedcode"
+                escape="false"
+                checkreturn="false" 
+                passthru="true" />
         </then><else>
             <echo msg="Skipped, since {to.phpmd} is FALSE" />    
         </else></if>
