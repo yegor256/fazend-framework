@@ -352,8 +352,8 @@
         <if><istrue value="${to.phpmd}" /><then>
             <exec command="phpmd 
                 --extensions='php,phtml'
-                ${project.basedir}/src/application
                 text
+                ${project.basedir}/src/application
                 codesize,unusedcode" />
         </then><else>
             <echo msg="Skipped, since {to.phpmd} is FALSE" />    
