@@ -39,6 +39,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
      */
     public function getInputs()
     {
+        $matches = array();
         if (!preg_match_all('/\$\{([ia]?\d+)\}/', $this->_data, $matches)) {
             return 0;
         }
@@ -52,6 +53,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
      * @return mixed
      * @throws FaZend_Callback_Eval_MissedArgumentException
      * @throws FaZend_Callback_Eval_MissedInjectionException
+     * @throws FaZend_Callback_Eval_SyntaxException
      */
     protected function _call(array $args)
     {
@@ -59,6 +61,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
         $eval = preg_replace('/\$\{(a\d+)\}/', '$args["${1}"]', $this->_data);
         
         // validation
+        $matches = array();
         if (preg_match_all('/\$args\["(a\d+)"\]/', $eval, $matches)) {
             foreach ($matches[1] as $match) {
                 if (!array_key_exists($match, $args)) {
@@ -85,7 +88,14 @@ class FaZend_Callback_Eval extends FaZend_Callback
             }
         }
 
-        eval('$result = ' . $eval . ';');
+        $eval = '$result = ' . $eval . ';';
+        eval($eval);
+        if (!isset($result)) {
+            FaZend_Exception::raise(
+                'FaZend_Callback_Eval_SyntaxException',
+                "Syntax error in '{$eval}'"
+            );
+        }
         return $result;
     }
 
