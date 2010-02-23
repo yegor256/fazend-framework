@@ -62,23 +62,26 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         $exceptions = $this->getResponse()->getException();
         $exception = $exceptions[0];
 
-        if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException')
+        if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException') {
             return $this->_redirectFlash($exception->getMessage());
+        }
 
         // $errors will be an object set as a parameter of the request object, 
         // type is a property
         switch ($errors->type) { 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER: 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION: 
-
-                return $this->_redirectFlash('Error 404: page not found', 'notfound');
+                return $this->_redirectFlash(_t('Error 404: page not found'), 'notfound');
 
             default: 
                 // generate error code
                 $errorCode = rand(100, 999);
                 // application error 
                 $this->getResponse()->setHttpResponseCode(500); 
-                $this->view->message = 'Internal application error #' . $errorCode; 
+                $this->view->message = _t(
+                    'Internal application error #%d',
+                    $errorCode
+                ); 
         } 
 
         // pass the actual exception object to the view
@@ -93,8 +96,9 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         // notify admin by email
         if (FaZend_Properties::get()->errors->email && !defined('TESTING_RUNNING')) {
             $lines = array();
-            foreach (debug_backtrace() as $line) 
+            foreach (debug_backtrace() as $line) {
                 $lines[] = isset($line['file']) ? "{$line['file']} ({$line['line']})" : false;
+            }
 
             $siteName = parse_url(WEBSITE_URL, PHP_URL_HOST);
             // send email to the site admin admin

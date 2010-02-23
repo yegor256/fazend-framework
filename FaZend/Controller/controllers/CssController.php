@@ -32,23 +32,29 @@ class Fazend_CssController extends FaZend_Controller_Action
     public function indexAction()
     {
         // if it's absent
-        //if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
+        // if (!file_exists(APPLICATION_PATH . '/views/scripts/css/' . $this->_getParam('css')))
         //    $this->_redirectFlash('path not found');
 
         $this->getResponse()
             ->setHeader('Content-type', 'text/css');
 
+        // cache content delivered, inform browser about it
         $this->_cacheContent();
 
+        // change location of view scripts
         $this->_helper->viewRenderer
-            ->setViewScriptPathSpec(':controller/'.$this->_getParam('css'));
+            ->setViewScriptPathSpec(':controller/' . $this->_getParam('css'));
         
+        // don't use HTML layouts
         $this->_helper->layout->disableLayout();
 
+        // remove all other compression
         $this->view->setFilter(null);
 
-        if (FaZend_Properties::get()->htmlCompression)
+        // inject CSS compressor
+        if (FaZend_Properties::get()->htmlCompression) {
             $this->view->addFilter('CssCompressor');
+        }
 
         $this->_helper->viewRenderer($this->_getParam('css'));
     }    
