@@ -63,6 +63,20 @@ class FaZend_Bo_Name
     {
         $this->set($name);
     }
+    
+    /**
+     * Convert it to string
+     *
+     * @return string
+     */
+    public function __toString() 
+    {
+        return trim(
+            implode(' ', $this->_prefixes) . ' ' . 
+            implode(' ', $this->_names) . ' ' .
+            implode(' ', $this->_suffixes)
+        );
+    }
 
     /**
      * Create class
@@ -87,6 +101,7 @@ class FaZend_Bo_Name
         if (method_exists($this, $method)) {
             return $this->$method();
         }
+        return false;
     }
     
     /**
