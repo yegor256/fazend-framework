@@ -107,8 +107,15 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
             }
             $options = $opts;
         }
+        
+        // convert every item to string
+        // and prepare array of options
+        $opts = array();
+        foreach ($options as $id=>$option) {
+            $opts[$id] = strval($option);
+        }
 
-        $element->setMultiOptions($options);
+        $element->setMultiOptions($opts);
     }
 
     /**
