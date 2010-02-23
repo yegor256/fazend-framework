@@ -92,32 +92,27 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
     {
         parent::_configureFormElement($element);
 
-        $options = $this->_options;
-        
+        // if ID mask is provided we change the list of
+        // options, in order to use new IDs
         if (!is_null($this->_idMask)) {
             $opts = array();
-            foreach ($options as $id=>$option) {
+            foreach ($this->_options as $id=>$option) {
                 $opts[$this->_idMask->call($option, $id)] = $option;
             }
-            $options = $opts;
+            $this->_options = $opts;
         }
         
-        if (!is_null($this->_mask)) {
-            $opts = array();
-            foreach ($options as $id=>$option) {
-                $opts[$id] = $this->_mask->call($option, $id);
+        // if mask is provided, we change the values of options to show
+        // this list we will show in SELECT
+        $multiOptions = array();
+        foreach ($this->_options as $id=>$option) {
+            if (!is_null($this->_mask)) {
+                $multiOptions[$id] = $this->_mask->call($option, $id);
+            } else {
+                $multiOptions[$id] = strval($option);
             }
-            $options = $opts;
         }
-
-        // convert every item to string
-        // and prepare array of options
-        $opts = array();
-        foreach ($options as $id=>$option) {
-            $opts[$id] = strval($option);
-        }
-
-        $element->setMultiOptions($opts);
+        $element->setMultiOptions($multiOptions);
     }
 
     /**
