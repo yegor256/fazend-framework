@@ -50,7 +50,7 @@ class Fazend_FileController extends FaZend_Controller_Action
 
         // set proper type of content
         if (extension_loaded('fileinfo')) {
-            $finfo = new finfo(FILEINFO_MIME);
+            $finfo = new finfo(FILEINFO_MIME, '/usr/share/misc/magic');
             if ($finfo) {
                 $this->getResponse()->setHeader('Content-type', $finfo->file($file));
             }
