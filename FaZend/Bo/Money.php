@@ -27,7 +27,7 @@
  *
  * @package Bo
  */
-class FaZend_Bo_Money
+class FaZend_Bo_Money extends FaZend_Bo_Abstract
 {
     
     const POINT_WEIGHT = 10000;

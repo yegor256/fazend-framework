@@ -28,7 +28,7 @@
  * @property string $first First name
  * @property string $last Last name
  */
-class FaZend_Bo_Name
+class FaZend_Bo_Name extends FaZend_Bo_Abstract
 {
     
     /**
