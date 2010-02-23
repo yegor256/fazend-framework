@@ -256,7 +256,7 @@ abstract class FaZend_View_Helper_Forma_Field
         $this->_label = $label;
         $suffixes = FaZend_View_Helper_Forma::getLabelSuffixes();
         if (isset($suffixes[$suffix])) {
-            $this->_label . $suffixes[$suffix];
+            $this->_label .= $suffixes[$suffix];
         }
         return $this;
     }
