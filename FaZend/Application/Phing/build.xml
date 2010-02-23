@@ -167,6 +167,7 @@
             <property name="to.phpdoc" value="false" override="true" />
             <property name="to.sniffer" value="false" override="true" />
             <property name="to.coverage" value="false" override="true" />
+            <property name="to.phpmd" value="false" override="true" />
         </then></if>
 
         <echo msg="{to.deploy} set to ${to.deploy}" />
@@ -176,6 +177,7 @@
         <echo msg="{to.sniffer} set to ${to.sniffer}" />
         <echo msg="{to.phpdoc} set to ${to.phpdoc}" />
         <echo msg="{to.phpcs} set to ${to.phpcs}" />
+        <echo msg="{to.phpmd} set to ${to.phpmd}" />
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
