@@ -118,7 +118,7 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
      * @param boolean Shall we sort the options?
      * @return void
      */
-    protected function _setOptions(array $options, $sort = false)
+    protected function _setOptions($options, $sort = false)
     {
         $this->_options = $options;
         if ($sort) {
