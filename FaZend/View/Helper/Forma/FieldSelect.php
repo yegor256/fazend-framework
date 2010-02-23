@@ -94,14 +94,6 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
 
         $options = $this->_options;
         
-        if (!is_null($this->_mask)) {
-            $opts = array();
-            foreach ($options as $id=>$option) {
-                $opts[$id] = $this->_mask->call($option, $id);
-            }
-            $options = $opts;
-        }
-
         if (!is_null($this->_idMask)) {
             $opts = array();
             foreach ($options as $id=>$option) {
@@ -110,6 +102,14 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
             $options = $opts;
         }
         
+        if (!is_null($this->_mask)) {
+            $opts = array();
+            foreach ($options as $id=>$option) {
+                $opts[$id] = $this->_mask->call($option, $id);
+            }
+            $options = $opts;
+        }
+
         // convert every item to string
         // and prepare array of options
         $opts = array();
