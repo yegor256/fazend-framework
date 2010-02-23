@@ -87,7 +87,7 @@ class FaZend_Bo_Money
      */
     public static function factory($value)
     {
-        return new FaZend_Bo_Money($value);
+        return new self($value);
     }
 
     /**
