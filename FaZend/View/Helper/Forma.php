@@ -56,6 +56,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @var Zend_Form
      */
     protected $_form;
+    
+    /**
+     * Form was completed?
+     *
+     * @var boolean
+     * @see _render()
+     */
+    protected $_completed = false;
 
     /**
      * Fields
@@ -128,6 +136,16 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         self::$_instances[$id]->_form = new FaZend_Form();
         return self::$_instances[$id];
     }
+    
+    /**
+     * Form was completed?
+     *
+     * @return boolean
+     */
+    public function isCompleted() 
+    {
+        return $this->_completed;
+    }
 
     /**
      * Converts it to HTML
@@ -137,10 +155,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     public function __toString() 
     {
         try {
-            return (string)$this->_render();
+            $html = (string)$this->_render();
         } catch (Exception $e) {
-            return get_class($this) . ' throws ' . get_class($e) . ': ' . $e->getMessage();
+            $html = get_class($this) . ' throws ' . get_class($e) . ': ' . $e->getMessage();
         }
+        return $html;
     }
 
     /**
@@ -199,11 +218,34 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     }
 
     /**
+     * Get param from POST
+     *
+     * Retrieve param using POST data and form configuration
+     *
+     * @param string What parameter we are looking for...
+     * @return mixed|null
+     * @throws FaZend_View_Helper_Forma_ParamNotFound
+     */
+    public function getParam($name) 
+    {
+        // maybe this element is absent in the form?
+        if (!isset($this->_form->$name)) {
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_Forma_ParamNotFound',
+                "Field '{$name}' not found in forma, but is required by the action"
+            );
+        }
+
+        // get the value of this element from the form
+        return $this->_fields[$name]->deriveValue($this->_form->$name);
+    }
+
+    /**
      * Converts it to HTML
      *
      * @return string HTML
      */
-    public function _render() 
+    protected function _render() 
     {
         // configure the form
         $this->_form->setView($this->getView())
@@ -220,11 +262,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // show the form again, if it's not filled and completed
         $log = '';
         $args = array();
-        $completed = ($this->_form->isFilled() && $this->_process($log, $args));
+        $this->_completed = ($this->_form->isFilled() && $this->_process($log, $args));
         $html = strval($this->_form->__toString());
         
         // if the form was NOT completed yet - just show it
-        if (!$completed) {
+        if (!$this->_completed) {
             return $html;
         }
 
@@ -262,7 +304,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         $newId = 1;
-        foreach ($this->_fields as $id=>$field) {
+        foreach (array_keys($this->_fields) as $id) {
+            $matches = array();
             if (preg_match('/^field(\d+)$/', $id, $matches)) {
                 $newId = (int)$matches[1] + 1;
             }
@@ -307,11 +350,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 // run through all required paramters. required by method
                 foreach ($inputs as $input) {
                     // get value of this parameter from form
-                    $args[$input] = $this->_getFormParam($input);
+                    $args[$input] = $this->getParam($input);
                 }
 
                 // make a call
-                $return = call_user_func_array(
+                call_user_func_array(
                     array(
                         $this->_fields[$submit->getName()]->action, 
                         'call'
@@ -337,29 +380,6 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // return boolean result
         return $result;
-    }
-
-    /**
-     * Get param from POST
-     *
-     * Retrieve param using POST data and form configuration
-     *
-     * @param string What parameter we are looking for...
-     * @return mixed|null
-     * @throws FaZend_View_Helper_Forma_ParamNotFound
-     */
-    protected function _getFormParam($name) 
-    {
-        // maybe this element is absent in the form?
-        if (!isset($this->_form->$name)) {
-            FaZend_Exception::raise(
-                'FaZend_View_Helper_Forma_ParamNotFound',
-                "Field '{$name}' not found in forma, but is required by the action"
-            );
-        }
-
-        // get the value of this element from the form
-        return $this->_fields[$name]->deriveValue($this->_form->$name);
     }
 
 }
