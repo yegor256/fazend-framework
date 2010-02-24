@@ -132,8 +132,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function forma($id = 1) 
     {
-        self::$_instances[$id] = new FaZend_View_Helper_Forma();
-        self::$_instances[$id]->_form = new FaZend_Form();
+        if (!isset(self::$_instances[$id])) {
+            self::$_instances[$id] = new FaZend_View_Helper_Forma();
+            self::$_instances[$id]->_form = new FaZend_Form();
+        }
         return self::$_instances[$id];
     }
     
