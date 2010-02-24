@@ -136,7 +136,7 @@ abstract class FaZend_Callback
         if (!isset($class)) {
             FaZend_Exception::raise(
                 'FaZend_Callback_InvalidData', 
-                "Can't instantiate the class using the data provided"
+                "Can't instantiate the class using: '{$data}'"
             );
         }
 
