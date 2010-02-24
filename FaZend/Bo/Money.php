@@ -119,7 +119,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @return void
      * @throws FaZend_Bo_Money_InvalidFormat
      */
-    public function set($value)
+    public function set($value, $part = null)
     {
         $currency = self::$_defaultCurrency;
         $value = (string)$value;
@@ -138,6 +138,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             
             // @todo Zend_Locale should be properly used 
             // bug(Zend_Locale::getTranslationList('currency'));
+            $matches = array();
             if (preg_match('/[a-zA-Z]{3}/', $value, $matches)) {
                 $currency = strtoupper($matches[0]);
             }
@@ -173,6 +174,17 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @return string
      */
     public function __toString()
+    {
+        return $this->get();
+    }
+
+    /**
+     * Get value, or part of it
+     *
+     * @param string Part name
+     * @return mixed
+     */
+    public function get($part = null)
     {
         return $this->_currency->toCurrency($this->original);
     }
