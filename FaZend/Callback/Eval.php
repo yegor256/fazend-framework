@@ -40,7 +40,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
     public function getInputs()
     {
         $matches = array();
-        if (!preg_match_all('/\$\{([ia]?\d+)\}/', $this->_data, $matches)) {
+        if (!preg_match_all('/\$\{([a]?\d+)\}/', $this->_data, $matches)) {
             return 0;
         }
         return array_unique($matches[1]);
