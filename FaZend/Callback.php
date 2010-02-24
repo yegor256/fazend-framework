@@ -87,7 +87,7 @@ abstract class FaZend_Callback
      */
     public function hasInjected($name) 
     {
-        return isset($this->_injected[$name]);
+        return array_key_exists($name, $this->_injected);
     }
     
     /**
