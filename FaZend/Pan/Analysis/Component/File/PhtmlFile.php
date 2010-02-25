@@ -10,17 +10,17 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: PhpFile.php 1587 2010-02-07 07:49:26Z yegor256@gmail.com $
  * @category FaZend
  */
 
 /**
- * Just one file
+ * Source code, in PHTML file
  *
  * @package AnalysisModeller
  * @subpackage Component
  */
-abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Component_Abstract
+class FaZend_Pan_Analysis_Component_File_PhtmlFile extends FaZend_Pan_Analysis_Component_File
 {
 
     /**
@@ -31,27 +31,13 @@ abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Co
      **/
     public function reflect(Reflector $reflector)
     {
-        // get the name of the file
-        $this->_name = preg_replace(
-            '/[^a-zA-Z0-9]+/',
-            '-', 
-            pathinfo($this->_name, PATHINFO_BASENAME)
-        );
-        
-        $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
+        parent::reflect($reflector);
+        assert($reflector instanceof Zend_Reflection_Docblock);
+
+        $this->_convertTagsToTraces($reflector);
+
+        // change my location
+        $this->_relocate($reflector);
     }
 
-    /**
-     * Build SVG of the component and returns it
-     *
-     * @param Zend_View View to render
-     * @param string Type of diagram to draw
-     * @param integer X-coordinate
-     * @param integer Y-coordinate
-     * @return string
-     */
-    public function svg(Zend_View $view, $type, $x, $y)
-    {
-    }
-    
 }

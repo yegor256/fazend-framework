@@ -73,8 +73,9 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
         $component = new $className($this, $name);
         $this[] = $component;
         
-        if (!is_null($reflector))
+        if (!is_null($reflector)) {
             $component->reflect($reflector);
+        }
             
         return $component;
     }
@@ -124,9 +125,11 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      */
     public function getFullName()
     {
-        if (!$this->_parent)
+        if (!$this->_parent) {
             return $this->getName();
-        return $this->_parent->getFullName() . 
+        }
+        return 
+        $this->_parent->getFullName() . 
         FaZend_Pan_Analysis_Component::SEPARATOR . $this->getName();
     }
     
@@ -191,8 +194,9 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     public static function makeSvg($name, array $options = array(), $content = null)
     {
         $svg = "\n<" . $name . ' ';
-        foreach ($options as $key=>$value)
+        foreach ($options as $key=>$value) {
             $svg .= $key . '="' . $value . '" ';
+        }
         return $svg . '>' . $content . '</' . $name . ">\n";
     }
 
@@ -215,9 +219,11 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      **/
     protected function _moveTo(FaZend_Pan_Analysis_Component_Abstract $destination)
     {
-        foreach ($this->_parent as $key=>$component)
-            if ($component == $this)
+        foreach ($this->_parent as $key=>$component) {
+            if ($component == $this) {
                 unset($this->_parent[$key]);
+            }
+        }
         $destination[] = $this;
         $this->_parent = $destination;
         return $this;
@@ -241,10 +247,9 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      * Relocate me in the tree
      *
      * @return void
-     **/
-    protected function _relocate(Reflector $reflector)
+     */
+    protected function _relocate(Zend_Reflection_Docblock $doc)
     {
-        $doc = $reflector->getDocblock();
         if (false !== $doc->getTag('category')) {
             $this->_moveTo(
                 $this->_parent->make(

@@ -26,6 +26,17 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
     const ROOT = 'System';
     
     /**
+     * Regex to use for different file types
+     *
+     * @var string[]
+     */
+    protected static $_docblockRegexs = array(
+        'phtml' => '/^\s*<!--(.*?)-->/s',
+        'sql' => '/^\s*((?:--.*\n)+)/',
+        'ini' => '/^\s*((?:;;.*\n)+)/',
+    );
+    
+    /**
      * Instance of system
      *
      * @var FaZend_Pan_Analysis_Component_System
@@ -53,8 +64,9 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
      **/
     public function findByFullName($name)
     {
-        if ($name == self::ROOT)
+        if ($name == self::ROOT) {
             return $this;
+        }
             
         $exp = explode(FaZend_Pan_Analysis_Component::SEPARATOR, $name);
         $target = array_pop($exp);
@@ -81,19 +93,39 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
             
         foreach ($dirs as $dir) {
             foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
-                if (!preg_match('/\.php$/i', $file->getFilename()))
-                    continue;
+                $file = (string)$file;
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                switch (true) {
+                    case $ext == 'php':
+                        // it's necessary for Zend reflection API
+                        ob_start();
+                        require_once $file;
+                        ob_end_clean();
                 
-                // it's necessary for Zend reflection API
-                ob_start();
-                require_once $file;
-                ob_end_clean();
-                
-                // try to reflect this file and add it to the collection
-                try {
-                    $this->factory('file_PhpFile', (string)$file, new Zend_Reflection_File((string)$file));
-                } catch (Zend_Reflection_Exception $e) {
-                    FaZend_Log::err("File '{$file} ignored: {$e->getMessage()}");
+                        // try to reflect this file and add it to the collection
+                        try {
+                            $this->factory(
+                                'file_PhpFile', 
+                                $file, 
+                                new Zend_Reflection_File($file)
+                            );
+                        } catch (Zend_Reflection_Exception $e) {
+                            FaZend_Log::err("File '{$file} ignored: {$e->getMessage()}");
+                        }
+                        break;
+                        
+                    case array_key_exists($ext, self::$_docblockRegexs):
+                        $matches = array();
+                        preg_match(self::$_docblockRegexs[$ext], file_get_contents($file), $matches);
+                        $this->factory(
+                            'file_' . ucfirst($ext) . 'File',
+                            $file,
+                            new Zend_Reflection_Docblock(isset($matches[1]) ? $matches[1] : ' ')
+                        );
+                        break;
+                        
+                    default:
+                        // ignore it...
                 }
             }
         }

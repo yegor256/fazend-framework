@@ -31,26 +31,20 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
      **/
     public function reflect(Reflector $reflector)
     {
+        parent::reflect($reflector);
         assert($reflector instanceof Zend_Reflection_File);
         
-        // get the name of the file
-        $this->_name = str_replace(
-            '/[^a-zA-Z0-9]+/',
-            '-', 
-            pathinfo($reflector->getFileName(), PATHINFO_BASENAME)
-        );
-        
-        $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
-
-        if ($reflector->getDocComment())
+        if ($reflector->getDocComment()) {
             $this->_convertTagsToTraces($reflector->getDocblock());
+        }
 
         // change my location
-        $this->_relocate($reflector);
+        $this->_relocate($reflector->getDocblock());
         
         // add all daughter classes to this location
-        foreach ($reflector->getClasses() as $class)
+        foreach ($reflector->getClasses() as $class) {
             $this->_parent->factory('class', null, $class);
+        }
     }
 
 }

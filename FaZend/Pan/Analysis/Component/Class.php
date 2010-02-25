@@ -34,16 +34,18 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
         assert($reflector instanceof Zend_Reflection_Class);
         $this->_name = $reflector->getName();
         
-        if ($reflector->getDocComment())
+        if ($reflector->getDocComment()) {
             $this->_convertTagsToTraces($reflector->getDocblock());
+        }
 
         // change my location
-        $this->_relocate($reflector);
+        $this->_relocate($reflector->getDocblock());
                     
         foreach ($reflector->getMethods() as $method) {
             // this method is inherited?
-            if ($method->getDeclaringClass()->name != $reflector->name)
+            if ($method->getDeclaringClass()->name != $reflector->name) {
                 continue;
+            }
             $this->factory('method', null, $method);
         }
     }
