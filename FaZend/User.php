@@ -101,8 +101,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     {
         // If the status is already set to an instance of class
         // or to FALSE -- we return the boolean
-        if (!is_null(self::$_loggedIn))
+        if (!is_null(self::$_loggedIn)) {
             return (bool)self::$_loggedIn;
+        }
 
         // try to analyze the situation in session
         if (self::_auth()->hasIdentity()) {
@@ -187,6 +188,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
 
         // clean session
         self::_auth()->clearIdentity();
+        
+        // forget it in session
+        Zend_Session::forgetMe();
     }
 
     /**
