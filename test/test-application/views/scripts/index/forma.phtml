@@ -8,32 +8,27 @@
     ->addBehavior('showLog')
     ->addBehavior(
         'flash', 
-        'FLASH++ for %s (%d bytes in reason)',
-        '{name}', 
-        'strlen({reason})'
+        'sprintf("FLASH++ for %s (%d bytes in reason)", ${a1}, strlen(${a4}))'
     )
     ->addBehavior('redirect', 'submitted', 'index')
     ->addField('text', 'name')
         ->fieldLabel('Your full name')
-        ->fieldRequired(true)
         ->fieldAttrib('maxlength', 45)
     ->addField('select', 'client')
         ->fieldLabel('Are you our client?')
-        ->fieldRequired(true)
         ->fieldOptions(array(1=>'yes', 0=>'no'))
         ->fieldConverter('boolean')
     ->addField('hidden', 'address')
         ->fieldValue('some address')
     ->addField('textarea', 'reason')
         ->fieldAttrib('cols', 15)
-        ->fieldRequired(true)
         ->fieldLabel('Why are you interested in our services?')
     // ->addField('file')
     //     ->fieldRequired(true)
     //     ->fieldLabel('Signed NDA in PDF')
     ->addField('submit', 'submit')
         ->fieldValue('go')
-        ->fieldAction('Model_Owner', 'register')
+        ->fieldAction(array('Model_Owner', 'register'))
     ?>
     
 <p>test</p>

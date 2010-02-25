@@ -71,8 +71,8 @@ class FaZend_CallbackTest extends AbstractTestCase
         $this->assertEquals(array('boolean'), FaZend_Callback::factory('boolean')->getInputs());
     
         $this->assertEquals(
-            array('1', 'i1'), 
-            FaZend_Callback::factory('new Zend_Date(${1}, ${i1})')->getInputs()
+            array('a1'), 
+            FaZend_Callback::factory('new Zend_Date(${a1}, ${i1})')->getInputs()
         );
     
         $this->assertEquals(
