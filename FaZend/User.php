@@ -109,7 +109,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
             $class = self::$_rowClass;
             $user = new $class(intval(self::_auth()->getIdentity()->id));
             if ($user->exists() && ($user->password == self::_auth()->getIdentity()->password)) {
-                $user->logIn();
+                $user->logIn(false);
                 return true;
             }
         }
@@ -142,7 +142,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      * @throws FaZend_User_LoginFailed
      * @see _auth()
      */
-    public function logIn() 
+    public function logIn($firstTime = true) 
     {
         $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $authAdapter->setTableName('user')
@@ -168,7 +168,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         self::$_loggedIn = $this;
 
         // remember me as a logged in user
-        Zend_Session::rememberMe();
+        if ($firstTime) {
+            Zend_Session::rememberMe();
+        }
     }
 
     /**
