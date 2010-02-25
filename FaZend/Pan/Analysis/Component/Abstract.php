@@ -289,7 +289,10 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     {
         $this->_traces = array();
         foreach ($docblock->getTags('see') as $tag) {
-            $this->_traces[] = $tag->getDescription();
+            $text = $tag->getDescription();
+            if (preg_match('/^\s*([\w\d\_]+)/', $text, $matches)) {
+                $this->_traces[] = $matches[1];
+            }
         }
     }
     
