@@ -88,9 +88,10 @@ class FaZend_Callback_Eval extends FaZend_Callback
             }
         }
 
+        $result = $previous = md5(microtime(true));
         $eval = '$result = ' . $eval . ';';
         eval($eval);
-        if (!isset($result)) {
+        if ($result === $previous) {
             FaZend_Exception::raise(
                 'FaZend_Callback_Eval_SyntaxException',
                 "Syntax error in '{$eval}'"
