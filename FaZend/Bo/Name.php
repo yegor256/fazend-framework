@@ -71,6 +71,17 @@ class FaZend_Bo_Name extends FaZend_Bo_Abstract
      */
     public function __toString() 
     {
+        return $this->get();
+    }
+
+    /**
+     * Get part
+     *
+     * @param string Part to get
+     * @return string
+     */
+    public function get($part = null) 
+    {
         return trim(
             implode(' ', $this->_prefixes) . ' ' . 
             implode(' ', $this->_names) . ' ' .
@@ -108,10 +119,11 @@ class FaZend_Bo_Name extends FaZend_Bo_Abstract
      * Set name, parse it
      *
      * @param string Name
+     * @param string Part to set
      * @return void
      * @throws FaZend_Bo_Name_EmptyException
      */
-    public function set($name) 
+    public function set($name, $part = null) 
     {
         // replace all "spaces" by single space-symbols
         $name = trim(preg_replace('/\s+/s', ' ', $name), "\t\r\n ");
