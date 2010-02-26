@@ -59,6 +59,7 @@ class FaZend_Pan_Analysis_Facade
                 'fullName' => $item->getFullName(),
                 'type' => $item->getType(),
                 'traces' => $item->getTraces(),
+                'tag' => $item->getTraceTag(),
             );
         }
         return $list;
