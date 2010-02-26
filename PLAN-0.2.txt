@@ -1,0 +1,52 @@
+#
+# FaZend Framework
+# @copyright Copyright (c) FaZend.com
+# @version $Id$
+#
+
+If you want to take a participation in the development/maintenance of
+FaZend Framework, please email to team@fazend.com. Thanks!
+
+This is our plan for version 0.2, planned delivery -- end of June:
+
+- to make code 100% compliant with Zend Code Analyzier
+- to make it 100% covered by unit tests, using Phing CoverageThresholdTask
+- to make it 100% compliant to PHPMD requirements
+- to polish all code: add curled braces
+- to implement Metric component
+- to replace FaZend_Cache_Backend_Memory with Zend_Cache_Backend_Array, when it's ready in Zend
+- to make application resources atomic
+- to migrate to Phing FtpDeployTask, from FtpUpload
+- to migrate to Phing HttpRequestTask, from PingFaZend
+- to place fazend controllers, views, fonts, and images into separate folder
+- to move /layouts, /helpers and /emails into /views
+- to fix test runner, to make it workable on all platforms from web
+- to introduce tree() view helper
+- to resolve a problem with two consequetive VIEWs in deployer
+- to get rid of Version.php/Revision.php, use just one file instead
+- to create fzTranslator resource
+- to get rid of FaZend_Date object
+- to move FaZend_Bo component to Zend, if possible
+- to integrate FaZend_Flyweight with Zend_Cache_Backend
+- to improve visual layout of /__fz/adm controller
+
+FaZend_Pos:
+- to test it properly and remove problems with serialization on shutdown
+- to separate DB layer, make it abstract
+- to introduce new storage layer implementation - with files
+
+FaZend Central Server:
+- to enable CC params configuration in control panel
+- to test and configure properly instant backups download
+
+FaZend CruiseControl Server:
+- to configure deployment of artifacts properly
+- to configure access to artifacts/reports for project owners
+- to publish full PHING report online
+
+FaZend SVN Server:
+- to enable regular configurable backups to FTP and AmazonS3
+
+FaZend Trac Server:
+- to enable regular configurable backups to FTP and AmazonS3
+

@@ -30,12 +30,14 @@ class FaZend_Pan_Analysis_Facade
      * component, not a component itself.
      *
      * @return string[]
-     **/
+     * @see FaZend_Pan_Analysis_Component_System
+     */
     public function getComponents()
     {
         $list = array();
-        foreach (FaZend_Pan_Analysis_Component_System::getInstance() as $component)
-            $list[] = $component->getFullName();
+        foreach (FaZend_Pan_Analysis_Component_System::getInstance()->getIterator() as $component) {
+            $list[] = $component->getFullName(); 
+        }
         return $list;
     }
 
@@ -46,33 +48,20 @@ class FaZend_Pan_Analysis_Facade
      * according to our internal principle.
      *
      * @return array[]
-     * @see _derive() To understand the content of every component
-     **/
+     * @see FaZend_Pan_Analysis_Component_System
+     */
     public function getComponentsList()
     {
         $list = array();
-        $this->_derive(FaZend_Pan_Analysis_Component_System::getInstance(), $list);
+        foreach (FaZend_Pan_Analysis_Component_System::getInstance()->getIterator() as $item) {
+            $list[] = array(
+                'name' => $item->getName(),
+                'fullName' => $item->getFullName(),
+                'type' => $item->getType(),
+                'traces' => $item->getTraces(),
+            );
+        }
         return $list;
     }
-
-    /**
-     * Get all components from current and add them to the list
-     *
-     * @param FaZend_Pan_Analysis_Component_Abstract Component to browse
-     * @param array List of elements to fill
-     * @return void
-     **/
-    protected function _derive(FaZend_Pan_Analysis_Component_Abstract $component, array &$list) 
-    {
-        foreach ($component as $sub) {
-            $list[] = array(
-                'name' => $sub->getName(),
-                'fullName' => $sub->getFullName(),
-                'type' => $sub->getType(),
-                'traces' => $sub->getTraces(),
-            );
-            $this->_derive($sub, $list);
-        }
-    }
-
+    
 }

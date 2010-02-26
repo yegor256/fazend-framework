@@ -67,11 +67,13 @@ final class FaZend_Validator
      **/
     public final function __construct()
     {
-        $this->_loader = new Zend_Loader_PluginLoader(array(
-            'Zend_Validate' => ZEND_PATH . '/Validate',
-            'FaZend_Validate' => FAZEND_PATH . '/Validate',
-            'Validator' => APPLICATION_PATH . '/validators',
-            ));
+        $this->_loader = new Zend_Loader_PluginLoader(
+            array(
+                'Zend_Validate' => ZEND_PATH . '/Validate',
+                'FaZend_Validate' => FAZEND_PATH . '/Validate',
+                'Validator' => APPLICATION_PATH . '/validators',
+            )
+        );
     }
 
     /**

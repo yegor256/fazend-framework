@@ -40,6 +40,16 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
     }
     
     /**
+     * Get tag for "see" tag
+     *
+     * @return string
+     */
+    public function getTraceTag() 
+    {
+        return $this->_parent->getTraceTag() . '::' . $this->_name . '()';
+    }
+
+    /**
      * Build SVG of the component and returns it
      *
      * @param Zend_View View to render

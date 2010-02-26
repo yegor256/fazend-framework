@@ -20,7 +20,7 @@
  * @package AnalysisModeller
  * @subpackage Component
  */
-abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
+abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIterator
 {
 
     const XLINK_NS = 'http://www.w3.org/1999/xlink';
@@ -29,6 +29,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      * Name of the component, like 'User' or 'AccessController', without parent
      *
      * @var string
+     * @see getName()
      */
     protected $_name;
     
@@ -43,7 +44,8 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      * List of traces to other components
      *
      * @var string[]
-     **/
+     * @see getTraces()
+     */
     protected $_traces = array();
     
     /**
@@ -57,6 +59,28 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     {
         $this->_parent = $parent;
         $this->_name = $name;
+    }
+    
+    /**
+     * Get all children from current node
+     *
+     * @see RecursiveArrayIterator
+     * @return RecursiveArrayIterator
+     */
+    public function getChildren() 
+    {
+        return $this->current();
+    }
+    
+    /**
+     * Current node has children?
+     *
+     * @see RecursiveArrayIterator
+     * @return boolean
+     */
+    public function hasChildren() 
+    {
+        return count($this->current());
     }
 
     /**
@@ -89,6 +113,21 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     abstract public function reflect(Reflector $reflector);
 
     /**
+     * Get recursive iterator
+     *
+     * @return RecursiveIteratorIterator
+     */
+    public function getIterator() 
+    {
+        $iterator = new RecursiveIteratorIterator(
+            $this,
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        $iterator->rewind();
+        return $iterator;
+    }
+
+    /**
      * Returns name of the component
      *
      * @return string
@@ -105,7 +144,36 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      */
     public function getTraces()
     {
+        foreach ($this->_traces as $id=>&$trace) {
+            if (strpos($trace, FaZend_Pan_Analysis_Component_System::ROOT) === 0) {
+                continue;
+            }
+            
+            // try to find it in $this
+            $component = FaZend_Pan_Analysis_Component_System::getInstance()->findByTrace($trace, $this);
+            
+            if (!$component && (strpos($trace, '$this') !== 0) && (strpos($trace, 'self::') !== 0)) {
+                // if nothing found - try to find it in system
+                $component = FaZend_Pan_Analysis_Component_System::getInstance()->findByTrace($trace);
+            }
+                
+            if ($component) {
+                $trace = $component;
+            } else {
+                unset($this->_traces[$id]);
+            }
+        }
         return $this->_traces;
+    }
+
+    /**
+     * Get the most log tag to be used in "see tag"
+     *
+     * @return string
+     */
+    public function getTraceTag() 
+    {
+        return $this->getFullName();
     }
 
     /**
@@ -136,19 +204,21 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     /**
      * Find child component by name
      *
-     * @param string Name of the componen to find
+     * @param string Name of the component to find
      * @return FaZend_Pan_Analysis_Component_Abstract
      */
     public function find($name)
     {
         foreach ($this as $component) {
-            if ($component->getName() == $name)
+            if ($component->getName() == $name) {
                 return $component;
+            }
         }
         FaZend_Exception::raise(
             'FaZend_Pan_Analysis_Component_NotFound', 
             "Component not found: '{$this->getName()}'::find('{$name}')"
         );
+        return null;
     }
 
     /**
@@ -246,6 +316,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
     /**
      * Relocate me in the tree
      *
+     * @param Zend_Reflection_Docblock Docblock to use for relocation
      * @return void
      */
     protected function _relocate(Zend_Reflection_Docblock $doc)
@@ -284,10 +355,11 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends ArrayIterator
      * @param Zend_Reflection_Docblock phpDoc block to parse
      * @return void
      * @see $this->_traces
-     **/
+     */
     protected function _convertTagsToTraces(Zend_Reflection_Docblock $docblock) 
     {
         $this->_traces = array();
+        $matches = array();
         foreach ($docblock->getTags('see') as $tag) {
             $text = $tag->getDescription();
             if (preg_match('/^\s*([\w\d\_]+)/', $text, $matches)) {

@@ -31,14 +31,32 @@ abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Co
      **/
     public function reflect(Reflector $reflector)
     {
-        // get the name of the file
-        $this->_name = preg_replace(
+        assert($reflector instanceof Zend_Reflection_File);
+        $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
+    }
+
+    /**
+     * Get name of the file
+     *
+     * @return string
+     */
+    public function getName() 
+    {
+        return preg_replace(
             '/[^a-zA-Z0-9]+/',
             '-', 
             pathinfo($this->_name, PATHINFO_BASENAME)
         );
-        
-        $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
+    }
+    
+    /**
+     * Get tag for "see" tag
+     *
+     * @return string
+     */
+    public function getTraceTag() 
+    {
+        return $this->_name;
     }
 
     /**

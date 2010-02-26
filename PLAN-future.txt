@@ -1,0 +1,8 @@
+Our plans for future releases:
+
+- to make code documentation compliant with phpDocumentor, ..
+- to integrate FileController with Amazon Front
+- to compress all CSS files automatically into one file
+- to compress all JS files automatically into one file
+- to convert current test-application to some useful website and host it online
+
