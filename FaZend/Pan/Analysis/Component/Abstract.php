@@ -358,11 +358,18 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      */
     protected function _convertTagsToTraces(Zend_Reflection_Docblock $docblock) 
     {
+        $tags = array();
+        foreach ($docblock->getTags('see') as $tag) {
+            $tags[] = $tag->getDescription();
+        }
+        foreach ($docblock->getTags('uses') as $tag) {
+            $tags[] = $tag->getDescription();
+        }
+
         $this->_traces = array();
         $matches = array();
-        foreach ($docblock->getTags('see') as $tag) {
-            $text = $tag->getDescription();
-            if (preg_match('/^\s*([\w\d\_]+)/', $text, $matches)) {
+        foreach ($tags as $tag) {
+            if (preg_match('/^\s*([\w\d\_]+)/', $tag, $matches)) {
                 $this->_traces[] = $matches[1];
             }
         }
