@@ -22,11 +22,11 @@ This is our plan for version 0.2, planned delivery -- end of June:
 - to move /layouts, /helpers and /emails into /views
 - to fix test runner, to make it workable on all platforms from web
 - to introduce tree() view helper
-- to resolve a problem with two consequetive VIEWs in deployer
+- to resolve a problem with two consequetive VIEWs in deployer ()
 - to get rid of Version.php/Revision.php, use just one file instead
 - to create fzTranslator resource
 - to get rid of FaZend_Date object
-- to move FaZend_Bo component to Zend, if possible
+- to move FaZend_Bo component to Zend, if possible (http://framework.zend.com/wiki/display/ZFPROP/Zend_Bo+-+Yegor+Bugayenko)
 - to integrate FaZend_Flyweight with Zend_Cache_Backend
 - to improve visual layout of /__fz/adm controller
 - to implement dynamic sorters-by-column in htmlTable()
@@ -47,6 +47,7 @@ FaZend CruiseControl Server:
 
 FaZend SVN Server:
 - to enable regular configurable backups to FTP and AmazonS3
+- to implement automated commit of revision-1 (with basic directory structure)
 
 FaZend Trac Server:
 - to enable regular configurable backups to FTP and AmazonS3
