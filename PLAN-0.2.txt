@@ -29,6 +29,7 @@ This is our plan for version 0.2, planned delivery -- end of June:
 - to move FaZend_Bo component to Zend, if possible
 - to integrate FaZend_Flyweight with Zend_Cache_Backend
 - to improve visual layout of /__fz/adm controller
+- to implement dynamic sorters-by-column in htmlTable()
 
 FaZend_Pos:
 - to test it properly and remove problems with serialization on shutdown
