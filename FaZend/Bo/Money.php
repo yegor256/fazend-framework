@@ -234,6 +234,17 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     }
     
     /**
+     * Round value to the closest scale
+     *
+     * @return void
+     */
+    public function round($scale = 0) 
+    {
+        $this->_points = round($this->_points, -log10(self::POINT_WEIGHT) + $scale);
+        return $this;
+    }
+    
+    /**
      * Add new value to current one
      *
      * @param FaZend_Bo_Money The cost to add

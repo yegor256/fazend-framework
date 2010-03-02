@@ -98,5 +98,16 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $this->assertEquals(-100, $money->usd);
     }
 
+    public function testMoneyCanBeRounded()
+    {
+        $money = new FaZend_Bo_Money('101 USD');
+        $money->round(-1);
+        $this->assertEquals(100, $money->usd);
+
+        $money = new FaZend_Bo_Money(101.57);
+        $money->round(1);
+        $this->assertEquals(101.6, $money->usd);
+    }
+
 }
 
