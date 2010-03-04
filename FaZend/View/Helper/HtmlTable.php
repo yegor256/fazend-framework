@@ -500,7 +500,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 foreach ($this->_options as $option) {
                     // skip the option
                     if ($option->skip) {
-                        if ($option->skip->call($rowOriginal)) {
+                        if ($option->skip->call($rowOriginal, $key)) {
                             continue;
                         }
                     }    
