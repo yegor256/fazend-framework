@@ -61,11 +61,18 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
      *
      * @param Zend_Form_Element The element to work with
      * @return mixed
+     * @throws FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException
      */
     public function deriveValue(Zend_Form_Element $element)
     {
         $value = parent::deriveValue($element);
         if ($this->_useValues) {
+            if (array_key_exists($value, $this->_options)) {
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException',
+                    "Option '{$value}' is out of range, it was not provided in the list of options"
+                );
+            }
             return $this->_options[$value];
         }
         return $value;
