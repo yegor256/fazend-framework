@@ -177,20 +177,23 @@ class FaZend_Db_Wrapper
         );
 
         // if we should keep silence - just return what we got
-        if ($this->getSilenceIfEmpty() && !$row)
-            return $row;
+        if ($this->getSilenceIfEmpty() && !$row) {
+            return false;
+        }
 
         // if the result is OK - just return it
-        if ($row)
+        if ($row) {
             return $row;
+        }
 
         // we should create this class in any case - no matter whether
         // we throw the exception or not. because the try{}catch block
         // will expect this class and will fail to load it    
-        if (strpos($this->getRowClass(), 'FaZend_Db_Table_ActiveRow') === 0)
+        if (strpos($this->getRowClass(), 'FaZend_Db_Table_ActiveRow') === 0) {
             $exceptionClassName = 'Exception';
-        else
+        } else {
             $exceptionClassName = $this->getRowClass() . '_NotFoundException';
+        }
 
         // raise this exception
         FaZend_Exception::raise(
