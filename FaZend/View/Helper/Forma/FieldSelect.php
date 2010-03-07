@@ -67,7 +67,7 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
     {
         $value = parent::deriveValue($element);
         if ($this->_useValues) {
-            if (array_key_exists($value, $this->_options)) {
+            if (!array_key_exists($value, $this->_options)) {
                 FaZend_Exception::raise(
                     'FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException',
                     "Option '{$value}' is out of range, it was not provided in the list of options"
