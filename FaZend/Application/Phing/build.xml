@@ -353,10 +353,11 @@
     <target name="phpmd" description="PHP Mess Detection">
         <if><istrue value="${to.phpmd}" /><then>
             <exec command="phpmd 
-                --extensions='php,phtml'
-                text
                 ${project.basedir}/src/application
-                codesize,unusedcode"
+                text
+                codesize,unusedcode
+                --extensions='php,phtml'
+				"
                 escape="false"
                 checkreturn="false" 
                 passthru="true" />
