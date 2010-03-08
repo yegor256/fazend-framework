@@ -373,7 +373,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 // make a call
                 call_user_func_array(
                     array(
-                        $this->_fields[$submit->getName()]->action, 
+                        $field->action, 
                         'call'
                     ),
                     $args
