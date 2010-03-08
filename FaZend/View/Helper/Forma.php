@@ -358,9 +358,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // if ACTION is specified in the submit button
-        if ($this->_fields[$this->_revertFieldName($submit->getName())]->action) {
+        $field = $this->_fields[$this->_revertFieldName($submit->getName())];
+        if ($field->action) {
             // get callback params from the clicked button
-            $inputs = $this->_fields[$submit->getName()]->action->getInputs();
+            $inputs = $field->action->getInputs();
 
             try {
                 // run through all required paramters. required by method
