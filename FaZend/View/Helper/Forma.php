@@ -51,6 +51,13 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     protected static $_labelSuffixes = array();
 
     /**
+     * Unique ID of the helper on the page
+     *
+     * @var mixed
+     */
+    protected $_id;
+
+    /**
      * Form to render
      *
      * @var Zend_Form
@@ -139,8 +146,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
             }
         }
         if (!isset(self::$_instances[$id])) {
-            self::$_instances[$id] = new FaZend_View_Helper_Forma();
+            self::$_instances[$id] = new self();
             self::$_instances[$id]->_form = new FaZend_Form();
+            self::$_instances[$id]->_id = $id;
         }
         return self::$_instances[$id];
     }
@@ -245,7 +253,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // get the value of this element from the form
-        return $this->_fields[$name]->deriveValue($this->_form->$name);
+        return $this->_fields[$name]->deriveValue($this->_form->{$this->_makeFieldName($name)});
     }
 
     /**
@@ -264,7 +272,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // add all input elements to the form
         foreach ($this->_fields as $name=>$field) {
-            $this->_form->addElement($field->getFormElement($name));
+            $this->_form->addElement($field->getFormElement($this->_makeFieldName($name)));
         }
 
         // show the form again, if it's not filled and completed
@@ -388,6 +396,20 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // return boolean result
         return $result;
+    }
+    
+    /**
+     * Make unique field name
+     *
+     * @param string Name of the field
+     * @return string
+     */
+    protected function _makeFieldName($name) 
+    {
+        if ($this->_id == 1) {
+            return $name;
+        }
+        return $this->_id . '--' . $name;
     }
 
 }
