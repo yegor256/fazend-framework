@@ -60,16 +60,28 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
     }
 
     /**
-     * Create class
+     * Get certain parts of the class
      *
-     * @param string Country
-     * @return FaZend_Bo_Address_Country
+     * @param string Part to get, property
+     * @return string
+     * @throws FaZend_Bo_Address_Country_UnknownProperty
      */
-    public static function factory($name)
+    public function __get($name) 
     {
-        return new self($name);
+        $method = '_get' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+        switch ($name) {
+            case 'code':
+                return $this->_code;
+        }
+        FaZend_Exception::raise(
+            'FaZend_Bo_Address_Country_UnknownProperty',
+            "Unknown property: '{$name}'"
+        );
     }
-
+    
     /**
      * Set country, parse it
      *
@@ -90,7 +102,7 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
      * @return string
      * @throws FaZend_Bo_Address_Country_InvalidPartException
      */
-    public function get($part) 
+    public function get($part = null) 
     {
         switch ($part) {
             case self::ISO_3166:
