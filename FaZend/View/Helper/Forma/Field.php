@@ -209,6 +209,7 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param Zend_Form_Element The element to configure
      * @return void
+     * @see getFormElement()
      */
     protected function _configureFormElement(Zend_Form_Element $element)
     {
@@ -248,6 +249,7 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param string Name of the element
      * @return Zend_Form_Element
+     * @see getFormElement()
      */
     abstract protected function _getFormElement($name);
 

@@ -244,8 +244,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function getParam($name) 
     {
+        // encode it first
+        $formName = $this->_makeFieldName($name);
+        
         // maybe this element is absent in the form?
-        if (!isset($this->_form->$name)) {
+        if (!isset($this->_form->$formName)) {
             FaZend_Exception::raise(
                 'FaZend_View_Helper_Forma_ParamNotFound',
                 "Field '{$name}' not found in forma, but is required by the action"
@@ -253,7 +256,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // get the value of this element from the form
-        return $this->_fields[$name]->deriveValue($this->_form->{$this->_makeFieldName($name)});
+        return $this->_fields[$name]->deriveValue($this->_form->$formName);
     }
 
     /**
@@ -273,7 +276,6 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // add all input elements to the form
         foreach ($this->_fields as $name=>$field) {
             $element = $field->getFormElement($this->_makeFieldName($name));
-            $element->setName($name);
             $this->_form->addElement($element);
         }
 
@@ -360,7 +362,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // if ACTION is specified in the submit button
-        $field = $this->_fields[$submit->getName()];
+        $field = $this->_fields[$this->_revertFieldName($submit->getName())];
         if ($field->action) {
             // get callback params from the clicked button
             $inputs = $field->action->getInputs();
