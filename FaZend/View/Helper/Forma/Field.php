@@ -169,6 +169,7 @@ abstract class FaZend_View_Helper_Forma_Field
      *
      * @param string Method name
      * @return value
+     * @throws FaZend_View_Helper_Forma_InvalidPropertyException
      */
     public function __get($name)
     {
@@ -176,7 +177,14 @@ abstract class FaZend_View_Helper_Forma_Field
         if (method_exists($this, $method)) {
             return $this->$method();
         }
-        return $this->{'_' . $name};
+        $property = '_' . $name;
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+        FaZend_Exception::raise(
+            'FaZend_View_Helper_Forma_InvalidPropertyException', 
+            "Method/property '{$name}' is unknown in " . get_class($this)
+        );
     }
 
     /**
