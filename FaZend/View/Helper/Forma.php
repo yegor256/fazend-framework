@@ -274,7 +274,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         foreach ($this->_fields as $name=>$field) {
             $element = $field->getFormElement($this->_makeFieldName($name));
             $element->setName($name);
-            $this->_form->addElement();
+            $this->_form->addElement($element);
         }
 
         // show the form again, if it's not filled and completed
