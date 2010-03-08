@@ -358,7 +358,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // if ACTION is specified in the submit button
-        if ($this->_fields[$submit->getName()]->action) {
+        if ($this->_fields[$this->_revertFieldName($submit->getName())]->action) {
             // get callback params from the clicked button
             $inputs = $this->_fields[$submit->getName()]->action->getInputs();
 
@@ -406,10 +406,18 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     protected function _makeFieldName($name) 
     {
-        if ($this->_id == 1) {
-            return $name;
-        }
-        return $this->_id . '--' . $name;
+        return $this->_id . '__' . $name;
+    }
+
+    /**
+     * Revert field name from a unique name
+     *
+     * @param string Name of the field
+     * @return string
+     */
+    protected function _revertFieldName($id) 
+    {
+        return substr(strchr($id, '__'), 2);
     }
 
 }
