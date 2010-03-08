@@ -272,7 +272,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // add all input elements to the form
         foreach ($this->_fields as $name=>$field) {
-            $this->_form->addElement($field->getFormElement($this->_makeFieldName($name)));
+            $element = $field->getFormElement($this->_makeFieldName($name));
+            $element->setName($name);
+            $this->_form->addElement();
         }
 
         // show the form again, if it's not filled and completed
@@ -358,7 +360,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
 
         // if ACTION is specified in the submit button
-        $field = $this->_fields[$this->_revertFieldName($submit->getName())];
+        $field = $this->_fields[$submit->getName()];
         if ($field->action) {
             // get callback params from the clicked button
             $inputs = $field->action->getInputs();
