@@ -360,7 +360,12 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 break;
             }
         }
-
+        
+        // double check
+        if (!isset($submit)) {
+            return false;
+        }
+ 
         // if ACTION is specified in the submit button
         $field = $this->_fields[$this->_revertFieldName($submit->getName())];
         if ($field->action) {

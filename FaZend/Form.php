@@ -78,14 +78,16 @@ class FaZend_Form extends Zend_Form
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         // just show the form
-        if (!$request->isPost())
+        if (!$request->isPost()) {
             return false;
+        }
 
         // find SUBMIT element, and validate it
         $submit = false;
         foreach ($this->getElements() as $element) {
-            if (!$element instanceof Zend_Form_Element_Submit)
+            if (!$element instanceof Zend_Form_Element_Submit) {
                 continue;
+            }
 
             // whether this particular form was submitted by this button?
             if ($element->getLabel() == $request->getPost($element->getName())) {
@@ -95,12 +97,14 @@ class FaZend_Form extends Zend_Form
         }
 
         // nothing clicked?
-        if ($submit === false)
+        if ($submit === false) {
             return false;
+        }
 
         // validate all fields
-        if (!$this->isValid($request->getPost() + $this->getValues()))
+        if (!$this->isValid($request->getPost() + $this->getValues())) {
             return false;
+        }
 
         return true;
     }    
