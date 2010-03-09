@@ -130,6 +130,16 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
     {
         return self::$_labelSuffixes;
     }
+    
+    /**
+     * Remove all instances of all forma's
+     *
+     * @return void
+     */
+    public static function cleanInstances() 
+    {
+        self::$_instances = array();
+    }
 
     /**
      * Builds the object
@@ -416,6 +426,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     protected function _makeFieldName($name) 
     {
+        if ($this->_id === 1) {
+            return $name;
+        }
         return $this->_id . '__' . $name;
     }
 
@@ -427,6 +440,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     protected function _revertFieldName($id) 
     {
+        if ($this->_id === 1) {
+            return $id;
+        }
         return substr(strchr($id, '__'), 2);
     }
 
