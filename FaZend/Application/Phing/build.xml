@@ -183,7 +183,7 @@
     <target name="lint" description="Run syntax check for all classes" >
         <if><istrue value="${to.lint}" />
         <then>
-            <phplint haltonfailure="yes">
+            <phplint haltonfailure="yes" level="verbose">
                 <fileset dir="${project.basedir}/src/application">
                     <include name="**/*.php"/>
                     <include name="**/*.phtml"/>
