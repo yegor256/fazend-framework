@@ -330,8 +330,9 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     protected function _initPluginCache() 
     {
         // only in production
-        if (APPLICATION_ENV !== 'production')
+        if (APPLICATION_ENV !== 'production') {
             return;
+        }
 
         // plugin cache
         // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
@@ -341,8 +342,9 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         '-includeCache.php';
 
         // this may happen if we start from a different process
-        if (file_exists($classFileIncCache) && !is_writable($classFileIncCache))
+        if (file_exists($classFileIncCache) && !is_writable($classFileIncCache)) {
             return;
+        }
 
         if (file_exists($classFileIncCache)) {
             include_once $classFileIncCache;
