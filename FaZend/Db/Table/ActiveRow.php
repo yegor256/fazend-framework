@@ -19,6 +19,14 @@ require_once 'Zend/Db/Table/Row.php';
 /**
  * One row, ActiveRow pattern
  *
+ * Usage example:
+ *
+ * <code>
+ * $row = new FaZend_Db_Table_ActiveRow_product(13); // ROW in "product" SQL table
+ * echo $row->owner->email; // get the email of the product owner
+ * </code>
+ *
+ * @see http://code.google.com/p/fazend/wiki/FaZend_Db_Table_ActiveRow
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  * @package Db
  */
