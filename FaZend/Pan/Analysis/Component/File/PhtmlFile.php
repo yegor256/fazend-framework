@@ -38,6 +38,9 @@ class FaZend_Pan_Analysis_Component_File_PhtmlFile extends FaZend_Pan_Analysis_C
 
         // change my location
         $this->_relocate($reflector);
+        
+        // find all todo tags and add them into $this->_todoTags
+        $this->_findTodoTags($reflector->__toString());
     }
 
 }

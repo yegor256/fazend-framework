@@ -60,6 +60,7 @@ class FaZend_Pan_Analysis_Facade
                 'type' => $item->getType(),
                 'traces' => $item->getTraces(),
                 'tag' => $item->getTraceTag(),
+                'todo' => $item->getTodoTags(), // list of tickets that are waiting or empty array
             );
         }
         return $list;

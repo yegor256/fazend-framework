@@ -37,6 +37,9 @@ class FaZend_Pan_Analysis_Component_Method extends FaZend_Pan_Analysis_Component
         if ($reflector->getDocComment()) {
             $this->_convertTagsToTraces($reflector->getDocblock());
         }
+
+        // find all todo tags and add them into $this->_todoTags
+        $this->_findTodoTags($reflector->__toString());
     }
     
     /**

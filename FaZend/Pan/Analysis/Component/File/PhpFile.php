@@ -45,6 +45,9 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
         foreach ($reflector->getClasses() as $class) {
             $this->_parent->factory('class', null, $class);
         }
+
+        // find all todo tags and add them into $this->_todoTags
+        $this->_findTodoTags($reflector->__toString());
     }
 
 }

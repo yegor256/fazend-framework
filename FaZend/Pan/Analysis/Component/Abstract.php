@@ -49,6 +49,17 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
     protected $_traces = array();
     
     /**
+     * List of tickets which are waiting for this component implementation
+     *
+     * Ticket format should mach this REGEX: "/((?:\w\-)?\d)/", in other words,
+     * we match Jira, Truc, Bugzilla ticket numbers. Everything else is ignored.
+     *
+     * @var string[]
+     * @see getTodoTags()
+     */
+    protected $_todoTags = array();
+    
+    /**
      * Constructor
      *
      * @param FaZend_Pan_Analysis_Component_Abstract Parent
@@ -164,6 +175,16 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
             }
         }
         return $this->_traces;
+    }
+    
+    /**
+     * Get list of todo tags
+     *
+     * @return string[]
+     */
+    public function getTodoTags() 
+    {
+        return $this->_todoTags;
     }
 
     /**
@@ -372,6 +393,20 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
             if (preg_match('/^\s*([\w\d\_]+)/', $tag, $matches)) {
                 $this->_traces[] = $matches[1];
             }
+        }
+    }
+
+    /**
+     * Find TODO tags in reflector and add them to the class
+     *
+     * @param string Information about an object
+     * @return void
+     */
+    protected function _findTodoTags($reflector) 
+    {
+        // find and protocol all "todo" tags
+        if (preg_match_all('/\n\s+\*\s@todo\s(\#\d+|\w+\-\d+)/', $reflector, $matches)) {
+            $this->_todoTags = array_values($matches[1]);
         }
     }
     

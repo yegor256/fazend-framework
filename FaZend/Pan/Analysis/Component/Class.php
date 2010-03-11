@@ -28,7 +28,7 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
      *
      * @param Reflector Information about entity
      * @return void
-     **/
+     */
     public function reflect(Reflector $reflector)
     {
         assert($reflector instanceof Zend_Reflection_Class);
@@ -48,6 +48,9 @@ class FaZend_Pan_Analysis_Component_Class extends FaZend_Pan_Analysis_Component_
             }
             $this->factory('method', null, $method);
         }
+        
+        // find all todo tags and add them into $this->_todoTags
+        $this->_findTodoTags($reflector->__toString());
     }
     
     /**
