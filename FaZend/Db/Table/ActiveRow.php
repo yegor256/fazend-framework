@@ -195,8 +195,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         $value = parent::__get($name);
         
         // maybe toArray() already produced object
-        if (!is_scalar($value))
+        if (!is_scalar($value)) {
             $value = intval((string)$value);
+        }
 
         return new $class(is_numeric($value) ? intval($value) : $value);
     }
@@ -253,8 +254,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         $array = parent::toArray();
         foreach ($array as $key=>$value) {
-            if ($key == 'id')
+            if ($key == 'id') {
                 continue;
+            }
             $array[$key] = $this->$key;
         }
         return $array;
@@ -397,8 +399,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     protected function _loadLiveData()
     {
         // if the class data are not loaded yet, it's a good moment to do it
-        if (!isset($this->_preliminaryKey))
+        if (!isset($this->_preliminaryKey)) {
             return;
+        }
 
         // find data to fill the internal variables
         $rowset = $this->_table->find($this->_preliminaryKey);
@@ -438,8 +441,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         // if the array of ALL tables in the db is NOT already defined
         // we should grab it from the DB by SQL request
-        if (!isset(self::$_allTables))
+        if (!isset(self::$_allTables)) {
             self::$_allTables = Zend_Db_Table_Abstract::getDefaultAdapter()->listTables();
+        }
 
         // whether this table is in the DB or not?
         return in_array($column, self::$_allTables);
