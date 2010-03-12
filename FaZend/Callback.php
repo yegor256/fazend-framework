@@ -147,16 +147,11 @@ abstract class FaZend_Callback
     /**
      * Execute the callback and return its result
      *
-     * @param mixed Some params, which are required by the callback
+     * @param array Associated array of params
      * @return mixed
      */
-    public final function call(/* param, param, ... */) 
+    public final function callAssociated(array $args) 
     {
-        $args = func_get_args();
-        foreach ($args as $id=>$arg) {
-            $args['a' . ($id + 1)] = $arg;
-            unset($args[$id]);
-        }
         $result = $this->_call($args);
         
         if ($this->_verbose) {
@@ -193,6 +188,22 @@ abstract class FaZend_Callback
         }
         
         return $result;
+    }
+    
+    /**
+     * Execute the callback and return its result
+     *
+     * @param mixed Some params, which are required by the callback
+     * @return mixed
+     */
+    public final function call(/* param, param, ... */) 
+    {
+        $args = func_get_args();
+        foreach ($args as $id=>$arg) {
+            $args['a' . ($id + 1)] = $arg;
+            unset($args[$id]);
+        }
+        return $this->callAssociated($args);
     }
     
     /**
