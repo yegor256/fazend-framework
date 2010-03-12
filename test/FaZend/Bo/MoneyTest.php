@@ -54,11 +54,19 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $this->assertTrue($money->sub(-1)->equalsTo('100 USD'));
         
         $this->assertEquals(200, $money->mul(2)->usd);
+        $this->assertEquals(20, $money->mul(0.1)->usd);
+        $this->assertEquals(200, $money->mul(10)->usd);
         $this->assertEquals(40, $money->div(5)->usd);
         $this->assertEquals(2, $money->div(new FaZend_Bo_Money('20 USD')));
 
         $this->assertTrue($money->isGreater(10));
         $this->assertTrue($money->isLess(50));
+    }
+
+    public function testMultiplicationWorks()
+    {
+        $money = new FaZend_Bo_Money('123 EUR');
+        $this->assertEquals('12.30EUR', strval($money->mul(0.1)));
     }
 
     public function testWeCanDoBasicCurrencyConversions()

@@ -84,6 +84,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      *
      * @param mixed Value
      * @return FaZend_Bo_Money
+     * @throws FaZend_Bo_Money_InvalidFormat
      */
     public static function factory($value)
     {
@@ -150,8 +151,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                     "Invalid cost format '{$value}', numeric literal not found"
                 );
             }
-            if (strpos($value, '-') !== false)
+            if (strpos($value, '-') !== false) {
                 $matches[0] = '-' . $matches[0];
+            }
             $value = $matches[0];
         }
         
@@ -309,8 +311,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             );
         }
         
-        if ($money instanceof FaZend_Bo_Money)
+        if ($money instanceof FaZend_Bo_Money) {
             return $this->_points / $div;
+        }
 
         $this->_points /= $money;
         return $this;
@@ -348,8 +351,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function isGreater($money = null, $orEqual = false)
     {
         $this->_normalize($money);
-        if ($orEqual)
+        if ($orEqual) {
             return $this->_points >= $money;
+        }
         return $this->_points > $money;
     }
 
@@ -362,8 +366,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function isLess($money = null, $orEqual = false)
     {
         $this->_normalize($money);
-        if ($orEqual)
+        if ($orEqual) {
             return $this->_points <= $money;
+        }
         return $this->_points < $money;
     }
     
