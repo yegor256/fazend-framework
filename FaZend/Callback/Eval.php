@@ -69,7 +69,8 @@ class FaZend_Callback_Eval extends FaZend_Callback
             if (!array_key_exists($input, $args)) {
                 FaZend_Exception::raise(
                     'FaZend_Callback_Eval_MissedArgumentException',
-                    "Argument '{$input}' is missed for '{$eval}' amont " . count($args) . " provided"
+                    "Argument '{$input}' is missed for '{$eval}' amont " .
+                    count($args) . " provided: " . implode(', ', array_keys($args))
                 );
             }
             $eval = str_replace("\${{$input}}", "\$args[\"{$input}\"]", $eval);
