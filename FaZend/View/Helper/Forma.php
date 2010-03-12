@@ -390,13 +390,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 }
 
                 // make a call
-                call_user_func_array(
-                    array(
-                        $field->action, 
-                        'call'
-                    ),
-                    $args
-                );
+                $field->action->callAssociated($args);
 
                 // it's done, if we're here and no exception has been thrown
                 $result = true;
