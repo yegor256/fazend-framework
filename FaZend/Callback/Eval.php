@@ -40,12 +40,15 @@ class FaZend_Callback_Eval extends FaZend_Callback
     public function getInputs()
     {
         $matches = array();
-        if (!preg_match_all('/\$\{([a]?\d+)\}/', $this->_data, $matches)) {
+        if (!preg_match_all('/\$\{(.*?)\}/', $this->_data, $matches)) {
             return 0;
         }
         $inputs = array_unique($matches[1]);
         sort($inputs);
-        return $inputs;
+        return array_filter(
+            $inputs,
+            create_function('$a', 'return !preg_match("/^i\d+$/", $a);')
+        );
     }
 
     /**
@@ -60,19 +63,16 @@ class FaZend_Callback_Eval extends FaZend_Callback
     protected function _call(array $args)
     {
         // replace ${a1}, ${a2}, etc with arguments provided
-        $eval = preg_replace('/\$\{(a\d+)\}/', '$args["${1}"]', $this->_data);
-        
-        // validation
-        $matches = array();
-        if (preg_match_all('/\$args\["(a\d+)"\]/', $eval, $matches)) {
-            foreach ($matches[1] as $match) {
-                if (!array_key_exists($match, $args)) {
-                    FaZend_Exception::raise(
-                        'FaZend_Callback_Eval_MissedArgumentException',
-                        "Argument '{$match}' is missed for '{$this->_data}'"
-                    );
-                }
+        $eval = $this->_data;
+        $inputs = $this->getInputs();
+        foreach ($inputs as $input) {
+            if (!array_key_exists($input, $args)) {
+                FaZend_Exception::raise(
+                    'FaZend_Callback_Eval_MissedArgumentException',
+                    "Argument '{$input}' is missed for '{$eval}'"
+                );
             }
+            $eval = str_replace("\${{$input}}", "\$args[\"{$input}\"]", $eval);
         }
         
         // replace ${i1}, ${i2}, etc with injected variables
