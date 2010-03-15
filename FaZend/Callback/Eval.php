@@ -59,11 +59,20 @@ class FaZend_Callback_Eval extends FaZend_Callback
      * @throws FaZend_Callback_Eval_MissedArgumentException
      * @throws FaZend_Callback_Eval_MissedInjectionException
      * @throws FaZend_Callback_Eval_SyntaxException
+     * @throws FaZend_Callback_Eval_EmptyCodeException
      */
     protected function _call(array $args)
     {
         // replace ${a1}, ${a2}, etc with arguments provided
         $eval = $this->_data;
+        
+        if (empty($eval)) {
+            FaZend_Exception::raise(
+                'FaZend_Callback_Eval_EmptyCodeException',
+                "Eval code is empty"
+            );
+        }
+        
         $inputs = $this->getInputs();
         if (is_array($inputs)) {
             foreach ($inputs as $input) {
