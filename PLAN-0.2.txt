@@ -39,6 +39,7 @@ FaZend_Pos:
 FaZend Central Server:
 - to enable CC params configuration in control panel
 - to test and configure properly instant backups download
+- to archive projects
 
 FaZend CruiseControl Server:
 - to configure deployment of artifacts properly
