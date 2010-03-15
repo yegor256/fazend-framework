@@ -263,6 +263,35 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     }
 
     /**
+     * This ROW still contains data retrieved from DB?
+     *
+     * The row is clean when the data received from DB were not changed yet, and
+     * the row doesn't require save(). The row is NOT clean when some changes
+     * were made in memory and we should call save() in order to populate
+     * such changes to the DB
+     *
+     * @return void
+     */
+    public function isClean() 
+    {
+        // the object just created, it is clean of course
+        // even if it's not loaded yet (primaryKey is set means that the object
+        // is not loaded yet, see _loadLiveData()
+        if (isset($this->_preliminaryKey)) {
+            return true;
+        }
+        
+        // if data and cleanData are not the same - it means that the object
+        // is modified in memory
+        if ($this->_data != $this->_cleanData) {
+            return false;
+        }
+        
+        // maybe some fields are modified
+        return empty($this->_modifiedFields);
+    }
+
+    /**
      * Before any call we have to be sure that live data are available
      *
      * @param string Name of the method being called

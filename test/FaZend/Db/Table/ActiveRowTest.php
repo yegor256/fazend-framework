@@ -156,4 +156,19 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         );
     }
 
+    public function testCleanStatusIsCorrect()
+    {
+        // $owner = new Model_Owner(132);
+        // $this->assertTrue($owner->isClean());
+        
+        $owner = new Model_Owner();
+        $this->assertFalse($owner->isClean());
+        
+        $owner->name = 'test';
+        $this->assertFalse($owner->isClean());
+        
+        $owner->save();
+        $this->assertTrue($owner->isClean());
+    }
+    
 }
