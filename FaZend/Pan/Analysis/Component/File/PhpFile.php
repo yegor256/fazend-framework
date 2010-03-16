@@ -47,7 +47,7 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
         }
 
         // find all todo tags and add them into $this->_todoTags
-        $this->_findTodoTags($reflector->__toString());
+        $this->_findTodoTags($reflector->getDocblock());
     }
 
 }

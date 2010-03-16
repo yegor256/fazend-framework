@@ -399,14 +399,17 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
     /**
      * Find TODO tags in reflector and add them to the class
      *
-     * @param string Information about an object
+     * @param Zend_Reflection_Docblock Information about an object
      * @return void
      */
-    protected function _findTodoTags($reflector) 
+    protected function _findTodoTags(Zend_Reflection_Docblock $docblock) 
     {
         // find and protocol all "todo" tags
-        if (preg_match_all('/\n\s+\*\s@todo\s(\#\d+|\w+\-\d+)/', $reflector, $matches)) {
-            $this->_todoTags = array_values($matches[1]);
+        $this->_todoTags = array();
+        foreach ($docblock->getTags('todo') as $tag) {
+            if (preg_match('/^(\#\d+|\w+\-\d+)/', trim($tag->getDescription()), $matches)) {
+                $this->_todoTags[] = $matches[1];
+            }
         }
     }
     

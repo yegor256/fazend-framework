@@ -28,7 +28,7 @@ class FaZend_Pan_Analysis_Component_File_PhtmlFile extends FaZend_Pan_Analysis_C
      *
      * @param Reflector Information about entity
      * @return void
-     **/
+     */
     public function reflect(Reflector $reflector)
     {
         parent::reflect($reflector);
@@ -40,7 +40,7 @@ class FaZend_Pan_Analysis_Component_File_PhtmlFile extends FaZend_Pan_Analysis_C
         $this->_relocate($reflector);
         
         // find all todo tags and add them into $this->_todoTags
-        $this->_findTodoTags($reflector->__toString());
+        $this->_findTodoTags($reflector);
     }
 
 }

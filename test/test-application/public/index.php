@@ -13,6 +13,7 @@
  * @version $Id$
  * @category FaZend
  * @see bootstrap.php
+ * @todo #1 just to test the tag finding in Pan/Analysis
  */
 
 defined('APPLICATION_PATH') or
