@@ -237,14 +237,27 @@ class FaZend_Db_Wrapper
     }
 
     /**
+     * Fetch one cell
+     *
+     * @param array|null Bindings in array, if they are required in query
+     * @return string
+     */
+    public function fetchOne(array $bind = null) 
+    {
+        return $this->table()->getAdapter()->fetchOne(
+            $this->select($bind)
+        );
+    }
+
+    /**
      * Fetch one column
      *
      * @param array|null Bindings in array, if they are required in query
      * @return array
      */
-    public function fetchOne(array $bind = null) 
+    public function fetchColumn(array $bind = null) 
     {
-        return $this->table()->getAdapter()->fetchOne(
+        return $this->table()->getAdapter()->fetchColumn(
             $this->select($bind)
         );
     }
