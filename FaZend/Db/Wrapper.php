@@ -255,9 +255,9 @@ class FaZend_Db_Wrapper
      * @param array|null Bindings in array, if they are required in query
      * @return array
      */
-    public function fetchColumn(array $bind = null) 
+    public function fetchCol(array $bind = null) 
     {
-        return $this->table()->getAdapter()->fetchColumn(
+        return $this->table()->getAdapter()->fetchCol(
             $this->select($bind)
         );
     }
