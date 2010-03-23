@@ -31,8 +31,8 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
      **/
     public function reflect(Reflector $reflector)
     {
-        parent::reflect($reflector);
         assert($reflector instanceof Zend_Reflection_File);
+        parent::reflect($reflector);
         
         if ($reflector->getDocComment()) {
             $this->_convertTagsToTraces($reflector->getDocblock());

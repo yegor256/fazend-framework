@@ -31,8 +31,8 @@ class FaZend_Pan_Analysis_Component_File_IniFile extends FaZend_Pan_Analysis_Com
      **/
     public function reflect(Reflector $reflector)
     {
-        parent::reflect($reflector);
         assert($reflector instanceof Zend_Reflection_Docblock);
+        parent::reflect($reflector);
 
         $this->_convertTagsToTraces($reflector);
 

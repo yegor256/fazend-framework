@@ -28,10 +28,10 @@ abstract class FaZend_Pan_Analysis_Component_File extends FaZend_Pan_Analysis_Co
      *
      * @param Reflector Information about entity
      * @return void
-     **/
+     */
     public function reflect(Reflector $reflector)
     {
-        assert($reflector instanceof Zend_Reflection_File);
+        // assert($reflector instanceof Zend_Reflection_File);
         $this->_moveTo(FaZend_Pan_Analysis_Component_System::getInstance());
     }
 
