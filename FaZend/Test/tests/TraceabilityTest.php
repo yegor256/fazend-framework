@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: BaselineTest.php 1747 2010-03-17 19:17:38Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 
