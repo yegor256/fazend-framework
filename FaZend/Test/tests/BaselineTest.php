@@ -28,7 +28,7 @@ class BaselineTest extends FaZend_Test_TestCase
      * Test entire project for conformance to baselines
      *
      * @return void
-     **/
+     */
     public function testCodeConformsToBaselines()
     {
         $validator = new FaZend_Pan_Baseliner_Validator(APPLICATION_PATH, true);

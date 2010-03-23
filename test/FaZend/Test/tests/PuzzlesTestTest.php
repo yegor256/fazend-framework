@@ -1,0 +1,29 @@
+<?php
+/**
+ * @version $Id$
+ */
+
+require_once 'AbstractTestCase.php';
+
+class FaZend_Test_tests_PuzzlesTestTest extends AbstractTestCase
+{
+    
+    public function testTestFindsAllPuzzles()
+    {
+        require_once 'FaZend/Test/tests/PuzzlesTest.php';
+        $unit = new PuzzlesTest('testCodeIsPuzzlesFree');
+        $result = $unit->run();
+        
+        if (!$result->wasSuccessful()) {
+            foreach ($result->errors() as $error) {
+                logg('Error: ' . $error->toString());
+            }
+            foreach ($result->failures() as $failure) {
+                logg('Failure: ' . $failure->toString());
+            }
+            $this->fail("Failed to run PuzzlesTest");
+        }
+    }
+
+}
+        

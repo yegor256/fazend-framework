@@ -28,7 +28,7 @@ class TraceabilityTest extends FaZend_Test_TestCase
      * Check traceability
      *
      * @return void
-     **/
+     */
     public function testUniDirectionalTraceabilityIsEstablished()
     {
         $facade = new FaZend_Pan_Analysis_Facade();
