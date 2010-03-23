@@ -92,7 +92,6 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
      * Initialize class, find ALL components
      *
      * @return void
-     * @throws FaZend_Pan_Analysis_Component_System_RootNotFoundException
      */
     protected function _init()
     {
@@ -150,13 +149,7 @@ class FaZend_Pan_Analysis_Component_System extends FaZend_Pan_Analysis_Component
         }
         
         // initialize search index...
-        $found = $this->findByTrace(self::ROOT);
-        if ($found != self::ROOT) {
-            FaZend_Exception::raise(
-                'FaZend_Pan_Analysis_Component_System_RootNotFoundException',
-                "Root not found, internal error: '{$found}'"
-            );
-        }
+        $this->findByTrace(self::ROOT);
     }
         
     /**
