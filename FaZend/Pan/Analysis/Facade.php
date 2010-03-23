@@ -45,7 +45,8 @@ class FaZend_Pan_Analysis_Facade
      * Get full list of components, as an array of arrays
      *
      * Every element of the list is an array, with elements named
-     * according to our internal principle.
+     * according to our internal principle. It's an associative array,
+     * where keys are fullName-s of components.
      *
      * @return array[]
      * @see FaZend_Pan_Analysis_Component_System
@@ -54,7 +55,7 @@ class FaZend_Pan_Analysis_Facade
     {
         $list = array();
         foreach (FaZend_Pan_Analysis_Component_System::getInstance()->getIterator() as $item) {
-            $list[] = array(
+            $list[$item->getFullName()] = array(
                 'name' => $item->getName(),
                 'fullName' => $item->getFullName(),
                 'type' => $item->getType(),

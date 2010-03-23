@@ -10,7 +10,10 @@ class FaZend_Pan_Analysis_Component_SystemTest extends AbstractTestCase
         return array(
             array('bootstrap.php', 'System.FaZend.bootstrap-php'),
             array('database/owner.sql', 'System.1-owner-sql'),
-            array('IndexController::tableAction()', 'System.FaZend.application.controllers.IndexController.tableAction'),
+            array(
+                'IndexController::tableAction()',
+                'System.FaZend.application.controllers.IndexController.tableAction'
+            ),
             array('Model_User', 'System.FaZend.application.Model.Model_User'),
             array('strange link', null),
         );

@@ -19,6 +19,7 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_Pos_Root extends FaZend_Pos_Root
 {
@@ -27,14 +28,16 @@ class Model_Pos_Root extends FaZend_Pos_Root
      * Counts how much init method was called
      *
      * @var integer
-     **/
+     * @see init()
+     */
     public static $initCounter = 0;
     
     /**
      * Initialize it
      *
      * @return void
-     **/
+     * @see Model_Pos_Root
+     */
     public function init() 
     {
         parent::init();

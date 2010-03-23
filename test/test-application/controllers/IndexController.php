@@ -21,6 +21,7 @@
  *
  * @package application
  * @subpackage controllers
+ * @see Bootstrap
  */
 class IndexController extends FaZend_Controller_Action
 {
@@ -29,6 +30,7 @@ class IndexController extends FaZend_Controller_Action
      * Test _redirectFlash() method
      *
      * @return void
+     * @see IndexController
      */
     public function flashAction()
     {
@@ -39,6 +41,7 @@ class IndexController extends FaZend_Controller_Action
      * Test htmlTable helper
      *
      * @return void
+     * @see IndexController
      */
     public function tableAction()
     {

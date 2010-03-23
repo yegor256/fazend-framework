@@ -12,6 +12,7 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
+ * @see Bootstrap
  */
 
 /**
@@ -19,10 +20,14 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_StdObject extends FaZend_StdObject
 {
 
+    /**
+     * @see Model_StdObject
+     */
     protected function _getName()
     {
         return 'name';

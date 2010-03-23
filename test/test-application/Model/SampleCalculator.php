@@ -12,6 +12,7 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
+ * @see Bootstrap
  */
 
 /**
@@ -19,10 +20,14 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_SampleCalculator
 {
     
+    /**
+     * @see Model_SampleCalculator
+     */
     function getBigValue($base, $pow)
     {
         if (FaZend_Metric::calculate())
@@ -31,6 +36,9 @@ class Model_SampleCalculator
         return pow($base, $pow);
     }
 
+    /**
+     * @see Model_SampleCalculator
+     */
     function getDependentValue()
     {
         if (FaZend_Metric::calculate())
@@ -40,6 +48,9 @@ class Model_SampleCalculator
         return rand();
     }
 
+    /**
+     * @see Model_SampleCalculator
+     */
     function getParentValue()
     {
         if (FaZend_Metric::calculate())

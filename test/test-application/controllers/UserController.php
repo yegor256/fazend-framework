@@ -21,6 +21,7 @@ require_once 'FaZend/Controller/controllers/UserController.php';
  * 
  * @package application
  * @subpackage controllers
+ * @see Bootstrap
  */
 class UserController extends Fazend_UserController
 {

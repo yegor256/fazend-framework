@@ -63,8 +63,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public static function setDefaultCurrency($currency) 
     {
-        if ($currency instanceof Zend_Currency)
+        if ($currency instanceof Zend_Currency) {
             $currency = $currency->getShortName();
+        }
         self::$_defaultCurrency = strval($currency);
     }
 
@@ -177,7 +178,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public function __toString()
     {
-        return $this->get();
+        return $this->_currency->toCurrency($this->original);
     }
 
     /**
@@ -185,22 +186,11 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      *
      * @param string Part name
      * @return mixed
+     * @throws FaZend_Bo_Money_UnknownProperty
      */
     public function get($part = null)
     {
-        return $this->_currency->toCurrency($this->original);
-    }
-
-    /**
-     * Getter dispatcher
-     *
-     * @param string Name of the property to get
-     * @return mixed
-     * @throws FaZend_Bo_Money_UnknownProperty
-     */
-    public function __get($name)
-    {
-        switch ($name) {
+        switch ($part) {
             case 'usd':
                 return $this->_getPoints() / self::POINT_WEIGHT;
             case 'cents':
@@ -218,9 +208,21 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownProperty',
-                    "Property {$name} is not found in " . get_class($this)
+                    "Property {$part} is not found in " . get_class($this)
                 );
         }
+    }
+
+    /**
+     * Getter dispatcher
+     *
+     * @param string Name of the property to get
+     * @return mixed
+     * @throws FaZend_Bo_Money_UnknownProperty
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
     }
 
     /**

@@ -19,10 +19,14 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_Pos_Car extends FaZend_Pos_Abstract
 {
 
+    /**
+     * @see Model_Pos_Car
+     */
     public function __get($name)
     {
         return parent::__get($name);

@@ -18,11 +18,11 @@
 /**
  * ORM auto-mapping classes
  * 
- *
  * @package application
  * @subpackage Model
  * @baseline team@fazend.com exists()
  * @baseline team@fazend.com instanceOf('FaZend_Db_Table_ActiveRow_owner')
+ * @see ActorOwner This is an example of a traceability link
  */
 class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
 {
@@ -31,6 +31,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * Create new owner
      *
      * @return Model_Owner
+     * @see Model_Owner
      */
     public static function create($name) 
     {
@@ -46,6 +47,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * @baseline team@fazend.com exists()
      * @return Model_Owner[]
      * @see FaZend_Db_Table_ActiveRow
+     * @see Model_Owner
      */
     public static function retrieveAll()
     {
@@ -60,6 +62,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * @baseline team@fazend.com exists()
      * @return boolean
      * @see FaZend_Cli_cli_BaselineTest
+     * @see Model_Owner
      */
     public function isMe()
     {
@@ -71,6 +74,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      *
      * @baseline team@fazend.com exists()
      * @return Model_Owner_Details
+     * @see Model_Owner_Details
      */
     public function getDetails()
     {
@@ -89,6 +93,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * @return void
      * @see views/scripts/index/forma.phtml
      * @see FaZend_View_Helper_FormaTest
+     * @see Model_Owner
      */
     public static function register($name, $reason, $client, $address, $file = null) 
     {

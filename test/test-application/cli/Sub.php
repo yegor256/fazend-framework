@@ -19,6 +19,7 @@
  *
  * @package application
  * @subpackage Cli
+ * @see Bootstrap
  */
 class Sub extends FaZend_Cli_Abstract
 {
@@ -27,6 +28,7 @@ class Sub extends FaZend_Cli_Abstract
      * Executor of a command-line command
      *
      * @return string
+     * @see Sub
      */
     public function execute()
     {

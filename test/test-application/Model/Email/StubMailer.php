@@ -20,10 +20,14 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_Email_StubMailer extends Zend_Mail_Transport_Sendmail
 {
 
+    /**
+     * @see Model_Email_StubMailier
+     */
     public function _sendMail()
     {
         return true;

@@ -156,7 +156,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
     public function getTraces()
     {
         foreach ($this->_traces as $id=>&$trace) {
-            if (strpos($trace, FaZend_Pan_Analysis_Component_System::ROOT) === 0) {
+            if (strpos($trace, FaZend_Pan_Analysis_Component_System::ROOT) !== 0) {
                 continue;
             }
             
@@ -381,16 +381,16 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
     {
         $tags = array();
         foreach ($docblock->getTags('see') as $tag) {
-            $tags[] = $tag->getDescription();
+            $tags[] = trim($tag->getDescription());
         }
         foreach ($docblock->getTags('uses') as $tag) {
-            $tags[] = $tag->getDescription();
+            $tags[] = trim($tag->getDescription());
         }
 
         $this->_traces = array();
         $matches = array();
         foreach ($tags as $tag) {
-            if (preg_match('/^\s*([\w\d\_]+)/', $tag, $matches)) {
+            if (preg_match('/^([^\s]+)/', $tag, $matches)) {
                 $this->_traces[] = $matches[1];
             }
         }

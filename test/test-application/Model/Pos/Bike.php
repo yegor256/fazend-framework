@@ -19,6 +19,7 @@
  *
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_Pos_Bike extends FaZend_Pos_Abstract
 {

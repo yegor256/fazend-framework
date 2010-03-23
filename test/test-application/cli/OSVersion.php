@@ -19,6 +19,7 @@
  *
  * @package application
  * @subpackage Cli
+ * @see Bootstrap
  */
 class OSVersion extends FaZend_Cli_Abstract
 {
@@ -27,6 +28,7 @@ class OSVersion extends FaZend_Cli_Abstract
      * Executor of a command-line command
      *
      * @return string
+     * @see OSVersion
      */
     public function execute()
     {

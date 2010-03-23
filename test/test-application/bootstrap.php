@@ -12,6 +12,7 @@
  * @copyright Copyright (c) FaZend.com
  * @version $Id$
  * @category FaZend
+ * @see ActorSystem
  */
 
 define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
@@ -22,6 +23,7 @@ define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
  * This file could be omitted
  *
  * @package application
+ * @see ActorSystem
  */
 class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
 {
@@ -30,6 +32,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      * Initialize DB schema
      *
      * @return void
+     * @see Model_Owner
      */
     protected function _initDbData()
     {
@@ -53,6 +56,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      * Initialize forma() helper
      *
      * @return void
+     * @see index/forma.phtml
      */
     protected function _initForma() 
     {
@@ -66,6 +70,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      * Initialize FaZend_User class
      *
      * @return void
+     * @see Model_User
      */
     public function _initUserClass() 
     {

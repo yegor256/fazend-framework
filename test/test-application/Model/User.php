@@ -13,6 +13,7 @@
  * @version $Id$
  * @category FaZend
  * @baseline team@fazend.com exists()
+ * @see Bootstrap
  */
 
 /**
@@ -20,6 +21,7 @@
  * 
  * @package application
  * @subpackage Model
+ * @see Bootstrap
  */
 class Model_User extends FaZend_User
 {

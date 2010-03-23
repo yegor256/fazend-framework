@@ -21,6 +21,7 @@
  * @package application
  * @subpackage Model
  * @baseline team@fazend.com exists()
+ * @see Bootstrap
  */
 class Model_Product extends FaZend_Db_Table_ActiveRow_product
 {
