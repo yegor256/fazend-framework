@@ -11,7 +11,7 @@ class FaZend_Test_tests_PuzzlesTestTest extends AbstractTestCase
     public function testTestFindsAllPuzzles()
     {
         require_once 'FaZend/Test/tests/PuzzlesTest.php';
-        $unit = new PuzzlesTest('testCodeIsPuzzlesFree');
+        $unit = new FaZend_Test_tests_PuzzlesTest('testCodeIsPuzzlesFree');
         $result = $unit->run();
         
         if (!$result->wasSuccessful()) {

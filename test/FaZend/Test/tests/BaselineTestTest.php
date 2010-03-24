@@ -11,7 +11,7 @@ class FaZend_Test_tests_BaselineTestTest extends AbstractTestCase
     public function testTestWorksFine()
     {
         require_once 'FaZend/Test/tests/BaselineTest.php';
-        $unit = new BaselineTest('testCodeConformsToBaselines');
+        $unit = new FaZend_Test_tests_BaselineTest('testCodeConformsToBaselines');
         $result = $unit->run();
         
         if (!$result->wasSuccessful()) {

@@ -21,7 +21,7 @@ require_once 'FaZend/Test/TestCase.php';
  *
  * @package Test
  */
-class TraceabilityTest extends FaZend_Test_TestCase
+class FaZend_Test_tests_TraceabilityTest extends FaZend_Test_TestCase
 {
     
     /**

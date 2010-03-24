@@ -11,7 +11,7 @@ class FaZend_Test_tests_TraceabilityTestTest extends AbstractTestCase
     public function testTestWorksFine()
     {
         require_once 'FaZend/Test/tests/TraceabilityTest.php';
-        $unit = new TraceabilityTest('testUniDirectionalTraceabilityIsEstablished');
+        $unit = new FaZend_Test_tests_TraceabilityTest('testUniDirectionalTraceabilityIsEstablished');
         $result = $unit->run();
         
         if (!$result->wasSuccessful()) {

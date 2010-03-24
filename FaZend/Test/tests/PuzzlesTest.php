@@ -21,7 +21,7 @@ require_once 'FaZend/Test/TestCase.php';
  *
  * @package Test
  */
-class PuzzlesTest extends FaZend_Test_TestCase
+class FaZend_Test_tests_PuzzlesTest extends FaZend_Test_TestCase
 {
     
     /**
