@@ -28,6 +28,7 @@ abstract class FaZend_View_Helper_Forma_Behavior_Abstract
      * Arguments
      *
      * @var array
+     * @see FaZend_View_Helper_Forma::_render()
      */
     protected $_args;
     
@@ -35,8 +36,19 @@ abstract class FaZend_View_Helper_Forma_Behavior_Abstract
      * List of arguments passed to the method
      *
      * @var array
+     * @see FaZend_View_Helper_Forma::_render()
+     * @see setMethodArgs()
      */
     protected $_methodArgs = array();
+    
+    /**
+     * Return of SUBMIT action
+     *
+     * @var mixed
+     * @see FaZend_View_Helper_Forma::_render()
+     * @see setReturn()
+     */
+    protected $_return;
 
     /**
      * Construct the class
@@ -57,6 +69,17 @@ abstract class FaZend_View_Helper_Forma_Behavior_Abstract
     public function setMethodArgs(array $methodArgs) 
     {
         $this->_methodArgs = $methodArgs;
+    }
+    
+    /**
+     * Save SUBMIT action return
+     *
+     * @param mixed Return
+     * @return void
+     */
+    public function setReturn($return) 
+    {
+        $this->_return = $return;
     }
     
     /**

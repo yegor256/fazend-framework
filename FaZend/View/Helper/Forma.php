@@ -224,7 +224,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      */
     public function addBehavior($type /*, ... */) 
     {
-        $className = 'FaZend_View_Helper_Forma_Behavior_' . ucfirst($type);
+        if (ctype_alpha($type)) {
+            $className = 'FaZend_View_Helper_Forma_Behavior_' . ucfirst($type);
+        } else {
+            $className = $type;
+        }
         $args = func_get_args();
         array_shift($args);
         $this->_behaviors[] = new $className($args);
@@ -292,7 +296,8 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // show the form again, if it's not filled and completed
         $log = '';
         $args = array();
-        $this->_completed = ($this->_form->isFilled() && $this->_process($log, $args));
+        $return = null;
+        $this->_completed = ($this->_form->isFilled() && $this->_process($log, $args, $return));
         $html = strval($this->_form->__toString());
         
         // if the form was NOT completed yet - just show it
@@ -308,6 +313,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // run them all one by one
         foreach ($this->_behaviors as $behavior) {
             $behavior->setMethodArgs($args);
+            $behavior->setReturn($return);
             $behavior->run($html, $log);
         }
             
@@ -349,9 +355,10 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *
      * @param string Log to save
      * @param array List of params to be passed to method
+     * @param mixed Return of the action
      * @return boolean Processed without errors?
      */
-    protected function _process(&$log, array &$args) 
+    protected function _process(&$log, array &$args, &$return) 
     {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', spl_object_hash($this));
@@ -361,8 +368,9 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
 
         // find the clicked button
         foreach ($this->_form->getElements() as $element) {
-            if (!$element instanceof Zend_Form_Element_Submit)
+            if (!$element instanceof Zend_Form_Element_Submit) {
                 continue;
+            }
 
             // whether this particular form was submitted by this button?
             if ($element->getLabel() == $request->getPost($element->getName())) {
@@ -390,7 +398,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 }
 
                 // make a call
-                $field->action->callAssociated($args);
+                $return = $field->action->callAssociated($args);
 
                 // it's done, if we're here and no exception has been thrown
                 $result = true;
