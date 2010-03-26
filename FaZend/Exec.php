@@ -170,8 +170,9 @@ class FaZend_Exec extends FaZend_StdObject
         
         if (self::$_isVerbose) {
             logg(
-                'exec: "%s", result (%d bytes): %s',
+                "exec: '%s' (in '%s'), result (%d bytes): '%s'",
                 $cmd,
+                $dir,
                 strlen($result),
                 cutLongLine($result)
             );
