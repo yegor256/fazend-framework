@@ -122,6 +122,11 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
             return;
         }
 
+        // more than a megabyte?
+        if (filesize($file) > 1024 * 1024) {
+            return;
+        }
+
         // email the content to the admin
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', $email)
