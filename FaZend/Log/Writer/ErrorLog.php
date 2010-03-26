@@ -49,19 +49,21 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
         // if it wasn't set...
         if (!$stream) {
             // and if it's a production mode - we should signal
-            if (APPLICATION_ENV === 'production')
+            if (APPLICATION_ENV === 'production') {
                 FaZend_Exception::raise(
                     'FaZend_Log_Writer_ErrorLog_NoLogFile',
                     '[error_log] is not set in php.ini or in app.ini'
                 );
-            else
+            } else {
                 // otherwise drop the output to stdout
                 $stream = 'php://stdout';
+            }
         }
 
         // if we can't write to project log file, let's write to syslog
-        if (is_file($stream) && !is_writable($stream))
+        if (is_file($stream) && !is_writable($stream)) {
             $stream = 'php://temp';
+        }
 
         // call parent constructor
         parent::__construct($stream);
@@ -94,45 +96,61 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
      */
     protected function _cutFile($file)
     {
-        if (APPLICATION_ENV !== 'production')
+        if (APPLICATION_ENV !== 'production') {
             return;
+        }
 
         // if it's not a regular file - skip the process
-        if (!@is_file($file))
+        if (!@is_file($file)) {
             return;
+        }
 
         // if it's still small, skip the rest
         // and if it's still very small
-        if ((@filesize($file) < self::MAX_LENGTH) && (@filectime($file) > time() - self::MAX_AGE_DAYS * 24 * 60 * 60))
+        if ((@filesize($file) < self::MAX_LENGTH) && (@filectime($file) > time() - self::MAX_AGE_DAYS * 24 * 60 * 60)) {
             return;
+        }
 
         // if the file is not writable - skip the process
-        if (!@is_writable($file))
+        if (!@is_writable($file)) {
             return;
+        }
 
         // if not email configured - skip it
         $email = FaZend_Properties::get()->errors->email;
-        if (!$email)
+        if (!$email) {
             return;
-
-        // get the content of the file
-        $content = @file_get_contents($file);
+        }
 
         // email the content to the admin
-        FaZend_Email::create('fazendForwardLog.tmpl')
+        $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', $email)
             ->set('toName', 'System Administrator')
-            ->set('log', $content)
             ->set('file', $file)
-            ->set('maximum', self::MAX_LENGTH)
-            ->send();
+            ->set('maximum', self::MAX_LENGTH);
+
+        // if the file is TOO big, we should send it as attachment, not
+        // as email body
+        $content = @file_get_contents($file);
+        if (filesize($file) > 100 * 1024) {
+            $sender->set('log', 'see attached file');
+            $sender->attach(new Zend_Mime_Part($content));
+        } else {
+            // get the content of the file
+            $sender->set('log', $content);
+        }
+        
+        // send email
+        $sender->send();
 
         // refresh the file
         $handle = @fopen($file, 'w');
-        if ($handle === false)
+        if ($handle === false) {
             return;
-        if (@ftruncate($handle, 0) === false)
+        }
+        if (@ftruncate($handle, 0) === false) {
             return;
+        }
         @fwrite(
             $handle, 
             date('m/d/Y h:i') . ": file content (" . strlen($content) .
