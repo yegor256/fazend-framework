@@ -120,7 +120,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      *
      * @param Reflector Information about entity
      * @return void
-     **/
+     */
     abstract public function reflect(Reflector $reflector);
 
     /**
@@ -264,7 +264,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      *
      * @param string Type of diagram to tell about this component
      * @return string
-     **/
+     */
     public function getDiagramName($type)
     {
         return str_replace(
@@ -281,7 +281,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      * @param array List of attributes, associative array
      * @param string Content of the node
      * @return string SVG node
-     **/
+     */
     public static function makeSvg($name, array $options = array(), $content = null)
     {
         $svg = "\n<" . $name . ' ';
@@ -307,7 +307,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      *
      * @param FaZend_Pan_Analysis_Component_Abstract Destination to move to
      * @return $this
-     **/
+     */
     protected function _moveTo(FaZend_Pan_Analysis_Component_Abstract $destination)
     {
         foreach ($this->_parent as $key=>$component) {
@@ -324,7 +324,7 @@ abstract class FaZend_Pan_Analysis_Component_Abstract extends RecursiveArrayIter
      * Cut title to the normal form
      *
      * @return string
-     **/
+     */
     protected function _cutTitle($text)
     {
         if (strlen($text) < 10)

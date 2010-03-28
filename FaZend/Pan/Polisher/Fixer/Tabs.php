@@ -27,7 +27,7 @@ class FaZend_Pan_Polisher_Fixer_Tabs extends FaZend_Pan_Polisher_Fixer_Abstract
      * List of types of files that are accepted here
      *
      * @var string[]
-     **/
+     */
     protected $_types = array(
         'php',
         'phtml',
@@ -38,7 +38,7 @@ class FaZend_Pan_Polisher_Fixer_Tabs extends FaZend_Pan_Polisher_Fixer_Abstract
      * Replacers
      *
      * @var string[]
-     **/
+     */
     protected $_replacers = array(
         '/\t/' => '    ',
         '/\r\n/' => "\n",

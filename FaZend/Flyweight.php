@@ -45,7 +45,7 @@ class FaZend_Flyweight
      * @param string Name of the class to create
      * @param mixed Any amount of params to be passed to the constructor
      * @return mixed
-     **/
+     */
     public static function factory($class /*, many params... */)
     {
         $args = func_get_args();

@@ -74,7 +74,7 @@ class Fazend_LoginController extends FaZend_Controller_Action
      * The admin is logged in?
      *
      * @return boolean
-     **/
+     */
     public static function isLoggedIn()
     {
         return !empty(self::_session()->user);
@@ -89,7 +89,7 @@ class Fazend_LoginController extends FaZend_Controller_Action
      * @param string Password
      * @return boolean
      * @throws LoginException If fails
-     **/
+     */
     public static function logIn($email, $password)
     {
         $accessFile = APPLICATION_PATH . '/deploy/access.txt';
@@ -137,7 +137,7 @@ class Fazend_LoginController extends FaZend_Controller_Action
      * Get session
      *
      * @return Zend_Session_Namespace
-     **/
+     */
     protected static function _session()
     {
         if (!isset(self::$_session))

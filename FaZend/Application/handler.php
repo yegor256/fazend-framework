@@ -29,7 +29,7 @@ class FaZendErrorHandler
      * undocumented function
      *
      * @return void
-     **/
+     */
     public static function handle($errno, $errstr, $errfile, $errline)
     {
         $errorType = array (

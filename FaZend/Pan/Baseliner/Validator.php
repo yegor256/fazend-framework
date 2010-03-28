@@ -27,14 +27,14 @@ class FaZend_Pan_Baseliner_Validator
      * Location of files
      *
      * @var string
-     **/
+     */
     protected $_path;
 
     /**
      * Shall we log all operations to STDOUT?
      *
      * @var boolean
-     **/
+     */
     protected $_verbose;
 
     /**
@@ -90,7 +90,7 @@ class FaZend_Pan_Baseliner_Validator
      * Log one message
      *
      * @return void
-     **/
+     */
     protected function _log($msg) 
     {
         if ($this->_verbose)

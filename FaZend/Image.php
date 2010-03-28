@@ -222,7 +222,7 @@ class FaZend_Image
      * Get width and height of the text message
      *
      * @return array (width, height)
-     **/
+     */
     public static function getTextDimensions($text, $fontSize = 10, $fontMnemo = 'default')
     {
         if (function_exists('imagettfbbox')) {

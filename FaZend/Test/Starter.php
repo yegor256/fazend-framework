@@ -41,7 +41,7 @@ abstract class FaZend_Test_Starter
      * Run it from build.xml
      *
      * @return void
-     **/
+     */
     public static function run()
     {
         $starterPhp = APPLICATION_PATH . '/../../test/starter/Starter.php';
@@ -57,7 +57,7 @@ abstract class FaZend_Test_Starter
      * Make all initializations before tests
      *
      * @return void
-     **/
+     */
     public final function start() 
     {
         $rc = new ReflectionClass($this);

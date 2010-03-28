@@ -34,7 +34,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      * @param  array $args
      * @return void
      * @throws Zend_Controller_Action_Exception
-     **/
+     */
     public function __call($method, $args)
     {
         if (preg_match('/Action$/', $method))

@@ -27,21 +27,21 @@ class FaZend_Pan_Polisher_Facade
      * Path of source code
      *
      * @var string
-     **/
+     */
     protected $_path;
     
     /**
      * Dry run? No changes to be made?
      *
      * @var boolean
-     **/
+     */
     protected $_dry;
     
     /**
      * Echo all results?
      *
      * @var boolean
-     **/
+     */
     protected $_verbose;
 
     /**
@@ -51,7 +51,7 @@ class FaZend_Pan_Polisher_Facade
      * @param boolean Dry run, without any actual changes?
      * @param boolean ECHO all results?
      * @return array
-     **/
+     */
     public function __construct($path, $dry = true, $verbose = true)
     {
         $this->_path = $path;
@@ -63,7 +63,7 @@ class FaZend_Pan_Polisher_Facade
      * Polish and log results
      *
      * @return void
-     **/
+     */
     public function polish() 
     {
         $fixers = FaZend_Pan_Polisher_Fixer_Abstract::retrieveAll();

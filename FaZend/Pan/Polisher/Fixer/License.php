@@ -27,7 +27,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      * List of types of files that are accepted here
      *
      * @var string[]
-     **/
+     */
     protected $_types = array(
         'php',
         'phtml',
@@ -41,14 +41,14 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      * - text
      *
      * @var array
-     **/
+     */
     protected $_license;    
     
     /**
      * Inject license
      *
      * @return void
-     **/
+     */
     public function setLicense($title, array $lines) 
     {
         $this->_license = array(
@@ -160,7 +160,7 @@ class FaZend_Pan_Polisher_Fixer_License extends FaZend_Pan_Polisher_Fixer_Abstra
      *
      * @return void
      * @throws FaZend_Pan_Polisher_Fixer_License_LicenseFileAbsent
-     **/
+     */
     protected function _getLicense() 
     {
         if (isset($this->_license))

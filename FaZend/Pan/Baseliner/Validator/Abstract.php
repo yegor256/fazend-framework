@@ -27,7 +27,7 @@ abstract class FaZend_Pan_Baseliner_Validator_Abstract
      * Location of application to validate
      *
      * @var string
-     **/
+     */
     protected $_location;
     
     /**
@@ -35,7 +35,7 @@ abstract class FaZend_Pan_Baseliner_Validator_Abstract
      *
      * @param string Location to set
      * @return void
-     **/
+     */
     public function setLocation($location) 
     {
         $this->_location = $location;

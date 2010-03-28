@@ -39,7 +39,7 @@ class FaZend_Exec extends FaZend_StdObject
      * Shall we document our operations in log?
      *
      * @var boolean
-     **/
+     */
     protected static $_isVerbose = false;
 
     /**
@@ -81,7 +81,7 @@ class FaZend_Exec extends FaZend_StdObject
      * This operation is cycled and should be executed again and again?
      *
      * @var boolean
-     **/
+     */
     protected $_cycled;
 
     /**
@@ -112,7 +112,7 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param boolean Shall we?
      * @return void
-     **/
+     */
     public static function setIsVerbose($isVerbose = true) 
     {
         self::$_isVerbose = $isVerbose;
@@ -123,7 +123,7 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param boolean Shall we?
      * @return void
-     **/
+     */
     public static function setIsTesting($isTesting = true) 
     {
         self::$_isTesting = $isTesting;
@@ -345,7 +345,7 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param boolean Show details?
      * @return $this
-     **/
+     */
     public function setDetailed($detailed = true)
     {
         $this->_detailed = $detailed;
@@ -357,7 +357,7 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param boolean Cycled or not?
      * @return $this
-     **/
+     */
     public function setCycled($cycled = true) 
     {
         $this->_cycled = $cycled;
@@ -369,7 +369,7 @@ class FaZend_Exec extends FaZend_StdObject
      *
      * @param string Directory name (absolute)
      * @return $this
-     **/
+     */
     public function setDir($dir) 
     {
         $this->_dir = $dir;

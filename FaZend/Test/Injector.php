@@ -43,7 +43,7 @@ abstract class FaZend_Test_Injector
      * Make all existing injections
      *
      * @return void
-     **/
+     */
     public final function inject()
     {
         $rc = new ReflectionClass($this);

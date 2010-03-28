@@ -39,14 +39,14 @@ class FaZend_Pos_Properties
      * Root object
      *
      * @var FaZend_Pos_Abstract
-     **/
+     */
     protected static $_root = null;
     
     /**
      * Name of root class
      *
      * @var string
-     **/
+     */
     protected static $_rootClass = 'FaZend_Pos_Root';
    
     /**
@@ -67,7 +67,7 @@ class FaZend_Pos_Properties
      *
      * @var integer|string
      * @see setUserId()
-     **/
+     */
     protected static $_userId = null;
     
     /**
@@ -79,7 +79,7 @@ class FaZend_Pos_Properties
      * @var FaZend_Pos_Properties[]
      * @see cleanPosMemory()
      * @see self::_attachTo()
-     **/
+     */
     protected static $_instances = array();
     
     /**
@@ -135,7 +135,7 @@ class FaZend_Pos_Properties
      * @see self::_attachTo()
      * @see __construct()
      * @see _getParent()
-     **/
+     */
     protected $_parent = null;
 
     /**
@@ -174,7 +174,7 @@ class FaZend_Pos_Properties
      *
      * @var Iterator
      * @see _getItemsIterator()
-     **/
+     */
     protected $_itemsIterator;
     
     /**
@@ -182,7 +182,7 @@ class FaZend_Pos_Properties
      *
      * @var boolean
      * @see setIgnoreVersions()
-     **/
+     */
     protected $_ignoreVersions = false;
     
     /**
@@ -209,7 +209,7 @@ class FaZend_Pos_Properties
      * @param string Name of root class
      * @return void
      * @throws FaZend_Pos_RootIsLocked
-     **/
+     */
     public static function setRootClass($rootClass) 
     {
         if (!is_null(self::$_root) && (self::$_rootClass != $rootClass)) {
@@ -252,7 +252,7 @@ class FaZend_Pos_Properties
      * Get root object, the main object of the entire POS tree
      *
      * @return FaZend_Pos_Abstract
-     **/
+     */
     public static function root() 
     {
         if (is_null(self::$_root)) {
@@ -267,7 +267,7 @@ class FaZend_Pos_Properties
      *
      * @param integer User ID to use later
      * @return void
-     **/
+     */
     public static function setUserId($userId) 
     {
         self::$_userId = $userId;
@@ -410,7 +410,7 @@ class FaZend_Pos_Properties
      * Save all changes to DB
      *
      * @return void
-     **/
+     */
     public final function __destruct() 
     {
         // We don't want any exceptions to be thrown in constructor, 
@@ -433,7 +433,7 @@ class FaZend_Pos_Properties
      *
      * @param string Name of property to get
      * @return string
-     **/
+     */
     public function __get($name)
     {
         $method = '_get' . ucfirst($name);
@@ -453,7 +453,7 @@ class FaZend_Pos_Properties
      * @param string Name of property to set
      * @param mixed Value to set
      * @return void
-     **/
+     */
     public function __set($name, $value)
     {
         $method = '_set' . ucfirst($name);
@@ -471,7 +471,7 @@ class FaZend_Pos_Properties
      * Convert properties to string
      *
      * @return string
-     **/
+     */
     public function __toString() 
     {
         return $this->dump(false);
@@ -487,7 +487,7 @@ class FaZend_Pos_Properties
      * @param boolean Ignore or not?
      * @return $this
      * @see _saveSnapshot()
-     **/
+     */
     public function setIgnoreVersions($ignoreVersions = true) 
     {
         $this->_ignoreVersions = $ignoreVersions;
@@ -516,7 +516,7 @@ class FaZend_Pos_Properties
      * @param mixed Value of it
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function setProperty($name, $value) 
     {
         $this->_attachToPos();
@@ -543,7 +543,7 @@ class FaZend_Pos_Properties
      * @return mixed
      * @throws FaZend_Pos_Exception If the object is not in POS yet
      * @throws FaZend_Pos_Properties_PropertyMissed If property is not found
-     **/
+     */
     public function getProperty($name) 
     {
         $this->_attachToPos();
@@ -572,7 +572,7 @@ class FaZend_Pos_Properties
      * @param string Name of the property
      * @return boolean
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function hasProperty($name) 
     {
         $this->_attachToPos();
@@ -586,7 +586,7 @@ class FaZend_Pos_Properties
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
      * @throws FaZend_Pos_Properties_PropertyMissed If property not found
-     **/
+     */
     public function unsetProperty($name) 
     {
         $this->_attachToPos();
@@ -618,7 +618,7 @@ class FaZend_Pos_Properties
      * @param mixed Value of it
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function setItem($name, $value) 
     {
         if ($name === null) {
@@ -638,7 +638,7 @@ class FaZend_Pos_Properties
      * @return mixed
      * @see setItem()
      * @throws FaZend_Pos_Properties_ItemMissed If the object is not in POS yet
-     **/
+     */
     public function getItem($name) 
     {
         try {
@@ -659,7 +659,7 @@ class FaZend_Pos_Properties
      * @return boolean The item exists in the array?
      * @see setItem()
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function hasItem($name) 
     {
         return $this->hasProperty(self::ARRAY_PREFIX . $name);
@@ -672,7 +672,7 @@ class FaZend_Pos_Properties
      * @return void
      * @see setItem()
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function unsetItem($name) 
     {
         try{
@@ -691,7 +691,7 @@ class FaZend_Pos_Properties
      *
      * @return void
      * @todo Optimize it to make more fast
-     **/
+     */
     public function cleanArray() 
     {
         foreach ($this->itemsIterator as $key=>$value)
@@ -704,7 +704,7 @@ class FaZend_Pos_Properties
      * @param boolean Force loading in any case?
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function load($force = true) 
     {
         // object is NOT loaded from DB yet?
@@ -729,7 +729,7 @@ class FaZend_Pos_Properties
      * @param boolean Save anyway
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function save($force = true) 
     {
         // if we're OUT of POS DB structure - ignore the procedure
@@ -747,7 +747,7 @@ class FaZend_Pos_Properties
      *
      * @return void
      * @throws FaZend_Pos_Exception If the object is not in POS yet
-     **/
+     */
     public function touch() 
     {
         $this->save(true);
@@ -758,7 +758,7 @@ class FaZend_Pos_Properties
      *
      * @param boolean Shall we DIE after it?
      * @return string
-     **/
+     */
     public function dump($die = true) 
     {
         $text = 
@@ -816,7 +816,7 @@ class FaZend_Pos_Properties
      * Is it clean, no changes have been made so far?
      *
      * @return boolean
-     **/
+     */
     public function isClean() 
     {
         return $this->_clean === true;
@@ -826,7 +826,7 @@ class FaZend_Pos_Properties
      * Set clean flag to FALSE
      *
      * @return void
-     **/
+     */
     public function setDirty() 
     {
         $this->_attachToPos();
@@ -845,7 +845,7 @@ class FaZend_Pos_Properties
      * @return void
      * @throws FaZend_Pos_Exception If something goes wrong
      * @see FaZend_Pos_Abstract::__wakeup()
-     **/
+     */
     public static function recoverById(FaZend_Pos_Abstract $object, $id) 
     {
         try {
@@ -895,7 +895,7 @@ class FaZend_Pos_Properties
      * @return void
      * @throws FaZend_Pos_LostObjectException If the object is not attached yet
      * @see _attachTo()
-     **/
+     */
     protected function _attachToPos() 
     {
         // parent is not assigned yet? no access is allowed
@@ -922,7 +922,7 @@ class FaZend_Pos_Properties
      * @param string Unique name inside the parent
      * @return void
      * @throws FaZend_Pos_Exception
-     **/
+     */
     protected static function _attachTo(FaZend_Pos_Abstract $parent, FaZend_Pos_Abstract $kid, $name) 
     {
         // maybe this KID object is already in POS,
@@ -1251,7 +1251,7 @@ class FaZend_Pos_Properties
      *
      * @param FaZend_Pos_Model_Object fzObject to restore from
      * @return FaZend_Pos_StubClass
-     **/
+     */
     protected function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
     {
         $stub = self::STUB_CLASS;
@@ -1275,7 +1275,7 @@ class FaZend_Pos_Properties
      * @return void
      * @see setProperty()
      * @see getProperty()
-     **/
+     */
     protected function _resolveStub($name) 
     {
         if (!isset($this->_properties[$name]))

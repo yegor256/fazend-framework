@@ -26,7 +26,7 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
      * Root exists?
      *
      * @return boolean
-     **/
+     */
     public static function exists() 
     {
         try {

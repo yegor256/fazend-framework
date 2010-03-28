@@ -27,7 +27,7 @@ class FaZend_Pan_Baseliner_Validator_Class extends FaZend_Pan_Baseliner_Validato
      * Class name
      *
      * @var string
-     **/
+     */
     protected $_class;
 
     /**
@@ -44,7 +44,7 @@ class FaZend_Pan_Baseliner_Validator_Class extends FaZend_Pan_Baseliner_Validato
      * Validate existence of the file
      *
      * @return string|null
-     **/
+     */
     public function isExists() 
     {
         if (!class_exists($this->_class))
@@ -55,7 +55,7 @@ class FaZend_Pan_Baseliner_Validator_Class extends FaZend_Pan_Baseliner_Validato
      * Validate inheritance
      *
      * @return string|null
-     **/
+     */
     public function isInstanceOf($parent) 
     {
         if (!is_subclass_of($this->_class, $parent))

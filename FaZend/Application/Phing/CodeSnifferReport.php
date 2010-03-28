@@ -201,7 +201,7 @@ class CodeSnifferReport extends Task
      * Create HTML file from template
      *
      * @return void
-     **/
+     */
     protected function _createFile($htmlFile, $template, $vars) 
     {
         ob_start();
@@ -215,7 +215,7 @@ class CodeSnifferReport extends Task
      * Cut email
      *
      * @return string
-     **/
+     */
     protected function _cutEmail($email) 
     {
         if (strpos($email, '@') === false)
@@ -228,7 +228,7 @@ class CodeSnifferReport extends Task
      *
      * @param float Quality
      * @return string
-     **/
+     */
     protected function _showQuality($quality) 
     {
         return "<span style='color: " . 
@@ -243,7 +243,7 @@ class CodeSnifferReport extends Task
      *
      * @param string File name
      * @return string
-     **/
+     */
     protected function _makeName($fileName) 
     {
         return str_replace('.', '-', $fileName);

@@ -27,7 +27,7 @@ class FaZend_Pan_Baseliner_Validator_File extends FaZend_Pan_Baseliner_Validator
      * Absolute file name (PHP file)
      *
      * @var string
-     **/
+     */
     protected $_file;
 
     /**
@@ -44,7 +44,7 @@ class FaZend_Pan_Baseliner_Validator_File extends FaZend_Pan_Baseliner_Validator
      * Validate existence of the file
      *
      * @return string|null
-     **/
+     */
     public function isExists() 
     {
         if (!file_exists($this->_location . '/' . $this->_file))

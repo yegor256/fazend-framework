@@ -28,7 +28,7 @@ class FaZend_Pan_Analysis_Component_File_PhpFile extends FaZend_Pan_Analysis_Com
      *
      * @param Reflector Information about entity
      * @return void
-     **/
+     */
     public function reflect(Reflector $reflector)
     {
         assert($reflector instanceof Zend_Reflection_File);

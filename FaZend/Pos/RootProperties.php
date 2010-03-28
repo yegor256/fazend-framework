@@ -28,7 +28,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * @param integer ID of the object (fzObject.id)
      * @return FaZend_Pos_Abstract
      * @throws FaZend_Pos_Root_ObjectNotFound
-     **/
+     */
     public function findById($id) 
     {
         $fzObject = new FaZend_Pos_Model_Object(intval($id));
@@ -54,7 +54,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * Validate whether the object is already in POS
      *
      * @return boolean
-     **/
+     */
     protected function _isInPos() 
     {
         return true;
@@ -64,7 +64,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
     //  * Validate whether the object is already in POS
     //  *
     //  * @return void
-    //  **/
+    //  */
     // protected function _attachToPos() 
     // {
     //     $this->_parent = false;
@@ -79,7 +79,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      * @param string Unique name inside the parent
      * @return nothing
      * @throws FaZend_Pos_RootException Always
-     **/
+     */
     protected function _setParent(FaZend_Pos_Abstract $parent, $name) 
     {
         FaZend_Exception::raise(

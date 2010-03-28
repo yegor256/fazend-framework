@@ -52,7 +52,7 @@ final class FaZend_Validator
      * Creates simple validator and returns it
      *  
      * @return FaZend_Validator
-     **/
+     */
     public static function factory()
     {
         if (is_null(self::$_instance))
@@ -64,7 +64,7 @@ final class FaZend_Validator
      * Construct validator class
      *
      * @return void
-     **/
+     */
     public final function __construct()
     {
         $this->_loader = new Zend_Loader_PluginLoader(

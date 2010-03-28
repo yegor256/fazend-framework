@@ -77,7 +77,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      * @param string Name of the method to call (suffix only, without '_init')
      * @return void
      * @throws FaZend_Application_Resource_Fazend_InvalidMethod
-     **/
+     */
     protected function _boot($name)
     {
         if (isset($this->_booted[$name]))
@@ -99,7 +99,7 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
      * Configure session properly
      *
      * @return void
-     **/
+     */
     protected function _initSessionOptions() 
     {
         // if there is NO session - ignore

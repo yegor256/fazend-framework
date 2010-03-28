@@ -230,7 +230,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return integer Total amount of ITEMS in the array
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function count() 
     {
         return iterator_count($this->ps()->itemsIterator);
@@ -241,7 +241,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return void
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function rewind() 
     {
         return $this->ps()->itemsIterator->rewind();
@@ -252,7 +252,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return boolean
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function valid() 
     {
         return $this->ps()->itemsIterator->valid();
@@ -263,7 +263,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return void
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function next() 
     {
         return $this->ps()->itemsIterator->next();
@@ -274,7 +274,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return scalar
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function key() 
     {
         return $this->ps()->itemsIterator->key();
@@ -285,7 +285,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return void
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function current() 
     {
         return $this->ps()->itemsIterator->current();
@@ -296,7 +296,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      *
      * @return array
      * @throws FaZend_Pos_Exception If something goes wrong with the object
-     **/
+     */
     public function getArrayCopy() 
     {
         return $this->ps()->itemsIterator->getArrayCopy();
@@ -340,7 +340,7 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
      * @throws FaZend_Pos_Exception If something goes wrong with the object
      * @throws FaZend_Pos_RootUnserializationProhibited
      * @throws FaZend_Pos_UnserializationFailure
-     **/
+     */
     public function __wakeup() 
     {
         if ($this instanceof FaZend_Pos_Root) {

@@ -706,7 +706,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @param mixed Original row we're working with
      * @return mixed
      * @throws FaZend_View_Helper_HtmlTable_InvalidConverter
-     **/
+     */
     protected function _convertColumnValue($name, $value, $row)
     {
         $column = $this->_column($name);

@@ -27,7 +27,7 @@ abstract class FaZend_Pan_Polisher_Fixer_Abstract
      * List of types of files that are accepted here
      *
      * @var string[]
-     **/
+     */
     protected $_types = array();
     
     /**
@@ -43,7 +43,7 @@ abstract class FaZend_Pan_Polisher_Fixer_Abstract
      * Get an array of all fixers
      *
      * @return FaZend_Pan_Polisher_Fixer_Abstract[]
-     **/
+     */
     public static function retrieveAll() 
     {
         $list = array();
@@ -65,7 +65,7 @@ abstract class FaZend_Pan_Polisher_Fixer_Abstract
      *
      * @param string File type (e.g. PHTML, PHP, XML, etc)
      * @return boolean
-     **/
+     */
     public function isFixable($type) 
     {
         return in_array(strtolower($type), $this->_types);

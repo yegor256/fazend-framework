@@ -27,14 +27,14 @@ class FaZend_Pan_Baseliner_Validator_Method extends FaZend_Pan_Baseliner_Validat
      * Class name
      *
      * @var string
-     **/
+     */
     protected $_class;
     
     /**
      * Name of the method in the class
      *
      * @var string
-     **/
+     */
     protected $_method;
 
     /**
@@ -52,7 +52,7 @@ class FaZend_Pan_Baseliner_Validator_Method extends FaZend_Pan_Baseliner_Validat
      * Validate existence of the method in the class
      *
      * @return void
-     **/
+     */
     public function isExists() 
     {
         if (!method_exists($this->_class, $this->_method))

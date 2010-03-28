@@ -27,14 +27,14 @@ class FaZend_Pan_Baseliner_Collector
      * Email to work with
      *
      * @var string
-     **/
+     */
     protected $_email;
     
     /**
      * Shall we log all operations to STDOUT?
      *
      * @var boolean
-     **/
+     */
     protected $_verbose;
 
     /**
@@ -95,7 +95,7 @@ class FaZend_Pan_Baseliner_Collector
      * Parse reflection and add elements to map
      *
      * @return void
-     **/
+     */
     protected function _parse(Reflector $reflector, FaZend_Pan_Baseliner_Map $map) 
     {
         try {
@@ -134,7 +134,7 @@ class FaZend_Pan_Baseliner_Collector
      * Log one message
      *
      * @return void
-     **/
+     */
     protected function _log($msg) 
     {
         if ($this->_verbose)

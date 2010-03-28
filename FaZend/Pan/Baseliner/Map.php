@@ -27,21 +27,21 @@ class FaZend_Pan_Baseliner_Map
      * List of rules
      *
      * @var array
-     **/
+     */
     protected $_rules = array();
     
     /**
      * Path of files
      *
      * @var string
-     **/
+     */
     protected $_path;
 
     /**
      * Email of baseliner
      *
      * @var string
-     **/
+     */
     protected $_email;
 
     /**
@@ -59,7 +59,7 @@ class FaZend_Pan_Baseliner_Map
      * Returns email
      *
      * @return string
-     **/
+     */
     public function getEmail() 
     {
         return $this->_email;
@@ -70,7 +70,7 @@ class FaZend_Pan_Baseliner_Map
      *
      * @param boolean Create it if it's absent?
      * @return string
-     **/
+     */
     public static function getStorageDir($enforce = false) 
     {
         $path = APPLICATION_PATH . '/../../test/baseline';
@@ -86,7 +86,7 @@ class FaZend_Pan_Baseliner_Map
      *
      * @param string Absolute name of the file
      * @return void
-     **/
+     */
     public function save($path) 
     {
         $xml = simplexml_load_string('<?xml version="1.0"?><map></map>');
@@ -111,7 +111,7 @@ class FaZend_Pan_Baseliner_Map
      *
      * @param string Absolute name of the file
      * @return void
-     **/
+     */
     public function load($path) 
     {
         $xml = simplexml_load_file($path);
@@ -130,7 +130,7 @@ class FaZend_Pan_Baseliner_Map
      * Get full list of rules
      *
      * @return array
-     **/
+     */
     public function getRules() 
     {
         return $this->_rules;
@@ -145,7 +145,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Explanation of the baseline, in text
      * @return void
      * @throws FaZend_Pan_Baseliner_Map_InvalidTag
-     **/
+     */
     public function add(Reflector $reflector, $method, array $params, $description) 
     {
         $mthd = '_add' . substr(get_class($reflector), strlen('Zend_Reflection_'));
@@ -161,7 +161,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Explanation of the baseline, in text
      * @return void
      * @throws FaZend_Pan_Baseliner_Map_InvalidTag
-     **/
+     */
     protected function _addFile(Reflector $reflector, $method, array $params, $description) 
     {
         switch ($method) {
@@ -191,7 +191,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Explanation of the baseline, in text
      * @return void
      * @throws FaZend_Pan_Baseliner_Map_InvalidTag
-     **/
+     */
     protected function _addClass(Reflector $reflector, $method, array $params, $description) 
     {
         switch ($method) {
@@ -224,7 +224,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Explanation of the baseline, in text
      * @return void
      * @throws FaZend_Pan_Baseliner_Map_InvalidTag
-     **/
+     */
     protected function _addFunction(Reflector $reflector, $method, array $params, $description) 
     {
         switch ($method) {
@@ -254,7 +254,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Explanation of the baseline, in text
      * @return void
      * @throws FaZend_Pan_Baseliner_Map_InvalidTag
-     **/
+     */
     protected function _addMethod(Reflector $reflector, $method, array $params, $description) 
     {
         switch ($method) {
@@ -282,7 +282,7 @@ class FaZend_Pan_Baseliner_Map
      * @param string Constructor params, like '("file.php")'
      * @param string Callback to use, like '->exists()'
      * @return void
-     **/
+     */
     protected function _addRule($type, $constructor, $callback) 
     {
         $this->_rules[] = array(

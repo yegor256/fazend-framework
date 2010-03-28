@@ -194,7 +194,7 @@ abstract class FaZend_View_Helper_Forma_Field
      * @return mixed
      * @throws FaZend_View_Helper_Forma_InvalidConverter
      * @uses $_converters
-     **/
+     */
     public function deriveValue(Zend_Form_Element $element)
     {
         $value = $element->getValue();

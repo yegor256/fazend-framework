@@ -26,7 +26,7 @@ class FaZend_Revision
      * Cached value
      *
      * @var string|integer
-     **/
+     */
     protected static $_revision;
 
     /**

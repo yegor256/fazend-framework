@@ -83,7 +83,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * What to do when the form is completed?
      *
      * @var FaZend_View_Helper_Forma_Behavior_Abstract
-     **/
+     */
     protected $_behaviors = array();
 
     /**

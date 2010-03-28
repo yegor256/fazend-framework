@@ -71,7 +71,7 @@ class CodeQuality
      * @param string Name of the variable to get
      * @return mixed
      * @throws Exception
-     **/
+     */
     public function __get($name)
     {
         $var = '_' . $name;
@@ -89,7 +89,7 @@ class CodeQuality
      * Set protected variable
      *
      * @return void
-     **/
+     */
     public function __set($name, $value)
     {
         $var = '_' . $name;
@@ -100,7 +100,7 @@ class CodeQuality
      * Add information from PHPCS file
      *
      * @return void
-     **/
+     */
     public function setInfo($info)
     {
         $this->_errors = $info->attributes()->errors;
@@ -112,7 +112,7 @@ class CodeQuality
      *
      * @param CodeQuality Quality of the child file
      * @return void
-     **/
+     */
     public function merge(CodeQuality $child)
     {
         $this->_errors += $child->errors;
@@ -126,7 +126,7 @@ class CodeQuality
      * @param string File name
      * @return void
      * @throws Exception
-     **/
+     */
     public function collect($file)
     {
         $this->_lines = intval(shell_exec('wc -l ' . escapeshellarg($file)));
@@ -151,7 +151,7 @@ class CodeQuality
      * Is it file (TRUE) or directory (FALSE)
      *
      * @return boolean
-     **/
+     */
     public function isFile()
     {
         return isset($this->_revision);
@@ -161,7 +161,7 @@ class CodeQuality
      * Calculate quality
      *
      * @return float
-     **/
+     */
     protected function _getQuality()
     {
         return round(100 * (1 - ($this->errors + $this->warnings) / $this->lines), 1);

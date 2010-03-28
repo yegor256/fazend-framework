@@ -39,7 +39,7 @@ class FaZend_Date extends Zend_Date
      * @param Zend_Date|mixed Start date
      * @param Zend_Date|mixed End date
      * @return boolean
-     **/
+     */
     public function isBetween($start, $end)
     {
         return (($this->isEarlier($end) || $this->equals($end)) && 
