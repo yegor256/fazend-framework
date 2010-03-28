@@ -50,7 +50,11 @@ class Fazend_JsController extends FaZend_Controller_Action
 
         $this->view->setFilter(null);
 
-        $this->_helper->viewRenderer($this->_getParam('script'));
+        try {
+            $this->_helper->viewRenderer($this->_getParam('script'));
+        } catch (Zend_View_Exception $e) {
+            $this->response->setBody('/* ' . $e->getMessage() . ' */');
+        }
     }    
     
 }

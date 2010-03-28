@@ -56,7 +56,11 @@ class Fazend_CssController extends FaZend_Controller_Action
             $this->view->addFilter('CssCompressor');
         }
 
-        $this->_helper->viewRenderer($this->_getParam('css'));
+        try {
+            $this->_helper->viewRenderer($this->_getParam('css'));
+        } catch (Zend_View_Exception $e) {
+            $this->response->setBody('/* ' . $e->getMessage() . ' */');
+        }
     }    
 
 }
