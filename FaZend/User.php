@@ -74,6 +74,22 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     protected static $_credentialColumn = 'password';
 
     /**
+     * Identity property in the class
+     *
+     * @var string
+     * @see logIn()
+     */
+    protected static $_identityProperty = 'email';
+
+    /**
+     * Credential property in the class
+     *
+     * @var string
+     * @see logIn()
+     */
+    protected static $_credentialProperty = 'password';
+
+    /**
      * Set class name to use in all static methods
      *
      * @param string Name of the class
@@ -119,6 +135,28 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     public static function setCredentialColumn($column) 
     {
         self::$_credentialColumn = $column;
+    }
+
+    /**
+     * Change the name of identity property
+     *
+     * @param string Property name
+     * @return void
+     */
+    public static function setIdentityProperty($property) 
+    {
+        self::$_identityProperty = $property;
+    }
+
+    /**
+     * Change the name of credential property
+     *
+     * @param string Column name
+     * @return void
+     */
+    public static function setCredentialProperty($property) 
+    {
+        self::$_credentialProperty = $property;
     }
 
     /**
@@ -187,8 +225,8 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         $authAdapter->setTableName('user')
             ->setIdentityColumn(self::$_identityColumn)
             ->setCredentialColumn(self::$_credentialColumn)
-            ->setIdentity(strtolower($this->email))
-            ->setCredential($this->password);
+            ->setIdentity(strtolower($this->{self::$_identityProperty}))
+            ->setCredential($this->{self::$_credentialProperty});
 
         $result = self::_auth()->authenticate($authAdapter);
 
