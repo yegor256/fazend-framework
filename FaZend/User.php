@@ -58,6 +58,22 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     protected static $_rowClass = 'FaZend_User';
 
     /**
+     * Identity column in the table
+     *
+     * @var string
+     * @see logIn()
+     */
+    protected static $_identityColumn = 'email';
+
+    /**
+     * Credential column in the table
+     *
+     * @var string
+     * @see logIn()
+     */
+    protected static $_credentialColumn = 'password';
+
+    /**
      * Set class name to use in all static methods
      *
      * @param string Name of the class
@@ -81,6 +97,28 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
             );
         }
         self::$_rowClass = $className;
+    }
+
+    /**
+     * Change the name of identity column
+     *
+     * @param string Column name
+     * @return void
+     */
+    public static function setIdentityColumn($column) 
+    {
+        self::$_identityColumn = $column;
+    }
+
+    /**
+     * Change the name of credential column
+     *
+     * @param string Column name
+     * @return void
+     */
+    public static function setCredentialColumn($column) 
+    {
+        self::$_credentialColumn = $column;
     }
 
     /**
@@ -147,8 +185,8 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
     {
         $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $authAdapter->setTableName('user')
-            ->setIdentityColumn('email')
-            ->setCredentialColumn('password')
+            ->setIdentityColumn(self::$_identityColumn)
+            ->setCredentialColumn(self::$_credentialColumn)
             ->setIdentity(strtolower($this->email))
             ->setCredential($this->password);
 
@@ -256,7 +294,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
                 ->set('user', $user)
                 ->send();
         } catch (FaZend_Email_NoTemplate $e) {
-            // don't do anything        
+            // just swallow it
         }
         return $user;    
     }
