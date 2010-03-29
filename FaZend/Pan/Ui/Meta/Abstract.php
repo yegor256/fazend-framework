@@ -59,7 +59,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
 
             if (!count($args)) {
                 $args = true;
-            } elseif (count($args) == 1)
+            } elseif (count($args) == 1) {
                 $args = current($args);
             }
 
