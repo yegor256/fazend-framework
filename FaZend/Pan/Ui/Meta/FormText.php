@@ -32,7 +32,7 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function draw($y)
     {
-        $txt = $this->_parse($this->value);
+        $txt = self::parse($this->value);
         $width = FaZend_Pan_Ui_Meta_Text::FONT_SIZE * min(self::WIDTH, strlen($txt) + 2);
 
         // element header
@@ -41,7 +41,7 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement
             FaZend_Pan_Ui_Mockup::INDENT, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $this->_parse($this->header) . ':'
+            self::parse($this->header) . ':'
         );
 
         $y += FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
@@ -79,8 +79,8 @@ class FaZend_Pan_Ui_Meta_FormText extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function html()
     {
-        $txt = $this->_parse($this->value);
-        $header = $this->_parse($this->header);
+        $txt = self::parse($this->value);
+        $header = self::parse($this->header);
         $input = '<input type="text" value="' . $txt . '" size=" ' . min(self::WIDTH, strlen($txt)) . '"/>';
 
         if ($this->_alignedStyle)

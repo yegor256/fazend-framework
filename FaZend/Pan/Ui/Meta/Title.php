@@ -39,7 +39,7 @@ class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract
             $y + self::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content.title'), 
             $this->_mockup->getImage()->getFont('mockup.content.title'), 
-            $this->_parse($this->label)
+            self::parse($this->label)
         );
 
         return self::FONT_SIZE * 2;
@@ -52,7 +52,7 @@ class FaZend_Pan_Ui_Meta_Title extends FaZend_Pan_Ui_Meta_Abstract
      */
     public function html()
     {
-        return '<h1>' . nl2br($this->_parse($this->label)) . '</h1>';
+        return '<h1>' . nl2br(self::parse($this->label)) . '</h1>';
     }
 
 }

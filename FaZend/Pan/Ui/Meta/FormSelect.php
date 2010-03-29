@@ -33,7 +33,7 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function draw($y)
     {
-        $txt = $this->_parse($this->value);
+        $txt = self::parse($this->value);
 
         $width = FaZend_Pan_Ui_Meta_Text::FONT_SIZE * min(25, strlen($txt) + 3);
 
@@ -43,7 +43,7 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement
             FaZend_Pan_Ui_Mockup::INDENT, $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $this->_parse($this->header) . ':'
+            self::parse($this->header) . ':'
         );
 
         $y += FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
@@ -91,19 +91,19 @@ class FaZend_Pan_Ui_Meta_FormSelect extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function html()
     {
-        $header = $this->_parse($this->header);
+        $header = self::parse($this->header);
 
         $list = $this->value;
         if (!is_array($list)) {
             $generated = array();
             for ($i = 0; $i < 7; $i++)
-                $generated[] = $this->_parse($list);
+                $generated[] = self::parse($list);
             $list = $generated;
         }
 
         $select = '<select>';
         foreach ($list as $option)
-            $select .= '<option>' . $this->_parse($option) . '</option>';
+            $select .= '<option>' . self::parse($option) . '</option>';
         $select .= '</select>';
 
         if ($this->_alignedStyle)

@@ -35,7 +35,7 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract
         $x = FaZend_Pan_Ui_Mockup::INDENT;
 
         foreach ($links as $link) {
-            $txt = $this->_parse($link['header']);
+            $txt = self::parse($link['header']);
 
             // @todo replace it 
             $bbox = imagettfbbox(
@@ -75,7 +75,7 @@ class FaZend_Pan_Ui_Meta_Bar extends FaZend_Pan_Ui_Meta_Abstract
 
         $hrefs = array();
         foreach ($links as $link)
-            $hrefs[] = $this->_htmlLink($link['link'], $this->_parse($link['header']));
+            $hrefs[] = $this->_htmlLink($link['link'], self::parse($link['header']));
 
         return '<p>' . implode(' | ', $hrefs) . '</p>';
     }

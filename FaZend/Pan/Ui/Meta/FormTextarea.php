@@ -44,7 +44,7 @@ class FaZend_Pan_Ui_Meta_FormTextarea extends FaZend_Pan_Ui_Meta_FormElement
             $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE, 
             $this->_mockup->getImage()->getColor('mockup.content'), 
             $this->_mockup->getImage()->getFont('mockup.content'), 
-            $this->_parse($this->header) . ':'
+            self::parse($this->header) . ':'
         );
 
         $y += FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 2;
@@ -75,7 +75,7 @@ class FaZend_Pan_Ui_Meta_FormTextarea extends FaZend_Pan_Ui_Meta_FormElement
             $y + FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 1.5, 
             $this->_mockup->getImage()->getColor('mockup.input.text'), 
             $this->_mockup->getImage()->getFont('mockup.input.text'), 
-            $this->_parse($this->value)
+            self::parse($this->value)
         );
 
         return $height + FaZend_Pan_Ui_Meta_Text::FONT_SIZE * 3.5;
@@ -88,9 +88,9 @@ class FaZend_Pan_Ui_Meta_FormTextarea extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function html()
     {
-        $header = $this->_parse($this->header);
+        $header = self::parse($this->header);
         $input = '<textarea cols="' . self::WIDTH . '" rows="' . self::HEIGHT . '">' . 
-        $this->_parse($this->value) . '</textarea>';
+        self::parse($this->value) . '</textarea>';
 
         if ($this->_alignedStyle)
             return "<tr><td class='left'>{$header}:</td><td>{$input}</td></tr>";

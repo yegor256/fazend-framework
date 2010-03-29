@@ -57,10 +57,11 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
         if (substr($method, 0, 3) == 'set') {
             $var = strtolower($method{3}) . (substr($method, 4));
 
-            if (!count($args))
+            if (!count($args)) {
                 $args = true;
-            elseif (count($args) == 1)
+            } elseif (count($args) == 1)
                 $args = current($args);
+            }
 
             $this->$var = $args;
         }
@@ -84,11 +85,12 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      */
     public function __get($var)
     {
-        if (!isset($this->_options[$var]))
+        if (!isset($this->_options[$var])) {
             return false;
+        }
         return $this->_options[$var];
     }
-
+    
     /**
      * Setter
      *
@@ -124,12 +126,13 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
      * @return void
      * @throws FaZend_Pan_Ui_Meta_InvalidMeta
      */
-    protected function _parse($txt)
+    public static function parse($txt)
     {
-        if ($txt === false)
+        if ($txt === false) {
             $txt = '%s';
-        elseif (is_array($txt)) 
+        } elseif (is_array($txt)) {
             $txt = $txt[array_rand($txt)];
+        }
 
         // replace complex meta-s:
         // %name%, %email%, %url%, etc.
@@ -351,8 +354,7 @@ abstract class FaZend_Pan_Ui_Meta_Abstract implements FaZend_Pan_Ui_Meta_Interfa
             if (preg_match('/([^%]%[^%0-9sdf])/', $txt, $matches)) {
                 FaZend_Exception::raise(
                     'FaZend_Pan_Ui_Meta_InvalidMeta',
-                    "All '%' symbols should be escaped, as for sprintf() in " . 
-                    "'{$this->_mockup->getScript()}': '{$txt}' ({$matches[1]})"
+                    "All '%' symbols should be escaped, as for sprintf() in '{$txt}' ({$matches[1]})"
                 );
             }
 

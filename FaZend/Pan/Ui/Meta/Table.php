@@ -59,7 +59,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract
 
             $html .= '<tr>';
             foreach ($columns as $details) {
-                $txt = $this->_parse($details['mask']);
+                $txt = self::parse($details['mask']);
 
                 // put a link onto this field
                 if (!empty($details['link']))
@@ -72,7 +72,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract
             
                 $hrefs = array();
                 foreach ($options as $opt)
-                    $hrefs[] = $this->_htmlLink($opt['link'], $this->_parse($opt['title']));
+                    $hrefs[] = $this->_htmlLink($opt['link'], self::parse($opt['title']));
                 $html .= '<td>' . implode(' | ', $hrefs) . '</td>';
             }
 
@@ -127,7 +127,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract
                 $this->_mockup->getImage()->getColor('mockup.table.header.background')
             ); 
 
-            $txt = $this->_parse($details['title']);
+            $txt = self::parse($details['title']);
             $this->_mockup->getImage()->imagettftext(
                 self::FONT_SIZE, 0, 
                 $details['x'], 
@@ -156,7 +156,7 @@ class FaZend_Pan_Ui_Meta_Table extends FaZend_Pan_Ui_Meta_Abstract
 
             $height = 1; 
             foreach ($columns as $details) {
-                $txt = $this->_parse($details['mask']);
+                $txt = self::parse($details['mask']);
 
                 // @todo we should replace it!
                 $bbox = imagettfbbox(

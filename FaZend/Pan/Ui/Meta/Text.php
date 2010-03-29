@@ -32,7 +32,7 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract
      */
     public function draw($y)
     {
-        $txt = $this->_parse($this->label);
+        $txt = self::parse($this->label);
 
         // get dimensions
         list($textWidth, ) = FaZend_Image::getTextDimensions(
@@ -65,7 +65,7 @@ class FaZend_Pan_Ui_Meta_Text extends FaZend_Pan_Ui_Meta_Abstract
     public function html()
     {
         return '<p' . ($this->bold ? ' style="font-weight:bold;"' : false) . '>' . 
-        nl2br($this->_parse($this->label)) . '</p>';
+        nl2br(self::parse($this->label)) . '</p>';
     }
 
 }

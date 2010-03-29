@@ -30,7 +30,7 @@ class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function draw($y)
     {
-        $txt = $this->_parse($this->value);
+        $txt = self::parse($this->value);
 
         // calulate the width of the text inside the button
         list($width, ) = FaZend_Image::getTextDimensions(
@@ -72,7 +72,7 @@ class FaZend_Pan_Ui_Meta_FormSubmit extends FaZend_Pan_Ui_Meta_FormElement
      */
     public function html()
     {
-        $button = $this->_htmlLink($this->header, '<span class="submit">' . $this->_parse($this->value). '</span>');
+        $button = $this->_htmlLink($this->header, '<span class="submit">' . self::parse($this->value). '</span>');
 
         if ($this->_alignedStyle)
             return "<tr><td></td><td>{$button}</td></tr>";

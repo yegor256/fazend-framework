@@ -30,7 +30,7 @@ class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract
      */
     public function draw($y)
     {
-        $txt = $this->_parse($this->label);
+        $txt = self::parse($this->label);
 
         list($textWidth, ) = FaZend_Image::getTextDimensions(
             $txt,
@@ -62,7 +62,7 @@ class FaZend_Pan_Ui_Meta_Link extends FaZend_Pan_Ui_Meta_Abstract
      */
     public function html()
     {
-        return '<p>' . $this->_htmlLink($this->destination, $this->_parse($this->label)) . '</p>';
+        return '<p>' . $this->_htmlLink($this->destination, self::parse($this->label)) . '</p>';
     }
 
 }
