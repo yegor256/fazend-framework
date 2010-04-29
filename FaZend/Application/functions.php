@@ -34,8 +34,9 @@ function bug($var = false)
  */
 function cutLongLine($line, $length = 100)
 {
-    if (strlen($line) <= $length)
+    if (strlen($line) <= $length) {
         return $line;
+    }
 
     return substr($line, 0, $length-3) . '...';    
 }
@@ -54,20 +55,25 @@ function validate()
 if (!function_exists('sys_get_temp_dir')) {
     function sys_get_temp_dir()
     {
-        if ($temp = getenv('TMP'))
+        if ($temp = getenv('TMP')) {
             return $temp;
-        if ($temp = getenv('TEMP'))
+        }
+        if ($temp = getenv('TEMP')) {
             return $temp;
-        if ($temp = getenv('TMPDIR'))
+        }
+        if ($temp = getenv('TMPDIR')) {
             return $temp;
+        }
             
         // trying to create a temp directory
         $temp = realpath(APPLICATION_PATH . '/../fz-temp');
-        if (!file_exists($temp))
+        if (!file_exists($temp)) {
             @mkdir($temp);
+        }
         
-        if (is_dir($temp) && is_writable($temp))
+        if (is_dir($temp) && is_writable($temp)) {
             return $temp;
+        }
         
         throw new Exception(
             'Function sys_get_temp_dir() is absent, probably you should upgrade to PHP 5.2+. ' . 
@@ -80,8 +86,9 @@ if (!function_exists('sys_get_temp_dir')) {
 if (!function_exists('lcfirst')) {
     function lcfirst($str) 
     {
-        if (!isset($str[0]))
+        if (!isset($str[0])) {
             return $str;
+        }
         return strtolower($str[0]) . substr($str, 1);
     }
 }
@@ -103,14 +110,16 @@ if (!function_exists('lcfirst')) {
 function _t($str) 
 {
     // if array specified - we get a random line from it
-    if (is_array($str))
+    if (is_array($str)) {
         $str = $str[array_rand($str)];
+    }
 
     $str = preg_replace('/\n\t\r/', ' ', $str);
 
     // translate this string
-    if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate'))
+    if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate')) {
         return $str;
+    }
         
     $str = Zend_Registry::get('Zend_Translate')->_($str);
 

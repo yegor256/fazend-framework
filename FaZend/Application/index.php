@@ -14,35 +14,56 @@
  * @category FaZend
  */
 
-// small simple and nice PHP functions
+// error handler
 require_once realpath(dirname(__FILE__) . '/handler.php');
 
+/**
+ * Global variable in order to calculate total page building time
+ * @see FaZend_View_Helper_PageLoadTime::pageLoadTime()
+ */
 global $startTime;
 $startTime = microtime(true);
 
-// whether it's CLI?
-defined('CLI_ENVIRONMENT')
-    || (empty($_SERVER['DOCUMENT_ROOT']) && define('CLI_ENVIRONMENT', true));
+/**
+ * @see FaZend_Application_Resource_fz_session::init()
+ * @see FaZend_Application_Resource_fz_front::init()
+ * @see FaZend_Test_TestCase
+ */
+if (!defined('CLI_ENVIRONMENT')) {
+    if (empty($_SERVER['DOCUMENT_ROOT'])) {
+        define('CLI_ENVIRONMENT', true);
+    }
+}
 
 // Define path to application directory
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
+if (!defined('APPLICATION_PATH')) {
+    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
+}
 
 // temp files location
-defined('TEMP_PATH')
-    || define('TEMP_PATH', realpath(sys_get_temp_dir()));
+if (!defined('TEMP_PATH')) {
+    define('TEMP_PATH', realpath(sys_get_temp_dir()));
+}
 
 // Define path to FaZend
-defined('FAZEND_PATH')
-    || define('FAZEND_PATH', realpath(APPLICATION_PATH . '/../library/FaZend'));
+if (!defined('FAZEND_PATH')) {
+    define('FAZEND_PATH', realpath(APPLICATION_PATH . '/../library/FaZend'));
+}
+
+// Define path to FaZend application inside framework
+if (!defined('FAZEND_APP_PATH')) {
+    define('FAZEND_APP_PATH', realpath(FAZEND_PATH . '/app'));
+}
 
 // Define path to Zend
-defined('ZEND_PATH')
-    || define('ZEND_PATH', realpath(APPLICATION_PATH . '/../library/Zend'));
+if (!defined('ZEND_PATH')) {
+    define('ZEND_PATH', realpath(APPLICATION_PATH . '/../library/Zend'));
+}
 
 // Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+if (!defined('APPLICATION_ENV')) {
+    define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+}
 
 set_include_path(
     implode(
@@ -55,32 +76,10 @@ set_include_path(
     )
 );
 
-// small simple and nice PHP functions
-require_once 'FaZend/Application/functions.php';
-
-// Create application, bootstrap, and run
-require_once 'Zend/Application.php';
-$application = new Zend_Application(APPLICATION_ENV);
-
-// load application-specific options
-$options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
-$options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
-
-// if the application doesn't have a bootstrap file
-if (!file_exists($options->bootstrap->path)) {
-    $options->bootstrap->path = FAZEND_PATH . '/Application/Bootstrap/Bootstrap.php';
-    $options->bootstrap->class = 'FaZend_Application_Bootstrap_Bootstrap';
-}                                             
-
-// load system options
-$application->setOptions($options->toArray());
-unset($options);        
-
-// bootstrap the application
-$application->bootstrap();
-
-// you can redefine it later, if you wish
-// now we define the site URL, without the leading WWW
+/**
+ * you can redefine it later, if you wish
+ * now we define the site URL, without the leading WWW
+ */
 if (!defined('WEBSITE_URL')) {
     define(
         'WEBSITE_URL', 
@@ -92,8 +91,20 @@ if (!defined('WEBSITE_URL')) {
     );
 }  
 
+/**
+ * small simple and nice PHP functions
+ */
+require_once 'FaZend/Application/functions.php';
+
+/**
+ * @see FaZend_Application_Bootstrap_Bootstrap
+ */
+require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
+$application = FaZend_Application_Bootstrap_Bootstrap::prepareApplication();
+
 // this flag could disable application execution
 if (!defined('FAZEND_DONT_RUN')) {
+    $application->bootstrap();
     // we're working from the command line?
     if (defined('CLI_ENVIRONMENT') && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
         $router = new FaZend_Cli_Router();
@@ -102,4 +113,3 @@ if (!defined('FAZEND_DONT_RUN')) {
         $application->run();
     }
 }
-

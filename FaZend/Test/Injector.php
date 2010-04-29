@@ -53,5 +53,21 @@ abstract class FaZend_Test_Injector
             }
         }
     }
+    
+    /**
+     * Bootstrap given resource
+     *
+     * You may need this method when some resource should be loaded
+     * BEFORE injector. Injector is executed before all other resources
+     * loading, that's why you may need to bootstrap something explicitly.
+     *
+     * @param string Name of the resource to bootstrap
+     * @return mixed
+     */
+    protected function _bootstrap($resource) 
+    {
+        return Zend_Registry::get('Zend_Application')
+            ->getBootstrap()->bootstrap($resource);
+    }
 
 }

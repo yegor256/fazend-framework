@@ -1,15 +1,12 @@
 <?php
+/**
+ * @version $Id$
+ */
 
 require_once 'AbstractTestCase.php';
 
 class FaZend_UserTest extends AbstractTestCase
 {
-    
-    public function tearDown()
-    {
-        FaZend_User::logOut();
-        parent::tearDown();
-    }
 
     public function testSimpleScenarioWorks()
     {
@@ -38,6 +35,12 @@ class FaZend_UserTest extends AbstractTestCase
         $user->logIn();
         $user = FaZend_User::getCurrentUser();
         $this->assertTrue($user instanceof Model_User);
+    }
+
+    public function tearDown()
+    {
+        FaZend_User::logOut();
+        parent::tearDown();
     }
 
 }

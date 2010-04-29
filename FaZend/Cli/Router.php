@@ -31,23 +31,26 @@ class FaZend_Cli_Router
     public function dispatch()
     {
         // strange situation, we should flag it
-        if (empty($_SERVER['argc']))
+        if (empty($_SERVER['argc'])) {
             return self::_error('$_SERVER[argc] is not defined, how come?');
+        }
 
         $argc = $_SERVER['argc'];
 
         // if there are not enough arguments
-        if ($argc < 2)
+        if ($argc < 2) {
             return self::_error(
                 'You started the application from the command line ("php index.php" or something), not from Web. ' .
                 'In such a case you should specify a class name, ' . 
                 'which has to be located in APPLICATION_PATH/cli and should be ' .
                 'an instance of FaZend_Cli_Interface, e.g. "php index.php Backup" ("Backup" is a sample class name).'
             );
+        }
 
         // strange situation, we should flag it
-        if (empty($_SERVER['argv']))
+        if (empty($_SERVER['argv'])) {
             return self::_error('$_SERVER[argv] is not defined, how come?');
+        }
 
         $argv = $_SERVER['argv'];
 
@@ -77,23 +80,24 @@ class FaZend_Cli_Router
      */
     public function call($name, array $options = null)
     {
-        if (is_null($options))
+        if (is_null($options)) {
             $options = self::_getCliOptions();
+        }
 
         $cliPath = APPLICATION_PATH . '/cli/' . $name . '.php';
-
         if (!file_exists($cliPath)) {
-            $cliPath = FAZEND_PATH . '/Cli/cli/' . $name . '.php';
-            if (!file_exists($cliPath))
+            $cliPath = FAZEND_APP_PATH . '/cli/' . $name . '.php';
+            if (!file_exists($cliPath)) {
                 return self::_error("File '$cliPath' is missed, why?");
+            }
         }
 
         // require this class once
         require_once $cliPath;
-
         // if the class is not found...
-        if (!class_exists($name))    
+        if (!class_exists($name)) {
             return self::_error("Class '$name' is not defined, why?");
+        }
 
         $cli = new $name();
 
@@ -119,15 +123,17 @@ class FaZend_Cli_Router
         $options = array();
         foreach (array_slice($argv, 2) as $opt) {
             $matches = array();
-            if (!preg_match('/^\-\-([\-\w]+)(?:\=(.*?))?$/', $opt, $matches))
+            if (!preg_match('/^\-\-([\-\w]+)(?:\=(.*?))?$/', $opt, $matches)) {
                 return self::_error("Invalid option: '$opt'. Correct format is: '--name=value'");
+            }
 
             $name = strtolower($matches[1]);
 
-            if (isset($matches[2]))    
+            if (isset($matches[2])) {
                 $options[$name] = $matches[2];    
-            else    
+            } else {
                 $options[$name] = true;    
+            }
         }
 
         return $options;

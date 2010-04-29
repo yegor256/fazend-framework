@@ -60,18 +60,6 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
         return true;
     }
 
-    // /**
-    //  * Validate whether the object is already in POS
-    //  *
-    //  * @return void
-    //  */
-    // protected function _attachToPos() 
-    // {
-    //     $this->_parent = false;
-    //     $this->_fzObject = FaZend_Pos_Model_Object::findRoot();
-    //     return parent::_attachToPos();
-    // }
-
     /**
      * Set parent for the object
      * 

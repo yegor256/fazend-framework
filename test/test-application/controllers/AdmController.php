@@ -14,7 +14,7 @@
  * @category FaZend
  */
 
-require_once 'FaZend/Controller/controllers/AdmController.php';
+require_once FAZEND_APP_PATH . '/controllers/AdmController.php';
             
 /**
  * Admin functions

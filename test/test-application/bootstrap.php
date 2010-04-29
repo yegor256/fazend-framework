@@ -15,8 +15,6 @@
  * @see ActorSystem
  */
 
-define('LICENSE_FILE', APPLICATION_PATH . '/../../LICENSE.txt');
-
 /**
  * Bootstraper
  *
@@ -36,9 +34,9 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      */
     protected function _initDbData()
     {
-        $this->bootstrap('db');
-        $this->bootstrap('Deployer');
-
+        $this->bootstrap('fz_Injector');
+        $this->bootstrap('fz_Deployer');
+        $this->bootstrap('fz_orm');
         FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'new Zend_Date(${a1})');
 
         $queries = array(
@@ -48,8 +46,9 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
             'insert into boat values (1, "boat", "super 8")',
         );
 
-        foreach ($queries as $query)
+        foreach ($queries as $query) {
             Zend_Db_Table_Abstract::getDefaultAdapter()->query($query);
+        }
     }
     
     /**
@@ -74,7 +73,8 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      */
     public function _initUserClass() 
     {
-        $this->bootstrap('Fazend');
+        $this->bootstrap('fz_Injector');
+        $this->bootstrap('fz_orm');
         FaZend_User::setRowClass('Model_User');
     }
 

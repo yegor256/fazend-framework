@@ -117,7 +117,8 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
         }
 
         // if not email configured - skip it
-        $email = FaZend_Properties::get()->errors->email;
+        $email = Zend_Registry::get('Zend_Application')
+            ->getBootstrap()->getResource('fz_errors')->getAdminEmail();
         if (!$email) {
             return;
         }

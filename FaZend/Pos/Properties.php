@@ -310,8 +310,9 @@ class FaZend_Pos_Properties
      */
     public static function cleanPosMemory($saveAll = true, $ignoreExceptions = false) 
     {
-        if (is_null(self::$_root))
+        if (is_null(self::$_root)) {
             return;
+        }
             
         if ($saveAll) {
             self::saveAll($ignoreExceptions);
@@ -333,8 +334,9 @@ class FaZend_Pos_Properties
      */
     public static function saveAll($ignoreExceptions = false) 
     {
-        if (is_null(self::$_root))
+        if (is_null(self::$_root)) {
             return;
+        }
             
         foreach (self::$_instances as $property) {
             try {
@@ -397,8 +399,9 @@ class FaZend_Pos_Properties
      */
     public static function factoryById($id)
     {
-        if (isset(self::$_instances[$id]))
+        if (isset(self::$_instances[$id])) {
             return self::$_instances[$id];
+        }
         FaZend_Exception::raise(
             'FaZend_Pos_Properties_InstanceNotFound', 
             "Instance not found by ID: $id",
@@ -421,10 +424,11 @@ class FaZend_Pos_Properties
             $this->save(false);
         } catch (FaZend_Pos_Exception $e) {
             $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
-            if (defined('TESTING_RUNNING'))
+            if (defined('TESTING_RUNNING')) {
                 echo $msg . "\n";
-            else
+            } else {
                 logg($msg);
+            }
         }
     }
 
@@ -437,8 +441,9 @@ class FaZend_Pos_Properties
     public function __get($name)
     {
         $method = '_get' . ucfirst($name);
-        if (method_exists($this, $method))
+        if (method_exists($this, $method)) {
             return $this->$method();
+        }
         
         FaZend_Exception::raise(
             'FaZend_Pos_Properties_PropertyOrMethodNotFound', 
@@ -457,8 +462,9 @@ class FaZend_Pos_Properties
     public function __set($name, $value)
     {
         $method = '_set' . ucfirst($name);
-        if (method_exists($this, $method))
+        if (method_exists($this, $method)) {
             return $this->$method($value);
+        }
         
         FaZend_Exception::raise(
             'FaZend_Pos_Properties_PropertyOrMethodNotFound', 
@@ -624,8 +630,9 @@ class FaZend_Pos_Properties
         if ($name === null) {
             $name = 0;
             foreach ($this->_properties as $key=>$item) {
-                if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(\d+)$/', $key, $matches))
+                if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(\d+)$/', $key, $matches)) {
                     $name = max($name, $matches[1] + 1);
+                }
             }
         }
         return $this->setProperty(self::ARRAY_PREFIX . $name, $value);
@@ -694,8 +701,9 @@ class FaZend_Pos_Properties
      */
     public function cleanArray() 
     {
-        foreach ($this->itemsIterator as $key=>$value)
+        foreach ($this->itemsIterator as $key=>$value) {
             $this->unsetItem($key);
+        }
     }
 
     /**
@@ -708,8 +716,9 @@ class FaZend_Pos_Properties
     public function load($force = true) 
     {
         // object is NOT loaded from DB yet?
-        if (is_null($this->_clean) || $force)
+        if (is_null($this->_clean) || $force) {
             $this->_loadSnapshot();
+        }
 
         if ($this->_clean === false) {
             FaZend_Exception::raise(
@@ -733,12 +742,14 @@ class FaZend_Pos_Properties
     public function save($force = true) 
     {
         // if we're OUT of POS DB structure - ignore the procedure
-        if (!$this->_isInPos())
+        if (!$this->_isInPos()) {
             return;
+        }
 
         // object is NOT saved to DB yet?
-        if (($this->_clean === false) || $force)
+        if (($this->_clean === false) || $force) {
             $this->_saveSnapshot();
+        }
         $this->_clean = true;
     }
     
@@ -782,9 +793,9 @@ class FaZend_Pos_Properties
         
         $text .= "Properties (" . count($this->_properties) . "):\n";
         
-        if (!count($this->_properties))
+        if (!count($this->_properties)) {
             $text .= "    none\n";
-        else {
+        } else {
             foreach ($this->_properties as $name=>$property) {
                 $text .= "    {$name}: ";
                 $stubClass = self::STUB_CLASS;
@@ -803,11 +814,13 @@ class FaZend_Pos_Properties
 
         // @todo We should use ->versions here
         $text .= "Versions:\n";
-        foreach (FaZend_Pos_Model_Snapshot::retrieveVersions($this->_fzObject) as $row)
+        foreach (FaZend_Pos_Model_Snapshot::retrieveVersions($this->_fzObject) as $row) {
             $text .= "    #{$row->version}: " . cutLongLine($row->properties, 100) . "\n";
+        }
 
-        if (!$die)
+        if (!$die) {
             return $text;
+        }
         echo "\n\n" . $text . "\n\n";
         die();
     }
@@ -907,8 +920,9 @@ class FaZend_Pos_Properties
             );
         }
         // the object was never loaded yet
-        if (is_null($this->_clean))
+        if (is_null($this->_clean)) {
             $this->load(false);
+        }
     }
 
     /**
@@ -927,8 +941,9 @@ class FaZend_Pos_Properties
     {
         // maybe this KID object is already in POS,
         // but somewhere else? we should save it then.
-        if ($kid->ps(null, false) instanceof FaZend_Pos_Properties)
+        if ($kid->ps(null, false) instanceof FaZend_Pos_Properties) {
             $parent->ps()->save();
+        }
             
         try {
             // find my ID
@@ -998,8 +1013,9 @@ class FaZend_Pos_Properties
             );
         }
         
-        if (strpos($name, self::ARRAY_PREFIX) === 0)
+        if (strpos($name, self::ARRAY_PREFIX) === 0) {
             $name = substr($name, strlen(self::ARRAY_PREFIX));
+        }
         
         return $name;
     }
@@ -1015,8 +1031,9 @@ class FaZend_Pos_Properties
     {
         foreach ($this->_properties as $name=>$property) {
             if (($property instanceof FaZend_Pos_Abstract) && 
-                ($kid->ps()->id == $property->ps()->id))
+                ($kid->ps()->id == $property->ps()->id)) {
                 return $name;
+            }
         }
             
         FaZend_Exception::raise(
@@ -1038,8 +1055,9 @@ class FaZend_Pos_Properties
         
         $uplinks = $this->_getUplinks();
         $path = '';
-        foreach ($uplinks as $uplink)
+        foreach ($uplinks as $uplink) {
             $path .= $uplink->ps()->name . '/';
+        }
         return $path . $this->name;
     }
 
@@ -1087,8 +1105,9 @@ class FaZend_Pos_Properties
      */
     protected function _getItemsIterator()
     {
-        if (isset($this->_itemsIterator))
+        if (isset($this->_itemsIterator)) {
             return $this->_itemsIterator;
+        }
             
         $this->_attachToPos();
         
@@ -1097,8 +1116,9 @@ class FaZend_Pos_Properties
         // http://bugs.php.net/bug.php?id=50579
         $array = array();
         foreach ($this->_properties as $name=>$value) {
-            if (!preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches))
+            if (!preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches)) {
                 continue;
+            }
             $array[$matches[1]] = $this->getItem($matches[1]);
         }
         return $this->_itemsIterator = new ArrayIterator($array);
@@ -1163,12 +1183,14 @@ class FaZend_Pos_Properties
         foreach ($this->_properties as $key=>$property) {
             // don't touch the stubs
             $stubClass = self::STUB_CLASS;
-            if ($property instanceof $stubClass)
+            if ($property instanceof $stubClass) {
                 continue;
+            }
                 
             // don't save stateless properties, ever
-            if (isset($this->_stateless[$key]))
+            if (isset($this->_stateless[$key])) {
                 continue;
+            }
                 
             if ($property instanceof FaZend_Pos_Abstract) {
                 // memory can be destroyed already and some
@@ -1232,8 +1254,9 @@ class FaZend_Pos_Properties
         
         // kill stateless properties
         foreach ($this->_properties as $key=>$property) {
-            if (isset($this->_stateless[$key]))
+            if (isset($this->_stateless[$key])) {
                 unset($this->_properties[$key]);
+            }
         }
         
         foreach (FaZend_Pos_Model_PartOf::retrieveByParent($this->_fzObject) as $partOf) {
@@ -1255,8 +1278,9 @@ class FaZend_Pos_Properties
     protected function _restoreFromObject(FaZend_Pos_Model_Object $fzObject) 
     {
         $stub = self::STUB_CLASS;
-        if (!class_exists($stub, false))
+        if (!class_exists($stub, false)) {
             eval("class {$stub} {};");
+        }
         $obj = new $stub();
         $obj->className = $fzObject->class;
         return $obj;
@@ -1278,8 +1302,9 @@ class FaZend_Pos_Properties
      */
     protected function _resolveStub($name) 
     {
-        if (!isset($this->_properties[$name]))
+        if (!isset($this->_properties[$name])) {
             return;
+        }
             
         $property = $this->_properties[$name];
         // this is just a stub for now and the real object should be loaded?
@@ -1301,8 +1326,9 @@ class FaZend_Pos_Properties
     protected function _getUplinks(array $uplinks = array()) 
     {
         $uplink = $this->_parent->ps()->_object;
-        if (isset($uplinks[$uplink->ps()->id]))
+        if (isset($uplinks[$uplink->ps()->id])) {
             return $uplinks;
+        }
         $uplinks[$uplink->ps()->id] = $uplink;
         $this->_parent->ps()->_getUplinks($uplinks);
         return $uplinks;

@@ -14,7 +14,35 @@
  * @category FaZend
  */
 
+/**
+ * @see Zend_Application_Bootstrap_ResourceBootstrapper
+ */
+require_once 'Zend/Application/Bootstrap/ResourceBootstrapper.php';
+
+/**
+ * @see Zend_Application_Bootstrap_Bootstrapper
+ */
+require_once 'Zend/Application/Bootstrap/Bootstrapper.php';
+
+/**
+ * @see Zend_Application_Bootstrap_BootstrapAbstract
+ */
+require_once 'Zend/Application/Bootstrap/BootstrapAbstract.php';
+
+/**
+ * @see Zend_Application_Bootstrap_Bootstrap
+ */
 require_once 'Zend/Application/Bootstrap/Bootstrap.php';
+
+/**
+ * @see Zend_Application
+ */
+require_once 'Zend/Application.php';
+
+/**
+ * @see Zend_Registry
+ */
+require_once 'Zend/Registry.php';
 
 /**
  * Bootstrap
@@ -24,5 +52,55 @@ require_once 'Zend/Application/Bootstrap/Bootstrap.php';
  */
 class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    
+    /**
+     * Create and return an instance of Zend_Application
+     *
+     * @return Zend_Application
+     * @see index.php
+     */
+    public static function prepareApplication() 
+    {
+        $application = new Zend_Application(APPLICATION_ENV);
+        Zend_Registry::set('Zend_Application', $application);
+
+        // load application-specific options
+        $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
+        $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
+
+        // if the application doesn't have a bootstrap file
+        if (!file_exists($options->bootstrap->path)) {
+            $options->bootstrap->path = FAZEND_PATH . '/Application/Bootstrap/Bootstrap.php';
+            $options->bootstrap->class = 'FaZend_Application_Bootstrap_Bootstrap';
+        }                                             
+
+        // load system options
+        $application->setOptions($options->toArray());
+        return $application;
+    }
+    
+    /**
+     * Execute a resource
+     *
+     * This method protects us in migration from version to version. If 
+     * resource is not found, we just ignore this situation.
+     *
+     * @param string Name of resource
+     * @return void
+     */
+    protected function _executeResource($resource)
+    {
+        return parent::_executeResource($resource);
+        try {
+            return parent::_executeResource($resource);
+        } catch (Zend_Application_Bootstrap_Exception $e) {
+            // swallow it...
+            trigger_error(
+                "Resource '{$resource}' is deprecated", 
+                E_USER_WARNING
+            );
+        }
+    }
+    
 }
 

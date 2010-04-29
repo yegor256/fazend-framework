@@ -20,6 +20,9 @@ defined('APPLICATION_PATH') or define('APPLICATION_PATH', realpath(dirname(__FIL
 defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
 defined('TESTING_RUNNING') or define('TESTING_RUNNING', true);
 
+/**
+ * @see Zend_Test_PHPUnit_ControllerTestCase
+ */
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 
 /**
@@ -34,51 +37,45 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
      * List of variables
      *
      * @var array
+     * @see __set()
+     * @see __get()
      */
     protected static $_variables = array();
 
     /**
      * Setup test
      *
+     * It is very important to note that we DO NOT use default Zend 
+     * {@link Zend_Test_PHPUnit_ControllerTestCase::setUp()} method. Mostly because
+     * in Zend Framework front controller is completely reset every time
+     * setUp() is called. We don't need this behavior, because we initialize
+     * application only once, not every run of the test.
+     *
      * @return void
+     * @see Zend_Test_PHPUnit_ControllerTestCase::setUp()
      */
     public function setUp()
     {
-        // run this method before everything else
-        $this->bootstrap = array($this, 'fazendTestBootstrap');
+        // bootstrap the application
+        // we include this bootstrap script only ONCE, in order
+        // to avoid multiple initialization of the application, in the
+        // same PHP environment
+        include_once 'FaZend/Application/index.php';
 
-        // perform normal operations of the test case
+        // run this method before everything else
+        require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
+        $this->bootstrap = FaZend_Application_Bootstrap_Bootstrap::prepareApplication();
+        
+        // run the normal setup of a test case, which will reset everything,
+        // including front controoler, layout, loaders, etc. and THEN will bootstrap
+        // the application provided.
         parent::setUp();
 
         // create local view, since it's a controller
-        $this->view = Zend_Registry::get('view');
+        $this->view = $this->bootstrap->getBootstrap()->getResource('view');
         
         // clean all instances of all formas
         FaZend_View_Helper_Forma::cleanInstances();
-    }
-    
-    /**
-     * Bootstrap as usual
-     *
-     * @return void
-     */
-    public function fazendTestBootstrap()
-    {
-        // bootstrap the application
-        include 'FaZend/Application/index.php';
-    }    
-
-    /**
-     * Close-out the test
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        $this->resetRequest();
-        $this->resetResponse();
-
-        parent::tearDown();
     }
     
     /**
@@ -101,8 +98,9 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
      */
     public function __get($name)
     {
-        if (isset(self::$_variables[$name]))
+        if (isset(self::$_variables[$name])) {
             return self::$_variables[$name];
+        }
         return parent::__get($name);
     }
 

@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: Date.php 1601 2010-02-08 12:10:51Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 

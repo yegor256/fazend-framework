@@ -18,134 +18,160 @@
  * Send email using template
  *
  * @package Email 
+ * @see FaZend_Application_Resource_Fazend_Email
  */
 class FaZend_Email
 {
 
     /**
-     * Configuration of the sender
+     * View that will render the template
      *
-     * @var Zend_Config
+     * @var Zend_View
+     * @see setView()
      */
-    protected static $_config;
+    protected $_view = null;
 
     /**
-     * Set of local variables defined through set()
-     *
-     * @var array
-     */
-    protected $_variables;
-
-    /**
-     * Mailer
+     * Mailer that will send this email
      *
      * @var Zend_Mail
+     * @see create()
      */
-    protected $_mailer;
-    
-    /**
-     * Attachments to use
-     *
-     * @var Zend_Mime_Part[]
-     */
-    protected $_attachments = array();
+    protected $_mailer = null;
 
     /**
-     * Saves configuration internally
+     * Are we sending emails actually? 
      *
-     * @param Zend_Config Config from .ini file
-     * @param Zend_View View to use for rendering
-     * @return FaZend_Email
-     * @throws FaZend_Email_InvalidTransport
+     * @var boolean
+     * @see send()
      */
-    public static function config(Zend_Config $config, Zend_View $view) 
+    protected $_isSending = false;
+    
+    /**
+     * Template to use
+     *
+     * @var string
+     * @see setTemplate()
+     */
+    protected $_template = null;
+    
+    /**
+     * Set view which will be used to render templates
+     *
+     * @param Zend_View View to use
+     * @return $this
+     * @see FaZend_Application_Resource_Fazend_Email::init()
+     */
+    public function setView(Zend_View $view) 
     {
-        // to allow further modifications
-        self::$_config = new Zend_Config($config->toArray(), true);
-        self::$_config->view = clone $view;
-        self::$_config->view->setFilter(null);        
-        
-        if (!isset(self::$_config->encoding))
-            self::$_config->encoding = 'utf-8';
-            
-        if (isset(self::$_config->transport)) {
-            switch (strval(self::$_config->transport->name)) {
-                case 'Zend_Mail_Transport_Smtp':
-                    Zend_Mail::setDefaultTransport(
-                        new Zend_Mail_Transport_Smtp(
-                            strval(self::$_config->transport->host),
-                            self::$_config->transport->params->toArray()
-                        )
-                    );
-                    break;
-                    
-                case 'Zend_Mail_Transport_Sendmail':
-                    // do nothing, it's default
-                    break;
-                    
-                default:
-                    FaZend_Exception::raise(
-                        'FaZend_Email_InvalidTransport', 
-                        'Transport "' . self::$_config->transport->name . '" is unknown'
-                    );
+        $this->_view = clone $view;
+        $this->_view->setFilter(null);
+        return $this;
+    }
+    
+    /**
+     * Set mailer which will be used for sending of emails
+     *
+     * @param Zend_Mail Mailer
+     * @return $this
+     * @see FaZend_Application_Resource_Fazend_Email::init()
+     */
+    public function setMailer(Zend_Mail $mailer) 
+    {
+        $this->_mailer = $mailer;
+        return $this;
+    }
+    
+    /**
+     * Set template to render
+     *
+     * @param string Name of template (relative path)
+     * @return $this
+     * @see create()
+     */
+    public function setTemplate($template) 
+    {
+        $this->_template = $template;
+        return $this;
+    }
+    
+    /**
+     * Are we sending or not?
+     *
+     * @param boolean Are we sending or just logging operations?
+     * @return $this
+     * @see FaZend_Application_Resource_Fazend_Email::init()
+     */
+    public function setIsSending($isSending) 
+    {
+        $this->_isSending = $isSending;
+        return $this;
+    }
+
+    /**
+     * Set list of folders where templates are stored
+     *
+     * @param string[] Folders
+     * @return $this
+     * @throws FaZend_Email_InvalidFolderException
+     * @see FaZend_Application_Resource_Fazend_Email::init()
+     */
+    public function setFolders(array $folders) 
+    {
+        foreach ($folders as $dir) {
+            if (!file_exists($dir) || !is_dir($dir)) {
+                FaZend_Exception::raise(
+                    'FaZend_Email_InvalidFolderException', 
+                    "Directory '{$dir}' is absent or is not a directory"
+                );
             }
         }
+        $this->_view->addScriptPath($folders);
+        return $this;
     }
 
     /**
      * Creates an object of class FaZend_Email, statically
      *
-     * @param string Name of the template to use, absolute file name (in 'application/emails')
+     * You should use this method in order to send emails. See the example
+     * in {@link __construct()}, for better understanding.
+     *
+     * @param string Name of the template to use, relative file name (in 'application/emails')
      * @return FaZend_Email
+     * @see __construct()
      */
-    public static function create($template = null) 
+    public static function create($template = null)
     {
-        return new FaZend_Email($template);
+        // pre-configured email object is created inside
+        // this resource. here we just get it from there, and clone
+        // it in order to configure for this particular template
+        $email = clone Zend_Registry::get('Zend_Application')
+            ->getBootstrap()->getResource('fz_email');
+            
+        $email->setTemplate($template);
+        return $email;
     }
 
     /**
-     * Creates an object of class FaZend_Email 
+     * Create a NEW FaZend_Email object, which is empty
      *
-     * @param string Name of the template to use, absolute file name (in 'application/emails')
+     * This method of creating emails is used only in bootstrap, to create
+     * the first object. Later you should use factory method {@link create()}
+     * in order to clone the next object, using the default one. For example:
+     *
+     * <code>
+     * FaZend_Email::create('account-created.tmpl')
+     *     ->set('toEmail', 'john@example.com')
+     *     ->set('toName', 'John Smith')
+     *     ->set('subject', 'Your account is created!')
+     *     ->send();
+     * </code>
+     *
      * @return void
+     * @see FaZend_Application_Resource_Fazend_Email::init()
      */
-    public function __construct($template = false) 
+    public function __construct() 
     {
-        $this->set('template', $template);
-
-        validate()
-            ->true(
-                isset(self::$_config->notifier), 
-                "You should define resources.Email.notifier in app.ini (author of notify messages)"
-            )
-            ->true(
-                isset(self::$_config->notifier->email), 
-                "You should define resources.Email.notifier.email in app.ini"
-            )
-            ->true(
-                isset(self::$_config->notifier->name), 
-                "You should define resources.Email.notifier.name in app.ini"
-            );
-
-        $this->set('fromEmail', self::$_config->notifier->email);
-        $this->set('fromName', self::$_config->notifier->name);
-
-        validate()
-            ->true(
-                isset(self::$_config->manager), 
-                "You should define resources.Email.manager in app.ini (receiver of system emails)"
-            )
-            ->true(
-                isset(self::$_config->manager->email), 
-                "You should define resources.Email.manager.email in app.ini"
-            )
-            ->true(
-                isset(self::$_config->manager->name), 
-                "You should define resources.Email.manager.name in app.ini"
-            );
-
-        $this->set('toEmail', self::$_config->manager->email);
-        $this->set('toName', self::$_config->manager->name);
     }
 
     /**
@@ -157,33 +183,19 @@ class FaZend_Email
      */
     public function set($key, $value) 
     {
-        $this->_variables[$key] = $value;
+        $this->_view->$key = $value;
         return $this;
     }
 
     /**
-     * Get local value
-     *
-     * @param string Name of the element
-     * @return mixed|false
-     */
-    public function get($key) 
-    {
-        if (!isset($this->_variables[$key])) {
-            return false;
-        }
-        return $this->_variables[$key];
-    }
-    
-    /**
      * Attach content as file
      *
      * @param Zend_Mime_Part To attach
-     * @return void
+     * @return $this
      */
     public function attach(Zend_Mime_Part $part) 
     {
-        $this->_attachments[] = $part;
+        $this->_mailer->addAttachment($part);
         return $this;
     }
     
@@ -195,12 +207,10 @@ class FaZend_Email
      */
     public function send($force = false) 
     {
-        $mailer = $this->_getFilledMailer();
-
-        if (self::$_config->send || $force)
-            // send it out
+        $mailer = $this->_fillMailer();
+        if ($this->_isSending || $force) {
             $mailer->send();
-        else
+        } else {
             logg(
                 "Email sending skipped:\n" 
                 . "\tFrom: " . $mailer->getFrom() . "\n"
@@ -208,7 +218,7 @@ class FaZend_Email
                 . "\tSubject: " . $mailer->getSubject() . "\n"
                 . "\tMessage (from new line):\n" . $mailer->getBodyText(true)
             );
-
+        }
         return $this;
     }
 
@@ -219,51 +229,29 @@ class FaZend_Email
      */
     public function logError() 
     {
-        FaZend_Log::err($this->_getFilledMailer()->getBodyText()->getContent());
+        FaZend_Log::err($this->_mailer->getBodyText()->getContent());
         return $this;
     }
 
     /**
      * Get filled mailer, with parsed data
      *
-     * @return Zend_Mail
+     * @return void
+     * @throws FaZend_Email_NoTemplateException
      */
-    protected function _getFilledMailer() 
+    protected function _fillMailer() 
     {
-        if (isset($this->_mailer))
-            return $this->_mailer;
-
-        // this class will send email
-        $mail = $this->_createZendMailer();
-
-        // we render the template by means of View
-        $view = self::$_config->view;
-
-        // in this folder all email templates are located
-        $view->setScriptPath(self::$_config->folder);
-        $template = $this->get('template');
-
+        $mailer = clone $this->_mailer;
         // if the template was specified
-        if ($template) {
-            // maybe email template is missed?
-            if (!file_exists(self::$_config->folder . '/' . $template)) {
-                // maybe we can find in FaZend?
-                if (file_exists(FAZEND_PATH . '/Email/emails/' . $template)) {
-                    $view->setScriptPath(FAZEND_PATH . '/Email/emails/');
-                } else {
-                    FaZend_Exception::raise(
-                        'FaZend_Email_NoTemplate', 
-                        'Template ' . $template . ' is missed in ' . self::$_config->folder
-                    );
-                }
+        if ($this->_template) {
+            try {
+                $body = $this->_view->render($this->_template);
+            } catch (Zend_View_Exception $e) {
+                FaZend_Exception::raise(
+                    'FaZend_Email_NoTemplateException', 
+                    "Template '{$this->_template}' not found: {$e->getMessage()}"
+                );
             }
-
-            // set all variables to View for rendering
-            foreach ($this->_variables as $key=>$value) {
-                $view->assign($key, $value);
-            }
-
-            $body = $view->render($template);
         
             // replace old-styled new lines with \n
             $body = preg_replace("/\r\n|\n\r|\r/", "\n", $body);
@@ -276,61 +264,47 @@ class FaZend_Email
                 if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
                     $this->set($matches[1], $matches[2]);
                 }    
-
                 // empty line stops parsing
                 if ($line == '--') {
                     break;
                 }
             }    
-
             $body = trim(implode("\n", array_slice($lines, $id+1)), " \n\r");
         } else {
-            $body = $this->get('body');
+            $body = $this->_view->body;
         }
 
         // set body of the email
-        $signatureFile = $view->getScriptPath('signature.txt');
+        $signatureFile = $this->_view->getScriptPath('signature.txt');
         if (file_exists($signatureFile)) {
             $body .= file_get_contents($signatureFile);
         }
             
-        $mail->setBodyText($body);
+        $mailer->setBodyText($body);
 
         // set from user
-        $mail->setFrom($this->get('fromEmail'), $this->get('fromName'));
+        $mailer->setFrom(
+            $this->_view->fromEmail,
+            $this->_view->fromName
+        );
+
+        // set recepient
+        $mailer->addTo(
+            $this->_view->toEmail,
+            $this->_view->toName
+        );
 
         // set CC, if required
-        if (is_array($this->get('cc'))) {
-            foreach ($this->get('cc') as $email=>$name) {
-                $mail->addCc($email, $name);
+        if (is_array($this->_view->cc)) {
+            foreach ($this->_view->cc as $email=>$name) {
+                $mailer->addCc($email, $name);
             }
         }
 
-        // add attachments
-        foreach ($this->_attachments as $part) {
-            $mail->addAttachment($part);
-        }
-
         // set subject
-        $mail->setSubject($this->get('subject'));
-
-        // set recepient
-        $mail->addTo($this->get('toEmail'), $this->get('toName'));
-
-        return $mail;
-    }
-
-    /**
-     * Creates an instance of class Zend_Mail
-     *
-     * @return Zend_Mail
-     */
-    protected function _createZendMailer () 
-    {
-        if (!isset($this->_mailer))
-            $this->_mailer = new Zend_Mail(self::$_config->encoding);
-
-        return $this->_mailer;
+        $mailer->setSubject($this->_view->subject);
+        
+        return $mailer;
     }
 
 }

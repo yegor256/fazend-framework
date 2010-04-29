@@ -35,12 +35,16 @@ class FaZend_ValidatorTest extends AbstractTestCase
                     case 5:
                         validate()->regex('try', 'invalid regular expression');
                     default:
-                        FaZend_Exception::raise('FaZend_Validator_Failure');
+                        FaZend_Exception::raise(
+                            'FaZend_Validator_Exception'
+                        );
                         break;
                 }
                 $this->fail('Exception should be raised, step: ' . $step);
-            } catch (FaZend_Validator_Failure $e) {
+            } catch (FaZend_Validator_Exception $e) {
                 logg($e->getMessage());
+            } catch (Zend_Validate_Exception $e) {
+                $this->fail("Exception thrown through our control, why? {$e->getMessage()}");
             }
             
         } while ($step--);

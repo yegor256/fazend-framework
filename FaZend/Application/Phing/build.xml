@@ -32,7 +32,7 @@
 
     <!-- main task, executed by the project -->
     <target name="main" 
-        depends="svn, lint, phpcs, phpmd, test, deploy, sniffer, doc, ping, clean"
+        depends="svn, lint, phpcs, phpmd, test, deploy, ping, phprack, clean"
         description="Validate, compile, deploy and clean">
     </target>
 
@@ -52,15 +52,10 @@
                 <property name="ccFacade" value="${cc.root}/ccFacade/public" />
 
                 <!-- locations of reports, on CC server -->
-                <property name="cc.doc" value="${cc.root}/doc/${phing.project.name}" />
                 <property name="cc.coverage" value="${cc.root}/coverage/${phing.project.name}" />
-                <property name="cc.phpcs" value="${cc.root}/phpcs/${phing.project.name}" />
-                <property name="cc.tests" value="${cc.root}/tests/${phing.project.name}" />
 
                 <!-- ftp uploader -->
                 <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
-                <!-- code sniffer reporter -->
-                <taskdef name="codeSnifferReport" classname="src.library.FaZend.Application.Phing.CodeSnifferReport" />
 
                 <!-- get the number of SVN revision we're currently working with -->
                 <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))" 
@@ -113,28 +108,6 @@
         </then></if>
 
         <!--
-            {to.sniffer} property asks the builder to create a PHP Code Sniffer
-            report in reports/ directory, after the testing is finished.
-            PHPCS PEAR package should be installed in order to run this task.
-        -->
-        <if>
-            <not><isset property="to.sniffer" /></not>
-        <then>
-            <property name="to.sniffer" value="${to.deploy}" />
-        </then></if>
-
-        <!--
-            {to.phpdoc} asks the builder to build phpDocumentor report when
-            testing is finished. The report is stored in reports/ directory
-            and phpDocumentor is a mandatory component in order to use this target
-        -->
-        <if>
-            <not><isset property="to.phpdoc" /></not>
-        <then>
-            <property name="to.phpdoc" value="${to.deploy}" />
-        </then></if>
-
-        <!--
             {to.phpcs} asks the builder to validate PHP/PHTML syntax with PHPCS
             PEAR package and stops building if any errors are found (warnings
             are ignored). PHPCS package is mandatory to use this task.
@@ -164,8 +137,6 @@
         <then>
             <property name="to.deploy" value="false" override="true" />
             <property name="to.phpcs" value="false" override="true" />
-            <property name="to.phpdoc" value="false" override="true" />
-            <property name="to.sniffer" value="false" override="true" />
             <property name="to.coverage" value="false" override="true" />
             <property name="to.phpmd" value="false" override="true" />
         </then></if>
@@ -174,8 +145,6 @@
         <echo msg="{to.lint} set to ${to.lint}" />
         <echo msg="{to.clean} set to ${to.clean}" />
         <echo msg="{to.coverage} set to ${to.coverage}" />
-        <echo msg="{to.sniffer} set to ${to.sniffer}" />
-        <echo msg="{to.phpdoc} set to ${to.phpdoc}" />
         <echo msg="{to.phpcs} set to ${to.phpcs}" />
         <echo msg="{to.phpmd} set to ${to.phpmd}" />
     </target>
@@ -201,18 +170,13 @@
             defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true); 
             defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing'); 
             defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
-            define('RUN_TEST_STARTER', true);
             include '${project.basedir}/src/library/FaZend/Application/index.php';" />
         <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
         
         <!-- prepare code coverage db -->
         <if><istrue value="${to.coverage}" /><then>
-            <property name="coverage.dir" value="${project.basedir}/reports/coverage" />
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
             
-            <!-- delete previous files, if any -->
-            <delete dir="${coverage.dir}" failonerror="false" verbose="false" includeemptydirs="true" />
-
             <!-- make sure it exists -->
             <mkdir dir="${coverage.dir}" />
             
@@ -225,18 +189,23 @@
             </coverage-setup>
         </then></if>
 
-        <if><istrue value="${to.coverage}" /><then>
+        <!-- one individual test, specified in -Dto.unit=... -->
+        <if><isset property="to.unit" /><then>
+            <phpunit haltonerror="yes" haltonfailure="yes">
+                <formatter type="plain" usefile="no" />
+                <batchtest>
+                    <fileset dir="${project.basedir}">
+                        <include name="${to.unit}"/>
+                        <include name="test/${to.unit}"/>
+                    </fileset>
+                </batchtest>
+            </phpunit>
+        </then><else>
             <mkdir dir="${project.basedir}/reports/tests" />
-            <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+            <phpunit haltonerror="yes" haltonfailure="yes" codecoverage="${to.coverage}">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
                 <formatter type="plain" usefile="no" />
                 <batchtest>
-                    <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
-                        <include name="**/*Test.php"/>
-                        <exclude name="**/Abstract*.php"/>
-                        <exclude name="**/_*.php"/>
-                        <exclude name=".svn/**"/>
-                    </fileset>
                     <fileset dir="${project.basedir}/test">
                         <include name="**/*Test.php"/>
                         <exclude name="**/Abstract*.php"/>
@@ -245,91 +214,7 @@
                     </fileset>
                 </batchtest>
             </phpunit>
-        </then><else>
-            <!-- one individual test, specified in -Dto.unit=... -->
-            <if><isset property="to.unit" /><then>
-                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-                    <formatter type="plain" usefile="no" />
-                    <batchtest>
-                        <fileset dir="${project.basedir}">
-                            <include name="${to.unit}"/>
-                            <include name="test/${to.unit}"/>
-                        </fileset>
-                    </batchtest>
-                </phpunit>
-            </then><else>
-                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-                    <formatter type="plain" usefile="no" />
-                    <batchtest>
-                        <fileset dir="${project.basedir}/src/library/FaZend/Test/tests">
-                            <include name="**/*Test.php"/>
-                            <exclude name="**/Abstract*.php"/>
-                            <exclude name="**/_*.php"/>
-                            <exclude name=".svn/**"/>
-                        </fileset>
-                        <fileset dir="${project.basedir}/test">
-                            <include name="**/*Test.php"/>
-                            <exclude name="**/Abstract*.php"/>
-                            <exclude name="**/_*.php"/>
-                            <exclude name=".svn/**"/>
-                        </fileset>
-                    </batchtest>
-                </phpunit>
-            </else></if>
         </else></if>
-
-        <if><istrue value="${to.deploy}" /><then>
-            <!-- create a report after unit tests -->
-            <mkdir dir="${project.basedir}/reports/phpunit" />
-            <phpunitreport 
-                infile="${project.basedir}/reports/tests/testsuites.xml" 
-                format="frames" 
-                todir="${project.basedir}/reports/phpunit" 
-                styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
-
-            <!-- delete previous phpunit report from HTTP hosting and copy a new one -->
-            <delete dir="${cc.tests}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${cc.tests}" />
-            <copy todir="${cc.tests}" >
-                <fileset dir="${project.basedir}/reports/phpunit" />
-            </copy>
-
-            <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.tests}"
-                dir="${ccFacade}"
-                escape="false"
-                checkreturn="true" />
-            <echo msg="Access protection files deployed to phpunit reports directory" />    
-        </then></if>
-
-        <if><istrue value="${to.coverage}" /><then>
-            <!-- create an HTML report about code coverage -->
-            <mkdir dir="${coverage.dir}/report" />
-            <coverage-report outfile="${coverage.db}">
-                <report todir="${coverage.dir}/report" styledir="${project.basedir}/src/library/FaZend/Application/Phing"/>
-            </coverage-report>
-        </then></if>
-
-        <if><and><istrue value="${to.deploy}" /><istrue value="${to.coverage}" /></and><then>
-            <!-- inject revision number into title -->
-            <copy file="${coverage.dir}/report/index.html" tofile="${coverage.dir}/report/index.html.orig" />
-            <exec command="sed 's/Coverage Results/xdebug coverage rev${svn.revision}/g' &lt; ${coverage.dir}/report/index.html.orig &gt; ${coverage.dir}/report/index.html" 
-                passthru="false" checkreturn="true" />  
-
-            <!-- delete previous coverage report from HTTP hosting and copy a new one -->
-            <delete dir="${cc.coverage}" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${cc.coverage}" />
-            <copy todir="${cc.coverage}" >
-                <fileset dir="${coverage.dir}/report" />
-            </copy>
-
-            <!-- create .htaccess and .htpasswd files to protect documentation -->
-            <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.coverage}"
-                dir="${ccFacade}"
-                escape="false"
-                checkreturn="true" />
-            <echo msg="Access protection files deployed to code coverage report directory" />    
-        </then></if>
     </target>    
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
@@ -366,47 +251,6 @@
         </else></if>
     </target>
 
-    <target name="sniffer" description="Run PHP Code Sniffer to validate code quality">
-        <if><istrue value="${to.sniffer}" /><then>
-            <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-            <mkdir dir="${project.basedir}/reports/phpcs" />
-            <exec command="phpcs 
-                --standard=Zend 
-                --report=xml
-                --ignore='.svn/*' 
-                --extensions='php,phtml' 
-                --report-file=${project.basedir}/reports/phpcs/index.xml 
-                ${project.basedir}/src/application >/dev/null" 
-                escape="false"
-                checkreturn="false" />
-
-            <echo msg="Converting PHPCS XML report into HTML files" />    
-            <mkdir dir="${project.basedir}/reports/phpcs/report" />
-            <codeSnifferReport 
-                srcDir="${project.basedir}/src/application"
-                destDir="${project.basedir}/reports/phpcs/report"
-                xmlFile="${project.basedir}/reports/phpcs/index.xml" />
-
-            <if><istrue value="${to.deploy}" /><then>
-                <!-- delete previous PHPCS report from HTTP hosting and copy a new one -->
-                <delete dir="${cc.phpcs}" failonerror="true" verbose="false" includeemptydirs="true" />
-                <mkdir dir="${cc.phpcs}" />
-                <copy todir="${cc.phpcs}" >
-                    <fileset dir="${project.basedir}/reports/phpcs/report" />
-                </copy>
-
-                <!-- create .htaccess and .htpasswd files to protect documentation -->
-                <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.phpcs}"
-                    dir="${ccFacade}"
-                    escape="false"
-                    checkreturn="true" />
-                <echo msg="Access protection files deployed to PHPCS report directory" />    
-            </then></if>
-        </then><else>
-            <echo msg="Skipped, since it's {to.sniffer} is FALSE" />    
-        </else></if>
-    </target>    
-
     <target name="deploy" description="Upload source files to the production FTP">
         <if><istrue value="${to.deploy}" /><then>
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
@@ -441,49 +285,27 @@
             <istrue value="${to.deploy}" />
             <isset property="live.home" />
         </and><then>
-            <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
-            <taskdef name="pingFaZend" classname="src.library.FaZend.Application.Phing.PingFaZend" />
-
-            <if>
-                <isset property="live.home"/>
-                <then>
-                    <pingFaZend url="${live.home}/__fz/ping/backup" />
-                </then>
-            </if>
+            <http-request url="${live.home}/__fz/ping" responseRegex="/.*/" />
         </then><else>
             <echo msg="Skipped, since it's not a continuous integration environment" />    
         </else></if>
     </target>
 
-    <target name="doc" description="Create phpDoc documentation and deploy it" >
-        <if><istrue value="${to.phpdoc}" /><then>
-            <!-- delete all previously created documentation -->
-            <delete dir="${project.basedir}/build/api" failonerror="true" verbose="false" includeemptydirs="true" />
-            <mkdir dir="${project.basedir}/build/api" />
-
-            <!-- create new php documentation -->
-            <exec command="phpdoc --useconfig ${project.basedir}/src/library/FaZend/Application/Phing/phpDocumentor.ini" 
-                passthru="no" />    
-        
-            <if><istrue value="${to.deploy}" /><then>
-                <!-- delete previous documentation from HTTP hosting and copy a new one -->
-                <delete dir="${cc.doc}" failonerror="true" verbose="false" includeemptydirs="true" />
-                <mkdir dir="${cc.doc}" />
-                <copy todir="${cc.doc}" >
-                    <fileset dir="${project.basedir}/build/api" />
-                </copy>
-
-                <!-- create .htaccess and .htpasswd files to protect documentation -->
-                <exec command="php index.php ProtectDirectory --project=${phing.project.name} --dir=${cc.doc}"
-                    dir="${ccFacade}"
-                    escape="false"
-                    checkreturn="true" />
-                <echo msg="Access protection files deployed to phpDoc directory" />    
-            </then></if>
+    <target name="phprack" description="Ping phpRack URL in order to run integration tests">
+        <if><and>
+            <istrue value="${to.deploy}" />
+            <isset property="phprack.url" />
+        </and><then>
+            <http-request 
+                url="${phprack.url}" 
+                responseRegex="/PHPRACK SUITE: OK/" 
+                observerEvents="connect, receivedBody, disconnect"
+                verbose="true"
+            />
         </then><else>
-            <echo msg="Skipped, since it {to.phpdoc} is FALSE" />    
+            <echo msg="Skipped, since it's not a continuous integration environment" />    
         </else></if>
-    </target>    
+    </target>
 
     <target name="clean" description="Remove obsolete files just created" >
         <if><istrue value="${to.clean}" /><then>

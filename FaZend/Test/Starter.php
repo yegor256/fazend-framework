@@ -19,7 +19,7 @@
  *
  * You should inherit this class and place your starter into
  * /test/starter/Starter.php. Your class should be called "Starter".
- * Method Starter::run() will be executed in building process, before
+ * Method Starter::start() will be executed in building process, before
  * all unit tests.
  *
  * In your class you should define _start*() methods. All of them will
@@ -38,22 +38,6 @@ abstract class FaZend_Test_Starter
 {
 
     /**
-     * Run it from build.xml
-     *
-     * @return void
-     */
-    public static function run()
-    {
-        $starterPhp = APPLICATION_PATH . '/../../test/starter/Starter.php';
-        if (!file_exists($starterPhp))
-            return;
-
-        require_once $starterPhp;
-        $starter = new Starter();
-        $starter->start();
-    }
-
-    /**
      * Make all initializations before tests
      *
      * @return void
@@ -68,6 +52,22 @@ abstract class FaZend_Test_Starter
         }
     }
     
+    /**
+     * Bootstrap given resource
+     *
+     * You may need this method when some resource should be loaded
+     * BEFORE injector. Injector is executed before all other resources
+     * loading, that's why you may need to bootstrap something explicitly.
+     *
+     * @param string Name of the resource to bootstrap
+     * @return mixed
+     */
+    protected function _bootstrap($resource) 
+    {
+        return Zend_Registry::get('Zend_Application')
+            ->getBootstrap()->bootstrap($resource);
+    }
+
     /**
      * Drop entire database, including all TABLE-s and VIEW-s
      *
@@ -95,6 +95,7 @@ abstract class FaZend_Test_Starter
             }
         }
         logg('TABLEs/VIEWs dropped: %s', implode(', ', $dropped));
+        unset($db);
     }
 
 }

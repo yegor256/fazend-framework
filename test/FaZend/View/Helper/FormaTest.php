@@ -26,11 +26,11 @@ class FaZend_View_Helper_FormaTest extends AbstractTestCase
     {        
         $this->request->setPost(
             array(
-                '2__name' => 'John Doe',
-                '2__client' => '1',
-                '2__reason' => 'just no reason',
-                '2__file' => 'test.jpg',
-                '2__submit' => 'go',
+                'name' => 'John Doe',
+                'client' => '1',
+                'reason' => 'just no reason',
+                'file' => 'test.jpg',
+                'submit' => 'go',
             )
         );
         $this->request->setMethod('POST');

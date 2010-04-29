@@ -17,9 +17,14 @@
 /**
  * One simple user
  *
- * It is assumed that there is a Table in the DB: user (id, email, password)
+ * It is assumed that there is a Table in the DB: user (id, email, password).
+ * Alos it is assumed that fz_orm resource is loaded already in
+ * {@link FaZend_Application_Resource_fz_orm}. If this resource is not loaded
+ * yet, there is going to be an error, since class auto-loader is not initialized
+ * and FaZend_Db_Table_ActiveRow_user won't be recognized as a hint for ORM.
  *
  * @package User
+ * @see FaZend_Application_Resource_fz_orm
  */
 class FaZend_User extends FaZend_Db_Table_ActiveRow_user
 {
@@ -106,7 +111,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         
         // We should not allow to change the name of the class
         // when the user is logged in
-        if (!is_null(self::$_loggedIn)) {
+        if (self::$_loggedIn) {
             FaZend_Exception::raise(
                 'FaZend_User_InvalidRequestException', 
                 'You cannot set rowClass when user is logged in'
@@ -317,7 +322,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
             FaZend_Email::create('adminNewUserRegistered.tmpl')
                 ->set('user', $user)
                 ->send();
-        } catch (FaZend_Email_NoTemplate $e) {
+        } catch (FaZend_Email_NoTemplateException $e) {
             // don't do anything        
         }
 
@@ -331,7 +336,7 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
                 ->set('toName', $user->email)
                 ->set('user', $user)
                 ->send();
-        } catch (FaZend_Email_NoTemplate $e) {
+        } catch (FaZend_Email_NoTemplateException $e) {
             // just swallow it
         }
         return $user;    

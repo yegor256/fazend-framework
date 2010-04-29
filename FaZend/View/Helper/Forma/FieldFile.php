@@ -28,7 +28,7 @@ class FaZend_View_Helper_Forma_FieldFile extends FaZend_View_Helper_Forma_Field
      * Get value from the form element
      *
      * @param Zend_Form_Element The element to work with
-     * @return mixed
+     * @return string|null File name or NULL if nothing received
      */
     public function deriveValue(Zend_Form_Element $element)
     {

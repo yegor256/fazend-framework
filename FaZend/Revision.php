@@ -21,6 +21,17 @@
  */
 class FaZend_Revision
 {
+
+    const VERSION = '0.2dev';
+    
+    /**
+     * Name of the project
+     *
+     * @var string
+     * @see FaZend_Application_Resource_Fazend::init()
+     * @see setName()
+     */
+    protected static $_name;
     
     /**
      * Cached value
@@ -36,18 +47,43 @@ class FaZend_Revision
      */
     public static function get()
     {
-        if (isset(self::$_revision))
+        if (isset(self::$_revision)) {
             return self::$_revision;
+        }
         
         $revFile = APPLICATION_PATH . '/deploy/subversion/revision.txt';
-        if (file_exists($revFile))
+        if (file_exists($revFile)) {
             return self::$_revision = file_get_contents($revFile);
+        }
         
         $info = shell_exec('svn info ' . APPLICATION_PATH);
-        if (preg_match('/Revision:\s(\d+)/m', $info, $matches))
+        if (preg_match('/Revision:\s(\d+)/m', $info, $matches)) {
             return self::$_revision = $matches[1] . 'L';
+        }
             
         return self::$_revision = 'local';
+    }
+    
+    /**
+     * Set name of the project
+     *
+     * @param string Name of the project
+     * @return void
+     * @see FaZend_Application_Resource_Fazend::init()
+     */
+    public static function setName($name) 
+    {
+        self::$_name = $name;
+    }
+
+    /**
+     * Get name of the project
+     *
+     * @return string Name of the project
+     */
+    public static function getName() 
+    {
+        return self::$_name;
     }
 
 }
