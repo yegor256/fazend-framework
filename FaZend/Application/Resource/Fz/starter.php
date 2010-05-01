@@ -67,8 +67,13 @@ class FaZend_Application_Resource_fz_starter extends Zend_Application_Resource_R
             )
         );
         
-        // we execute starter ONLY in CLI and during testing
-        if (!defined('CLI_ENVIRONMENT') || (APPLICATION_ENV !== 'testing')) {
+        // we execute starter ONLY in CLI
+        if (!defined('CLI_ENVIRONMENT')) {
+            return false;
+        }
+            
+        // we DON'T execute starter in production
+        if (APPLICATION_ENV == 'production') {
             return false;
         }
     
