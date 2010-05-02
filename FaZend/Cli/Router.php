@@ -40,6 +40,7 @@ class FaZend_Cli_Router
         // if there are not enough arguments
         if ($argc < 2) {
             return self::_error(
+                'FaZend ' . FaZend_Revision::VERSION . ' (' . FaZend_Revision::get() . ") is alive\n" .
                 'You started the application from the command line ("php index.php" or something), not from Web. ' .
                 'In such a case you should specify a class name, ' . 
                 'which has to be located in APPLICATION_PATH/cli and should be ' .
@@ -93,7 +94,7 @@ class FaZend_Cli_Router
         }
 
         // require this class once
-        require_once $cliPath;
+        eval('require_once $cliPath;'); // for ZCA
         // if the class is not found...
         if (!class_exists($name)) {
             return self::_error("Class '$name' is not defined, why?");
@@ -108,7 +109,7 @@ class FaZend_Cli_Router
             return $cli->execute();
         } catch (FaZend_Cli_OptionMissedException $e) {
             return self::_error($e->getMessage());
-        }    
+        }   
     }
         
     /**
