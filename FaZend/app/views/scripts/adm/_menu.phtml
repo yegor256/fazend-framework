@@ -14,7 +14,7 @@
 <?php $this->headTitle('adm: ' . $this->action) ?>
 
 <p>
-    <?php foreach(scandir(FAZEND_PATH . '/View/scripts/adm') as $file): ?>
+    <?php foreach(scandir(FAZEND_APP_PATH . '/views/scripts/adm') as $file): ?>
 
         <?php if (($file == 'index.phtml') || ($file[0] == '_')) continue; ?>
         
