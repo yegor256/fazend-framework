@@ -66,6 +66,9 @@ class FaZend_Application_Resource_fz_session extends Zend_Application_Resource_R
                 E_USER_WARNING
             );
         }
+        
+        // bootstrap Zend resource
+        $this->_bootstrap->bootstrap('session');
     }
 
 }
