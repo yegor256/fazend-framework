@@ -32,7 +32,7 @@
 
     <!-- main task, executed by the project -->
     <target name="main" 
-        depends="svn, lint, phpcs, phpmd, test, deploy, ping, phprack, clean"
+        depends="svn, lint, phpcs, phpmd, test, deploy, phprack, clean"
         description="Validate, compile, deploy and clean">
     </target>
 
@@ -277,17 +277,6 @@
             </uploadByFTP>
         </then><else>
             <echo msg="Skipped, since {to.deploy} is FALSE" />    
-        </else></if>
-    </target>
-
-    <target name="ping" description="Ping the production server and show the result">
-        <if><and>
-            <istrue value="${to.deploy}" />
-            <isset property="live.home" />
-        </and><then>
-            <http-request url="${live.home}/__fz/ping" responseRegex="/.*/" />
-        </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
         </else></if>
     </target>
 
