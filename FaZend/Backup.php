@@ -73,10 +73,9 @@ class FaZend_Backup
     public function getLatestLog()
     {
         $file = $this->_getSemaphoreFileName();
-
-        if (!file_exists($file))
+        if (!file_exists($file)) {
             return 'no log in ' . $file . ' ...';
-
+        }
         return file_get_contents($file);
     }
 
@@ -490,8 +489,8 @@ class FaZend_Backup
      */
     protected function _getSemaphoreFileName()
     {
-        $this->_log('Semaphore file unique name for ' . WEBSITE_URL);
-        return TEMP_PATH . '/fz-sem-' . md5(WEBSITE_URL) . '.dat';
+        $this->_log('Semaphore file unique name for ' . FaZend_Revision::getName());
+        return TEMP_PATH . '/fz-backup-semaphore-' . FaZend_Revision::getName() . '.dat';
     }
 
     /**
@@ -509,7 +508,7 @@ class FaZend_Backup
         }    
 
         $time = filemtime($file);
-        $this->_log("Semaphore file $file says that the latest backup was started on " . date('m/d/y h:i:s', $time));
+        $this->_log("Semaphore file '{$file}' says that the latest backup was started on " . date('m/d/y H:i:s', $time));
         return $time;
     }
 
@@ -522,11 +521,9 @@ class FaZend_Backup
     protected function _setSemaphoreTime($log = 'started...')
     {
         $file = $this->_getSemaphoreFileName();
-
         // save content into semaphore file
         file_put_contents($file, $log);
-
-        $this->_log("Semaphore file $file saved (" . strlen($log) . " bytes), backup process is started/finished");
+        $this->_log("Semaphore file '{$file}' saved (" . strlen($log) . " bytes), backup process is started/finished");
     }
 
     /**
@@ -537,9 +534,9 @@ class FaZend_Backup
      */
     protected function _nice($file)
     {
-        if (!file_exists($file))
+        if (!file_exists($file)) {
             return basename($file) . ' (absent)';
-
+        }
         return basename($file) . ' (' . filesize($file). 'bytes)';
     }
 
