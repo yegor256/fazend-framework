@@ -25,6 +25,11 @@ global $startTime;
 $startTime = microtime(true);
 
 /**
+ * small simple and nice PHP functions
+ */
+require_once 'FaZend/Application/functions.php';
+
+/**
  * @see FaZend_Application_Resource_fz_session::init()
  * @see FaZend_Application_Resource_fz_front::init()
  * @see FaZend_Test_TestCase
@@ -90,11 +95,6 @@ if (!defined('WEBSITE_URL')) {
         )
     );
 }  
-
-/**
- * small simple and nice PHP functions
- */
-require_once 'FaZend/Application/functions.php';
 
 /**
  * @see FaZend_Application_Bootstrap_Bootstrap
