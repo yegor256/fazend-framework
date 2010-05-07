@@ -25,11 +25,6 @@ global $startTime;
 $startTime = microtime(true);
 
 /**
- * small simple and nice PHP functions
- */
-require_once 'FaZend/Application/functions.php';
-
-/**
  * @see FaZend_Application_Resource_fz_session::init()
  * @see FaZend_Application_Resource_fz_front::init()
  * @see FaZend_Test_TestCase
@@ -43,11 +38,6 @@ if (!defined('CLI_ENVIRONMENT')) {
 // Define path to application directory
 if (!defined('APPLICATION_PATH')) {
     define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
-}
-
-// temp files location
-if (!defined('TEMP_PATH')) {
-    define('TEMP_PATH', realpath(sys_get_temp_dir()));
 }
 
 // Define path to FaZend
@@ -80,6 +70,16 @@ set_include_path(
         )
     )
 );
+
+/**
+ * small simple and nice PHP functions
+ */
+require_once 'FaZend/Application/functions.php';
+
+// temp files location
+if (!defined('TEMP_PATH')) {
+    define('TEMP_PATH', realpath(sys_get_temp_dir()));
+}
 
 /**
  * you can redefine it later, if you wish
