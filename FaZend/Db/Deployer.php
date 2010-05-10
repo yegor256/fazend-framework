@@ -239,13 +239,13 @@ class FaZend_Db_Deployer
     {
         // check the existence of the flag
         // it it's absent, we should do NOT anything
-        if (!file_exists($this->_flag) && (APPLICATION_ENV === 'production')) {
+        if ((APPLICATION_ENV === 'production') && !file_exists($this->_flag)) {
             return false;
         }
 
         // remove it
         // we will never come back here again
-        if ((@unlink($this->_flag) === false) && (APPLICATION_ENV === 'production')) {
+        if ((APPLICATION_ENV === 'production') && (@unlink($this->_flag) === false)) {
             FaZend_Log::err("Failed to remove deployer flag file: '{$this->_flag}'");
             return false;
         }
