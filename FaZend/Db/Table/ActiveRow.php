@@ -209,7 +209,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __toString()
     {
-        return (string)$this->__get('__id');
+        try {
+            return (string)$this->__get('__id');
+        } catch (Exception $e) {
+            FaZend_Log::err(get_class($e) . ': ' . $e->getMessage());
+        }
+        return '0';
     }
 
     /**
