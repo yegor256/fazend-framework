@@ -171,7 +171,7 @@ class FaZend_Exec extends FaZend_StdObject
         // protocol this operation in LOG if required
         if (self::$_isVerbose) {
             logg(
-                "exec: '%s', result (%d bytes): '%s'",
+                "exec: '%s'%s, result (%d bytes): '%s'",
                 $cmd,
                 !is_null($dir) ? " in ('{$dir}')" : false,
                 strlen($result),
