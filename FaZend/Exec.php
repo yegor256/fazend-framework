@@ -168,11 +168,12 @@ class FaZend_Exec extends FaZend_StdObject
             $result = $expectedResult;
         }
         
+        // protocol this operation in LOG if required
         if (self::$_isVerbose) {
             logg(
-                "exec: '%s' (in '%s'), result (%d bytes): '%s'",
+                "exec: '%s', result (%d bytes): '%s'",
                 $cmd,
-                $dir,
+                !is_null($dir) ? " in ('{$dir}')" : false,
                 strlen($result),
                 cutLongLine($result)
             );
