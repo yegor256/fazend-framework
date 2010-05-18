@@ -56,7 +56,7 @@ class FaZend_Revision
             return self::$_revision = file_get_contents($revFile);
         }
         
-        $info = FaZend_Exed::exec('svn info ' . APPLICATION_PATH . ' 2>&1');
+        $info = FaZend_Exec::exec('svn info ' . APPLICATION_PATH . ' 2>&1');
         $matches = array();
         if (preg_match('/Revision:\s(\d+)/m', $info, $matches)) {
             return self::$_revision = $matches[1] . 'L';
