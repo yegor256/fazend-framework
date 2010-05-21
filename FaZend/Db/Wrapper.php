@@ -151,14 +151,15 @@ class FaZend_Db_Wrapper
         if (!isset($this->_select)) {
             $this->_select = $this->table()->select();
             $this->_select->setIntegrityCheck(false);
-            if ($this->_setFrom)    
+            if ($this->_setFrom) {
                 $this->_select->from($this->table()->info(Zend_Db_Table_Abstract::NAME));
+            }
         }
 
         // add bindings to the query, if necessary
-        if (!is_null($bind))
+        if (!is_null($bind)) {
             $this->_select->bind($bind);
-
+        }
         return $this->_select;
     }
 
@@ -218,8 +219,8 @@ class FaZend_Db_Wrapper
     public function fetchAll(array $bind = null) 
     {
         return new FaZend_Db_RowsetWrapper(
-            $this->table(), 
-            $this->select($bind)
+            $this->select($bind),
+            $this->table()
         );
     }
 

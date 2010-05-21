@@ -243,7 +243,7 @@ class FaZend_Db_Deployer
             return false;
         }
 
-        // remove it
+        // remove the flag from the disc, and 
         // we will never come back here again
         if ((APPLICATION_ENV === 'production') && (@unlink($this->_flag) === false)) {
             FaZend_Log::err("Failed to remove deployer flag file: '{$this->_flag}'");

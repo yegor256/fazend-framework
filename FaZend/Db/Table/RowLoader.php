@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see Zend_Loader_Autoloader_Interface
+ */
 require_once 'Zend/Loader/Autoloader/Interface.php';
 
 /**
@@ -33,25 +36,36 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
      */
     public function autoload($class)
     {
-        if (class_exists($class))
+        if (class_exists($class)) {
             return;
-
+        }
         $name = substr(strrchr($class, '_'), 1);
 
+        /**
+         * @see FaZend_Db_Table_ActiveRow
+         */
         require_once 'FaZend/Db/Table/ActiveRow.php';
-        if (false === eval(
-            "class $class extends FaZend_Db_Table_ActiveRow {
-                public function __construct(\$id = false) {
+        $eval = eval(
+            "
+            class $class extends FaZend_Db_Table_ActiveRow 
+            {
+                public function __construct(\$id = false) 
+                {
                     \$this->_table = FaZend_Db_ActiveTable::createTableClass(
-                        isset(\$this->_table) ? \$this->_table : '{$name}');
+                        isset(\$this->_table) ? \$this->_table : '{$name}'
+                    );
                     parent::__construct(\$id);
                 }    
-
-                public static function retrieve(\$param = true) {
+                public static function retrieve(\$param = true) 
+                {
                     \$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
                     return \$wrapper;
                 }    
-            };")) {
+            };
+            "
+        );
+        
+        if (false === $eval) {
             FaZend_Exception::raise(
                 'FaZend_Db_Table_InvalidClass',
                 "Class $class can't be declared, some error in its definition"

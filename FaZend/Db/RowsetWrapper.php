@@ -24,19 +24,19 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
 {
 
     /**
-     * Table
-     *
-     * @var Zend_Db_Table
-     */
-    private $_table;
-
-    /**
      * Select
      *
      * @var Zend_Db_Select
      */
     private $_select;
     
+    /**
+     * Table
+     *
+     * @var Zend_Db_Table
+     */
+    private $_table;
+
     /**
      * Rowset
      *
@@ -47,14 +47,14 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     /**
      * Create a rowset wrapping object
      *
-     * @param Zend_Db_Table
      * @param Zend_Db_Select
+     * @param Zend_Db_Table
      * @return void
      */
-    public function __construct(Zend_Db_Table $table, Zend_Db_Select $select)
+    public function __construct(Zend_Db_Select $select, Zend_Db_Table $table = null)
     {
-        $this->_table = $table;
         $this->_select = $select;
+        $this->_table = $table;
     }
 
     /**
@@ -96,10 +96,22 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     public function __call($name, array $args)
     {
         if (!isset($this->_rowset)) {
-            $this->_rowset = $this->_table->fetchAll(
-                $this->select(), 
-                $this->select()->getBind()
-            );
+            try {
+                $this->_rowset = $this->_table->fetchAll(
+                    $this->select(), 
+                    $this->select()->getBind()
+                );
+            } catch (Zend_Db_Statement_Exception $e) {
+                FaZend_Exception::raise(
+                    'FaZend_Db_RowsetWrapper_Exception', 
+                    sprintf(
+                        '%s: (%s) in "%s"',
+                        get_class($e),
+                        $e->getMessage(),
+                        $this->select()
+                    )
+                );
+            }
         }
 
         return call_user_func_array(array($this->_rowset, $name), $args);
