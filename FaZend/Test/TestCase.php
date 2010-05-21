@@ -14,11 +14,21 @@
  * @category FaZend
  */
 
-defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing');
-defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true);
-defined('APPLICATION_PATH') or define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
-defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
-defined('TESTING_RUNNING') or define('TESTING_RUNNING', true);
+if (!defined('APPLICATION_ENV')) {
+    define('APPLICATION_ENV', 'testing');
+}
+if (!defined('FAZEND_DONT_RUN')) {
+    define('FAZEND_DONT_RUN', true);
+}
+if (!defined('APPLICATION_PATH')) {
+    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
+}
+if (!defined('CLI_ENVIRONMENT')) {
+    define('CLI_ENVIRONMENT', true);
+}
+if (!defined('TESTING_RUNNING')) {
+    define('TESTING_RUNNING', true);
+}
 
 /**
  * @see Zend_Test_PHPUnit_ControllerTestCase
@@ -78,6 +88,21 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         FaZend_View_Helper_Forma::cleanInstances();
     }
     
+    /**
+     * Clean after the test
+     *
+     * @return void
+     * @see Zend_Test_PHPUnit_ControllerTestCase::tearDown()
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        // close connection to DB to avoid multiple connections
+        // with many tests running in a suite
+        $this->bootstrap->getBootstrap()->getResource('db')->closeConnection();
+    }
+
     /**
      * Save local variables
      *
