@@ -89,21 +89,6 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     }
     
     /**
-     * Clean after the test
-     *
-     * @return void
-     * @see Zend_Test_PHPUnit_ControllerTestCase::tearDown()
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        // close connection to DB to avoid multiple connections
-        // with many tests running in a suite
-        $this->bootstrap->getBootstrap()->getResource('db')->closeConnection();
-    }
-
-    /**
      * Save local variables
      *
      * @param string Name of the variable
