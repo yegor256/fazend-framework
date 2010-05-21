@@ -27,6 +27,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * Select
      *
      * @var Zend_Db_Select
+     * @see __construct()
      */
     private $_select;
     
@@ -34,15 +35,16 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * Table
      *
      * @var Zend_Db_Table
+     * @see __construct()
      */
     private $_table;
 
     /**
      * Rowset
      *
-     * @var Zend_Db_Table_Rowset
+     * @var Zend_Db_Table_Rowset|null NULL means that there is no rowset yet
      */
-    private $_rowset;
+    private $_rowset = null;
 
     /**
      * Create a rowset wrapping object
@@ -51,7 +53,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @param Zend_Db_Table
      * @return void
      */
-    public function __construct(Zend_Db_Select $select, Zend_Db_Table $table = null)
+    public function __construct(Zend_Db_Select $select, Zend_Db_Table $table)
     {
         $this->_select = $select;
         $this->_table = $table;
@@ -79,7 +81,10 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
         // and you may be sure that no data goes to memory when
         // you're counting rows. We optimize your request here.
         return $this->_table->getAdapter()->fetchOne(
-            sprintf('SELECT COUNT(*) FROM (%s) AS tbl', (string)$this->select()),
+            sprintf(
+                'SELECT COUNT(*) FROM (%s) AS tbl', 
+                (string)$this->select()
+            ),
             $this->select()->getBind()
         );
     }
@@ -92,9 +97,13 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @param string Name of the method to call
      * @param array List of arguments
      * @return mixed
+     * @throws FaZend_Db_RowsetWrapper_Exception
      */
     public function __call($name, array $args)
     {
+        // If rowset is not yet ready we should retrieve it now
+        // from the DB. This is a lazy loading mechanism implemented
+        // here to avoid immediate retrieval of rowsets
         if (!isset($this->_rowset)) {
             try {
                 $this->_rowset = $this->_table->fetchAll(
@@ -114,7 +123,11 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
             }
         }
 
-        return call_user_func_array(array($this->_rowset, $name), $args);
+        // execute what was asked
+        return call_user_func_array(
+            array($this->_rowset, $name), 
+            $args
+        );
     }
 
     /**
