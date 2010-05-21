@@ -84,4 +84,15 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         FaZend_View_Helper_Forma::cleanInstances();
     }
     
+    /**
+     * Close all connections
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+        Zend_Db_Table::getDefaultAdapter()->closeConnection();
+    }
+    
 }
