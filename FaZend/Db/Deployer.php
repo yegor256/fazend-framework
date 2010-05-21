@@ -287,7 +287,7 @@ class FaZend_Db_Deployer
             logg(
                 "DB table '%s' was created: '%s'",
                 $table,
-                trim(preg_replace('/\s+/ms', ' ', $sql))
+                cutLongLine(trim(preg_replace('/\s+/ms', ' ', $sql)))
             );
         }
     }
