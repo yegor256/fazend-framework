@@ -63,10 +63,18 @@ if (!defined('APPLICATION_ENV')) {
 set_include_path(
     implode(
         PATH_SEPARATOR, 
-        array(
-            realpath(APPLICATION_PATH . '/../library'),
-            realpath(FAZEND_PATH . '/..'),
-            get_include_path(),
+        array_unique(
+            array_merge(
+                array(
+                    realpath(APPLICATION_PATH),
+                    realpath(APPLICATION_PATH . '/../library'),
+                    realpath(FAZEND_PATH . '/..'),
+                ),
+                explode(
+                    PATH_SEPARATOR,
+                    get_include_path()
+                )
+            )
         )
     )
 );
