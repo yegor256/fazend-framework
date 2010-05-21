@@ -84,6 +84,7 @@ class FaZend_Application_Resource_fz_starter extends Zend_Application_Resource_R
 
         eval('require_once $starterPhp;');
         self::$_starter = new Starter();
+        self::$_starter->setResource($this);
         self::$_starter->start();
         return self::$_starter;
     }

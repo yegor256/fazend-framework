@@ -34,11 +34,18 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      */
     protected function _initDbData()
     {
-        $this->bootstrap('fz_Injector');
-        $this->bootstrap('fz_Deployer');
+        $this->bootstrap('fz_injector');
+        $this->bootstrap('fz_deployer');
         $this->bootstrap('fz_orm');
         FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'new Zend_Date(${a1})');
 
+        // explicitly deploy DB
+        $deployer = new FaZend_Db_Deployer();
+        $deployer->setFolders(array(APPLICATION_PATH . '/deploy/database'));
+        $deployer->setVerbose(true);
+        $deployer->deploy();
+        // bug(555);
+        
         $queries = array(
             'insert into owner values (132, "john smith", null)',
             'insert into product values (10, "car", 132)',

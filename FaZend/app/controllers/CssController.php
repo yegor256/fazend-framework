@@ -25,6 +25,24 @@ class Fazend_CssController extends FaZend_Controller_Action
 {
 
     /**
+     * Shall we compress CSS?
+     *
+     * @var boolean
+     */
+    protected static $_compress = false;
+
+    /**
+     * Shall we compress CSS?
+     *
+     * @param bool
+     * @return void
+     */
+    public static function setCompression($compress = true) 
+    {
+        self::$_compress = $compress;
+    }
+
+    /**
      * Show one Java Script
      * 
      * @return string
@@ -48,9 +66,7 @@ class Fazend_CssController extends FaZend_Controller_Action
         $this->view->setFilter(null);
 
         // inject CSS compressor
-        $fzView = Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->getResource('fz_view');
-        if ($fzView->isCompressed()) {
+        if (self::$_compress) {
             $this->view->addFilter('CssCompressor');
         }
 

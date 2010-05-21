@@ -71,14 +71,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
          */
         require_once 'Zend/Application.php';
 
-        $application = new Zend_Application(APPLICATION_ENV);
-        Zend_Registry::set('Zend_Application', $application);
+        $this->bootstrap = new Zend_Application(APPLICATION_ENV);
 
         // run this method before everything else
         require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
-        FaZend_Application_Bootstrap_Bootstrap::prepareApplication($application);
-        
-        $this->bootstrap = $application;
+        FaZend_Application_Bootstrap_Bootstrap::prepareApplication($this->bootstrap);
         
         // run the normal setup of a test case, which will reset everything,
         // including front controoler, layout, loaders, etc. and THEN will bootstrap
@@ -87,25 +84,10 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         // create local view, since it's a controller
         // $this->view = $this->bootstrap->getBootstrap()->getResource('view');
-        $this->view = $application->getBootstrap()->getResource('view');
+        $this->view = $this->bootstrap->getBootstrap()->getResource('view');
         
         // clean all instances of all formas
         FaZend_View_Helper_Forma::cleanInstances();
     }
     
-    /**
-     * Clean after the test
-     *
-     * @return void
-     * @see Zend_Test_PHPUnit_ControllerTestCase::tearDown()
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        // unset the variable
-        unset($this->bootstrap);
-        Zend_Registry::set('Zend_Application', null);
-    }
-
 }

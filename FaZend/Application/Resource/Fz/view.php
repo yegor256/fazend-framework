@@ -39,21 +39,6 @@ class FaZend_Application_Resource_fz_view extends Zend_Application_Resource_Reso
     protected $_view;
     
     /**
-     * Shall we compress output streams? (HTML and CSS)
-     *
-     * @var boolean
-     * @see isCompressed()
-     */
-    protected $_compressed = true;
-
-    /**
-     * Google analytics name
-     *
-     * @var string
-     */
-    protected $_ga;
-
-    /**
      * Initializes the resource
      *
      * @return $this
@@ -95,11 +80,16 @@ class FaZend_Application_Resource_fz_view extends Zend_Application_Resource_Reso
         if (!empty($options['htmlCompression'])) {
             $this->_compressed = true;
             $this->_view->addFilter('HtmlCompressor');
+            /**
+             * @see Fazend_CssController
+             */
+            require_once FAZEND_APP_PATH . '/controllers/CssController.php';
+            Fazend_CssController::setCompression(true);
         }
 
         // turn compression ON
         if (!empty($options['GoogleAnalytics'])) {
-            $this->_ga = $options['GoogleAnalytics'];
+            $this->_view->googleAnalytics = $options['GoogleAnalytics'];
         }
 
         // view paginator
@@ -124,24 +114,4 @@ class FaZend_Application_Resource_fz_view extends Zend_Application_Resource_Reso
         return $this->_view;
     }
     
-    /**
-     * Get google analytics name
-     *
-     * @return string
-     */
-    public function getGa() 
-    {
-        return $this->_ga;
-    }
-    
-    /**
-     * Output is compressed?
-     *
-     * @return boolean
-     */
-    public function isCompressed() 
-    {
-        return $this->_compressed;
-    }
-
 }

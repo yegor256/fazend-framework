@@ -30,22 +30,6 @@ class FaZend_Application_Resource_fz_errors extends Zend_Application_Resource_Re
 {
 
     /**
-     * Email of admin, who should receive errors
-     *
-     * @var string
-     * @see setAdminEmail()
-     */
-    protected $_adminEmail = null;
-
-    /**
-     * Errors should be visible to users?
-     *
-     * @var boolean
-     * @see setIsVisible()
-     */
-    protected $_isVisible = false;
-
-    /**
      * Initializes the resource
      *
      * @return void
@@ -53,49 +37,28 @@ class FaZend_Application_Resource_fz_errors extends Zend_Application_Resource_Re
      */
     public function init()
     {
-        return $this;
-    }
-    
-    /**
-     * Shall we make errors visible to end user?
-     *
-     * @param boolean
-     * @return $this
-     */
-    public function setIsVisible($isVisible) 
-    {
-        $this->_isVisible = $isVisible;
-    }
-    
-    /**
-     * Email of the admin
-     *
-     * @param string
-     * @return $this
-     */
-    public function setAdminEmail($adminEmail) 
-    {
-        $this->_adminEmail = $adminEmail;
-    }
-    
-    /**
-     * Errors shall be visible to end user?
-     *
-     * @return boolean
-     */
-    public function getIsVisible() 
-    {
-        return $this->_isVisible;
-    }
-    
-    /**
-     * Email to send errors to
-     *
-     * @return string|null
-     */
-    public function getAdminEmail() 
-    {
-        return $this->_adminEmail;
+        /**
+         * @see Fazend_ErrorController
+         */
+        require_once FAZEND_APP_PATH . '/controllers/ErrorController.php';
+
+        foreach ($this->getOptions() as $option=>$value) {
+            switch ($option) {
+                case 'isVisible':
+                case 'display':
+                    Fazend_ErrorController::setVisible($value);
+                    break;
+                case 'adminEmail':
+                    Fazend_ErrorController::setAdminEmail($value);
+                    FaZend_Log_Writer_ErrorLog::setAdminEmail($value);
+                    break;
+                default:
+                    FaZend_Exception::raise(
+                        'FaZend_Application_Resource_fz_errors_Exception', 
+                        "Option '{$option}' is not valid in fz_errors"
+                    );
+            }
+        }
     }
     
 }

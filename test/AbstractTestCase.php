@@ -14,10 +14,17 @@ define('ZEND_PATH', realpath(dirname(__FILE__) . '/../../zend-trunk/Zend'));
 set_include_path(
     implode(
         PATH_SEPARATOR, 
-        array(
-            realpath(ZEND_PATH . '/..'),
-            realpath(dirname(__FILE__) . '/..'),
-            get_include_path()
+        array_unique(
+            array_merge(
+                array(
+                    realpath(ZEND_PATH . '/..'),
+                    realpath(dirname(__FILE__) . '/..'),
+                ),
+                explode(
+                    PATH_SEPARATOR,
+                    get_include_path()
+                )
+            )
         )
     )
 );
@@ -38,6 +45,7 @@ class AbstractTestCase extends FaZend_Test_TestCase
     public function setUp()
     {
         parent::setUp();
+        
         $this->_dbAdapter = Zend_Db_Table_Abstract::getDefaultAdapter();
     }    
 

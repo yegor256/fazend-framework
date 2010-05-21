@@ -22,6 +22,13 @@
  */
 class FaZend_Email
 {
+    
+    /**
+     * Default email
+     *
+     * @var FaZend_Email
+     */
+    protected static $_defaultEmail;
 
     /**
      * View that will render the template
@@ -54,6 +61,18 @@ class FaZend_Email
      * @see setTemplate()
      */
     protected $_template = null;
+    
+    /**
+     * Set default email
+     *
+     * @param FaZend_Email
+     * @return void
+     * @see FaZend_Application_Resource_fz_email
+     */
+    public static function setDefaultEmail(FaZend_Email $email) 
+    {
+        self::$_defaultEmail = $email;
+    }
     
     /**
      * Set view which will be used to render templates
@@ -142,12 +161,7 @@ class FaZend_Email
      */
     public static function create($template = null)
     {
-        // pre-configured email object is created inside
-        // this resource. here we just get it from there, and clone
-        // it in order to configure for this particular template
-        $email = clone Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->getResource('fz_email');
-            
+        $email = clone self::$_defaultEmail;
         $email->setTemplate($template);
         return $email;
     }

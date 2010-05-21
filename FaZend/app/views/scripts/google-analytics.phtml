@@ -19,8 +19,7 @@ document.write(unescape("%3Cscript src='" + gaJsHost +
 <script type="text/javascript">
 try {
 var pageTracker = _gat._getTracker(
-    "<?php echo Zend_Registry::get('Zend_Application')
-    ->getBootstrap()->getResource('fz_view')->getGa()?>"
+    "<?php echo $this->googleAnalytics?>"
 );
 pageTracker._trackPageview();
 } catch(err) {}</script>

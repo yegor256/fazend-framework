@@ -27,6 +27,25 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
 
     const MAX_LENGTH = 20000; // maximum length of the log file, in bytes
     const MAX_AGE_DAYS = 5; // maximum age of the error_log file in days
+    
+    /**
+     * Email of the admin
+     *
+     * @var string
+     */
+    protected static $_adminEmail;
+
+    /**
+     * Set email of the admin
+     *
+     * @param string
+     * @return void
+     * @see FaZend_Application_Resource_fz_errors
+     */
+    public static function setAdminEmail($email) 
+    {
+        self::$_adminEmail = $email;
+    }
 
     /**
      * Constructs the writer
@@ -117,9 +136,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
         }
 
         // if not email configured - skip it
-        $email = Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->getResource('fz_errors')->getAdminEmail();
-        if (!$email) {
+        if (!self::$_adminEmail) {
             return;
         }
 

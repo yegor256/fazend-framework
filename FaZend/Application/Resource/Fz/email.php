@@ -31,14 +31,6 @@ class FaZend_Application_Resource_fz_email extends Zend_Application_Resource_Res
 {
 
     /**
-     * Default email template
-     *
-     * @var FaZend_Email
-     * @see init()
-     */
-    protected $_email;
-
-    /**
      * Initializes the resource
      *
      * @return void
@@ -46,25 +38,21 @@ class FaZend_Application_Resource_fz_email extends Zend_Application_Resource_Res
      */
     public function init()
     {
-        if (isset($this->_email)) {
-            return $this->_email;
-        }
-        
         /**
          * @see FaZend_Email
          */
         require_once 'FaZend/Email.php';
         // configure default email message
-        $this->_email = new FaZend_Email();
+        $email = new FaZend_Email();
 
         // make sure view is initialized
         $this->_bootstrap->bootstrap('view');
-        $this->_email->setView($this->_bootstrap->getResource('view'));
+        $email->setView($this->_bootstrap->getResource('view'));
         $charset = 'utf-8';
         foreach ($this->getOptions() as $option=>$value) {
             switch (strtolower($option)) {
                 case 'send':
-                    $this->_email->setIsSending((bool)$value);
+                    $email->setIsSending((bool)$value);
                     break;
                     
                 case 'encoding':
@@ -72,21 +60,21 @@ class FaZend_Application_Resource_fz_email extends Zend_Application_Resource_Res
                     break;
                     
                 case 'folders':
-                    $this->_email->setFolders($value);
+                    $email->setFolders($value);
                     break;
                     
                 case 'folder':
-                    $this->_email->setFolders(array($value));
+                    $email->setFolders(array($value));
                     break;
 
                 case 'notifier':
-                    $this->_email->set('fromEmail', $value['email']);
-                    $this->_email->set('fromName', $value['name']);
+                    $email->set('fromEmail', $value['email']);
+                    $email->set('fromName', $value['name']);
                     break;
                     
                 case 'manager':
-                    $this->_email->set('toEmail', $value['email']);
-                    $this->_email->set('toName', $value['name']);
+                    $email->set('toEmail', $value['email']);
+                    $email->set('toName', $value['name']);
                     break;
                     
                 case 'transport':
@@ -98,8 +86,8 @@ class FaZend_Application_Resource_fz_email extends Zend_Application_Resource_Res
             }
         }
         
-        $this->_email->setMailer(new Zend_Mail($charset));
-        return $this->_email;
+        $email->setMailer(new Zend_Mail($charset));
+        FaZend_Email::setDefaultEmail($email);
     }
 
     /**

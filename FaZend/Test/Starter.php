@@ -38,6 +38,24 @@ abstract class FaZend_Test_Starter
 {
 
     /**
+     * Resource who is running us now
+     *
+     * @var FaZend_Application_Resource_fz_injector
+     */
+    private $_resource;
+    
+    /**
+     * Set resource
+     *
+     * @param FaZend_Application_Resource_fz_injector
+     * @return void
+     */
+    public final function setResource(FaZend_Application_Resource_fz_injector $resource) 
+    {
+        $this->_resource = $resource;
+    }
+
+    /**
      * Make all initializations before tests
      *
      * @return void
@@ -64,8 +82,7 @@ abstract class FaZend_Test_Starter
      */
     protected function _bootstrap($resource) 
     {
-        return Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->bootstrap($resource);
+        return $this->_resource->getBootstrap()->bootstrap($resource);
     }
 
     /**

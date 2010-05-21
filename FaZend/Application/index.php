@@ -21,9 +21,7 @@ require_once realpath(dirname(__FILE__) . '/prolog.php');
  * @see Zend_Application
  */
 require_once 'Zend/Application.php';
-
 $application = new Zend_Application(APPLICATION_ENV);
-Zend_Registry::set('Zend_Application', $application);
 
 /**
  * @see FaZend_Application_Bootstrap_Bootstrap

@@ -25,6 +25,40 @@ class Fazend_ErrorController extends FaZend_Controller_Action
 {
 
     /**
+     * Email of the admin
+     *
+     * @var string
+     */
+    protected static $_adminEmail = null;
+
+    /**
+     * Errors are visible on web?
+     *
+     * @var bool
+     */
+    protected static $_visible = false;
+
+    /**
+     * Set email to use as admin's address
+     *
+     * @return void
+     */
+    public static function setAdminEmail($email) 
+    {
+        self::$_adminEmail = $email;
+    }
+
+    /**
+     * Set visibility
+     *
+     * @return void
+     */
+    public static function setVisible($visible) 
+    {
+        self::$_visible = $visible;
+    }
+
+    /**
      * Not found action
      *
      * @return void
@@ -88,14 +122,11 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         // pass the request to the view
         $this->view->request = $errors->request; 
 
-        $fzErrors = Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->getResource('fz_errors');
-
         // shall we show this error to the user?
-        $this->view->showError = $fzErrors->getIsVisible();
+        $this->view->showError = self::$_visible;
 
         // notify admin by email
-        if ($fzErrors->getAdminEmail() && !defined('TESTING_RUNNING')) {
+        if (self::$_adminEmail && !defined('TESTING_RUNNING')) {
             $lines = array();
             foreach (debug_backtrace() as $line) {
                 $lines[] = isset($line['file']) ? "{$line['file']} ({$line['line']})" : false;
@@ -104,7 +135,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
             $siteName = parse_url(WEBSITE_URL, PHP_URL_HOST);
             // send email to the site admin admin
             FaZend_Email::create('fazendException.tmpl')
-                ->set('toEmail', $fzErrors->getAdminEmail())
+                ->set('toEmail', self::$_adminEmail)
                 ->set('toName', 'admin')
                 ->set(
                     'subject', 

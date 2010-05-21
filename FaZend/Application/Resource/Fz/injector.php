@@ -54,8 +54,11 @@ class FaZend_Application_Resource_fz_injector extends Zend_Application_Resource_
             return $this->_injector;
         }
 
+        // logger comes first
+        $this->_bootstrap->bootstrap('fz_logger');
+
         // start test session
-        $this->_bootstrap->bootstrap('fz_starter');
+        $this->getBootstrap()->bootstrap('fz_starter');
 
         // objects in 'test/Mocks' directory
         $mocks = APPLICATION_PATH . '/../../test/Mocks';
@@ -70,6 +73,7 @@ class FaZend_Application_Resource_fz_injector extends Zend_Application_Resource_
 
         eval('require_once $injectorPhp;'); // workaround for ZCA validator
         $this->_injector = new Injector();
+        $this->_injector->setResource($this);
         $this->_injector->inject();
         return $this->_injector;
     }

@@ -162,7 +162,7 @@ class FaZend_Db_Deployer
                 }
             } catch (FaZend_Db_Deployer_Exception $e) {
                 // swallow it and report in log
-                FaZend_Log::err("Deployment exception: {$e->getMessage()}");
+                FaZend_Log::err("Deployment failure: '{$e->getMessage()}'");
             } 
         }
     }
@@ -284,7 +284,11 @@ class FaZend_Db_Deployer
         
         // log the operation
         if ($this->_verbose) {
-            logg("DB table '{$table}' was created: {$sql}");
+            logg(
+                "DB table '%s' was created: '%s'",
+                $table,
+                trim(preg_replace('/\s+/ms', ' ', $sql))
+            );
         }
     }
 

@@ -11,8 +11,7 @@ class FaZend_Db_DeployerTest extends AbstractTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->_deployer = Zend_Registry::get('Zend_Application')
-            ->getBootstrap()->getResource('fz_deployer');
+        $this->_deployer = new FaZend_Deployer();
     }
 
     public static function providerSqlSamples()
