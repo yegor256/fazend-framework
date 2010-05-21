@@ -40,17 +40,17 @@ abstract class FaZend_Test_Starter
     /**
      * Resource who is running us now
      *
-     * @var FaZend_Application_Resource_fz_injector
+     * @var FaZend_Application_Resource_fz_starter
      */
     private $_resource;
     
     /**
      * Set resource
      *
-     * @param FaZend_Application_Resource_fz_injector
+     * @param FaZend_Application_Resource_fz_starter
      * @return void
      */
-    public final function setResource(FaZend_Application_Resource_fz_injector $resource) 
+    public final function setResource(FaZend_Application_Resource_fz_starter $resource) 
     {
         $this->_resource = $resource;
     }
