@@ -25,7 +25,6 @@
 
     <!-- all php scripts should be able to include files from these dirs -->
     <includepath classpath="${project.basedir}/src/library" />
-    <includepath classpath="${project.basedir}/test" />
 
     <!-- this is where CC home is located -->
     <property name="cc.root" value="/home/cc" />
@@ -165,14 +164,6 @@
     </target>
 
     <target name="test" description="Run all existing unit-tests" >
-        <!-- we should initialize the application mostly because of dynamic class loaders -->
-        <php expression="false; 
-            defined('FAZEND_DONT_RUN') or define('FAZEND_DONT_RUN', true); 
-            defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing'); 
-            defined('CLI_ENVIRONMENT') or define('CLI_ENVIRONMENT', true);
-            include '${project.basedir}/src/library/FaZend/Application/index.php';" />
-        <php expression='false; echo "APPLICATION_ENV=" . APPLICATION_ENV . "\n";' />
-        
         <!-- prepare code coverage db -->
         <if><istrue value="${to.coverage}" /><then>
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />

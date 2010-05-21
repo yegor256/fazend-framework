@@ -56,14 +56,11 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
     /**
      * Create and return an instance of Zend_Application
      *
-     * @return Zend_Application
+     * @param Zend_Application
      * @see index.php
      */
-    public static function prepareApplication() 
+    public static function prepareApplication(Zend_Application $application) 
     {
-        $application = new Zend_Application(APPLICATION_ENV);
-        Zend_Registry::set('Zend_Application', $application);
-
         // load application-specific options
         $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
         $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
@@ -86,7 +83,6 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
 
         // load system options
         $application->setOptions($options->toArray());
-        return $application;
     }
     
     /**

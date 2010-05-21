@@ -17,9 +17,6 @@
 if (!defined('APPLICATION_ENV')) {
     define('APPLICATION_ENV', 'testing');
 }
-if (!defined('FAZEND_DONT_RUN')) {
-    define('FAZEND_DONT_RUN', true);
-}
 if (!defined('APPLICATION_PATH')) {
     define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
 }
@@ -29,6 +26,13 @@ if (!defined('CLI_ENVIRONMENT')) {
 if (!defined('TESTING_RUNNING')) {
     define('TESTING_RUNNING', true);
 }
+
+/**
+ * We include this bootstrap script only ONCE, in order
+ * to avoid multiple initialization of the application, in the
+ * same PHP environment
+ */
+include_once 'FaZend/Application/prolog.php';
 
 /**
  * @see Zend_Test_PHPUnit_ControllerTestCase
@@ -44,15 +48,6 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
 
     /**
-     * List of variables
-     *
-     * @var array
-     * @see __set()
-     * @see __get()
-     */
-    protected static $_variables = array();
-
-    /**
      * Setup test
      *
      * It is very important to note that we DO NOT use default Zend 
@@ -66,15 +61,24 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
      */
     public function setUp()
     {
-        // bootstrap the application
-        // we include this bootstrap script only ONCE, in order
-        // to avoid multiple initialization of the application, in the
-        // same PHP environment
-        include_once 'FaZend/Application/index.php';
+        /**
+         * @see Zend_Registry
+         */
+        require_once 'Zend/Registry.php';
+
+        /**
+         * @see Zend_Application
+         */
+        require_once 'Zend/Application.php';
+
+        $application = new Zend_Application(APPLICATION_ENV);
+        Zend_Registry::set('Zend_Application', $application);
 
         // run this method before everything else
         require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
-        $this->bootstrap = FaZend_Application_Bootstrap_Bootstrap::prepareApplication();
+        FaZend_Application_Bootstrap_Bootstrap::prepareApplication($application);
+        
+        $this->bootstrap = $application;
         
         // run the normal setup of a test case, which will reset everything,
         // including front controoler, layout, loaders, etc. and THEN will bootstrap
@@ -82,36 +86,26 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         parent::setUp();
 
         // create local view, since it's a controller
-        $this->view = $this->bootstrap->getBootstrap()->getResource('view');
+        // $this->view = $this->bootstrap->getBootstrap()->getResource('view');
+        $this->view = $application->getBootstrap()->getResource('view');
         
         // clean all instances of all formas
         FaZend_View_Helper_Forma::cleanInstances();
     }
     
     /**
-     * Save local variables
+     * Clean after the test
      *
-     * @param string Name of the variable
-     * @param string Value of the variable
      * @return void
+     * @see Zend_Test_PHPUnit_ControllerTestCase::tearDown()
      */
-    public function __set($name, $value)
+    public function tearDown()
     {
-        self::$_variables[$name] = $value;
-    }
+        parent::tearDown();
 
-    /**
-     * Load local variables
-     *
-     * @param string Name of the variable
-     * @return string
-     */
-    public function __get($name)
-    {
-        if (isset(self::$_variables[$name])) {
-            return self::$_variables[$name];
-        }
-        return parent::__get($name);
+        // unset the variable
+        unset($this->bootstrap);
+        Zend_Registry::set('Zend_Application', null);
     }
 
 }

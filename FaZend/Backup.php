@@ -115,11 +115,8 @@ class FaZend_Backup
             $this->_setSemaphoreTime($this->getLog());
         
         } catch (FaZend_Backup_Exception $e) {
-
             $this->_log("Script terminated by exception");
-
             unlink($this->_getSemaphoreFileName());
-
         }
     }
 
@@ -508,7 +505,10 @@ class FaZend_Backup
         }    
 
         $time = filemtime($file);
-        $this->_log("Semaphore file '{$file}' says that the latest backup was started on " . date('m/d/y H:i:s', $time));
+        $this->_log(
+            "Semaphore file '{$file}' says that the latest backup was started on " 
+            . Zend_Date::now()
+        );
         return $time;
     }
 

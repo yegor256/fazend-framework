@@ -363,8 +363,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      */
     public function isCurrentUser() 
     {
-        if (!self::isLoggedIn())
+        if (!self::isLoggedIn()) {
             return false;
+        }
         return strval(self::getCurrentUser()) === strval($this);
     }
         
@@ -386,8 +387,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
      */
     protected static function _auth() 
     {
-        if (is_null(self::$_auth))
+        if (is_null(self::$_auth)) {
             self::$_auth = Zend_Auth::getInstance();
+        }
         return self::$_auth;
     }
 

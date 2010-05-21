@@ -14,110 +14,30 @@
  * @category FaZend
  */
 
-// error handler
-require_once realpath(dirname(__FILE__) . '/handler.php');
+// prolog
+require_once realpath(dirname(__FILE__) . '/prolog.php');
 
 /**
- * Global variable in order to calculate total page building time
- * @see FaZend_View_Helper_PageLoadTime::pageLoadTime()
+ * @see Zend_Application
  */
-global $startTime;
-$startTime = microtime(true);
+require_once 'Zend/Application.php';
 
-/**
- * @see FaZend_Application_Resource_fz_session::init()
- * @see FaZend_Application_Resource_fz_front::init()
- * @see FaZend_Test_TestCase
- */
-if (!defined('CLI_ENVIRONMENT')) {
-    if (empty($_SERVER['DOCUMENT_ROOT'])) {
-        define('CLI_ENVIRONMENT', true);
-    }
-}
-
-// Define path to application directory
-if (!defined('APPLICATION_PATH')) {
-    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../application'));
-}
-
-// Define path to FaZend
-if (!defined('FAZEND_PATH')) {
-    define('FAZEND_PATH', realpath(APPLICATION_PATH . '/../library/FaZend'));
-}
-
-// Define path to FaZend application inside framework
-if (!defined('FAZEND_APP_PATH')) {
-    define('FAZEND_APP_PATH', realpath(FAZEND_PATH . '/app'));
-}
-
-// Define path to Zend
-if (!defined('ZEND_PATH')) {
-    define('ZEND_PATH', realpath(APPLICATION_PATH . '/../library/Zend'));
-}
-
-// Define application environment
-if (!defined('APPLICATION_ENV')) {
-    define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-}
-
-set_include_path(
-    implode(
-        PATH_SEPARATOR, 
-        array_unique(
-            array_merge(
-                array(
-                    realpath(APPLICATION_PATH),
-                    realpath(APPLICATION_PATH . '/../library'),
-                    realpath(FAZEND_PATH . '/..'),
-                ),
-                explode(
-                    PATH_SEPARATOR,
-                    get_include_path()
-                )
-            )
-        )
-    )
-);
-
-/**
- * small simple and nice PHP functions
- */
-require_once 'FaZend/Application/functions.php';
-
-// temp files location
-if (!defined('TEMP_PATH')) {
-    define('TEMP_PATH', realpath(sys_get_temp_dir()));
-}
-
-/**
- * you can redefine it later, if you wish
- * now we define the site URL, without the leading WWW
- */
-if (!defined('WEBSITE_URL')) {
-    define(
-        'WEBSITE_URL', 
-        'http://' . preg_replace(
-            '/^www\./i', 
-            '', 
-            isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'
-        )
-    );
-}  
+$application = new Zend_Application(APPLICATION_ENV);
+Zend_Registry::set('Zend_Application', $application);
 
 /**
  * @see FaZend_Application_Bootstrap_Bootstrap
  */
 require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
-$application = FaZend_Application_Bootstrap_Bootstrap::prepareApplication();
+FaZend_Application_Bootstrap_Bootstrap::prepareApplication($application);
 
-// this flag could disable application execution
-if (!defined('FAZEND_DONT_RUN')) {
-    $application->bootstrap();
-    // we're working from the command line?
-    if (defined('CLI_ENVIRONMENT') && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
-        $router = new FaZend_Cli_Router();
-        exit($router->dispatch());
-    } else {
-        $application->run();
-    }
+$application->bootstrap();
+
+// we're working from the command line?
+if (defined('CLI_ENVIRONMENT') && (APPLICATION_ENV !== 'testing') && !defined('TESTING_RUNNING')) {
+    $router = new FaZend_Cli_Router();
+    exit($router->dispatch());
+} else {
+    $application->run();
 }
+
