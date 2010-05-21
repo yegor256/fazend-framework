@@ -91,6 +91,7 @@ class FaZend_Callback_Eval extends FaZend_Callback
         $eval = preg_replace('/\$\{(i\d+)\}/', '$this->_injected["${1}"]', $eval);
         
         // validation
+        $matches = array();
         if (preg_match_all('/\$this->\_injected\["(i\d+)"\]/', $eval, $matches)) {
             foreach ($matches[1] as $match) {
                 if (!array_key_exists($match, $this->_injected)) {
@@ -103,8 +104,18 @@ class FaZend_Callback_Eval extends FaZend_Callback
         }
 
         $result = $previous = md5(microtime(true));
-        $eval = '$result = ' . $eval . ';';
+        $eval = 
+            '
+            try {
+                $result = ' . $eval . ';
+            } catch (Exception $e) {
+                $result = $e;
+            }
+            ';
         eval($eval);
+        if ($result instanceof Exception) {
+            throw $result;
+        }
         if ($result === $previous) {
             FaZend_Exception::raise(
                 'FaZend_Callback_Eval_SyntaxException',
