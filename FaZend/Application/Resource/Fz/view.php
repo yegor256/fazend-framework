@@ -101,16 +101,6 @@ class FaZend_Application_Resource_fz_view extends Zend_Application_Resource_Reso
             FAZEND_PATH . '/View/Helper/Forma'
         );
         
-        return $this;
-    }
-    
-    /**
-     * Get instance of view
-     *
-     * @return Zend_View
-     */
-    public function getView() 
-    {
         return $this->_view;
     }
     
