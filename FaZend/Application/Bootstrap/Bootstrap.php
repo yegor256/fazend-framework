@@ -68,6 +68,16 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
         $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
 
+        // include sub-INI files, if necessary
+        if (isset($options->resources->fazend->includes)) {
+            foreach ($options->resources->fazend->includes as $path) {
+                if (!file_exists($path)) {
+                    throw new Zend_Exception("File not found: '{$path}'");
+                }
+                $options->merge(new Zend_Config_Ini($path, APPLICATION_ENV));
+            }
+        }
+
         // if the application doesn't have a bootstrap file
         if (!file_exists($options->bootstrap->path)) {
             $options->bootstrap->path = FAZEND_PATH . '/Application/Bootstrap/Bootstrap.php';
