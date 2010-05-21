@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Bo_Abstract
+ */
+require_once 'FaZend/Bo/Abstract.php';
+
+/**
  * IP address
  *
  * Use it like this:

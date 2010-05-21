@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Bo_Abstract
+ */
+require_once 'FaZend/Bo/Abstract.php';
+
+/**
  * Name of a person
  *
  * Use it like this:

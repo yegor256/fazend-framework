@@ -13,6 +13,11 @@
  * @version $Id$
  * @category FaZend
  */
+ 
+/**
+ * @see FaZend_Bo_Abstract
+ */
+require_once 'FaZend/Bo/Abstract.php';
 
 /**
  * Cost/money value holder
