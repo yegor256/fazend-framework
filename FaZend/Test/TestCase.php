@@ -62,15 +62,9 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     public function setUp()
     {
         /**
-         * @see Zend_Registry
-         */
-        require_once 'Zend/Registry.php';
-
-        /**
          * @see Zend_Application
          */
         require_once 'Zend/Application.php';
-
         $this->bootstrap = new Zend_Application(APPLICATION_ENV);
 
         // run this method before everything else
