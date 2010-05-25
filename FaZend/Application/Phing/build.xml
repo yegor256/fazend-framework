@@ -193,7 +193,8 @@
             </phpunit>
         </then><else>
             <mkdir dir="${project.basedir}/reports/tests" />
-            <phpunit haltonerror="yes" haltonfailure="yes" codecoverage="${to.coverage}">
+            <phpunit haltonerror="yes" haltonfailure="yes" codecoverage="${to.coverage}"
+                haltonincomplete="false" haltonskipped="false">
                 <formatter type="xml" usefile="true" todir="${project.basedir}/reports/tests" />
                 <formatter type="plain" usefile="no" />
                 <batchtest>
