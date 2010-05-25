@@ -456,7 +456,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 } elseif (method_exists($rowOriginal, $injectedColumn)) {
                     $injectedValue = $rowOriginal->$injectedColumn();
                 } else {
-                    $injectedValue = $rowOriginal->$injectedColumn;
+                    try {
+                        $injectedValue = $rowOriginal->$injectedColumn;
+                    } catch (Exception $e) {
+                        $injectedValue = $e->getMessage();
+                    }
                 }
 
                 $this->_inject($row, $injectedColumn, $predecessor, $injectedValue);
