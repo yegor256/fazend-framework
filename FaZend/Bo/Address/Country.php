@@ -104,7 +104,7 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
      */
     public function set($value, $part = null) 
     {
-        $this->_code = $value;
+        $this->_code = strval($value);
     }
     
     /**
