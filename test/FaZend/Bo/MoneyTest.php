@@ -21,7 +21,7 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
             array('$  10', 100000, 'USD'),
         );
     }
-
+    
     /**
      * @dataProvider providerMonetaryStrings
      */
@@ -43,7 +43,7 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
             "Invalid currency in {$value}, why?"
         );
     }
-
+    
     public function testWeCanDoArithmeticOperations()
     {
         $money = new FaZend_Bo_Money('100 USD');
@@ -58,29 +58,29 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $this->assertEquals(200, $money->mul(10)->usd);
         $this->assertEquals(40, $money->div(5)->usd);
         $this->assertEquals(2, $money->div(new FaZend_Bo_Money('20 USD')));
-
+    
         $this->assertTrue($money->isGreater(10));
         $this->assertTrue($money->isLess(50));
     }
-
+    
     public function testMultiplicationWorks()
     {
         $money = new FaZend_Bo_Money('123 EUR');
         $this->assertEquals('12.30EUR', strval($money->mul(0.1)));
     }
-
+    
     public function testWeCanDoBasicCurrencyConversions()
     {
         $money = new FaZend_Bo_Money('100 EUR');
         $this->assertNotEquals($money->usd, $money->original);
         $this->assertNotEquals($money->cents, $money->origCents);
         $this->assertNotEquals($money->points, $money->origPoints);
-
+    
         $money->add('20 GBP');
-
+    
         $this->assertEquals('EUR', strval($money->currency->getShortName()));
     }
-
+    
     /**
      * @expectedException FaZend_Bo_Money_InvalidMuliplication
      */
@@ -89,7 +89,7 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $money = new FaZend_Bo_Money('100 USD');
         $money->mul(new FaZend_Bo_Money('100 USD'));
     }
-
+    
     /**
      * @expectedException FaZend_Bo_Money_DivisionByZero
      */
@@ -98,23 +98,30 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $money = new FaZend_Bo_Money('100 USD');
         $money->div(0);
     }
-
+    
     public function testSimpleMethodsWorkProperly()
     {
         $money = new FaZend_Bo_Money('100 USD');
         $money->inverse();
         $this->assertEquals(-100, $money->usd);
     }
-
+    
     public function testMoneyCanBeRounded()
     {
         $money = new FaZend_Bo_Money('101 USD');
         $money->round(-1);
         $this->assertEquals(100, $money->usd);
-
+    
         $money = new FaZend_Bo_Money(101.57);
         $money->round(1);
         $this->assertEquals(101.6, $money->usd);
+    }
+    
+    public function testBigNumbers()
+    {
+        $money = new FaZend_Bo_Money('100,000,000,000,123 USD'); // 100 trillions
+        $this->assertGreaterThan(0, $money->usd);
+        $this->assertRegexp('/123$/', strval($money->usd));
     }
 
 }

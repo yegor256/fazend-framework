@@ -132,10 +132,10 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
         $value = strval($value);
         
         if ($value && !is_numeric($value)) {
-            // remove spaces and replace comas with dots
+            // remove spaces and replace comas with nothing
             $value = preg_replace(
                 array('/\s+/', '/\,/'), 
-                array('', '.'), 
+                array('', ''), 
                 $value
             );
 
@@ -173,7 +173,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                 'position' => Zend_Currency::RIGHT
             )
         );
-        $this->_points = (int)($value * self::POINT_WEIGHT);
+        $this->_points = $value * self::POINT_WEIGHT;
     }
 
     /**

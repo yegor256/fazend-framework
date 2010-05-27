@@ -42,9 +42,9 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         // explicitly deploy DB
         $deployer = new FaZend_Db_Deployer();
         $deployer->setFolders(array(APPLICATION_PATH . '/deploy/database'));
-        $deployer->setVerbose(true);
-        $deployer->deploy();
-        // bug(555);
+        $deployer->setVerbose(false);
+        $deployer->setAdapter(Zend_Db_Table::getDefaultAdapter());
+        $deployer->deploy(true);
         
         $queries = array(
             'insert into owner values (132, "john smith", null)',

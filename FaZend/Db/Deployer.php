@@ -123,12 +123,13 @@ class FaZend_Db_Deployer
     /**
      * Deploy Db schema
      *
+     * @param bool Enforce deployment?
      * @return void
      */
-    public function deploy() 
+    public function deploy($enforce = false) 
     {
         // shall we deploy?
-        if (!$this->_isNecessary()) {
+        if (!$enforce && !$this->_isNecessary()) {
             return;
         }
         
