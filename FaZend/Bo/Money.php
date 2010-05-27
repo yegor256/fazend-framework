@@ -129,7 +129,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function set($value, $part = null)
     {
         $currency = self::$_defaultCurrency;
-        $value = (string)$value;
+        $value = strval($value);
         
         if ($value && !is_numeric($value)) {
             // remove spaces and replace comas with dots
