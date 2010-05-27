@@ -61,7 +61,13 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
      */
     public function __toString() 
     {
-        return $this->get(self::ISO_3166);
+        try {
+            return $this->get(self::ISO_3166);
+        } catch (Exception $e) {
+            // just swallow it
+            assert($e instanceof Exception);
+        }
+        return 'US';
     }
 
     /**
@@ -85,6 +91,7 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
             'FaZend_Bo_Address_Country_UnknownProperty',
             "Unknown property: '{$name}'"
         );
+        return false;
     }
     
     /**
