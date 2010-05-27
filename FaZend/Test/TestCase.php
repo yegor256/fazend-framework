@@ -93,7 +93,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     {
         parent::tearDown();
         $db = Zend_Db_Table::getDefaultAdapter();
-        if ($db instanceof Zend_Db_Adapter) {
+        if ($db instanceof Zend_Db_Adapter_Abstract) {
             $db->closeConnection();
         }
     }
