@@ -122,6 +122,10 @@ class FaZend_Bo_MoneyTest extends AbstractTestCase
         $money = new FaZend_Bo_Money('100,000,000,000,123 USD'); // 100 trillions
         $this->assertGreaterThan(0, $money->usd);
         $this->assertRegexp('/123$/', strval($money->usd));
+
+        $money = FaZend_Bo_Money::convertFromPoints(100 * 1000 * 1000 * 1000 * 10000 + 123 * 10000); // 100 billions
+        $this->assertGreaterThan(0, $money->usd);
+        $this->assertRegexp('/123$/', strval($money->usd));
     }
 
 }
