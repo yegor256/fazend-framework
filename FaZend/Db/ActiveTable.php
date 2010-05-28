@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see Zend_Db_Table
+ */
 require_once 'Zend/Db/Table.php';
 
 /**
@@ -46,9 +49,11 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
             // - Zend_Db_Adapter_Mysqli_Exception
         } catch (Exception $e) {
             // no, we can't detect it automatically
-            $cls = new $tableClassName(array(
-                'primary' => 'id'
-            ));
+            $cls = new $tableClassName(
+                array(
+                    'primary' => 'id'
+                )
+            );
 
             try {
                 // maybe we just have a field ID?

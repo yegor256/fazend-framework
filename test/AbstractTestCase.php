@@ -45,14 +45,12 @@ class AbstractTestCase extends FaZend_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        
         $this->_dbAdapter = Zend_Db_Table_Abstract::getDefaultAdapter();
     }    
 
     public function tearDown()
     {
         parent::tearDown();
-        unset($this->_dbAdapter);
     }    
 
 }

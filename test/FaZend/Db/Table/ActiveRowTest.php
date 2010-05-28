@@ -11,25 +11,25 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
     public function testCreationWorks ()
     {
         $owner = new Model_Owner(132);
-
+    
         $this->assertEquals(true, $owner->exists());
-
+    
         $product = new Model_Product();
         $product->text = 'just test';
         $product->owner = $owner;
         $product->save();
     }
-
+    
     public function testGettingWorks()
     {
         $product = new Model_Product(10);
         $this->assertNotEquals(false, $product->owner, "Owner is null, why?");
         $this->assertTrue($product->owner instanceof Model_Owner, "Owner is invalid");
-
+    
         $name = $product->owner->name;
         $this->assertTrue(is_string($name), "Owner name is not STRING, why?");
     }
-
+    
     public function testClassMappingWorks()
     {
         $owner = Model_Owner::create('peter');
@@ -38,17 +38,17 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             "CREATED is of invalid type: " . gettype($owner->created)
         );
     }
-
+    
     public function testRetrieveWorks()
     {
         $owner = Model_Owner::retrieve()
             ->where('name is not null')
             ->setRowClass('Model_Owner')
             ->fetchRow();
-
+    
         $this->assertTrue(is_bool($owner->isMe()));
     }
-
+    
     public function testDynamicBindingWorks()
     {
         Model_Owner::create('john');
@@ -66,27 +66,27 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         foreach ($list as $i)
             $cnt++;
         $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
-
+    
         $cnt = count(
             Model_Owner::retrieve()
             ->where('name = :name OR name = :name')
             ->fetchPairs(array('name' => 'john'))
         );
         $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
-
+    
         $cnt = count(
             Model_Owner::retrieve()
             ->where('name = :name OR name = :name')
             ->fetchOne(array('name' => 'john'))
         );
         $this->assertEquals(1, $cnt, 'No rows in the DB? Impossible!');
-
+    
         $owner = Model_Owner::retrieve()
             ->where('name = :name OR name = :name')
             ->fetchRow(array('name' => 'john'));
         $this->assertEquals('john', $owner->name, 'Name of the owner is wrong, hm...');
     }
-
+    
     /**
      * @expectedException Model_Owner_NotFoundException
      */
@@ -97,7 +97,7 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             ->setRowClass('Model_Owner')
             ->fetchRow();
     }
-
+    
     public function testTableWithoutIDWorks()
     {
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
@@ -105,14 +105,14 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $list = FaZend_Db_Table_ActiveRow_car::retrieve()
             ->fetchPairs();
     }
-
+    
     public function testTableWithoutPrimaryKeyWorks()
     {
         $list = FaZend_Db_Table_ActiveRow_boat::retrieve()
             ->fetchAll();
         $boat = new FaZend_Db_Table_ActiveRow_boat(1);
     }
-
+    
     /**
      * @expectedException FaZend_Db_Wrapper_NoIDFieldException
      */
@@ -121,13 +121,13 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $list = FaZend_Db_Table_ActiveRow_flower::retrieve()
             ->fetchAll();
     }
-
+    
     public function testDeleteRowWorks()
     {
         $owner = new Model_Owner(132);
         $owner->delete();
     }
-
+    
     public function testDeleteRowsetWorks()
     {
          FaZend_Db_Table_ActiveRow_car::retrieve()
@@ -158,12 +158,9 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
             "Objects are different, but they should be the same"
         );
     }
-
+    
     public function testCleanStatusIsCorrect()
     {
-        // $owner = new Model_Owner(132);
-        // $this->assertTrue($owner->isClean());
-        
         $owner = new Model_Owner();
         $this->assertFalse($owner->isClean());
         
@@ -174,4 +171,23 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $this->assertTrue($owner->isClean());
     }
     
+    public function testPotentialMemoryLeaks()
+    {
+        $start = $stop = memory_get_usage();
+
+        for ($i = 1; $i < 10; $i++) {
+            $owner = new Model_Owner();
+            $owner->name = 'Test ' . $i;
+            $owner->save();
+            unset($owner);
+        }
+        $stop = memory_get_usage();
+
+        $this->assertLessThan(
+            50, 
+            $stop - $start, 
+            'we lost ' . ($stop - $start) . ' bytes, why?'
+        );
+    }
+
 }
