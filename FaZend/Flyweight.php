@@ -28,6 +28,7 @@
  * already exists in the factory. The instance will be returned.
  *
  * @package Model
+ * @see FaZend_Db_Table_ActiveRow::save()
  */
 class FaZend_Flyweight
 {
@@ -38,6 +39,16 @@ class FaZend_Flyweight
      * @var array
      */
     static protected $_storage = array();
+
+    /**
+     * Clean entire factory
+     *
+     * @return void
+     */
+    public static function clean() 
+    {
+        self::$_storage = array();
+    }
 
     /**
      * Instantiate and return an object
@@ -55,8 +66,9 @@ class FaZend_Flyweight
         $id = self::_makeId(array_merge(array($class), $args));
         
         // create an object, if it's not in the storage yet
-        if (!isset(self::$_storage[$id]))
+        if (!isset(self::$_storage[$id])) {
             self::$_storage[$id] = self::_makeObject($class, $args);
+        }
         return self::$_storage[$id];
     }
     
@@ -78,14 +90,16 @@ class FaZend_Flyweight
         $id = self::_makeId(array($class)) . $id;
         
         // create an object, if it's not in the storage yet
-        if (!isset(self::$_storage[$id]))
+        if (!isset(self::$_storage[$id])) {
             self::$_storage[$id] = self::_makeObject($class, $args);
+        }
         return self::$_storage[$id];
     }
 
     /**
      * Inject new object into the storage
      *
+     * @param object
      * @return void
      */
     public static function inject($object /* many params... */) 
@@ -96,6 +110,24 @@ class FaZend_Flyweight
         // unique object ID in the storage
         $id = self::_makeId(array_merge(array(get_class($object)), $args));
         self::$_storage[$id] = $object;
+    }
+
+    /**
+     * Remove the object from the storage
+     *
+     * @param object
+     * @return void
+     */
+    public static function remove($object /* many params... */) 
+    {
+        $args = func_get_args();
+        array_shift($args); // pop out the first argument
+        
+        // unique object ID in the storage
+        $id = self::_makeId(array_merge(array(get_class($object)), $args));
+        if (isset(self::$_storage[$id])) {
+            unset(self::$_storage[$id]);
+        }
     }
 
     /**
@@ -138,9 +170,11 @@ class FaZend_Flyweight
     protected static function _makeObject($class, array $args) 
     {
         // initialize validator with dynamic list of params
+        $object = null;
         $call = '$object = new $class(';
-        for ($i=0; $i<count($args); $i++)
+        for ($i=0; $i<count($args); $i++) {
             $call .= ($i > 0 ? ', ' : false) . "\$args[{$i}]";
+        }
         $call .= ');';
         eval($call);
         return $object;

@@ -416,13 +416,12 @@ class FaZend_Pos_Properties
      */
     public final function __destruct() 
     {
-        // We don't want any exceptions to be thrown in constructor, 
+        // We don't want any exceptions to be thrown in destructor, 
         // since they will destroy the entire application framework. That's
         // why we catch them here and log them.
         try {
-            // bug(array_keys(self::$_instances));
             $this->save(false);
-        } catch (FaZend_Pos_Exception $e) {
+        } catch (Exception $e) {
             $msg = get_class($e) . ' in ' . get_class($this) . "::__destruct: {$e->getMessage()}";
             if (defined('TESTING_RUNNING')) {
                 echo $msg . "\n";

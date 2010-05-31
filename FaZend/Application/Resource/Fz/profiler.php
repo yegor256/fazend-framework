@@ -42,6 +42,11 @@ class FaZend_Application_Resource_fz_profiler extends Zend_Application_Resource_
             return;
         }
 
+        // disable it during CLI unit testing
+        if (defined('TESTING_RUNNING')) {
+            return;
+        }
+
         // maybe there is no DB in the application, sometimes it happens :)
         if (!$this->_bootstrap->hasPluginResource('db')) {
             return;
