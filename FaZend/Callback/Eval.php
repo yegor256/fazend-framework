@@ -45,10 +45,18 @@ class FaZend_Callback_Eval extends FaZend_Callback
         }
         $inputs = array_unique($matches[1]);
         sort($inputs);
-        return array_filter(
-            $inputs,
-            create_function('$a', 'return !preg_match("/^i\d+$/", $a);')
-        );
+        return array_filter($inputs, array($this, '_filter'));
+    }
+
+    /**
+     * Filter inputs
+     *
+     * @param string
+     * @return boolean
+     */
+    protected function _filter($a) 
+    {
+        return !preg_match("/^i\d+$/", $a);
     }
 
     /**

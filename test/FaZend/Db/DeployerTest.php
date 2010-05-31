@@ -11,7 +11,7 @@ class FaZend_Db_DeployerTest extends AbstractTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->_deployer = new FaZend_Deployer();
+        $this->_deployer = new FaZend_Db_Deployer();
     }
 
     public static function providerSqlSamples()

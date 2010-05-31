@@ -24,15 +24,19 @@ require_once 'Zend/Loader/Autoloader/Interface.php';
  *
  * @see http://framework.zend.com/manual/en/zend.loader.autoloader.html
  * @package Db
+ * @see FaZend_Application_Resource_fz_orm::init()
  */
 class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
 {
 
     /**
-     * Load class
+     * Dynamically load class
      *
-     * @param string Name of the class to create
-     * @return FaZend_Db_Table_Row
+     * @param string Name of the class to create, should be in format:
+     *               "FaZend_Db_Table_RowLoader_*" where "*" stands for the
+     *               name of database table
+     * @return void
+     * @see FaZend_Application_Resource_fz_orm::init()
      */
     public function autoload($class)
     {

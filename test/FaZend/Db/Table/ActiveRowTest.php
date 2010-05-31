@@ -171,22 +171,28 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $this->assertTrue($owner->isClean());
     }
     
+    /**
+     * Profiler has to be turned OFF, remember this!
+     * @see FaZend_Application_Resource_fz_profiler
+     * @see http://framework.zend.com/issues/browse/ZF-9916
+     * @see http://stackoverflow.com/questions/2942296/memory-leak-in-zend-db-table-row
+     */
     public function testPotentialMemoryLeaks()
     {
-        $start = $stop = memory_get_usage();
-
-        for ($i = 1; $i < 10; $i++) {
+        FaZend_Flyweight::clean();
+        $start = memory_get_usage();
+        for ($i = 0; $i < 20; $i++) {
             $owner = new Model_Owner();
             $owner->name = 'Test ' . $i;
             $owner->save();
-            unset($owner);
+            FaZend_Flyweight::clean();
+            $lost = memory_get_usage() - $start;
+            // echo $lost . "\n";
         }
-        $stop = memory_get_usage();
-
         $this->assertLessThan(
-            50, 
-            $stop - $start, 
-            'we lost ' . ($stop - $start) . ' bytes, why?'
+            50 * 1024, 
+            $lost, 
+            "We've lost {$lost} bytes, why?"
         );
     }
 

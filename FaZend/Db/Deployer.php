@@ -138,7 +138,7 @@ class FaZend_Db_Deployer
             try {
                 // get full list of existing(!) tables in Db
                 $tables = array_map(
-                    create_function('$a', 'return strtolower($a);'), 
+                    'strtolower', 
                     $this->_adapter->listTables()
                 );
             

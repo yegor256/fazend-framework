@@ -51,6 +51,14 @@ class FaZend_Revision
             return self::$_revision;
         }
         
+        /**
+         * If we're running a testing suite in phing, just skip
+         * everything and return a simple version ID
+         */
+        if (defined('TESTING_RUNNING')) {
+            return self::$_revision = 'testing';
+        }
+        
         $revFile = APPLICATION_PATH . '/deploy/subversion/revision.txt';
         if (file_exists($revFile)) {
             return self::$_revision = file_get_contents($revFile);

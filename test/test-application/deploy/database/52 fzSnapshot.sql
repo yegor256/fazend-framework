@@ -1,5 +1,4 @@
 CREATE TABLE fzSnapshot (
-    
     id integer not null primary key autoincrement,
     fzObject integer not null,
     properties varchar(1024),
@@ -9,4 +8,4 @@ CREATE TABLE fzSnapshot (
     user integer,
     comment varchar(255),
     baselined boolean not null
-    ) 
+) 

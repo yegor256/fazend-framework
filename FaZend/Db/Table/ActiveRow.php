@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see Zend_Db_Table_Row
+ */
 require_once 'Zend/Db/Table/Row.php';
 
 /**
@@ -105,6 +108,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __construct($id = false)
     {
+        /**
+         * To make sure that the table class is loaded
+         */
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->autoload($this->_tableClass);
 
@@ -173,7 +179,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @return void
      */
-    public function save() 
+    public function save()
     {
         parent::save();
         // inject this object into flyweight
@@ -205,12 +211,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     /**
      * Show the ROW as a string 
      *
-     * @return string
+     * @return string ID of the row, as string
      */
     public function __toString()
     {
         try {
-            return (string)$this->__get('__id');
+            return strval($this->__get('__id'));
         } catch (Exception $e) {
             FaZend_Log::err(get_class($e) . ': ' . $e->getMessage());
         }
@@ -226,6 +232,10 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         // make sure the class has live data from DB
         $this->_loadLiveData();
+
+        // remove the object from the flyweight factory
+        FaZend_Flyweight::inject($this, intval(strval($this)));
+
         return parent::delete();
     }
 

@@ -34,10 +34,14 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      */
     protected function _initDbData()
     {
+        $this->bootstrap('db');
         $this->bootstrap('fz_injector');
         $this->bootstrap('fz_deployer');
         $this->bootstrap('fz_orm');
-        FaZend_Db_Table_ActiveRow::addMapping('/owner\.created/', 'new Zend_Date(${a1})');
+        FaZend_Db_Table_ActiveRow::addMapping(
+            '/owner\.created/', 
+            'new Zend_Date(${a1})'
+        );
 
         // explicitly deploy DB
         $deployer = new FaZend_Db_Deployer();
@@ -80,7 +84,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      */
     public function _initUserClass() 
     {
-        $this->bootstrap('fz_Injector');
+        $this->bootstrap('fz_injector');
         $this->bootstrap('fz_orm');
         FaZend_User::setRowClass('Model_User');
     }

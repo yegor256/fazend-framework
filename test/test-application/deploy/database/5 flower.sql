@@ -1,3 +1,4 @@
 create table flower (
     name varchar(50) not null, 
-    mark varchar(50));
+    mark varchar(50)
+)

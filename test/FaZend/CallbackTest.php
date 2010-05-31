@@ -98,7 +98,7 @@ class FaZend_CallbackTest extends AbstractTestCase
             ->call('tt')
         );
     }
-
+    
     /**
      * @expectedException FaZend_Callback_Eval_MissedInjectionException
      */
@@ -110,7 +110,7 @@ class FaZend_CallbackTest extends AbstractTestCase
             ->call('tt')
         );
     }
-
+    
     /**
      * @expectedException FaZend_Callback_Eval_MissedArgumentException
      */
@@ -124,5 +124,19 @@ class FaZend_CallbackTest extends AbstractTestCase
         );
     }
 
+    public function testPotentialMemoryLeaks()
+    {
+        $start = memory_get_usage();
+        for ($i = 0; $i < 20; $i++) {
+            $d = FaZend_Callback::factory('${a1}')->call(time());
+            $lost = memory_get_usage() - $start;
+            echo $lost . "\n";
+        }
+        $this->assertLessThan(
+            15 * 1024, 
+            $lost, 
+            "We've lost {$lost} bytes, why?"
+        );
+    }
 }
         

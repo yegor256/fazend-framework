@@ -3,4 +3,4 @@ CREATE TABLE fzPartOf (
     name varchar(255) not null,
     parent integer not null,
     kid integer not null
-    )
+)
