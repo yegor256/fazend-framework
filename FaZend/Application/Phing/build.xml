@@ -25,6 +25,7 @@
 
     <!-- all php scripts should be able to include files from these dirs -->
     <includepath classpath="${project.basedir}/src/library" />
+    <includepath classpath="${project.basedir}/test" />
 
     <!-- this is where CC home is located -->
     <property name="cc.root" value="/home/cc" />
