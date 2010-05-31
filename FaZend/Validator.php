@@ -68,6 +68,10 @@ final class FaZend_Validator
      */
     public final function __construct()
     {
+        /**
+         * @see Zend_Loader_PluginLoader
+         */
+        require_once 'Zend/Loader/PluginLoader.php';
         $this->_loader = new Zend_Loader_PluginLoader(
             array(
                 'Zend_Validate' => ZEND_PATH . '/Validate',
@@ -179,6 +183,7 @@ final class FaZend_Validator
                 'Zend_Validate_Exception'
             );
         }
+        return false;
     }
 
 }
