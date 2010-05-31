@@ -121,9 +121,9 @@ function _t($str)
     $str = preg_replace('/\n\t\r/', ' ', $str);
 
     /**
-     * @see FaZend_Registry
+     * @see Zend_Registry
      */
-    require_once 'FaZend/Registry.php';
+    require_once 'Zend/Registry.php';
     if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate')) {
         return $str;
     }
