@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see Zend_Validate_Abstract
+ */
+require_once 'Zend/Validate/Abstract.php';
+
+/**
  * One simple validator for numeric values
  *
  * @package Validate

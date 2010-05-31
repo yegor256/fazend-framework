@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see Zend_Validate_Abstract
+ */
+require_once 'Zend/Validate/Abstract.php';
+
+/**
  * Object is of some type
  *
  * @package Validate
