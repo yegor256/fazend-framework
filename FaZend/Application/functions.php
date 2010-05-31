@@ -48,6 +48,10 @@ function cutLongLine($line, $length = 100)
  */
 function validate()
 {
+    /**
+     * @see FaZend_Validator
+     */
+    require_once 'FaZend/Validator.php';
     return FaZend_Validator::factory();
 }
 
@@ -55,13 +59,13 @@ function validate()
 if (!function_exists('sys_get_temp_dir')) {
     function sys_get_temp_dir()
     {
-        if ($temp = getenv('TMP')) {
+        if (false != ($temp = getenv('TMP'))) {
             return $temp;
         }
-        if ($temp = getenv('TEMP')) {
+        if (false != ($temp = getenv('TEMP'))) {
             return $temp;
         }
-        if ($temp = getenv('TMPDIR')) {
+        if (false != ($temp = getenv('TMPDIR'))) {
             return $temp;
         }
             
@@ -116,11 +120,15 @@ function _t($str)
 
     $str = preg_replace('/\n\t\r/', ' ', $str);
 
-    // translate this string
+    /**
+     * @see FaZend_Registry
+     */
+    require_once 'FaZend/Registry.php';
     if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate')) {
         return $str;
     }
         
+    // translate this string
     $str = Zend_Registry::get('Zend_Translate')->_($str);
 
     // pass it to sprintf
@@ -161,6 +169,6 @@ function logg($message)
     try {
         FaZend_Log::info($message);
     } catch (Zend_Log_Exception $e) {
-        echo '<p>Log missed: ' . $message . '</p>';
+        echo '<p>Log missed (' . $e->getMessage() . '): ' . $message . '</p>';
     }
 }
