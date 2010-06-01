@@ -48,7 +48,7 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
         
         FaZend_Db_Table_ActiveRow::addMapping(
             '/^fzSnapshot\.fzObject|fzPartOf\.(?:parent|kid)$/', 
-            'new FaZend_Pos_Model_Object(${a1})'
+            'new FaZend_Pos_Model_Object(intval(${a1}))'
         );
         
         FaZend_Db_Table_ActiveRow::addMapping(
