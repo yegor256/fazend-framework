@@ -372,7 +372,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name)) {
                 continue;
             }
-            return $callback->call(is_numeric($value) ? intval($value) : $value);
+            return $callback->call($value);
         }
                 
         // We are trying to understand what is the class to be
