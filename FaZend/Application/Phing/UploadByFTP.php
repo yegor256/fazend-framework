@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see Task
+ */
 require_once 'phing/Task.php';
 
 /**
@@ -26,7 +29,9 @@ require_once 'phing/Task.php';
 class UploadByFTP extends Task
 {
 
-    // these directories/files won't be uploaded
+    /**
+     * These directories/files won't be uploaded
+     */
     protected static $_forbidden = array(
         '.svn',
     );
@@ -154,10 +159,10 @@ class UploadByFTP extends Task
         }
         $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
-        if (@ftp_pasv($this->ftp, false) === false) {
-            $this->_failure("Failed to turn PASV mode OFF");    
+        if (@ftp_pasv($this->ftp, true) === false) {
+            $this->_failure("Failed to turn PASV mode ON");    
         }
-        $this->Log("PASV mode turned OFF");    
+        $this->Log("PASV mode turned ON");    
 
         if (@ftp_chdir($this->ftp, $this->_destDir) === false) {
             $this->_failure("Failed to go to '{$this->_destDir}'");    
