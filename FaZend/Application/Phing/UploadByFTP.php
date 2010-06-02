@@ -361,7 +361,7 @@ class UploadByFTP extends Task
         $delta = microtime(true) - $this->_start;
         $this->Log(
             sprintf(
-                '[%d:%d] %s',
+                '[%d:%02d] %s',
                 round($delta / 60),
                 round($delta % 60),
                 $text
