@@ -160,7 +160,7 @@
                 </fileset>
             </phplint>
         </then><else>
-            <echo msg="Skipped, since {to.lint} is FALSE" />    
+            <echo msg="Skipped in '${project.name}', since {to.lint} is FALSE" />    
         </else></if>
     </target>
 
@@ -224,7 +224,7 @@
                 checkreturn="true" 
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped, since {to.phpcs} is FALSE" />    
+            <echo msg="Skipped in '${project.name}', since {to.phpcs} is FALSE" />    
         </else></if>
     </target>
 
@@ -240,7 +240,7 @@
                 checkreturn="false" 
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped, since {to.phpmd} is FALSE" />    
+            <echo msg="Skipped in '${project.name}', since {to.phpmd} is FALSE" />    
         </else></if>
     </target>
 
@@ -269,7 +269,7 @@
                 destdir="${ftp.destdir}">
             </uploadByFTP>
         </then><else>
-            <echo msg="Skipped, since {to.deploy} is FALSE" />    
+            <echo msg="Skipped in '${project.name}', since {to.deploy} is FALSE" />    
         </else></if>
     </target>
 
@@ -285,7 +285,7 @@
                 verbose="true"
             />
         </then><else>
-            <echo msg="Skipped, since it's not a continuous integration environment" />    
+            <echo msg="Skipped in '${project.name}', since it's not a continuous integration environment" />    
         </else></if>
     </target>
 
@@ -300,7 +300,7 @@
                 </fileset>
             </delete>
         </then><else>
-            <echo msg="Skipped, since {to.clean} is set to FALSE" />    
+            <echo msg="Skipped in '${project.name}', since {to.clean} is set to FALSE" />    
         </else></if>
     </target>    
     
