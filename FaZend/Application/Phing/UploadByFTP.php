@@ -358,11 +358,12 @@ class UploadByFTP extends Task
      */
     protected function _protocol($text) 
     {
-        $this->_protocol(
+        $delta = microtime(true) - $this->_start;
+        $this->Log(
             sprintf(
                 '[%d:%d] %s',
-                round($this->_start / 60),
-                round($this->start % 60),
+                round($delta / 60),
+                round($delta % 60),
                 $text
             )
         );
