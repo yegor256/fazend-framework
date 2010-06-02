@@ -177,8 +177,10 @@ class UploadByFTP extends Task
 
         // let's try to play with PASV
         if (@ftp_nlist($this->_ftp, '.') === false) {
+            $this->_protocol("NLIST returns FALSE, we should try to change PASV");    
             $this->_setPassiveMode(true);
             if (@ftp_nlist($this->_ftp, '.') === false) {
+                $this->_protocol("NLIST still returns FALSE, we try to change PASV again");    
                 $this->_setPassiveMode(false);
                 if (@ftp_nlist($this->_ftp, '.') === false) {
                     $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");    
