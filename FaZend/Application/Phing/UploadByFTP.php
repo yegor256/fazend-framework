@@ -150,36 +150,41 @@ class UploadByFTP extends Task
 
         $this->ftp = @ftp_connect($this->_server);
         if ($this->ftp === false) {
-            $this->_failure("Failed to connect to ftp ({$this->_server})");    
+            $this->_failure("Failed to connect to FTP '{$this->_server}'");    
         }
         $this->Log("Connected successfully to '{$this->_server}'");    
 
         if (@ftp_login($this->ftp, $this->_userName, $this->_password) === false) {
-            $this->_failure("Failed to login to ftp ({$this->_server})");    
+            $this->_failure("Failed to login to FTP '{$this->_server}'");    
         }
         $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
         if (@ftp_pasv($this->ftp, true) === false) {
             $this->_failure("Failed to turn PASV mode ON");    
         }
-        $this->Log("PASV mode turned ON");    
+        $this->Log('PASV mode turned ON');    
 
         if (@ftp_chdir($this->ftp, $this->_destDir) === false) {
             $this->_failure("Failed to go to '{$this->_destDir}'");    
         }
-        $this->Log("Current directory in FTP: ".ftp_pwd($this->ftp));    
+        $this->Log('Current directory in FTP: ' . ftp_pwd($this->ftp));    
 
-        $start = time();
+        $start = microtime(true);
         $currentDir = getcwd();
         $uploaded = $this->_uploadFiles($this->_srcDir);
         chdir($currentDir);
-        $this->Log("Uploaded {$uploaded} files, " . sprintf('%0.2f', (time() - $start)/60) . 'mins');    
+        $this->Log(
+            sprintf(
+                'Uploaded %d files, %0.2fmin',
+                $uploaded,
+                (microtime(true) - $start) / 60
+            )
+        );    
 
         if (@ftp_close($this->ftp) === false) {
-            $this->_failure("Failed to close connection to ftp ({$this->_server})");    
+            $this->_failure("Failed to close connection to FTP '{$this->_server}");    
         }
-
-        $this->Log("Disconnected from FTP");    
+        $this->Log('Disconnected from FTP');    
 
         // kill temp file
         if (isset($this->_tempFileName)) {
@@ -197,7 +202,7 @@ class UploadByFTP extends Task
     {
         $dir = scandir($path);
         
-        $ftpList = @ftp_nlist($this->ftp, '.');    
+        $ftpList = @ftp_nlist($this->ftp, '.');
         if ($ftpList === false) {
             $this->_failure('Failed to get nlist from FTP at ' . ftp_pwd($this->ftp));    
         }
@@ -216,7 +221,6 @@ class UploadByFTP extends Task
 
         // calculate the amount of uploaded files
         $uploaded = 0;
-
         foreach ($dir as $entry) {
             // don't upload directories or forbidden files
             if (($entry == '.') || ($entry == '..') || in_array($entry, self::$_forbidden)) {
@@ -228,18 +232,18 @@ class UploadByFTP extends Task
                 // this directory doesn't exist yet on the server, we should create it
                 if (@ftp_chdir($this->ftp, $entry) === false) {
                     if (@ftp_mkdir($this->ftp, $entry) === false) {
-                        $this->_failure("Failed to create dir '{$entry}' in ".ftp_pwd($this->ftp));    
+                        $this->_failure("Failed to MKDIR '{$entry}' in " . ftp_pwd($this->ftp));    
                     }
                     if (@ftp_chdir($this->ftp, $entry) === false) {
-                        $this->_failure("Failed to chdir to '{$entry}' in ".ftp_pwd($this->ftp));    
+                        $this->_failure("Failed to CHDIR to '{$entry}' in " . ftp_pwd($this->ftp));    
                     }
-                    $this->Log("Created directory $entry");    
+                    $this->Log("Created directory '{$entry}'");    
                 }
 
                 $uploaded += $this->_uploadFiles($fileName);
 
                 if (@ftp_cdup($this->ftp) === false) {
-                    $this->_failure("Failed to cdup from '{$entry}' in ".ftp_pwd($this->ftp));    
+                    $this->_failure("Failed to CDUP from '{$entry}' in " . ftp_pwd($this->ftp));    
                 }
             } else {
                 // compress the file
@@ -268,15 +272,24 @@ class UploadByFTP extends Task
                 }    
 
                 if (@ftp_put($this->ftp, $entry, $compressedFile, FTP_BINARY) === false) {
-                    $this->_failure("Failed to upload '{$fileName}' (" . filesize($fileName) . ' bytes)');    
+                    $this->_failure(
+                        sprintf(
+                            "Failed to upload '%s' (%d bytes)",
+                            $fileName,
+                            filesize($fileName)
+                        )
+                    );    
                 }
-
                 $uploaded++;
-                $this->Log("Uploaded '{$fileName}' (" . filesize($fileName) . ' bytes)');    
+                $this->Log(
+                    sprintf(
+                        "Uploaded '%s' (%d bytes)",
+                        $fileName,
+                        filesize($fileName)
+                    )
+                );    
             }    
-
         }
-
         return $uploaded;
     }
 
