@@ -242,10 +242,10 @@ class UploadByFTP extends Task
         $uploaded = 0;
         foreach ($dir as $entry) {
             // don't upload directories or forbidden files
-            if (($entry == '.') || ($entry == '..') || in_array($entry, self::$_forbidden)) {
+            if (($entry[0] == '.') || in_array($entry, self::$_forbidden)) {
                 continue;
             }
-            $fileName = $path.'/'.$entry;
+            $fileName = $path . '/' . $entry;
 
             if (is_dir($fileName)) {
                 // this directory doesn't exist yet on the server, we should create it
@@ -302,8 +302,8 @@ class UploadByFTP extends Task
                 $uploaded++;
                 $this->_protocol(
                     sprintf(
-                        "Uploaded '%s' (%d bytes)",
-                        $fileName,
+                        "Uploaded './%s' (%d bytes)",
+                        substr($fileName, strlen($this->_srcDir)),
                         filesize($fileName)
                     )
                 );    
