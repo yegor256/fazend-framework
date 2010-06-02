@@ -156,7 +156,7 @@ class UploadByFTP extends Task
 
         $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
-        if (@ftp_pasv($this->ftp, true) === false) {
+        if (@ftp_pasv($this->ftp, false) === false) {
             $this->_failure("Failed to turn PASV mode ON");    
         }
 
