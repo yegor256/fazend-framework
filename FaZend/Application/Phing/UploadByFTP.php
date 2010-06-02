@@ -362,7 +362,7 @@ class UploadByFTP extends Task
         $this->Log(
             sprintf(
                 '[%d:%02d] %s',
-                round($delta / 60),
+                $delta / 60,
                 round($delta % 60),
                 $text
             )
