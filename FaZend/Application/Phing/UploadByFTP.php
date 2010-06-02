@@ -147,30 +147,27 @@ class UploadByFTP extends Task
         if ($this->ftp === false) {
             $this->_failure("Failed to connect to ftp ({$this->_server})");    
         }
-
         $this->Log("Connected successfully to '{$this->_server}'");    
 
         if (@ftp_login($this->ftp, $this->_userName, $this->_password) === false) {
             $this->_failure("Failed to login to ftp ({$this->_server})");    
         }
-
         $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
         if (@ftp_pasv($this->ftp, false) === false) {
-            $this->_failure("Failed to turn PASV mode ON");    
+            $this->_failure("Failed to turn PASV mode OFF");    
         }
+        $this->Log("PASV mode turned OFF");    
 
         if (@ftp_chdir($this->ftp, $this->_destDir) === false) {
             $this->_failure("Failed to go to '{$this->_destDir}'");    
         }
-
         $this->Log("Current directory in FTP: ".ftp_pwd($this->ftp));    
 
         $start = time();
         $currentDir = getcwd();
         $uploaded = $this->_uploadFiles($this->_srcDir);
         chdir($currentDir);
-
         $this->Log("Uploaded {$uploaded} files, " . sprintf('%0.2f', (time() - $start)/60) . 'mins');    
 
         if (@ftp_close($this->ftp) === false) {
