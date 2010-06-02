@@ -159,10 +159,16 @@ class UploadByFTP extends Task
         }
         $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
 
-        if (@ftp_pasv($this->ftp, true) === false) {
-            $this->_failure("Failed to turn PASV mode ON");    
+        // let's try to play with PASV
+        if (@ftp_nlist($this->ftp, '.') === false) {
+            $this->_setPassiveMode(true);
+            if (@ftp_nlist($this->ftp, '.') === false) {
+                $this->_setPassiveMode(false);
+                if (@ftp_nlist($this->ftp, '.') === false) {
+                    $this->_failure("NLIST doesn't work, neither in normal nor passive mode");    
+                }
+            }
         }
-        $this->Log('PASV mode turned ON');    
 
         if (@ftp_chdir($this->ftp, $this->_destDir) === false) {
             $this->_failure("Failed to go to '{$this->_destDir}'");    
@@ -204,7 +210,7 @@ class UploadByFTP extends Task
         
         $ftpList = @ftp_nlist($this->ftp, '.');
         if ($ftpList === false) {
-            $this->_failure('Failed to get nlist from FTP at ' . ftp_pwd($this->ftp));    
+            $this->_failure('Failed to NLIST at ' . @ftp_pwd($this->ftp));    
         }
 
         // delete obsolete elements from FTP server    
@@ -328,6 +334,20 @@ class UploadByFTP extends Task
     {
         $this->Log($text);
         throw new BuildException($text);
+    }
+    
+    /**
+     * Set passive mode
+     *
+     * @param boolean
+     * @return void
+     */
+    protected function _setPassiveMode($on = true) 
+    {
+        if (@ftp_pasv($this->ftp, $on) === false) {
+            $this->_failure("Failed to change PASV mode");    
+        }
+        $this->Log('PASV mode turned ' . ($on ? 'ON' : 'OFF'));    
     }
 
 }
