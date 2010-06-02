@@ -77,6 +77,13 @@ class UploadByFTP extends Task
      * @var integer
      */
     private $_ftp;
+    
+    /**
+     * When we started?
+     *
+     * @var float
+     */
+    private $_start;
 
     /**
      * Initiator (when the build.xml sees the task)
@@ -144,14 +151,16 @@ class UploadByFTP extends Task
      */
     public function main()
     {
-        $this->Log(
+        $this->_start = microtime(true);
+        
+        $this->_protocol(
             "FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: " .
             preg_replace('/./', '*', $this->_password) . 
             "\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'"
         );
 
         if (!$this->_server) {
-            $this->Log("Server is not specified, the deployment won't happen");    
+            $this->_protocol("Server is not specified, the deployment won't happen");    
             return;
         }
 
@@ -159,12 +168,12 @@ class UploadByFTP extends Task
         if ($this->_ftp === false) {
             $this->_failure("Failed to connect to FTP '{$this->_server}'");    
         }
-        $this->Log("Connected successfully to '{$this->_server}'");    
+        $this->_protocol("Connected successfully to '{$this->_server}'");    
 
         if (@ftp_login($this->_ftp, $this->_userName, $this->_password) === false) {
             $this->_failure("Failed to login to FTP '{$this->_server}'");    
         }
-        $this->Log("Logged in successfully to FTP as '{$this->_userName}'");    
+        $this->_protocol("Logged in successfully to FTP as '{$this->_userName}'");    
 
         // let's try to play with PASV
         if (@ftp_nlist($this->_ftp, '.') === false) {
@@ -172,7 +181,7 @@ class UploadByFTP extends Task
             if (@ftp_nlist($this->_ftp, '.') === false) {
                 $this->_setPassiveMode(false);
                 if (@ftp_nlist($this->_ftp, '.') === false) {
-                    $this->_failure("NLIST doesn't work, neither in normal nor passive mode");    
+                    $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");    
                 }
             }
         }
@@ -180,24 +189,22 @@ class UploadByFTP extends Task
         if (@ftp_chdir($this->_ftp, $this->_destDir) === false) {
             $this->_failure("Failed to go to '{$this->_destDir}'");    
         }
-        $this->Log('Current directory in FTP: ' . ftp_pwd($this->_ftp));    
+        $this->_protocol('Current directory in FTP: ' . ftp_pwd($this->_ftp));    
 
-        $start = microtime(true);
         $currentDir = getcwd();
         $uploaded = $this->_uploadFiles($this->_srcDir);
         chdir($currentDir);
-        $this->Log(
+        $this->_protocol(
             sprintf(
-                'Uploaded %d files, %0.2fmin',
-                $uploaded,
-                (microtime(true) - $start) / 60
+                'Uploaded %d files',
+                $uploaded
             )
         );    
 
         if (@ftp_close($this->_ftp) === false) {
             $this->_failure("Failed to close connection to FTP '{$this->_server}");    
         }
-        $this->Log('Disconnected from FTP');    
+        $this->_protocol('Disconnected from FTP');    
 
         // kill temp file
         if (isset($this->_tempFileName)) {
@@ -250,7 +257,7 @@ class UploadByFTP extends Task
                     if (@ftp_chdir($this->_ftp, $entry) === false) {
                         $this->_failure("Failed to CHDIR to '{$entry}' in " . ftp_pwd($this->_ftp));    
                     }
-                    $this->Log("Created directory '{$entry}'");    
+                    $this->_protocol("Created directory '{$entry}'");    
                 }
 
                 $uploaded += $this->_uploadFiles($fileName);
@@ -294,7 +301,7 @@ class UploadByFTP extends Task
                     );    
                 }
                 $uploaded++;
-                $this->Log(
+                $this->_protocol(
                     sprintf(
                         "Uploaded '%s' (%d bytes)",
                         $fileName,
@@ -334,13 +341,32 @@ class UploadByFTP extends Task
     /**
      * Raise an exception and protocol the failure
      *
+     * @param string The message to show in log
      * @return void
      * @throws BuildException
      */
     protected function _failure($text) 
     {
-        $this->Log($text);
+        $this->_protocol($text);
         throw new BuildException($text);
+    }
+    
+    /**
+     * Protocol an action
+     *
+     * @param string The message to show in log
+     * @return void
+     */
+    protected function _protocol($text) 
+    {
+        $this->_protocol(
+            sprintf(
+                '[%d:%d] %s',
+                round($this->_start / 60),
+                round($this->start % 60),
+                $text
+            )
+        );
     }
     
     /**
@@ -355,7 +381,7 @@ class UploadByFTP extends Task
         if (@ftp_pasv($this->_ftp, $on) === false) {
             $this->_failure("Failed to change PASV mode to '{$mnemo}'");    
         }
-        $this->Log("PASV mode turned '{$mnemo}'");    
+        $this->_protocol("PASV mode turned '{$mnemo}'");    
     }
 
 }
