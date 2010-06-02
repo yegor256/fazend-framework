@@ -176,15 +176,12 @@ class UploadByFTP extends Task
         $this->_protocol("Logged in successfully to FTP as '{$this->_userName}'");    
 
         // let's try to play with PASV
+        $this->_setPassiveMode(true);
         if (@ftp_nlist($this->_ftp, '.') === false) {
             $this->_protocol("NLIST returns FALSE, we should try to change PASV");    
-            $this->_setPassiveMode(true);
+            $this->_setPassiveMode(false);
             if (@ftp_nlist($this->_ftp, '.') === false) {
-                $this->_protocol("NLIST still returns FALSE, we try to change PASV again");    
-                $this->_setPassiveMode(false);
-                if (@ftp_nlist($this->_ftp, '.') === false) {
-                    $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");    
-                }
+                $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");    
             }
         }
 
