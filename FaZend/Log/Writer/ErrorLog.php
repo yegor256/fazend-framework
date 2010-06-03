@@ -25,13 +25,21 @@
 class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
 {
 
-    const MAX_LENGTH = 20000; // maximum length of the log file, in bytes
-    const MAX_AGE_DAYS = 5; // maximum age of the error_log file in days
+    /**
+     * Maximum length of the log file, in bytes
+     */
+    const MAX_LENGTH = 20000;
+    
+    /**
+     * Maximum age of the error_log file in days
+     */
+    const MAX_AGE_DAYS = 5;
     
     /**
      * Email of the admin
      *
      * @var string
+     * @see setAdminEmail()
      */
     protected static $_adminEmail = 'bugs@fazend.com';
 
@@ -124,36 +132,48 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
             return;
         }
 
-        // if it's still small, skip the rest
-        // and if it's still very small
+        /**
+         * If it's still small, skip the rest
+         * and if it's still very small
+         */
         if ((@filesize($file) < self::MAX_LENGTH) && (@filectime($file) > time() - self::MAX_AGE_DAYS * 24 * 60 * 60)) {
             return;
         }
 
-        // if the file is not writable - skip the process
+        /**
+         * if the file is not writable - skip the process
+         */
         if (!@is_writable($file)) {
             return;
         }
 
-        // if not email configured - skip it
+        /**
+         * if not email configured - skip it
+         */
         if (!self::$_adminEmail) {
             return;
         }
 
-        // more than a megabyte?
+        /**
+         * more than a megabyte?
+         */
         if (filesize($file) > 1024 * 1024) {
             return;
         }
 
-        // email the content to the admin
+        /**
+         * email the content to the admin
+         */
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', self::$_adminEmail)
             ->set('toName', 'System Administrator')
             ->set('file', $file)
             ->set('maximum', self::MAX_LENGTH);
 
-        // if the file is TOO big, we should send it as attachment, not
-        // as email body
+        /**
+         * if the file is TOO big, we should send it as attachment, not
+         * as email body
+         */
         $content = @file_get_contents($file);
         if (filesize($file) > 100 * 1024) {
             $sender->set('log', 'see attached file');
