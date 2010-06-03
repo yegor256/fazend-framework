@@ -98,7 +98,7 @@ class FaZend_Cli_Router
             return self::_error(
                 sprintf(
                     "Script '%s' can't be dispatched, candidates are: %s",
-                    $cliPath,
+                    $name,
                     implode(', ', $paths)
                 )
             );
