@@ -303,7 +303,7 @@ class UploadByFTP extends Task
                 $this->_protocol(
                     sprintf(
                         "Uploaded './%s' (%d bytes)",
-                        substr($fileName, strlen($this->_srcDir)),
+                        substr($fileName, strlen($this->_srcDir) + 1),
                         filesize($fileName)
                     )
                 );    
