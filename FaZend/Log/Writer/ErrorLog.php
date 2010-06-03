@@ -33,7 +33,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
      *
      * @var string
      */
-    protected static $_adminEmail;
+    protected static $_adminEmail = 'bugs@fazend.com';
 
     /**
      * Set email of the admin
