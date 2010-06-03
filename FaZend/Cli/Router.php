@@ -85,19 +85,31 @@ class FaZend_Cli_Router
             $options = self::_getCliOptions();
         }
 
-        $cliPath = APPLICATION_PATH . '/cli/' . $name . '.php';
-        if (!file_exists($cliPath)) {
-            $cliPath = FAZEND_APP_PATH . '/cli/' . $name . '.php';
-            if (!file_exists($cliPath)) {
-                return self::_error("File '$cliPath' is missed, why?");
+        $paths = $this->_buildPaths($name);
+        foreach ($paths as $p) {
+            if (file_exists($p)) {
+                $cliPath = $p;
+                break;
             }
+        }
+
+        // still nothing found?
+        if (!isset($cliPath)) {
+            return self::_error(
+                sprintf(
+                    "Script '%s' can't be dispatched, candidates are: %s",
+                    $cliPath,
+                    implode(', ', $paths)
+                )
+            );
         }
 
         // require this class once
         eval('require_once $cliPath;'); // for ZCA
+        
         // if the class is not found...
         if (!class_exists($name)) {
-            return self::_error("Class '$name' is not defined, why?");
+            return self::_error("Class '{$name}' is not defined in '{$cliPath}', why?");
         }
 
         $cli = new $name();
@@ -106,10 +118,11 @@ class FaZend_Cli_Router
         $cli->setRouter($this);
 
         try {
-            return $cli->execute();
+            $result = $cli->execute();
         } catch (FaZend_Cli_OptionMissedException $e) {
             return self::_error($e->getMessage());
         }   
+        return $result;
     }
         
     /**
@@ -139,5 +152,19 @@ class FaZend_Cli_Router
 
         return $options;
     }    
+
+    /**
+     * Construct a list of absolute file path names
+     *
+     * @param string Name of the script to run
+     * @return string[]
+     */
+    protected function _buildPaths($name) 
+    {
+        return array(
+            APPLICATION_PATH . '/cli/' . $name . '.php',
+            FAZEND_APP_PATH . '/cli/' . $name . '.php',
+        );
+    }
 
 }
