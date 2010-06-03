@@ -14,7 +14,9 @@
  * @category FaZend
  */
 
-// error handler
+/**
+ * Re-defining of PHP error handler
+ */
 require_once realpath(dirname(__FILE__) . '/handler.php');
 
 /**
@@ -30,7 +32,7 @@ $startTime = microtime(true);
  * @see FaZend_Test_TestCase
  */
 if (!defined('CLI_ENVIRONMENT')) {
-    if (empty($_SERVER['DOCUMENT_ROOT'])) {
+    if (empty($_SERVER['DOCUMENT_ROOT']) || defined('STDIN')) {
         define('CLI_ENVIRONMENT', true);
     }
 }
