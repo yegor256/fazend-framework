@@ -147,7 +147,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
 
         // email the content to the admin
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
-            ->set('toEmail', $email)
+            ->set('toEmail', self::$_adminEmail)
             ->set('toName', 'System Administrator')
             ->set('file', $file)
             ->set('maximum', self::MAX_LENGTH);
@@ -177,7 +177,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
         @fwrite(
             $handle, 
             date('m/d/Y h:i') . ": file content (" . strlen($content) .
-            " bytes) was sent by email ({$email}) to admin.\n\n"
+            " bytes) was sent by email (" . self::$_adminEmail . ") to admin.\n\n"
         );
         @fclose($handle);
     }
