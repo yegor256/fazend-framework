@@ -178,10 +178,23 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Save the object
      *
      * @return void
+     * @throws FaZend_Db_Table_ActiveRow_SaveException
      */
     public function save()
     {
-        parent::save();
+        try {
+            parent::save();
+        } catch (Exception $e) {
+            FaZend_Exception::raise(
+                'FaZend_Db_Table_ActiveRow_SaveException',
+                sprintf(
+                    'Failed to save instance of %s: %s',
+                    get_class($this),
+                    $e->getMessage()
+                ),
+                get_class($e)
+            );
+        }
         // inject this object into flyweight
         FaZend_Flyweight::inject($this, intval(strval($this)));
     }
@@ -227,6 +240,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Delete the row
      *
      * @return mixed
+     * @throws FaZend_Db_Table_ActiveRow_DeleteException
      */
     public function delete()
     {
@@ -236,7 +250,20 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // remove the object from the flyweight factory
         FaZend_Flyweight::inject($this, intval(strval($this)));
 
-        return parent::delete();
+        try {
+            return parent::delete();
+        } catch (Exception $e) {
+            FaZend_Exception::raise(
+                'FaZend_Db_Table_ActiveRow_DeleteException',
+                sprintf(
+                    'Failed to delete instance of %s: %s',
+                    get_class($this),
+                    $e->getMessage()
+                ),
+                get_class($e)
+            );
+        }
+        return 0;
     }
 
     /**
@@ -249,10 +276,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         try {
             // make sure the class has live data from DB
             $this->_loadLiveData();
-            return true;
         } catch (FaZend_Db_Table_NotFoundException $e) {
+            assert($e instanceof Exception); // for ZCA
             return false;
         }
+        return true;
     }
 
     /**
@@ -268,7 +296,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function toArray() 
     {
         $array = parent::toArray();
-        foreach ($array as $key=>$value) {
+        foreach (array_keys($array) as $key) {
             if ($key == 'id') {
                 continue;
             }
@@ -377,13 +405,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
                 
         // We are trying to understand what is the class to be
         // used for this column, if it is necessary
-        if (!isset($rowClass)) {
-            if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
-                // try to find this class and LOAD it if possible
-                $rowClass = 'Model_' . ucfirst($name);
-                if (!class_exists($rowClass)) {
-                    $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
-                }
+        if (is_numeric($value) && $this->_isForeignKey(false, $name)) {
+            // try to find this class and LOAD it if possible
+            $rowClass = 'Model_' . ucfirst($name);
+            if (!class_exists($rowClass)) {
+                $rowClass = 'FaZend_Db_Table_ActiveRow_' . $name;
             }
         }
 
