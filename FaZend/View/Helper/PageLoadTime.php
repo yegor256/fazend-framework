@@ -51,23 +51,28 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             if ($profiler instanceof Zend_Db_Profiler) {
                 $queries = $profiler->getQueryProfiles();
                 if (is_array($queries)) {
-                    $html .= "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>". 
-                        $profiler->getTotalNumQueries() . ' queries</span>, ' . 
-                        sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]' .
-                        "<div id='profiler' style='display:none;'>" . 
+                    $html .= sprintf(
+                        "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>" 
+                        . "%d queries in %0.2fsec</span>]<div id='profiler' style='display:none;'>%s</div>", 
+                        $profiler->getTotalNumQueries(),
+                        $profiler->getTotalElapsedSecs(),
                         implode(
                             '<br/>', 
                             array_map(
                                 create_function(
                                     '$query', 
-                                    'return "[" . sprintf("%0.3f", $query->getElapsedSecs()) . 
-                                    "]&#32;" . $query->getQuery();'
+                                    '
+                                    return sprintf(
+                                        "[%0.3f]&#32;%s", 
+                                        $query->getElapsedSecs(),
+                                        $query->getQuery()
+                                    );
+                                    '
                                 ), 
                                 $queries
                             )
-                        ) . 
-                        '</div>';
-        
+                        )
+                    );
                     // jQuery is required for this    
                     $this->getView()->includeJQuery();
                 }
