@@ -46,30 +46,31 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             $html = '<b style="color:red;">' . $html . '</b>';
 
         // add information from DB profiler, if any
-        if ((APPLICATION_ENV == 'development') && !is_null(Zend_Db_Table::getDefaultAdapter())) {
+        if (!is_null(Zend_Db_Table::getDefaultAdapter())) {
             $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
-            $queries = $profiler->getQueryProfiles();
-
-            if (is_array($queries)) {
-                $html .= "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>". 
-                    $profiler->getTotalNumQueries() . ' queries</span>, ' . 
-                    sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]' .
-                    "<div id='profiler' style='display:none;'>" . 
-                    implode(
-                        '<br/>', 
-                        array_map(
-                            create_function(
-                                '$query', 
-                                'return "[" . sprintf("%0.3f", $query->getElapsedSecs()) . 
-                                "]&#32;" . $query->getQuery();'
-                            ), 
-                            $queries
-                        )
-                    ) . 
-                    '</div>';
+            if ($profiler instanceof Zend_Db_Profiler) {
+                $queries = $profiler->getQueryProfiles();
+                if (is_array($queries)) {
+                    $html .= "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>". 
+                        $profiler->getTotalNumQueries() . ' queries</span>, ' . 
+                        sprintf('%0.2f', $profiler->getTotalElapsedSecs()) . ' sec]' .
+                        "<div id='profiler' style='display:none;'>" . 
+                        implode(
+                            '<br/>', 
+                            array_map(
+                                create_function(
+                                    '$query', 
+                                    'return "[" . sprintf("%0.3f", $query->getElapsedSecs()) . 
+                                    "]&#32;" . $query->getQuery();'
+                                ), 
+                                $queries
+                            )
+                        ) . 
+                        '</div>';
         
-                // jQuery is required for this    
-                $this->getView()->includeJQuery();
+                    // jQuery is required for this    
+                    $this->getView()->includeJQuery();
+                }
             }
         }
 
