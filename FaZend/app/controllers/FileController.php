@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_Controller_Action
+ */
 require_once 'FaZend/Controller/Action.php';
 
 /**
@@ -34,15 +37,17 @@ class Fazend_FileController extends FaZend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $file = APPLICATION_PATH . '/views/files/' . $this->_getParam('file');
-
-        // if it's absent
-        if (!file_exists($file)) {
-            $file = FAZEND_APP_PATH . '/views/files/' . $this->_getParam('file');
-            if (!file_exists($file)) {
-                $this->getResponse()->setBody('file ' . $this->_getParam('file') . ' not found');
-                return;
+        // trying to find the file
+        foreach ($this->_computePaths($this->_getParam('file')) as $path) {
+            if (file_exists($path)) {
+                $file = $path;
             }
+        }
+
+        // nothing found in the proposed paths?
+        if (!isset($file)) {
+            $this->getResponse()->setBody('file not found');
+            return;
         }
 
         // tell browser to cache this content    
@@ -50,7 +55,7 @@ class Fazend_FileController extends FaZend_Controller_Action
 
         // set proper type of content
         if (extension_loaded('fileinfo')) {
-            $finfo = new finfo(FILEINFO_MIME, '/usr/share/misc/magic');
+            $finfo = new finfo(FILEINFO_MIME);
             if ($finfo) {
                 $this->getResponse()->setHeader('Content-type', $finfo->file($file));
             }
@@ -59,6 +64,20 @@ class Fazend_FileController extends FaZend_Controller_Action
         $this->getResponse()->setHeader('Content-Length', filesize($file));
         $this->getResponse()->setBody(file_get_contents($file));
     }    
+    
+    /**
+     * Compute and return possible paths for the file name
+     *
+     * @param string Relative file name
+     * @return string[]
+     */
+    protected function _computePaths($name) 
+    {
+        return array(
+            APPLICATION_PATH . '/views/files/' . $name,
+            FAZEND_APP_PATH . '/views/files/' . $name,
+        );
+    }
     
 }
 
