@@ -166,7 +166,7 @@ class FaZend_Log_Writer_ErrorLog extends Zend_Log_Writer_Stream
          */
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', self::$_adminEmail)
-            ->set('toName', 'System Administrator')
+            ->set('toName', 'admin')
             ->set('file', $file)
             ->set('maximum', self::MAX_LENGTH);
 
