@@ -96,6 +96,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         if ($db instanceof Zend_Db_Adapter_Abstract) {
             $db->closeConnection();
         }
+        
+        FaZend_Db_ActiveTable::cleanCache();
     }
     
 }

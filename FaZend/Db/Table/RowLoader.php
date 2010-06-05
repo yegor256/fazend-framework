@@ -30,21 +30,35 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
 {
 
     /**
-     * Dynamically load class
+     * Dynamically load active-row class
      *
      * @param string Name of the class to create, should be in format:
-     *               "FaZend_Db_Table_RowLoader_*" where "*" stands for the
+     *               "FaZend_Db_Table_ActiveRow_*" where "*" stands for the
      *               name of database table
      * @return void
      * @see FaZend_Application_Resource_fz_orm::init()
+     * @throws FaZend_Db_Table_RowLoader_Exception
      */
     public function autoload($class)
     {
-        // maybe this class is already loaded?
+        /**
+         * Maybe this class already exists?
+         */
         if (class_exists($class)) {
             return;
         }
-        $name = substr(strrchr($class, '_'), 1);
+
+        /**
+         * Get the name of the table from the class name
+         */
+        $matches = array();
+        if (!preg_match('/^FaZend_Db_Table_ActiveRow_([a-zA-Z]+)$/', $class, $matches)) {
+            FaZend_Exception::raise(
+                'FaZend_Db_Table_RowLoader_Exception',
+                "Invalid name of the class: '{$class}'"
+            );
+        }
+        $name = $matches[1];
 
         /**
          * @see FaZend_Db_Table_ActiveRow
@@ -63,8 +77,7 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
                 }    
                 public static function retrieve(\$param = true) 
                 {
-                    \$wrapper = new FaZend_Db_Wrapper('{$name}', \$param);
-                    return \$wrapper;
+                    return new FaZend_Db_Wrapper('{$name}', \$param);
                 }    
             };
             "
@@ -74,7 +87,8 @@ class FaZend_Db_Table_RowLoader implements Zend_Loader_Autoloader_Interface
         if (false === $eval) {
             FaZend_Exception::raise(
                 'FaZend_Db_Table_InvalidClass',
-                "Class '{$class}' can't be declared, some error in its definition"
+                "Class '{$class}' can't be declared, some error in its definition",
+                'FaZend_Db_Table_RowLoader_Exception'
             );
         }
     }

@@ -211,12 +211,11 @@ class FaZend_Db_Deployer
                 }
             }
         }
-        FaZend_Exception::raise(
+        return FaZend_Exception::raise(
             'FaZend_Db_Deployer_SqlFileNotFound', 
             "File '<num> {$table}.sql' not found in '{$dir}'",
             'FaZend_Db_Deployer_Exception'
         );
-        return null; // for ZCA only
     }
 
     /**

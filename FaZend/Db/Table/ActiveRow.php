@@ -88,6 +88,14 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     protected $_ignoreNull = false;
 
     /**
+     * List of cached properties, in order to avoid duplicate calculation
+     *
+     * @var mixed[]
+     * @see __get()
+     */
+    protected $_cachedProperties = array();
+
+    /**
      * Add new mapping
      *
      * @param string Regular expression to match, e.g. "/user\.project/"
@@ -119,10 +127,12 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             // create normal row
             parent::__construct();
 
-            // save the id into the class
-            // we don't load any data from DB at this stage, just remembering
-            // the ID of the row
-            // later data will be loaded, but later, in __get() method
+            /**
+             * save the id into the class
+             * we don't load any data from DB at this stage, just remembering
+             * the ID of the row
+             * later data will be loaded, but later, in __get() method
+             */
             $this->_preliminaryKey = $id;
 
             // inject this object into flyweight
@@ -356,6 +366,11 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __get($name)
     {
+        // if we already have it locally, immediately return
+        if (array_key_exists($name, $this->_cachedProperties)) {
+            return $this->_cachedProperties[$name];
+        }
+        
         // you should not access ID field directly!
         if (strtolower($name) == 'id') {
             trigger_error(
@@ -372,7 +387,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // if we are interested in just ID and data are not loaded yet
         // we just return the ID, that's it
         if ($name === 'id' && isset($this->_preliminaryKey)) {
-            return intval($this->_preliminaryKey);
+            return $this->_cachedProperties[$name] = intval($this->_preliminaryKey);
         }
 
         // make sure the class has live data from DB
@@ -385,13 +400,13 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         // and it was already calculated before and stored
         // in toArray()
         if (!is_scalar($value) && !is_null($value)) {
-            return $value;
+            return $this->_cachedProperties[$name] = $value;
         }
         
         // NULL received. We shall either return it as NULL
         // or ignore and continue to type casting
         if (is_null($value) && !$this->_ignoreNull) {
-            return null;
+            return $this->_cachedProperties[$name] = null;
         }
 
         // We're trying to find a class of explicit mapping/casting
@@ -401,7 +416,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             if (!preg_match($regex, $mask)) {
                 continue;
             }
-            return $callback->call($value);
+            return $this->_cachedProperties[$name] = $callback->call($value);
         }
                 
         // We are trying to understand what is the class to be
@@ -436,7 +451,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             }
         }
 
-        return $value;
+        return $this->_cachedProperties[$name] = $value;
     }
 
     /**
@@ -448,6 +463,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __set($name, $value)
     {
+        // clean internal cache
+        $this->_cachedProperties = array();
+        
         // make sure the class has live data from DB
         $this->_loadLiveData();
 

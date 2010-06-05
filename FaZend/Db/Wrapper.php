@@ -74,6 +74,7 @@ class FaZend_Db_Wrapper
      * @param string Name of the DB table
      * @param boolean Set FROM attribute to the select or not
      * @return void
+     * @see FaZend_Db_Table_RowLoader::autoload()
      */
     public function __construct($table, $setFrom = true) 
     {
@@ -198,7 +199,11 @@ class FaZend_Db_Wrapper
         // raise this exception
         FaZend_Exception::raise(
             $exceptionClassName, 
-            sprintf('Row not found in %s with "%s"', $this->getRowClass(), $this->select()),
+            sprintf(
+                'Row not found in %s with "%s"', 
+                $this->getRowClass(), 
+                $this->select()
+            ),
             'FaZend_Db_Table_NotFoundException'
         );
     }

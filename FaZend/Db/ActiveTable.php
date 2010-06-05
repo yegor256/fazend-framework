@@ -36,48 +36,66 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
     protected static $_cached = array();
 
     /**
+     * Clean static cache, used for unit testing
+     *
+     * If we don't clean this cache after every unit test we might
+     * see a problem when DB adapter is no longer active, but our static
+     * table instances are attached to it.
+     *
+     * @return void
+     */
+    public static function cleanCache() 
+    {
+        self::$_cached = array();
+    }
+
+    /**
      * Returns table class properly configured
      *
      * @param string Name of the table in the DB
-     * @return void
+     * @return FaZend_Db_ActiveTable
      * @throws FaZend_Db_Wrapper_NoIdFieldException
      */
     public static function createTableClass($table)
     {
         $tableClassName = 'FaZend_Db_ActiveTable_' . $table;
-        if (isset(self::$_cached[$tableClassName])) {
-            return self::$_cached[$tableClassName];
-        }
+        // if (array_key_exists($table, self::$_cached)) {
+        //     return self::$_cached[$table];
+        // }
 
-        $cls = self::$_cached[$tableClassName] = new $tableClassName();
+        /**
+         * Create new table class and store it in a local static cache
+         */
+        $cls = self::$_cached[$table] = new $tableClassName();
 
-        // this page has primary key and Zend automatically detects it?
+        /**
+         * This table has primary key and Zend automatically detects it?
+         */
         try {
             $cls->info(Zend_Db_Table_Abstract::PRIMARY);
-            // possible exceptions:
-            // - Zend_Db_Table_Exception
-            // - Zend_Db_Adapter_Mysqli_Exception
+            /**
+             * Possible exceptions here:
+             * - Zend_Db_Table_Exception
+             * - Zend_Db_Adapter_Mysqli_Exception
+             */
         } catch (Exception $e) {
-            // no, we can't detect it automatically
-            $cls = new $tableClassName(
-                array(
-                    'primary' => 'id'
-                )
-            );
-
             try {
-                // maybe we just have a field ID?
+                /**
+                 * No, we can't detect it automatically, let's assume
+                 * that primary key is "ID". Maybe we just have a field "ID", 
+                 * which is not a primary key, but is named properly?
+                 */
+                $cls = new $tableClassName(array('primary' => 'id'));
                 $cls->info(Zend_Db_Table_Abstract::PRIMARY);
             } catch (Exception $e2) {
                 FaZend_Exception::raise(
                     'FaZend_Db_Wrapper_NoIdFieldException',
-                    "Table {$table} doesn't have either a primary or ID field. " .
-                    " Error1: " . $e->getMessage() . 
-                    '. Error2: ' . $e2->getMessage()
+                    "Table {$table} doesn't have either a primary key and it doesn't have field 'ID'. "
+                    . $e->getMessage() . '. '
+                    . $e2->getMessage()
                 );
             }    
         }
-
         return $cls;    
     }
     
