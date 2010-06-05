@@ -37,13 +37,14 @@ class FaZend_Application_Resource_fz_profiler extends Zend_Application_Resource_
      */
     public function init() 
     {
+        $opts = $this->getOptions();
         // profiler is used ONLY in development environment
-        if (APPLICATION_ENV === 'production') {
+        if (empty($opts['mandatory']) && (APPLICATION_ENV === 'production')) {
             return;
         }
 
         // disable it during CLI unit testing
-        if (defined('TESTING_RUNNING')) {
+        if (empty($opts['mandatory']) && defined('TESTING_RUNNING')) {
             return;
         }
 
