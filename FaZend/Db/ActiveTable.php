@@ -59,9 +59,9 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
     public static function createTableClass($table)
     {
         $tableClassName = 'FaZend_Db_ActiveTable_' . $table;
-        // if (array_key_exists($table, self::$_cached)) {
-        //     return self::$_cached[$table];
-        // }
+        if (array_key_exists($table, self::$_cached)) {
+            return self::$_cached[$table];
+        }
 
         /**
          * Create new table class and store it in a local static cache
@@ -85,7 +85,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
                  * that primary key is "ID". Maybe we just have a field "ID", 
                  * which is not a primary key, but is named properly?
                  */
-                $cls = new $tableClassName(array('primary' => 'id'));
+                $cls = self::$_cached[$table] = new $tableClassName(array('primary' => 'id'));
                 $cls->info(Zend_Db_Table_Abstract::PRIMARY);
             } catch (Exception $e2) {
                 FaZend_Exception::raise(
