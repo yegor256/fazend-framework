@@ -396,8 +396,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         // We're trying to find a class of explicit mapping/casting
         // and convert $value to this class
+        $mask = $this->_table->info(Zend_Db_Table::NAME) . '.' . $name;
         foreach (self::$_mapping as $regex=>$callback) {
-            if (!preg_match($regex, $this->_table->info(Zend_Db_Table::NAME) . '.' . $name)) {
+            if (!preg_match($regex, $mask)) {
                 continue;
             }
             return $callback->call($value);
