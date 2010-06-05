@@ -136,7 +136,6 @@ class FaZend_Db_Wrapper
         if (is_string($this->_table)) {
             $this->_table = FaZend_Db_ActiveTable::createTableClass($this->_table);
         }    
-
         return $this->_table;
     }
 

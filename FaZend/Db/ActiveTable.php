@@ -27,6 +27,13 @@ require_once 'Zend/Db/Table.php';
  */
 abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
 {
+    
+    /**
+     * Cached array of classes
+     *
+     * @var FaZend_Db_ActiveTable
+     */
+    protected static $_cached = array();
 
     /**
      * Returns table class properly configured
@@ -38,8 +45,11 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
     public static function createTableClass($table)
     {
         $tableClassName = 'FaZend_Db_ActiveTable_' . $table;
+        if (isset(self::$_cached[$tableClassName])) {
+            return self::$_cached[$tableClassName];
+        }
 
-        $cls = new $tableClassName();
+        $cls = self::$_cached[$tableClassName] = new $tableClassName();
 
         // this page has primary key and Zend automatically detects it?
         try {

@@ -49,7 +49,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      *
      * 100 points = 1 cent
      *
-     * @var integer
+     * @var float
      */
     protected $_points;
     
@@ -100,7 +100,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     /**
      * Create object from given amount of cents
      *
-     * @param integer Total amount of cents
+     * @param float Total amount of cents
      * @return FaZend_Bo_Money
      */
     public static function convertFromCents($cents) 
@@ -111,7 +111,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     /**
      * Create object from given amount of POINTS
      *
-     * @param integer Total amount of points
+     * @param float Total amount of points
      * @return FaZend_Bo_Money
      */
     public static function convertFromPoints($points) 
@@ -170,7 +170,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             array(
                 'precision' => 2, // cents to show
                 'display' => Zend_Currency::USE_SHORTNAME,
-                'position' => Zend_Currency::RIGHT
+                'position' => Zend_Currency::RIGHT,
             )
         );
         $this->_points = $value * self::POINT_WEIGHT;
@@ -233,7 +233,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     /**
      * Return the value in USD points
      *
-     * @return integer
+     * @return float
      * @todo implement it properly, getting conversion rates somewhere
      * @uses $_points
      */
@@ -282,7 +282,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     /**
      * Multiply current value by this new value
      *
-     * @param integer Multiplier
+     * @param float Multiplier
      * @return $this
      * @throws FaZend_Bo_Money_InvalidMuliplication
      */
