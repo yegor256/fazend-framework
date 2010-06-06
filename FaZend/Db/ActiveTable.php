@@ -66,37 +66,47 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
         /**
          * Create new table class and store it in a local static cache
          */
-        $cls = self::$_cached[$table] = new $tableClassName();
+        self::$_cached[$table] = new $tableClassName();
 
         /**
          * This table has primary key and Zend automatically detects it?
          */
         try {
-            $cls->info(Zend_Db_Table_Abstract::PRIMARY);
+            self::$_cached[$table]->info(Zend_Db_Table_Abstract::PRIMARY);
             /**
              * Possible exceptions here:
              * - Zend_Db_Table_Exception
              * - Zend_Db_Adapter_Mysqli_Exception
              */
         } catch (Exception $e) {
+            /**
+             * If we're here it means that the table is NOT properly initialized
+             * yet and we should clean the cache!
+             */
+            unset(self::$_cached[$table]);
             try {
                 /**
                  * No, we can't detect it automatically, let's assume
                  * that primary key is "ID". Maybe we just have a field "ID", 
                  * which is not a primary key, but is named properly?
                  */
-                $cls = self::$_cached[$table] = new $tableClassName(array('primary' => 'id'));
-                $cls->info(Zend_Db_Table_Abstract::PRIMARY);
+                self::$_cached[$table] = new $tableClassName(array('primary' => 'id'));
+                self::$_cached[$table]->info(Zend_Db_Table_Abstract::PRIMARY);
             } catch (Exception $e2) {
+                /**
+                 * If we're here it means that the table is NOT properly initialized
+                 * yet and we should clean the cache!
+                 */
+                unset(self::$_cached[$table]);
                 FaZend_Exception::raise(
                     'FaZend_Db_Wrapper_NoIdFieldException',
-                    "Table {$table} doesn't have either a primary key and it doesn't have field 'ID'. "
+                    "Table '{$table}' doesn't have either a PK and or an 'ID' field. "
                     . $e->getMessage() . '. '
                     . $e2->getMessage()
                 );
             }    
         }
-        return $cls;    
+        return self::$_cached[$table];
     }
     
 }
