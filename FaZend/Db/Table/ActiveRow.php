@@ -232,7 +232,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function getObject($name, $class)
     {
         // make sure the class has live data from DB
-        $this->_loadLiveData();
+        $this->loadLiveData();
         $value = parent::__get($name);
         
         // maybe toArray() already produced object
@@ -277,7 +277,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function delete()
     {
         // make sure the class has live data from DB
-        $this->_loadLiveData();
+        $this->loadLiveData();
 
         // remove the object from the flyweight factory
         FaZend_Flyweight::inject($this, intval(strval($this)));
@@ -307,7 +307,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         try {
             // make sure the class has live data from DB
-            $this->_loadLiveData();
+            $this->loadLiveData();
         } catch (FaZend_Db_Table_NotFoundException $e) {
             assert($e instanceof Exception); // for ZCA
             return false;
@@ -351,7 +351,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         // the object just created, it is clean of course
         // even if it's not loaded yet (primaryKey is set means that the object
-        // is not loaded yet, see _loadLiveData()
+        // is not loaded yet, see loadLiveData()
         if (isset($this->_preliminaryKey)) {
             return true;
         }
@@ -376,7 +376,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     public function __call($method, array $args)
     {
         // make sure the class has live data from DB
-        $this->_loadLiveData();
+        $this->loadLiveData();
         return parent::__call($method, $args);
     }
 
@@ -413,7 +413,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         }
 
         // make sure the class has live data from DB
-        $this->_loadLiveData();
+        $this->loadLiveData();
 
         // get raw value from Zend_Db_Table_Row
         $value = parent::__get($name);
@@ -489,7 +489,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         $this->_cachedProperties = array();
         
         // make sure the class has live data from DB
-        $this->_loadLiveData();
+        $this->loadLiveData();
 
         if ($value instanceof Zend_Db_Table_Row) {
             $value = intval(strval($value));
@@ -507,7 +507,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @return void
      */
-    protected function _loadLiveData()
+    public function loadLiveData()
     {
         // if the class data are not loaded yet, it's a good moment to do it
         if (!isset($this->_preliminaryKey)) {
@@ -539,6 +539,9 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 
         // kill this variable, since we have LIVE data in the class already
         unset($this->_preliminaryKey);
+
+        // clean internal cache
+        $this->_cachedProperties = array();
     }
 
     /**
