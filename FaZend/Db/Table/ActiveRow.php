@@ -185,6 +185,18 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     }
     
     /**
+     * Refreshes properties from the database.
+     *
+     * @return void
+     * @see Zend_Db_Table_Row::refresh()
+     */
+    public function refresh()
+    {
+        $this->_cachedProperties = array();
+        return parent::refresh();
+    }
+
+    /**
      * Save the object
      *
      * @return void
