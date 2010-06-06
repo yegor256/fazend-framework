@@ -259,6 +259,16 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     }
 
     /**
+     * Get list of columns in this ROW
+     *
+     * @return string[]
+     */
+    public function getColumns()
+    {
+        return array_keys($this->_data);
+    }
+
+    /**
      * Delete the row
      *
      * @return mixed
