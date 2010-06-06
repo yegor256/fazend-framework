@@ -60,6 +60,9 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         foreach ($queries as $query) {
             Zend_Db_Table_Abstract::getDefaultAdapter()->query($query);
         }
+
+        // register a default user
+        Model_User::register('test@example.com', 'test');
     }
     
     /**

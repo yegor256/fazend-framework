@@ -49,6 +49,31 @@ class FaZend_Db_Table_ActiveRowTest extends AbstractTestCase
         $this->assertTrue(is_bool($owner->isMe()));
     }
     
+    public function testRetrieveWithFalseWorks()
+    {
+        $email = Model_Owner::retrieve(false) // pay attention to this FALSE
+            ->from('user', array('email'))
+            ->where('email is not null')
+            ->setRowClass('Model_User')
+            ->fetchRow()
+            ->email;
+        $this->assertFalse(empty($email));
+        
+        $text = Model_Owner::retrieve(false) // pay attention to this FALSE
+            ->from('product', array('text'))
+            ->where('text is not null')
+            ->setRowClass('Model_Product')
+            ->fetchRow()
+            ->text;
+        $this->assertFalse(empty($text));
+
+        $name = Model_Owner::retrieve()
+            ->setRowClass('Model_Owner')
+            ->fetchRow()
+            ->name;
+        $this->assertFalse(empty($name));
+    }
+    
     public function testDynamicBindingWorks()
     {
         Model_Owner::create('john');
