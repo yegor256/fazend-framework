@@ -263,7 +263,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      *
      * @return string[]
      */
-    public function getColumns()
+    public function getColumnNames()
     {
         return array_keys($this->_data);
     }
