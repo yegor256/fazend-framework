@@ -188,7 +188,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Save the object
      *
      * @return void
-     * @throws FaZend_Db_Table_ActiveRow_SaveException
+     * @throws FaZend_Db_Table_SaveException
      */
     public function save()
     {
@@ -196,7 +196,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             parent::save();
         } catch (Exception $e) {
             FaZend_Exception::raise(
-                'FaZend_Db_Table_ActiveRow_SaveException',
+                'FaZend_Db_Table_SaveException',
                 sprintf(
                     'Failed to save instance of %s: %s',
                     get_class($this),
@@ -250,7 +250,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      * Delete the row
      *
      * @return mixed
-     * @throws FaZend_Db_Table_ActiveRow_DeleteException
+     * @throws FaZend_Db_Table_DeleteException
      */
     public function delete()
     {
@@ -264,7 +264,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
             return parent::delete();
         } catch (Exception $e) {
             FaZend_Exception::raise(
-                'FaZend_Db_Table_ActiveRow_DeleteException',
+                'FaZend_Db_Table_DeleteException',
                 sprintf(
                     'Failed to delete instance of %s: %s',
                     get_class($this),
