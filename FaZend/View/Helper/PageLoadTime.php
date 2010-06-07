@@ -91,9 +91,9 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
 
             $labels[] = sprintf(
                 "<span style='font-size:1em;cursor:pointer;color:red;' title='%s' "
-                . "onclick='$(\"#fz__syslog\").toggle();'>syslog&#32;(%d)</span>",
-                _t('log messages from the script'),
-                substr_count($log, "\n")
+                . "onclick='$(\"#fz__syslog\").toggle();'>%d@syslog</span>",
+                substr_count($log, "\n"),
+                _t('log messages from the script')
             );
             $divs[] = sprintf(
                 "<pre id='fz__syslog' style='display:none;'>%s</pre>",
