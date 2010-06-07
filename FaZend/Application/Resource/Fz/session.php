@@ -41,6 +41,7 @@ class FaZend_Application_Resource_fz_session extends Zend_Application_Resource_R
         // if in testing mode - ignore this
         if (defined('CLI_ENVIRONMENT')) {
             Zend_Session::$_unitTestEnabled = true;
+            Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_NonPersistent());
             return;
         }
 

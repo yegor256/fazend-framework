@@ -15,6 +15,7 @@ Already done:
 - to get rid of Version.php/Revision.php, use just one file instead
 - to get rid of FaZend_Date object
 - to improve visual layout of /__fz/adm controller
+- to create fzTranslator resource
 
 This is our plan for version 0.2, planned delivery -- end of June:
 
@@ -27,7 +28,6 @@ This is our plan for version 0.2, planned delivery -- end of June:
 - to migrate to Phing FtpDeployTask, from FtpUpload
 - to introduce tree() view helper
 - to resolve a problem with two consequetive VIEWs in deployer ()
-- to create fzTranslator resource
 - to move FaZend_Bo component to Zend, if possible (http://framework.zend.com/wiki/display/ZFPROP/Zend_Bo+-+Yegor+Bugayenko)
 - to integrate FaZend_Flyweight with Zend_Cache_Backend
 - to implement dynamic sorters-by-column in htmlTable()
