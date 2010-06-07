@@ -36,6 +36,7 @@ class FaZend_Exception
      *
      * @param string Exception class name, will be created or loaded
      * @param string Message to be sent inside this class
+     * @param string|mixed Parent class
      * @return boolean
      * @throws Zend_Exception
      */
@@ -53,11 +54,17 @@ class FaZend_Exception
      * Automatically create class or load it
      *
      * @param string Exception class name, will be created or loaded
-     * @param string Parent class
+     * @param string|mixed Parent class
      * @return void
      */
     public static function _declareClass($class, $parent = 'Zend_Exception')
     {
+        // it's already an object?
+        if (is_object($class)) {
+            return;
+        }
+        
+        // this class already exists?
         if (class_exists($class, false)) {
             return;
         }
@@ -80,7 +87,11 @@ class FaZend_Exception
         }
 
         // dynamically declare this class
-        eval("class {$class} extends {$parent} {};");    
+        if (is_object($parent)) {
+            eval("class {$class} extends " . get_class($parent) . " {};");    
+        } else {
+            eval("class {$class} extends {$parent} {};");    
+        }
     }
 
 }
