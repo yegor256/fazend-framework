@@ -67,8 +67,9 @@ class FaZend_Log
      */
     public static function getInstance()
     {
-        if (is_null(self::$_instance))
+        if (is_null(self::$_instance)) {
             self::$_instance = new FaZend_Log();
+        }
         return self::$_instance;
     }
 
@@ -118,9 +119,11 @@ class FaZend_Log
         // create a unique name
         if (is_null($name)) {
             $name = get_class($writer) . '1';
-            foreach ($this->_loggers as $id=>$logger) {
-                if (preg_match('/^(' . preg_quote(get_class($writer)) . ')(\d+)$/', $id, $matches))
+            foreach (array_keys($this->_loggers) as $id) {
+                $matches = array();
+                if (preg_match('/^(' . preg_quote(get_class($writer)) . ')(\d+)$/', $id, $matches)) {
                     $name = $matches[1] . ((int)$matches[2] + 1);
+                }
             }
         }
 
@@ -139,11 +142,12 @@ class FaZend_Log
      */
     public function removeWriter($name)
     {
-        if (!isset($this->_loggers[$name]))
+        if (!isset($this->_loggers[$name])) {
             FaZend_Exception::raise(
                 'FaZend_Log_WriterNotFound', 
                 "Writer '{$name}' was not found in stack"
             );
+        }
 
         unset($this->_loggers[$name]);
         unset($this->_writers[$name]);
@@ -160,11 +164,12 @@ class FaZend_Log
      */
     public function getWriter($name)
     {
-        if (!isset($this->_loggers[$name]))
+        if (!isset($this->_loggers[$name])) {
             FaZend_Exception::raise(
                 'FaZend_Log_WriterNotFound', 
                 "Writer '{$name}' was not found in stack"
             );
+        }
 
         return $this->_writers[$name];
     }
@@ -233,8 +238,9 @@ class FaZend_Log
      */
     protected function _log($method, $message)
     {
-        foreach ($this->_loggers as $logger)
+        foreach ($this->_loggers as $logger) {
             call_user_func_array(array($logger, $method), array((string)$message));
+        }
     }
 
 }

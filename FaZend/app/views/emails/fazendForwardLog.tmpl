@@ -2,13 +2,9 @@ subject: Forward of error_log from <?php echo $this->serverUrl()?>.
 --
 ATTN: <?php echo $this->toName?>,
 
-The size of 'error_log' file is too big now (more than <?php echo $this->maximum?> bytes):
+<?php echo implode('. ', $this->reasons)?>.
 
-file: <?php echo $this->file?>
-
-size: <?php echo strlen($this->log)?> bytes
-server: <?php echo $this->serverUrl()?>
-
+Log file: <?php echo $this->file?>.
 
 That's why you receive its content by email. The file itself
 was removed from the production server. Please, review the

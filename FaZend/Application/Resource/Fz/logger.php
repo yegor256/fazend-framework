@@ -34,6 +34,7 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
      *
      * @return void
      * @see Zend_Application_Resource_Resource::init()
+     * @throws FaZend_Application_Resource_fz_logger_Exception
      */
     public function init()
     {
@@ -43,12 +44,61 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         // remove all writers
         FaZend_Log::getInstance()->clean();
 
-        // log errors in ALL environments
-        FaZend_Log::getInstance()->addWriter('ErrorLog', 'ErrorLog');
-        
+        // initialize the log
+        $this->_initErrorLog();
+
         // if testing or development - log into memory as well
         if (APPLICATION_ENV !== 'production') {
             FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
+        }
+    }
+
+    /**
+     * Initialize error log
+     *
+     * @return void
+     */
+    protected function _initErrorLog() 
+    {
+        // we try to get the file name from php.ini
+        $stream = ini_get('error_log');
+
+        // if it wasn't set...
+        if (!$stream) {
+            // and if it's a production mode - we should signal
+            if (APPLICATION_ENV === 'production') {
+                FaZend_Exception::raise(
+                    'FaZend_Application_Resource_fz_logger_Exception',
+                    '[error_log] is not set in php.ini or in app.ini'
+                );
+            }
+            return;
+        }
+
+        // log errors in ALL environments
+        FaZend_Log::getInstance()->addWriter(
+            new Zend_Log_Writer_Stream($stream),
+            'ErrorLog' // unique name of the writer
+        );
+        
+        if (!empty($this->_options['policy'])) {
+            $name = @$this->_options['policy']['name'];
+            if (!is_string($name) || empty($name)) {
+                FaZend_Exception::raise(
+                    'FaZend_Application_Resource_fz_logger_Exception',
+                    'Name of the log policy is not defined for fz_logger'
+                );
+            }
+            $params = @$this->_options['policy']['params'];
+            if (!is_array($params)) {
+                FaZend_Exception::raise(
+                    'FaZend_Application_Resource_fz_logger_Exception',
+                    'Params of the log policy is not defined for fz_logger'
+                );
+            }
+            FaZend_Log::getInstance()->getWriter('ErrorLog')->addFilter(
+                FaZend_Log_Policy_Abstract::factory($name, $params, $stream)
+            );
         }
     }
 
