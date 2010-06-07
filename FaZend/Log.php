@@ -164,7 +164,7 @@ class FaZend_Log
      */
     public function getWriter($name)
     {
-        if (!isset($this->_loggers[$name])) {
+        if (!$this->hasWriter($name)) {
             FaZend_Exception::raise(
                 'FaZend_Log_WriterNotFound', 
                 "Writer '{$name}' was not found in stack"
@@ -172,6 +172,17 @@ class FaZend_Log
         }
 
         return $this->_writers[$name];
+    }
+
+    /**
+     * Do we have the writer with this name?
+     *
+     * @param string Name of the writer
+     * @return boolean
+     */
+    public function hasWriter($name)
+    {
+        return isset($this->_loggers[$name]);
     }
 
     /**
