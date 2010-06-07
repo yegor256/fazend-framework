@@ -42,20 +42,27 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
         $html = sprintf('%0.2f', $time) . 'sec';
 
         // encolor with red, if more than 2 seconds
-        if ($time > 2)
+        if ($time > 2) {
             $html = '<b style="color:red;">' . $html . '</b>';
+        }
 
+        // labels and DIVs to show inside brackets
+        $labels = $divs = array();
+        
         // add information from DB profiler, if any
         if (!is_null(Zend_Db_Table::getDefaultAdapter())) {
             $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
             if ($profiler instanceof Zend_Db_Profiler) {
                 $queries = $profiler->getQueryProfiles();
                 if (is_array($queries)) {
-                    $html .= sprintf(
-                        "&#32;[<span style='cursor:pointer;' onclick='$(\"#profiler\").toggle();'>" 
-                        . "%d queries in %0.2fsec</span>]<div id='profiler' style='display:none;'>%s</div>", 
+                    $labels[] = sprintf(
+                        "<span style='cursor:pointer;' onclick='$(\"#fz__profiler\").toggle();'>" 
+                        . "%d queries in %0.2fsec</span>", 
                         $profiler->getTotalNumQueries(),
-                        $profiler->getTotalElapsedSecs(),
+                        $profiler->getTotalElapsedSecs()
+                    );
+                    $divs[] = sprintf(
+                        "<div id='fz__profiler' style='display:none;'>%s</div>",
                         implode(
                             '<br/>', 
                             array_map(
@@ -73,23 +80,31 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                             )
                         )
                     );
-                    // jQuery is required for this    
-                    $this->getView()->includeJQuery();
                 }
             }
         }
 
         // add information from system log
-        if ((APPLICATION_ENV == 'development') && !FaZend_Log::getInstance()->getWriter('FaZendDebug')->isEmpty()) {
-            // jQuery is necessary
-            $this->getView()->includeJQuery();
-            $log = FaZend_Log::getInstance()->getWriter('FaZendDebug')->getLog();
+        $factory = FaZend_Log::getInstance();
+        if ($factory->hasWriter('FaZendDebug') && !$factory->getWriter('FaZendDebug')->isEmpty()) {
+            $log = $factory->getWriter('FaZendDebug')->getLog();
 
-            $html .= 
-                "&#32;<span style='cursor:pointer;color:red;' " . 
-                "title='Log messages from the script' ".
-                "onclick='$(\"#syslog\").toggle();'>syslog(" . substr_count($log, "\n"). ")</span>".
-                "<pre id='syslog' style='display:none;'>{$log}</pre>";
+            $labels[] = sprintf(
+                "<span style='cursor:pointer;color:red;' title='%s' "
+                . "onclick='$(\"#fz__syslog\").toggle();'>syslog&#32;(%d)</span>",
+                _t('log messages from the script'),
+                substr_count($log, "\n")
+            );
+            $divs[] = sprintf(
+                "<pre id='syslog' style='display:none;'>%s</pre>",
+                $log
+            );
+        }
+
+        if ($labels) {
+            $html .= '&#32;[' . implode(',&#32;', $labels) . ']' . implode('', $divs);
+            // jQuery is required for this    
+            $this->getView()->includeJQuery();
         }
 
         return $html;
