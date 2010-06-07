@@ -91,14 +91,14 @@ abstract class FaZend_Log_Policy_Abstract implements Zend_Log_Filter_Interface
             );
         }
         // if it's not a regular file - skip the process
-        if (!@is_file($this->_file)) {
+        if (!@is_file($file)) {
             FaZend_Exception::raise(
                 'FaZend_Log_Policy_Abstract_Exception',
                 "Stream provided ({$file}) is not a regular file"
             );
         }
         // if the file is not writable - skip the process
-        if (!@is_writable($this->_file)) {
+        if (!@is_writable($file)) {
             FaZend_Exception::raise(
                 'FaZend_Log_Policy_Abstract_Exception',
                 "Stream '{$file}' is not writable"

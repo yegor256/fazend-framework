@@ -100,7 +100,7 @@ abstract class FaZend_Db_ActiveTable extends Zend_Db_Table
                 unset(self::$_cached[$table]);
                 FaZend_Exception::raise(
                     'FaZend_Db_Wrapper_NoIdFieldException',
-                    "Table '{$table}' doesn't have either a PK and or an 'ID' field. "
+                    "Table '{$table}' doesn't have either a PK or an 'ID' field. "
                     . $e->getMessage() . '. '
                     . $e2->getMessage()
                 );

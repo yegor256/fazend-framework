@@ -93,11 +93,14 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
             );
         }
         $params = @$this->_options['policy']['params'];
-        if (!is_array($params)) {
+        if (!empty($params) && !is_array($params)) {
             FaZend_Exception::raise(
                 'FaZend_Application_Resource_fz_logger_Exception',
-                'Params of the log policy is not defined for fz_logger'
+                'Params of the log policy are invalid for fz_logger'
             );
+        }
+        if (empty($params)) {
+            $params = array();
         }
 
         FaZend_Log::getInstance()->getWriter('ErrorLog')->addFilter(
