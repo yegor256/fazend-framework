@@ -43,7 +43,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
 
         // encolor with red, if more than 2 seconds
         if ($time > 2) {
-            $html = '<b style="color:red;">' . $html . '</b>';
+            $html = '<b style="font-size:1em;color:red;">' . $html . '</b>';
         }
 
         // labels and DIVs to show inside brackets
