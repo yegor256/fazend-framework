@@ -57,7 +57,8 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 if (is_array($queries)) {
                     $labels[] = sprintf(
                         "<span style='font-size:1em;cursor:pointer;' onclick='$(\"#fz__profiler\").toggle();'>" 
-                        . "%d queries in %0.2fsec</span>", 
+                        . str_replace(' ', '&#32;', _t('%d queries in %0.2fsec'))
+                        . '</span>', 
                         $profiler->getTotalNumQueries(),
                         $profiler->getTotalElapsedSecs()
                     );
@@ -90,10 +91,12 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             $log = $factory->getWriter('FaZendDebug')->getLog();
 
             $labels[] = sprintf(
-                "<span style='font-size:1em;cursor:pointer;color:red;' title='%s' "
-                . "onclick='$(\"#fz__syslog\").toggle();'>%d@syslog</span>",
-                substr_count($log, "\n"),
-                _t('log messages from the script')
+                "<span style='font-size:1em;cursor:pointer' title='%s' "
+                . "onclick='$(\"#fz__syslog\").toggle();'>"
+                . str_replace(' ', '&#32;', _t('%d logs'))
+                . '</span>',
+                _t('log messages from the script'),
+                substr_count($log, "\n")
             );
             $divs[] = sprintf(
                 "<pre id='fz__syslog' style='display:none;'>%s</pre>",
