@@ -190,6 +190,12 @@
                         <include name="${to.unit}"/>
                         <include name="test/${to.unit}"/>
                     </fileset>
+                    <fileset dir="${project.basedir}/test">
+                        <include name="closers/*.php"/>
+                        <exclude name="**/Abstract*.php"/>
+                        <exclude name="**/_*.php"/>
+                        <exclude name=".svn/**"/>
+                    </fileset>
                 </batchtest>
             </phpunit>
         </then><else>
@@ -201,6 +207,12 @@
                 <batchtest>
                     <fileset dir="${project.basedir}/test">
                         <include name="**/*Test.php"/>
+                        <exclude name="**/Abstract*.php"/>
+                        <exclude name="**/_*.php"/>
+                        <exclude name=".svn/**"/>
+                    </fileset>
+                    <fileset dir="${project.basedir}/test">
+                        <include name="closers/*.php"/>
                         <exclude name="**/Abstract*.php"/>
                         <exclude name="**/_*.php"/>
                         <exclude name=".svn/**"/>
