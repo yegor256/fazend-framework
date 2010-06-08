@@ -63,7 +63,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                         $profiler->getTotalElapsedSecs()
                     );
                     $divs[] = sprintf(
-                        "<div id='fz__profiler' style='display:none;'>%s</div>",
+                        "<div id='fz__profiler' style='font-size:1em;display:none;'>%s</div>",
                         implode(
                             '<br/>', 
                             array_map(
@@ -99,7 +99,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 substr_count($log, "\n")
             );
             $divs[] = sprintf(
-                "<pre id='fz__syslog' style='display:none;'>%s</pre>",
+                "<pre id='fz__syslog' style='font-size:1em;display:none;'>%s</pre>",
                 $log
             );
         }
