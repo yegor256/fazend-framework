@@ -71,8 +71,10 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                                     '$query', 
                                     '
                                     return sprintf(
-                                        "[%0.3f]&#32;%s", 
+                                        "[%s%0.3f%s]&#32;%s", 
+                                        $query->getElapsedSecs() < 1 ? false : "<b>",
                                         $query->getElapsedSecs(),
+                                        $query->getElapsedSecs() < 1 ? false : "</b>",
                                         $query->getQuery()
                                     );
                                     '

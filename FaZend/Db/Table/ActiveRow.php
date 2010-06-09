@@ -35,6 +35,11 @@ require_once 'Zend/Db/Table/Row.php';
  */
 abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
 {
+    
+    /**
+     * Name of column in DB that contains an integer number of the row
+     */
+    const ID_COLUMN = 'id';
 
     /**
      * List of all tables in the db schema
@@ -329,7 +334,7 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
     {
         $array = parent::toArray();
         foreach (array_keys($array) as $key) {
-            if ($key == 'id') {
+            if ($key == self::ID_COLUMN) {
                 continue;
             }
             $array[$key] = $this->$key;
@@ -388,13 +393,8 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
      */
     public function __get($name)
     {
-        // if we already have it locally, immediately return
-        if (array_key_exists($name, $this->_cachedProperties)) {
-            return $this->_cachedProperties[$name];
-        }
-        
         // you should not access ID field directly!
-        if (strtolower($name) == 'id') {
+        if (strcasecmp($name, self::ID_COLUMN) === 0) {
             trigger_error(
                 'ID should not be directly accesses in ' . get_class($this), 
                 E_USER_WARNING
@@ -402,13 +402,18 @@ abstract class FaZend_Db_Table_ActiveRow extends Zend_Db_Table_Row
         }
 
         // system field
-        if (strtolower($name) == '__id') {
-            $name = 'id';
+        if (strcasecmp($name, '__id') === 0) {
+            $name = self::ID_COLUMN;
         }
 
+        // if we already have it locally, immediately return
+        if (array_key_exists($name, $this->_cachedProperties)) {
+            return $this->_cachedProperties[$name];
+        }
+        
         // if we are interested in just ID and data are not loaded yet
         // we just return the ID, that's it
-        if ($name === 'id' && isset($this->_preliminaryKey)) {
+        if ($name === self::ID_COLUMN && isset($this->_preliminaryKey)) {
             return $this->_cachedProperties[$name] = intval($this->_preliminaryKey);
         }
 
