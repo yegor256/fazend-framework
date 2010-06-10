@@ -39,7 +39,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      *
      * @var Zend_Paginator
      */
-    protected $_paginator;
+    protected $_paginator = null;
     
     /**
      * List of columns defined by set..()
@@ -416,12 +416,20 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * Render the table and return HTML
      *
      * @return string HTML table
+     * @throws FaZend_View_Helper_HtmlTable_MissedPaginatorParameter
      */
     protected function _render()
     {
         $resultTRs = array();
         $resultTDs = array();
         $options = array();
+
+        if (is_null($this->_paginator)) {
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_HtmlTable_MissedPaginatorParameter', 
+                "Paginator must be set first"
+            );
+        }
 
         foreach ($this->_paginator as $key=>$rowOriginal) {
             // convert ROW, if necessary. skip the ROW if false returned
