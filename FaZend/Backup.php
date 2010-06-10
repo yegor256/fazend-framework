@@ -87,7 +87,7 @@ class FaZend_Backup
      */
     public function execute()
     {
-        $this->_log('Backup started, revision: ' . FaZend_Revision::get());
+        $this->_log('FaZend backup started, revision: ' . FaZend_Revision::get());
 
         try {
 
