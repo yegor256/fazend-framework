@@ -708,7 +708,7 @@ class FaZend_Pos_Properties
      */
     public function cleanArray() 
     {
-        foreach (array_keys($this->itemsIterator) as $key) {
+        foreach (array_keys(iterator_to_array($this->itemsIterator)) as $key) {
             $this->unsetItem($key);
         }
     }
