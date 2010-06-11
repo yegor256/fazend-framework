@@ -102,7 +102,7 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
         } catch (Zend_Application_Bootstrap_Exception $e) {
             // swallow it...
             trigger_error(
-                "Resource '{$resource}' is deprecated", 
+                "Resource '{$resource}' is deprecated: {$e->getMessage()}", 
                 E_USER_WARNING
             );
         }

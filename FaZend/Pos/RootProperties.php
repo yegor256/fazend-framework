@@ -70,6 +70,8 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      */
     protected function _setParent(FaZend_Pos_Abstract $parent, $name) 
     {
+        assert($parent instanceof FaZend_Pos_Abstract);
+        assert(is_string($name));
         FaZend_Exception::raise(
             'FaZend_Pos_RootException',
             "You can't attach POS root to any other object"
@@ -107,6 +109,7 @@ class FaZend_Pos_RootProperties extends FaZend_Pos_Properties
      */
     protected function _getUplinks(array $uplinks = array())
     {
+        assert(is_array($uplinks)); // for ZCA
         return array();
     }
 

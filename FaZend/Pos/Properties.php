@@ -365,7 +365,11 @@ class FaZend_Pos_Properties
         FaZend_Pos_Model_Object $fzObject
     ) 
     {
-        return self::$_instances[intval(strval($fzObject))] = new $class($object, $fzObject);
+        $id = intval(strval($fzObject));
+        if (!isset(self::$_instances[$id])) {
+            self::$_instances[$id] = new $class($object, $fzObject);
+        }
+        return self::$_instances[$id];
     }
     
     /**
@@ -402,7 +406,7 @@ class FaZend_Pos_Properties
         if (isset(self::$_instances[$id])) {
             return self::$_instances[$id];
         }
-        FaZend_Exception::raise(
+        return FaZend_Exception::raise(
             'FaZend_Pos_Properties_InstanceNotFound', 
             "Instance not found by ID: $id",
             'FaZend_Pos_Exception'
@@ -444,7 +448,7 @@ class FaZend_Pos_Properties
             return $this->$method();
         }
         
-        FaZend_Exception::raise(
+        return FaZend_Exception::raise(
             'FaZend_Pos_Properties_PropertyOrMethodNotFound', 
             "Can't find what is '$name' in " . get_class($this->_object) . "::ps()",
             'FaZend_Pos_Exception'
@@ -462,7 +466,7 @@ class FaZend_Pos_Properties
     {
         $method = '_set' . ucfirst($name);
         if (method_exists($this, $method)) {
-            return $this->$method($value);
+            $this->$method($value);
         }
         
         FaZend_Exception::raise(
@@ -628,7 +632,8 @@ class FaZend_Pos_Properties
     {
         if ($name === null) {
             $name = 0;
-            foreach ($this->_properties as $key=>$item) {
+            $matches = array();
+            foreach (array_keys(iterator_to_array($this->_properties)) as $key) {
                 if (preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(\d+)$/', $key, $matches)) {
                     $name = max($name, $matches[1] + 1);
                 }
@@ -648,14 +653,16 @@ class FaZend_Pos_Properties
     public function getItem($name) 
     {
         try {
-            return $this->getProperty(self::ARRAY_PREFIX . $name);
+            $val = $this->getProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
             FaZend_Exception::raise(
                 'FaZend_Pos_Properties_ItemMissed', 
-                "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
+                "Can't find item [{$name}] in " . get_class($this->_object) 
+                . " ({$this->path}), {$e->getMessage()}",
                 'FaZend_Pos_Exception'
             );        
         }
+        return $val;
     }
 
     /**
@@ -682,11 +689,12 @@ class FaZend_Pos_Properties
     public function unsetItem($name) 
     {
         try{
-            return $this->unsetProperty(self::ARRAY_PREFIX . $name);
+            $this->unsetProperty(self::ARRAY_PREFIX . $name);
         } catch (FaZend_Pos_Properties_PropertyMissed $e) {
             FaZend_Exception::raise(
                 'FaZend_Pos_Properties_ItemMissed', 
-                "Can't find item [{$name}] in " . get_class($this->_object) . " ({$this->path})",
+                "Can't find item [{$name}] in " . get_class($this->_object) 
+                . " ({$this->path}), {$e->getMessage()}",
                 'FaZend_Pos_Exception'
             );        
         }
@@ -700,7 +708,7 @@ class FaZend_Pos_Properties
      */
     public function cleanArray() 
     {
-        foreach ($this->itemsIterator as $key=>$value) {
+        foreach (array_keys($this->itemsIterator) as $key) {
             $this->unsetItem($key);
         }
     }
@@ -866,7 +874,7 @@ class FaZend_Pos_Properties
             // parent not found, we're the root!
             FaZend_Exception::raise(
                 'FaZend_Pos_RootCantBeRecovered',
-                "Root object can't be recovered by ID ($id)",
+                "Root object can't be recovered by ID ($id), {$e->getMessage()}",
                 'FaZend_Pos_Exception'
             );
         }
@@ -948,6 +956,7 @@ class FaZend_Pos_Properties
             // find my ID
             $fzObject = FaZend_Pos_Model_Object::findByParent($parent, $name);
         } catch (FaZend_Pos_Model_Object_NotFoundException $e) {
+            assert($e instanceof FaZend_Pos_Model_Object_NotFoundException); // for ZCA
             $fzObject = FaZend_Pos_Model_Object::create($kid);
         }
         
@@ -1008,7 +1017,8 @@ class FaZend_Pos_Properties
         } catch (FaZend_Pos_KidNotFoundByObject $e) {
             FaZend_Exception::raise(
                 'FaZend_Pos_Exception',
-                "Very strange situation, probably some changes happened to the object"
+                "Very strange situation, probably some changes happened to the object",
+                $e
             );
         }
         
@@ -1035,7 +1045,7 @@ class FaZend_Pos_Properties
             }
         }
             
-        FaZend_Exception::raise(
+        return FaZend_Exception::raise(
             'FaZend_Pos_KidNotFoundByObject',
             "Kid not found"
         );
@@ -1113,8 +1123,8 @@ class FaZend_Pos_Properties
         // this ugly code should be replaced by the iterator, below
         // when this bug is fixed:
         // http://bugs.php.net/bug.php?id=50579
-        $array = array();
-        foreach ($this->_properties as $name=>$value) {
+        $array = $matches = array();
+        foreach (array_keys(iterator_to_array($this->_properties)) as $name) {
             if (!preg_match('/^' . preg_quote(self::ARRAY_PREFIX, '/') . '(.*)/', $name, $matches)) {
                 continue;
             }
@@ -1200,6 +1210,7 @@ class FaZend_Pos_Properties
                 try {
                     FaZend_Pos_Model_PartOf::findByParent($this->_fzObject, $key);
                 } catch (FaZend_Pos_Model_PartOf_NotFoundException $e) {
+                    assert($e instanceof FaZend_Pos_Model_PartOf_NotFoundException); // for ZCA
                     FaZend_Pos_Model_PartOf::create(
                         $property->ps()->fzObject, 
                         $this->_fzObject, 
@@ -1238,6 +1249,7 @@ class FaZend_Pos_Properties
         try {
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::findByObject($this->_fzObject);
         } catch (FaZend_Pos_Model_Snapshot_NotFoundException $e) {
+            assert($e instanceof FaZend_Pos_Model_Snapshot_NotFoundException); // for ZCA
             $this->_fzSnapshot = FaZend_Pos_Model_Snapshot::create(
                 $this->_fzObject, 
                 self::$_userId, 
@@ -1252,7 +1264,7 @@ class FaZend_Pos_Properties
         $this->_properties = new ArrayIterator(@unserialize($this->_fzSnapshot->properties));
         
         // kill stateless properties
-        foreach ($this->_properties as $key=>$property) {
+        foreach (array_keys(iterator_to_array($this->_properties)) as $key) {
             if (isset($this->_stateless[$key])) {
                 unset($this->_properties[$key]);
             }

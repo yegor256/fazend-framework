@@ -31,10 +31,11 @@ class FaZend_Pos_Root extends FaZend_Pos_Abstract
     {
         try {
             FaZend_Pos_Model_Object::findRoot();
-            return true;
         } catch (Exception $e) {
+            assert($e instanceof Exception); // for ZCA
             return false;
         }
+        return true;
     }
     
     /**

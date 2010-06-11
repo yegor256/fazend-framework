@@ -394,7 +394,8 @@ abstract class FaZend_Pos_Abstract implements ArrayAccess, Countable, Iterator
             } catch (FaZend_Pos_LostObjectException $e) {
                 FaZend_Exception::raise(
                     'FaZend_Pos_SerializationProhibited',
-                    "Object of class " . get_class($this) . " can't be serialized, since it's not in POS",
+                    "Object of class " . get_class($this) 
+                    . " can't be serialized, since it's not in POS, {$e->getMessage()}",
                     'FaZend_Pos_Exception'
                 );
             } 
