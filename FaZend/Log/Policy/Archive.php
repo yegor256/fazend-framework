@@ -86,19 +86,18 @@ class FaZend_Log_Policy_Archive extends FaZend_Log_Policy_Abstract
         
         // kill old files
         foreach (glob(dirname($this->_file) . '/' . pathinfo($this->_file, PATHINFO_FILENAME) . '-*') as $f) {
-            $path = dirname($this->_file) . '/' . $f;
-            if (filemtime($path) < time() - $this->_options['maxAge'] * 24*60*60) {
-                if (false === @unlink($path)) {
+            if (filemtime($f) < time() - $this->_options['maxAge'] * 24*60*60) {
+                if (false === @unlink($f)) {
                     FaZend_Exception::raise(
                         'FaZend_Log_Policy_Archive_Exception',
-                        "Failed to delete old archive: '{$path}'"
+                        "Failed to delete old archive: '{$f}'"
                     );
                 }
                 // protocol this operation
                 logg(
                     'archive log deleted (%dKb) at %s, since it is too old',
-                    filesize($path),
-                    $path
+                    filesize($f),
+                    realpath($f)
                 );
             }
         }
