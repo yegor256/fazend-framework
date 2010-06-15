@@ -66,7 +66,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                         . '</span>', 
                         $this->getView()->escape(_t('report from the database profiler')),
                         $profiler->getTotalNumQueries(),
-                        $total > 2 ? "<b>{$total}</b>" : $total
+                        $total
                     );
                     $divs[] = sprintf(
                         "<span id='fz__profiler' style='font-size:1em;display:none;'><br/>%s</span>",
