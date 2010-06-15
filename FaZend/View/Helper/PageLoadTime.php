@@ -60,7 +60,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 if (is_array($queries)) {
                     $total = $profiler->getTotalElapsedSecs();
                     $labels[] = sprintf(
-                        "<span id='fz__profilerSpan'style='font-size:1em;cursor:pointer;' title='%s'"
+                        "<span id='fz__profilerSpan' style='font-size:1em;cursor:pointer;' title='%s'"
                         . " onclick='$(\"#fz__profiler\").toggle();'>"
                         . str_replace(' ', '&#32;', _t('%d queries in %0.2fsec'))
                         . '</span>', 
