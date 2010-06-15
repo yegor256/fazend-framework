@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -101,7 +104,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 substr_count($log, "\n")
             );
             $divs[] = sprintf(
-                "<span id='fz__syslog' style='font-size:1em;display:none;'>%s</span>",
+                "<span id='fz__syslog' style='font-size:1em;display:none;'><br/>%s</span>",
                 nl2br($log)
             );
         }
