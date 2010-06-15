@@ -67,28 +67,12 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                         $profiler->getTotalNumQueries(),
                         $profiler->getTotalElapsedSecs()
                     );
-                    $log = implode(
-                        "<br/>\n", 
-                        array_map(
-                            create_function(
-                                '$query', 
-                                '
-                                return sprintf(
-                                    "[%s%0.3f%s]&#32;%s", 
-                                    $query->getElapsedSecs() < 1 ? false : "<b>",
-                                    $query->getElapsedSecs(),
-                                    $query->getElapsedSecs() < 1 ? false : "</b>",
-                                    $query->getQuery()
-                                );
-                                '
-                            ), 
-                            $queries
-                        )
-                    );
-                    
                     $divs[] = sprintf(
                         "<span id='fz__profiler' style='font-size:1em;display:none;'><br/>%s</span>",
-                        $this->getView()->escape($log)
+                        implode(
+                            "<br/>\n", 
+                            array_map(array($this, 'showQuery'), $queries)
+                        )
                     );
                 }
             }
@@ -122,4 +106,23 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
         return $html;
     }
 
+    /**
+     * Show one query as a string
+     *
+     * @param Zend_Db_Profiler_Query
+     * @return string
+     * @see pageLoadTime()
+     */
+    public function showQuery(Zend_Db_Profiler_Query $query) 
+    {
+        $secs = $query->getElapsedSecs();
+        return sprintf(
+            "[%s%0.3f%s]&#32;%s", 
+            $secs < 1 ? false : '<b>',
+            $secs,
+            $secs < 1 ? false : '</b>',
+            $this->getView()->escape($query->getQuery())
+        );
+    }
+    
 }
