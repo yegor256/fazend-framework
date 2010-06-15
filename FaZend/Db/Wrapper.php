@@ -169,13 +169,26 @@ class FaZend_Db_Wrapper
      * @param array|null Bindings in array, if they are required in query
      * @return Zend_Db_Table_Row
      * @throws FaZend_Db_Table_NotFoundException
+     * @throws FaZend_Db_Wrapper_Exception
      */
     public function fetchRow(array $bind = null) 
     {
         // get row with fetchRow from the select we have
-        $row = $this->table()->fetchRow(
-            $this->select($bind)
-        );
+        try {
+            $row = $this->table()->fetchRow(
+                $this->select($bind)
+            );
+        } catch (Zend_Db_Statement_Exception $e) {
+            FaZend_Exception::raise(
+                'FaZend_Db_Wrapper_Exception', 
+                sprintf(
+                    '%s: (%s) in "%s"',
+                    get_class($e),
+                    $e->getMessage(),
+                    $this->select()
+                )
+            );
+        }
 
         // if we should keep silence - just return what we got
         if ($this->getSilenceIfEmpty() && !$row) {
@@ -197,7 +210,7 @@ class FaZend_Db_Wrapper
         }
 
         // raise this exception
-        FaZend_Exception::raise(
+        return FaZend_Exception::raise(
             $exceptionClassName, 
             sprintf(
                 'Row not found in %s with "%s"', 

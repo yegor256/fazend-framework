@@ -76,17 +76,28 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      */
     public function count()
     {
-        // We build a new query, where the original query goes into
-        // a subquery. You don't need to calculate rows manually
-        // and you may be sure that no data goes to memory when
-        // you're counting rows. We optimize your request here.
-        return $this->_table->getAdapter()->fetchOne(
-            sprintf(
-                'SELECT COUNT(*) FROM (%s) AS tbl', 
-                (string)$this->select()
-            ),
-            $this->select()->getBind()
+        $sql = sprintf(
+            'SELECT COUNT(*) FROM (%s) AS tbl', 
+            (string)$this->select()
         );
+        try{
+            // We build a new query, where the original query goes into
+            // a subquery. You don't need to calculate rows manually
+            // and you may be sure that no data goes to memory when
+            // you're counting rows. We optimize your request here.
+            $cnt = $this->_table->getAdapter()->fetchOne($sql, $this->select()->getBind());
+        } catch (Zend_Db_Statement_Exception $e) {
+            FaZend_Exception::raise(
+                'FaZend_Db_RowsetWrapper_Exception', 
+                sprintf(
+                    '%s: (%s) in "%s"',
+                    get_class($e),
+                    $e->getMessage(),
+                    $sql
+                )
+            );
+        }
+        return $cnt;
     }
 
     /**
