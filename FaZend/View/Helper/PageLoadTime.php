@@ -60,7 +60,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 if (is_array($queries)) {
                     $total = $profiler->getTotalElapsedSecs();
                     $labels[] = sprintf(
-                        "<span style='font-size:1em;cursor:pointer;' title='%s'"
+                        "<span id='fz__profilerSpan'style='font-size:1em;cursor:pointer;' title='%s'"
                         . " onclick='$(\"#fz__profiler\").toggle();'>"
                         . str_replace(' ', '&#32;', _t('%d queries in %0.2fsec'))
                         . '</span>', 
@@ -85,7 +85,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             $log = $factory->getWriter('fz__debug')->getLog();
 
             $labels[] = sprintf(
-                "<span style='font-size:1em;cursor:pointer' title='%s' "
+                "<span id='fz__syslogSpan' style='font-size:1em;cursor:pointer' title='%s' "
                 . "onclick='$(\"#fz__syslog\").toggle();'>"
                 . str_replace(' ', '&#32;', _t('%d logs'))
                 . '</span>',
