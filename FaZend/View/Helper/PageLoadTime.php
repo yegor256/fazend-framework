@@ -109,7 +109,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             );
             $divs[] = sprintf(
                 "<span id='fz__syslog' style='font-size:1em;display:none;'><br/>%s</span>",
-                nl2br($this->getView()->escape($log)6)
+                nl2br($this->getView()->escape($log))
             );
         }
 
