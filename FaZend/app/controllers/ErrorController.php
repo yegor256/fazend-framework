@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_Controller_Action
+ */
 require_once 'FaZend/Controller/Action.php';
 
 /**
