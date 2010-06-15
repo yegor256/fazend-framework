@@ -48,8 +48,9 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         $this->_initErrorLog();
 
         // if testing or development - log into memory as well
-        if (APPLICATION_ENV !== 'production') {
-            FaZend_Log::getInstance()->addWriter('Memory', 'FaZendDebug');
+        $opts = $this->getOptions();
+        if (APPLICATION_ENV !== 'production' || !empty($opts['mandatory'])) {
+            FaZend_Log::getInstance()->addWriter('Memory', 'fz__debug');
         }
     }
 
