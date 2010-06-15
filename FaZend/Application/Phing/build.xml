@@ -278,7 +278,8 @@
                 username="${ftp.user}"
                 password="${ftp.password}"
                 srcdir="${project.basedir}/${ftp.srcdir}"
-                destdir="${ftp.destdir}">
+                destdir="${ftp.destdir}"
+                compression="${ftp.compression}">
             </uploadByFTP>
         </then><else>
             <echo msg="Skipped in '${phing.project.name}', since {to.deploy} is FALSE" />    

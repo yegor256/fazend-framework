@@ -72,6 +72,13 @@ class UploadByFTP extends Task
     private $_srcDir;
     
     /**
+     * Shall we use PHP compression before uploading?
+     * 
+     * @var boolean
+     */
+    private $_compression = true;
+
+    /**
      * FTP handler
      *
      * @var integer
@@ -142,6 +149,16 @@ class UploadByFTP extends Task
     public function setsrcdir($srcDir)
     {
         $this->_srcDir = $srcDir;
+    }
+
+    /**
+     * Initalizer
+     *
+     * @param boolean
+     */
+    public function setcompression($compression)
+    {
+        $this->_compression = $compression;
     }
 
     /**
@@ -320,6 +337,10 @@ class UploadByFTP extends Task
      */
     protected function _compressed($fileName)
     {
+        if (!$this->_compression) {
+            return $fileName;
+        }
+        
         // compress only PHP files
         if (!preg_match('/\.(php|phtml|php5)$/', $fileName)) {
             return $fileName;
