@@ -59,32 +59,36 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 $queries = $profiler->getQueryProfiles();
                 if (is_array($queries)) {
                     $labels[] = sprintf(
-                        "<span style='font-size:1em;cursor:pointer;' onclick='$(\"#fz__profiler\").toggle();'>" 
+                        "<span style='font-size:1em;cursor:pointer;' title='%s'"
+                        . " onclick='$(\"#fz__profiler\").toggle();'>"
                         . str_replace(' ', '&#32;', _t('%d queries in %0.2fsec'))
                         . '</span>', 
+                        $this->getView()->escape(_t('report from the database profiler')),
                         $profiler->getTotalNumQueries(),
                         $profiler->getTotalElapsedSecs()
                     );
+                    $log = implode(
+                        "<br/>\n", 
+                        array_map(
+                            create_function(
+                                '$query', 
+                                '
+                                return sprintf(
+                                    "[%s%0.3f%s]&#32;%s", 
+                                    $query->getElapsedSecs() < 1 ? false : "<b>",
+                                    $query->getElapsedSecs(),
+                                    $query->getElapsedSecs() < 1 ? false : "</b>",
+                                    $query->getQuery()
+                                );
+                                '
+                            ), 
+                            $queries
+                        )
+                    );
+                    
                     $divs[] = sprintf(
                         "<span id='fz__profiler' style='font-size:1em;display:none;'><br/>%s</span>",
-                        implode(
-                            "<br/>\n", 
-                            array_map(
-                                create_function(
-                                    '$query', 
-                                    '
-                                    return sprintf(
-                                        "[%s%0.3f%s]&#32;%s", 
-                                        $query->getElapsedSecs() < 1 ? false : "<b>",
-                                        $query->getElapsedSecs(),
-                                        $query->getElapsedSecs() < 1 ? false : "</b>",
-                                        $query->getQuery()
-                                    );
-                                    '
-                                ), 
-                                $queries
-                            )
-                        )
+                        $this->getView()->escape($log)
                     );
                 }
             }
@@ -100,12 +104,12 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                 . "onclick='$(\"#fz__syslog\").toggle();'>"
                 . str_replace(' ', '&#32;', _t('%d logs'))
                 . '</span>',
-                _t('log messages from the script'),
+                $this->getView()->escape(_t('log messages from the script')),
                 substr_count($log, "\n")
             );
             $divs[] = sprintf(
                 "<span id='fz__syslog' style='font-size:1em;display:none;'><br/>%s</span>",
-                nl2br($log)
+                nl2br($this->getView()->escape($log)6)
             );
         }
 
