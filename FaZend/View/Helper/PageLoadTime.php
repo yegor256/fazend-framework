@@ -41,7 +41,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
         global $startTime; 
 
         // we calculate the difference, and format the value
-        $time = round(microtime(true)-$startTime, 2); // in secs
+        $time = microtime(true) - $startTime; // in secs
         $html = sprintf('%0.2f', $time) . 'sec';
 
         // encolor with red, if more than 2 seconds
@@ -58,6 +58,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
             if ($profiler instanceof Zend_Db_Profiler) {
                 $queries = $profiler->getQueryProfiles();
                 if (is_array($queries)) {
+                    $total = $profiler->getTotalElapsedSecs();
                     $labels[] = sprintf(
                         "<span style='font-size:1em;cursor:pointer;' title='%s'"
                         . " onclick='$(\"#fz__profiler\").toggle();'>"
@@ -65,7 +66,7 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
                         . '</span>', 
                         $this->getView()->escape(_t('report from the database profiler')),
                         $profiler->getTotalNumQueries(),
-                        $profiler->getTotalElapsedSecs()
+                        $total > 2 ? "<b>{$total}</b>" : $total
                     );
                     $divs[] = sprintf(
                         "<span id='fz__profiler' style='font-size:1em;display:none;'><br/>%s</span>",
