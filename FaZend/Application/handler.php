@@ -15,15 +15,27 @@
  */
 
 if (defined('APPLICATION_ENV') && APPLICATION_ENV !== 'production') {
-    set_error_handler(
-        create_function(
-            '$errno, $errstr, $errfile, $errline',
-            '
-            if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
-                return;
+    if (version_compare(PHP_VERSION, '5.3') >= 0) {
+        set_error_handler(
+            function($errno, $errstr, $errfile, $errline)
+            {
+                if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
+                    return;
+                }
+                echo "{$errno} {$errstr}, file: {$errfile} ({$errline})\n";
             }
-            echo "{$errno} {$errstr}, file: {$errfile} ({$errline})\n";
-            '
-        )
-    );
+        );
+    } else {
+        set_error_handler(
+            create_function(
+                '$errno, $errstr, $errfile, $errline',
+                '
+                if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
+                    return;
+                }
+                echo "{$errno} {$errstr}, file: {$errfile} ({$errline})\n";
+                '
+            )
+        );
+    }
 }
