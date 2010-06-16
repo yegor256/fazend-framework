@@ -53,6 +53,13 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
      * @var integer
      */
     private $_memoryUsage;
+    
+    /**
+     * Initial memory usage, when first came to this class
+     *
+     * @var integer
+     */
+    private static $_memoryUsageInitial = null;
 
     /**
      * Setup test
@@ -93,6 +100,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         // get total amount of memory used now, in order
         // to compare with it later, in tearDown()
         $this->_memoryUsage = memory_get_usage();
+        
+        // save it for future
+        if (is_null(self::$_memoryUsageInitial)) {
+            self::$_memoryUsageInitial = $this->_memoryUsage;
+        }
     }
     
     /**
@@ -129,7 +141,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         $leak = memory_get_usage() - $this->_memoryUsage;
         if ($leak > 10 * 1024) {
-            logg("Memory leak of %d bytes", $leak);
+            logg(
+                "Memory leak of %d bytes in this test, %d total in suite", 
+                $leak,
+                memory_get_usage() - self::$_memoryUsageInitial
+            );
         }
     }
     
