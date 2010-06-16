@@ -48,6 +48,13 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
 
     /**
+     * Memory usage when test started
+     *
+     * @var integer
+     */
+    private $_memoryUsage;
+
+    /**
      * Setup test
      *
      * It is very important to note that we DO NOT use default Zend 
@@ -82,6 +89,10 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         
         // clean all instances of all formas
         FaZend_View_Helper_Forma::cleanInstances();
+
+        // get total amount of memory used now, in order
+        // to compare with it later, in tearDown()
+        $this->_memoryUsage = memory_get_usage();
     }
     
     /**
@@ -92,6 +103,8 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     public function tearDown()
     {
         parent::tearDown();
+    
+        // close connection
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($db instanceof Zend_Db_Adapter_Abstract) {
             $db->closeConnection();
@@ -102,6 +115,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         
         // clean it, again to save memory
         FaZend_Flyweight::clean();
+
+        $this->assertTrue(
+            ($leak = memory_get_usage() - $this->_memoryUsage) < 50 * 1024,
+            "Memory leak ({$leak} bytes) is too big"
+        );
     }
     
 }
