@@ -35,7 +35,15 @@ require_once 'FaZend/Bo/Abstract.php';
 class FaZend_Bo_Money extends FaZend_Bo_Abstract
 {
     
-    const POINT_WEIGHT = 10000;
+    /**
+     * How many digits after DOT we store?
+     */
+    const PRECISION = 4;
+    
+    /**
+     * How many digits after DOT have any meaning for us?
+     */
+    const SENSIVITY = 2;
 
     /**
      * Default currency short name
@@ -116,7 +124,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public static function convertFromPoints($points) 
     {
-        return self::factory($points / self::POINT_WEIGHT);
+        return self::factory($points / pow(10, self::PRECISION));
     }
 
     /**
@@ -173,7 +181,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                 'position' => Zend_Currency::RIGHT,
             )
         );
-        $this->_points = $value * self::POINT_WEIGHT;
+        $this->_points = $value * pow(10, self::PRECISION);
     }
 
     /**
@@ -197,15 +205,15 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     {
         switch ($part) {
             case 'usd':
-                return $this->_getPoints() / self::POINT_WEIGHT;
+                return $this->_getPoints() / pow(10, self::PRECISION);
             case 'cents':
-                return $this->_getPoints() / 100;
+                return $this->_getPoints() / pow(10, self::PRECISION - 2);
             case 'points':
                 return $this->_getPoints();
             case 'original':
-                return $this->_points / self::POINT_WEIGHT;
+                return $this->_points / pow(10, self::PRECISION);
             case 'origCents':
-                return $this->_points / 100;
+                return $this->_points / pow(10, self::PRECISION - 2);
             case 'origPoints':
                 return $this->_points;
             case 'currency':
@@ -249,7 +257,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public function round($scale = 0) 
     {
-        $this->_points = round($this->_points, -log10(self::POINT_WEIGHT) + $scale);
+        $this->_points = round($this->_points, $scale - self::PRECISION);
         return $this;
     }
     
@@ -346,7 +354,8 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function equalsTo($money) 
     {
         $this->_normalize($money);
-        return $this->_points == $money;
+        $digits = self::PRECISION - self::SENSIVITY;
+        return round($this->_points, -$digits) == round($money, -$digits);
     }
 
     /**
@@ -438,7 +447,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                 break;
         
             default:
-                $money *= self::POINT_WEIGHT;
+                $money *= pow(10, self::PRECISION);
                 break;
         }
     }
