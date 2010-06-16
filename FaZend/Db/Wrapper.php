@@ -345,11 +345,12 @@ class FaZend_Db_Wrapper
      * Add this query to log
      *
      * @param string Log message to add
-     * @return void
+     * @return $this
      */
     public function log($message) 
     {
         logg($message . ': ' . $this->select()->__toString());
+        return $this;
     }
     
     /**
