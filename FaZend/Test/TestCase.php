@@ -97,7 +97,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
             $db->closeConnection();
         }
         
+        // clean cache, to save memory during testing
         FaZend_Db_ActiveTable::cleanCache();
+        
+        // clean it, again to save memory
+        FaZend_Flyweight::clean();
     }
     
 }
