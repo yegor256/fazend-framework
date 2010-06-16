@@ -108,6 +108,12 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($db instanceof Zend_Db_Adapter_Abstract) {
             $db->closeConnection();
+
+            // clean profiler, if it exists
+            $profiler = Zend_Db_Table::getDefaultAdapter()->getProfiler();
+            if ($profiler instanceof Zend_Db_Profiler) {
+                $profiler->clear();
+            }
         }
         
         // clean cache, to save memory during testing
