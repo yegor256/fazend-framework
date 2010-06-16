@@ -342,6 +342,17 @@ class FaZend_Db_Wrapper
     }
 
     /**
+     * Add this query to log
+     *
+     * @param string Log message to add
+     * @return void
+     */
+    public function log($message) 
+    {
+        logg($message . ': ' . $this->select()->__toString());
+    }
+    
+    /**
      * Show SELECT string and die
      *
      * You can use it like this:
