@@ -50,7 +50,7 @@ abstract class FaZend_Callback
      * @param string|function|array
      * @return void
      */
-    private function __construct($data)
+    public function __construct($data)
     {
         $this->_data = $data;
     }
@@ -141,7 +141,7 @@ abstract class FaZend_Callback
         }
 
         $class = __CLASS__ . '_' . ucfirst($class);
-        return new $class($data);
+        return FaZend_Flyweight::factory($class, $data);
     }
     
     /**
