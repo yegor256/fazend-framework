@@ -17,7 +17,13 @@
 /**
  * Re-defining of PHP error handler
  */
-require_once realpath(dirname(__FILE__) . '/handler.php');
+if (defined('APPLICATION_ENV') && APPLICATION_ENV !== 'production') {
+    if (version_compare(PHP_VERSION, '5.3') >= 0) {
+        require_once realpath(dirname(__FILE__) . '/handler-5.3.php');
+    } else {
+        require_once realpath(dirname(__FILE__) . '/handler.php');
+    }
+}
 
 /**
  * Global variable in order to calculate total page building time

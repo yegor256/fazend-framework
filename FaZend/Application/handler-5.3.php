@@ -10,18 +10,22 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: handler.php 2048 2010-06-16 12:41:04Z yegor256@gmail.com $
  * @category FaZend
  */
 
 set_error_handler(
-    create_function(
-        '$errno, $errstr, $errfile, $errline',
-        '
+    function($errno, $errstr, $errfile, $errline)
+    {
         if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
             return;
         }
-        echo "{$errno} {$errstr}, file: {$errfile} ({$errline})\n";
-        '
-    )
+        echo sprintf(
+            "%d %s, file: %s(%d)\n",
+            $errno, 
+            $errstr,
+            $errfile,
+            $errline
+        );
+    }
 );
