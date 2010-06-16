@@ -117,7 +117,9 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         FaZend_Flyweight::clean();
 
         $leak = memory_get_usage() - $this->_memoryUsage;
-        logg("Memory leak of %d bytes", $leak);
+        if ($leak > 10 * 1024) {
+            logg("Memory leak of %d bytes", $leak);
+        }
     }
     
 }
