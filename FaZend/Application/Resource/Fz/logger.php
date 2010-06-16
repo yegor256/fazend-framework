@@ -30,6 +30,16 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
 {
 
     /**
+     * Unique name of the writer
+     */
+    const LOG_WRITER = 'fz__syslog';
+
+    /**
+     * Name of the log writer for testing
+     */
+    const DEBUG_WRITER = 'fz__writer';
+
+    /**
      * Initializes the resource
      *
      * @return void
@@ -50,7 +60,7 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         // if testing or development - log into memory as well
         $opts = $this->getOptions();
         if (APPLICATION_ENV !== 'production' || !empty($opts['mandatory'])) {
-            FaZend_Log::getInstance()->addWriter('Memory', 'fz__debug');
+            FaZend_Log::getInstance()->addWriter('Memory', self::DEBUG_WRITER);
         }
     }
 
@@ -79,7 +89,7 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         // log errors in ALL environments
         FaZend_Log::getInstance()->addWriter(
             new Zend_Log_Writer_Stream($stream),
-            'ErrorLog' // unique name of the writer
+            self::LOG_WRITER // unique name of the writer
         );
         
         if (empty($this->_options['policy'])) {
@@ -104,7 +114,7 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
             $params = array();
         }
 
-        FaZend_Log::getInstance()->getWriter('ErrorLog')->addFilter(
+        FaZend_Log::getInstance()->getWriter(self::LOG_WRITER)->addFilter(
             FaZend_Log_Policy_Abstract::factory($name, $params, $stream)
         );
     }

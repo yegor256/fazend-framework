@@ -81,8 +81,9 @@ class FaZend_View_Helper_PageLoadTime extends FaZend_View_Helper
 
         // add information from system log
         $factory = FaZend_Log::getInstance();
-        if ($factory->hasWriter('fz__debug') && !$factory->getWriter('fz__debug')->isEmpty()) {
-            $log = $factory->getWriter('fz__debug')->getLog();
+        if ($factory->hasWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER) 
+            && !$factory->getWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER)->isEmpty()) {
+            $log = $factory->getWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER)->getLog();
 
             $labels[] = sprintf(
                 "<span id='fz__syslogSpan' style='font-size:1em;cursor:pointer' title='%s' "
