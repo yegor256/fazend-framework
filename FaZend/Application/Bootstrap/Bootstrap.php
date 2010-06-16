@@ -62,7 +62,7 @@ class FaZend_Application_Bootstrap_Bootstrap extends Zend_Application_Bootstrap_
     public static function prepareApplication(Zend_Application $application) 
     {
         // load application-specific options
-        $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', 'global', true);
+        $options = new Zend_Config_Ini(FAZEND_PATH . '/Application/application.ini', APPLICATION_ENV, true);
         $options->merge(new Zend_Config_Ini(APPLICATION_PATH . '/config/app.ini', APPLICATION_ENV));
 
         // include sub-INI files, if necessary
