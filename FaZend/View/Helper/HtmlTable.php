@@ -93,24 +93,6 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     protected $_injections = array();
 
     /**
-     * Instances of this class, in case we nee many tables in one page
-     *
-     * @var FaZend_View_Helper_HtmlTable[]
-     */
-    protected static $_instances = array();
-
-    /**
-     * Clean all instances, used for unit testing mostly
-     *
-     * @return void
-     * @see FaZend_Test_TestCase::tearDown()
-     */
-    public static function cleanInstances() 
-    {
-        self::$_instances = array();
-    }
-
-    /**
      * Show the table
      *
      * @return string HTML
@@ -122,13 +104,15 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             return $this;
         }
 
+        $id = 'FaZend_View_Helper_HtmlTable_' . $name;
         // initialize this particular table
-        if (!isset(self::$_instances[$name])) {
-            self::$_instances[$name] = clone $this;
-            self::$_instances[$name]->_name = $name;
+        if (!FaZend_Flyweight::hasId($id)) {
+            $helper = clone $this;
+            $helper->_name = $name;
+            FaZend_Flyweight::injectById($id, $helper);
         }
 
-        return self::$_instances[$name];
+        return FaZend_Flyweight::getById($id);
     }
 
     /**
