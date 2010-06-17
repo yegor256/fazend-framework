@@ -127,6 +127,9 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
                 $profiler->clear();
             }
         }
+
+        // remove all instances
+        FaZend_View_Helper_HtmlTable::cleanInstances();
         
         // clean cache, to save memory during testing
         FaZend_Db_ActiveTable::cleanCache();

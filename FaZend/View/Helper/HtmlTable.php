@@ -100,6 +100,17 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     protected static $_instances = array();
 
     /**
+     * Clean all instances, used for unit testing mostly
+     *
+     * @return void
+     * @see FaZend_Test_TestCase::tearDown()
+     */
+    public static function cleanInstances() 
+    {
+        self::$_instances = array();
+    }
+
+    /**
      * Show the table
      *
      * @return string HTML

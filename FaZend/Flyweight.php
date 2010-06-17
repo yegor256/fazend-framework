@@ -73,7 +73,7 @@ class FaZend_Flyweight
     }
     
     /**
-     * undocumented function
+     * Create or return an object by ID
      *
      * @param string Name of the class to create
      * @param string ID to use with this class
