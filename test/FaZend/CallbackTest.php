@@ -66,6 +66,15 @@ class FaZend_CallbackTest extends AbstractTestCase
         );
     }
     
+    public function testClosureCallbackWorks()
+    {
+        $this->assertEquals(
+            't:1', 
+            FaZend_Callback::factory(function($a, $b) { return sprintf($a, $b); })
+            ->call('t:%s', 1)
+        );
+    }
+    
     public function testInputsAreListedCorrectly()
     {
         $this->assertEquals(array('integer'), FaZend_Callback::factory('integer')->getInputs());
