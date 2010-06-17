@@ -395,7 +395,8 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public function isZero() 
     {
-        return empty($this->_points);
+        $digits = self::PRECISION - self::SENSIVITY;
+        return round($this->_points, -$digits) == 0;
     }
     
     /**
