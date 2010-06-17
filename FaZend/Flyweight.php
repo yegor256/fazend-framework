@@ -29,9 +29,15 @@
  *
  * @package Model
  * @see FaZend_Db_Table_ActiveRow::save()
+ * @todo we should migrate it to Zend_Cache
  */
 class FaZend_Flyweight
 {
+
+    /**
+     * Prefix used for internal IDs, you should NOT start your names with this prefix
+     */
+    const ID_PREFIX = 'fz__';
 
     /**
      * Storage of objects
@@ -66,7 +72,7 @@ class FaZend_Flyweight
         $id = self::_makeId(array_merge(array($class), $args));
         
         // create an object, if it's not in the storage yet
-        if (!isset(self::$_storage[$id])) {
+        if (!array_key_exists($id, self::$_storage)) {
             self::$_storage[$id] = self::_makeObject($class, $args);
         }
         return self::$_storage[$id];
@@ -79,9 +85,17 @@ class FaZend_Flyweight
      * @param string ID to use with this class
      * @param mixed Any amount of params to be passed to the constructor
      * @return mixed
+     * @throws FaZend_Flyweight_InvalidIdException
      */
     public static function factoryById($class, $id /*, ...*/) 
     {
+        if (strpos($id, self::ID_PREFIX) === 0) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_InvalidIdException', 
+                "Object ID '{$id}' is not allowed, it's reserved for FaZend"
+            );
+        }
+
         $args = func_get_args();
         array_shift($args); // pop out the first argument
         array_shift($args); // pop out the second argument
@@ -90,7 +104,7 @@ class FaZend_Flyweight
         $id = self::_makeId(array($class)) . $id;
         
         // create an object, if it's not in the storage yet
-        if (!isset(self::$_storage[$id])) {
+        if (!array_key_exists($id, self::$_storage)) {
             self::$_storage[$id] = self::_makeObject($class, $args);
         }
         return self::$_storage[$id];
@@ -113,6 +127,73 @@ class FaZend_Flyweight
     }
 
     /**
+     * Inject an object by ID
+     *
+     * @param string ID
+     * @param mixed The object to inject
+     * @return void
+     * @throws FaZend_Flyweight_DuplicateInjectionException
+     */
+    public static function injectById($id, $object) 
+    {
+        if (array_key_exists($id, self::$_storage)) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_DuplicateInjectionException', 
+                "Object with id '{$id}' already exists in Flyweight factory"
+            );
+        }
+        if (strpos($id, self::ID_PREFIX) === 0) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_InvalidIdException', 
+                "Object ID '{$id}' is not allowed, it's reserved for FaZend"
+            );
+        }
+        self::$_storage[$id] = $object;
+    }
+
+    /**
+     * Factory has such ID?
+     *
+     * @param string ID
+     * @return boolean
+     * @throws FaZend_Flyweight_InvalidIdException
+     */
+    public static function hasId($id) 
+    {
+        if (strpos($id, self::ID_PREFIX) === 0) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_InvalidIdException', 
+                "Object ID '{$id}' is not allowed, it's reserved for FaZend"
+            );
+        }
+        return array_key_exists($id, self::$_storage);
+    }
+
+    /**
+     * Get an object with this ID
+     *
+     * @param string ID
+     * @return mixed
+     * @throws FaZend_Flyweight_InvalidIdException
+     */
+    public static function getById($id) 
+    {
+        if (strpos($id, self::ID_PREFIX) === 0) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_InvalidIdException', 
+                "Object ID '{$id}' is not allowed, it's reserved for FaZend"
+            );
+        }
+        if (!array_key_exists($id, self::$_storage)) {
+            FaZend_Exception::raise(
+                'FaZend_Flyweight_DuplicateInjectionException', 
+                "Object with id '{$id}' not found in factory"
+            );
+        }
+        return self::$_storage[$id];
+    }
+
+    /**
      * Remove the object from the storage
      *
      * @param object
@@ -125,7 +206,7 @@ class FaZend_Flyweight
         
         // unique object ID in the storage
         $id = self::_makeId(array_merge(array(get_class($object)), $args));
-        if (isset(self::$_storage[$id])) {
+        if (array_key_exists($id, self::$_storage)) {
             unset(self::$_storage[$id]);
         }
     }
@@ -157,7 +238,7 @@ class FaZend_Flyweight
             }
             $id .= ($id ? ',' : false) . $arg;
         }
-        return $id;
+        return self::ID_PREFIX . $id;
     }
     
     /**
