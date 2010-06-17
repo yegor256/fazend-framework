@@ -53,6 +53,16 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     protected static $_defaultCurrency = 'USD';
 
     /**
+     * Currency to be used for rendering of all monetary values, if required
+     *
+     * When this property is set, every time you convert your FaZend_Bo_Money
+     * objects to string, it will be used.
+     *
+     * @var Zend_Currency
+     */
+    protected static $_currencyToRender = null;
+
+    /**
      * The value, in points, in original currency (NOT in USD!)
      *
      * 100 points = 1 cent
@@ -80,6 +90,17 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             $currency = $currency->getShortName();
         }
         self::$_defaultCurrency = strval($currency);
+    }
+    
+    /**
+     * Set currency to be used in rendering
+     *
+     * @param Zend_Currency
+     * @return void
+     */
+    public static function setCurrencyToRender(Zend_Currency $currency) 
+    {
+        self::$_currencyToRender = $currency;
     }
 
     /**
@@ -191,6 +212,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      */
     public function __toString()
     {
+        if (!is_null(self::$_currencyToRender)) {
+            return self::$_currencyToRender->toCurrency($this->original);
+        }
         return $this->_currency->toCurrency($this->original);
     }
 
