@@ -75,24 +75,31 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
             );
         }
 
+        // maybe the file is absent?
+        if (!file_exists($this->_file)) {
+            return;
+        }
+        
+        $file = realpath($this->_file);
+
         /**
          * Here we find all reasons why this file should be sent
          * by email to admin
          */
         $reasons = array();
-        if (@filesize($this->_file) > $this->_options['length'] * 1024) {
+        if (@filesize($file) > $this->_options['length'] * 1024) {
             $reasons[] = _t(
                 'Log file %s is long enough - %dKb (over %dKb)',
-                $this->_file,
-                filesize($this->_file),
+                $file,
+                filesize($file),
                 intval($this->_options['length'])
             );
         }
-        if (@filectime($this->_file) > time() - $this->_options['age'] * 24*60*60) {
+        if (@filectime($file) > time() - $this->_options['age'] * 24*60*60) {
             $reasons[] = _t(
                 'Log file %s is old enough - %ddays (older than %d)',
-                $this->_file,
-                (@filectime($this->_file) - time()) / (24*60*60),
+                $file,
+                (@filectime($file) - time()) / (24*60*60),
                 intval($this->_options['age'])
             );
         }
@@ -100,11 +107,11 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         /**
          * If the log file is too big..
          */
-        if (@filesize($this->_file) > $this->_options['maxLengthToSend'] * 1024) {
+        if (@filesize($file) > $this->_options['maxLengthToSend'] * 1024) {
             logg(
                 'File %s is too big (%d bytes) to be sent by email (max %dkb allowed)',
-                $this->_file,
-                @filesize($this->_file),
+                $file,
+                @filesize($file),
                 $this->_options['maxLengthToSend']
             );
             return;
@@ -116,18 +123,18 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', $this->_options['toEmail'])
             ->set('toName', $this->_options['toName'])
-            ->set('file', $this->_file)
+            ->set('file', $file)
             ->set('reasons', $reasons);
 
         /**
          * If the file is TOO big, we should send it as attachment, not
          * as email body
          */
-        $content = @file_get_contents($this->_file);
-        if (@filesize($this->_file) > $this->_options['maxContentLength'] * 1024) {
+        $content = @file_get_contents($file);
+        if (@filesize($file) > $this->_options['maxContentLength'] * 1024) {
             $sender->set('log', _t('see attached file'));
             $mime = new Zend_Mime_Part($content);
-            $mime->filename = pathinfo($this->_file, PATHINFO_BASENAME);
+            $mime->filename = pathinfo($file, PATHINFO_BASENAME);
             $mime->encoding = Zend_Mime::ENCODING_BASE64;
             $mime->type = Zend_Mime::TYPE_OCTETSTREAM;
             $mime->disposition = Zend_Mime::DISPOSITION_ATTACHMENT;
@@ -140,7 +147,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $sender->send();
         
         // truncate the original file
-        $this->_truncate($this->_file);
+        $this->_truncate($file);
         
         // protocol this operation
         logg(
