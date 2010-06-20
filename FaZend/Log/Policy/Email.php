@@ -65,7 +65,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
                 'Log file %s is long enough - %dKb (over %dKb)',
                 $this->_file,
                 filesize($this->_file),
-                $this->_options['length']
+                intval($this->_options['length'])
             );
         }
         if (@filectime($this->_file) > time() - $this->_options['age'] * 24*60*60) {
@@ -73,7 +73,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
                 'Log file %s is old enough - %ddays (older than %d)',
                 $this->_file,
                 (@filectime($this->_file) - time()) / (24*60*60),
-                $this->_options['age']
+                intval($this->_options['age'])
             );
         }
 
@@ -81,7 +81,11 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          * If the log file is too big..
          */
         if (@filesize($this->_file) > $this->_options['maxLengthToSend'] * 1024) {
-            return;
+            logg(
+                'File %s is too big (%d bytes) to be sent by email',
+                $this->_file,
+                @filesize($this->_file)
+            );
         }
 
         /**
