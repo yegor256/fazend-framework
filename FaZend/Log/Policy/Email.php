@@ -29,12 +29,32 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'toEmail'          => null, // to be set in INI file
-        'toName'           => 'admin', // to be set in INI file
-        'length'           => 50, // in Kb
-        'age'              => 5, // days
-        'maxLengthToSend'  => 2048, // maximum length of file to be sent by email, in Kb
-        'maxContentLength' => 300, // maximum length of file to be sent by email, in Kb
+        // The email address to use for sending of log files. If you don't
+        // set this parameter the policy will throw an exception during
+        // bootstrap
+        'toEmail' => null, 
+        
+        // The name of the email, it's an optional param
+        'toName' => 'admin',
+        
+        // The length of log file which is allowed on the server. If the file
+        // is longer than this specified length (in Kb), it will be sent
+        // by email.
+        'length' => 50,
+        
+        // Maximum duration in days to keep the file on the server, no matter
+        // how long it is
+        'age' => 5, 
+        
+        // The length of the log file, which could be sent by email. If the file
+        // is longer, we WON'T send it, but will add a log line telling about
+        // this critical situation.
+        'maxLengthToSend' => 2048, 
+        
+        // Maximum length of file to be embedded inside email content, in Kb.
+        // If the file is bigger, we will attach it to the email as MIME part
+        // named as pathinfo() of the original log file
+        'maxContentLength' => 300, 
     );
 
     /**
@@ -107,6 +127,9 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
             $sender->set('log', _t('see attached file'));
             $mime = new Zend_Mime_Part($content);
             $mime->filename = pathinfo($this->_file, PATHINFO_BASENAME);
+            $mime->encoding = Zend_Mime::ENCODING_BASE64;
+            $mime->type = Zend_Mime::TYPE_OCTETSTREAM;
+            $mime->disposition = Zend_Mime::DISPOSITION_ATTACHMENT;
             $sender->attach($mime);
         } else {
             // get the content of the file
