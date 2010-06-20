@@ -22,9 +22,29 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
     if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
         return;
     }
+    switch ($errno) {
+        case E_WARNING:
+            $err = 'WARNING';
+            break;
+        case E_USER_ERROR:
+            $err = 'USER ERROR';
+            break;
+        case E_USER_WARNING:
+            $err = 'USER WARNING';
+            break;
+        case E_USER_NOTICE:
+            $err = 'USER NOTICE';
+            break;
+        case E_NOTICE:
+            $err = 'NOTICE';
+            break;
+        default:
+            $err = 'OTHER';
+            break;
+    }
     echo sprintf(
-        "%d %s, file: %s(%d)\n",
-        $errno, 
+        "[%s] %s, file: %s(%d)\n",
+        $err, 
         $errstr,
         $errfile,
         $errline
