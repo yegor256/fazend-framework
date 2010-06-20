@@ -107,6 +107,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
                 @filesize($this->_file),
                 $this->_options['maxLengthToSend']
             );
+            return;
         }
 
         /**
