@@ -82,9 +82,10 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          */
         if (@filesize($this->_file) > $this->_options['maxLengthToSend'] * 1024) {
             logg(
-                'File %s is too big (%d bytes) to be sent by email',
+                'File %s is too big (%d bytes) to be sent by email (max %dkb allowed)',
                 $this->_file,
-                @filesize($this->_file)
+                @filesize($this->_file),
+                $this->_options['maxLengthToSend']
             );
         }
 
