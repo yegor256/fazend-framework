@@ -1,5 +1,11 @@
 <?php
+/**
+ * @version $Id$
+ */
 
+/**
+ * @see AbstractTestCase
+ */
 require_once 'AbstractTestCase.php';
 
 class FaZend_ValidatorTest extends AbstractTestCase

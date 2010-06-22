@@ -118,18 +118,14 @@ function _t($str)
         $str = $str[array_rand($str)];
     }
 
-    $str = preg_replace('/\n\t\r/', ' ', $str);
-
     /**
      * @see Zend_Registry
      */
     require_once 'Zend/Registry.php';
-    if (!Zend_Registry::getInstance()->offsetExists('Zend_Translate')) {
-        return $str;
+    if (Zend_Registry::getInstance()->offsetExists('Zend_Translate')) {
+        // translate this string
+        $str = Zend_Registry::get('Zend_Translate')->_($str);
     }
-        
-    // translate this string
-    $str = Zend_Registry::get('Zend_Translate')->_($str);
 
     // pass it to sprintf
     if (func_num_args() > 1) {
