@@ -123,6 +123,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', $this->_options['toEmail'])
             ->set('toName', $this->_options['toName'])
+            ->set('subject', 'forward of error_log from ' . FaZend_Revision::getName())
             ->set('file', $file)
             ->set('reasons', $reasons);
 
