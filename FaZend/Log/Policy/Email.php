@@ -22,6 +22,11 @@
  */
 class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
 {
+    
+    /**
+     * Bytes in one unit
+     */
+    const UNIT_SIZE = 1024;
 
     /**
      * List of available options
@@ -87,7 +92,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          * by email to admin
          */
         $reasons = array();
-        if (@filesize($file) > $this->_options['length'] * 1024) {
+        if (@filesize($file) > $this->_options['length'] * self::UNIT_SIZE) {
             $reasons[] = _t(
                 'Log file %s is long enough - %dKb (over %dKb)',
                 $file,
@@ -95,19 +100,24 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
                 intval($this->_options['length'])
             );
         }
-        if (@filectime($file) > time() - $this->_options['age'] * 24*60*60) {
-            $reasons[] = _t(
-                'Log file %s is old enough - %ddays (older than %d)',
-                $file,
-                (@filectime($file) - time()) / (24*60*60),
-                intval($this->_options['age'])
-            );
-        }
+        /**
+         * @todo I don't know how to implement it properly. Now we end up
+         * with an endless cycle, removing the file again and again and sending
+         * empty emails to admin
+         */
+        // if (@filectime($file) > time() - $this->_options['age'] * 24*60*60) {
+        //     $reasons[] = _t(
+        //         'Log file %s is old enough - %ddays (older than %d)',
+        //         $file,
+        //         (@filectime($file) - time()) / (24*60*60),
+        //         intval($this->_options['age'])
+        //     );
+        // }
 
         /**
          * If the log file is too big..
          */
-        if (@filesize($file) > $this->_options['maxLengthToSend'] * 1024) {
+        if (@filesize($file) > $this->_options['maxLengthToSend'] * self::UNIT_SIZE) {
             logg(
                 'File %s is too big (%d bytes) to be sent by email (max %dkb allowed)',
                 $file,
@@ -132,7 +142,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          * as email body
          */
         $content = @file_get_contents($file);
-        if (@filesize($file) > $this->_options['maxContentLength'] * 1024) {
+        if (@filesize($file) > $this->_options['maxContentLength'] * self::UNIT_SIZE) {
             $sender->set('log', _t('see attached file'));
             $mime = new Zend_Mime_Part($content);
             $mime->filename = pathinfo($file, PATHINFO_BASENAME);
@@ -152,8 +162,8 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         
         // protocol this operation
         logg(
-            'log file was truncated (%dKb) and sent by email to %s',
-            strlen($content) / 1024,
+            'log file was truncated (%0.2fKb) and sent by email to %s',
+            strlen($content) / self::UNIT_SIZE,
             $this->_options['toEmail']
         );
     }
