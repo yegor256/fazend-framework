@@ -114,6 +114,11 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         //     );
         // }
 
+        // if there are no reasons to truncate the file - exit
+        if (!$reasons) {
+            return;
+        }
+
         /**
          * If the log file is too big..
          */
