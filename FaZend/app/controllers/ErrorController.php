@@ -31,6 +31,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
      * Email of the admin
      *
      * @var string
+     * @see setAdminEmail()
      */
     protected static $_adminEmail = null;
 
@@ -38,13 +39,16 @@ class Fazend_ErrorController extends FaZend_Controller_Action
      * Errors are visible on web?
      *
      * @var bool
+     * @see setVisible()
      */
     protected static $_visible = false;
 
     /**
      * Set email to use as admin's address
      *
+     * @param string Email to use for errors delivery
      * @return void
+     * @see FaZend_Application_Resource_fz_errors::init()
      */
     public static function setAdminEmail($email) 
     {
@@ -54,7 +58,9 @@ class Fazend_ErrorController extends FaZend_Controller_Action
     /**
      * Set visibility
      *
+     * @param boolean Shall we render errors to end-users?
      * @return void
+     * @see FaZend_Application_Resource_fz_errors::init()
      */
     public static function setVisible($visible) 
     {
@@ -65,6 +71,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
      * Not found action
      *
      * @return void
+     * @see errorAction()
      */
     public function notfoundAction()
     {
@@ -74,6 +81,8 @@ class Fazend_ErrorController extends FaZend_Controller_Action
     }
 
     /**
+     * Error action
+     *
      * errorAction() is the action that will be called by the "ErrorHandler" 
      * plugin.  When an error/exception has been encountered
      * in a ZF MVC application (assuming the ErrorHandler has not been disabled
@@ -97,16 +106,19 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         $exceptions = $this->getResponse()->getException();
         $exception = $exceptions[0];
 
-        if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException') {
-            return $this->_redirectFlash($exception->getMessage());
-        }
+        // if (get_class($exception) == 'FaZend_Controller_Action_ParamNotFoundException') {
+        //     return $this->_redirectFlash($exception->getMessage());
+        // }
 
         // $errors will be an object set as a parameter of the request object, 
         // type is a property
         switch ($errors->type) { 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER: 
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION: 
-                return $this->_redirectFlash(_t('Error 404: page not found'), 'notfound');
+                return $this->_redirectFlash(
+                    _t('Error 404: page not found'), 
+                    'notfound'
+                );
 
             default: 
                 // generate error code
@@ -129,7 +141,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         $this->view->showError = self::$_visible;
 
         // notify admin by email
-        if (self::$_adminEmail && !defined('TESTING_RUNNING')) {
+        if (self::$_adminEmail) {
             $lines = array();
             foreach (debug_backtrace() as $line) {
                 $lines[] = isset($line['file']) ? "{$line['file']} ({$line['line']})" : false;

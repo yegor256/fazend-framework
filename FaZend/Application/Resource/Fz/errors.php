@@ -48,6 +48,11 @@ class FaZend_Application_Resource_fz_errors extends Zend_Application_Resource_Re
                 case 'display':
                     Fazend_ErrorController::setVisible($value);
                     break;
+                    
+                case 'email':
+                    Fazend_ErrorController::setAdminEmail($value);
+                    break;
+                
                 default:
                     FaZend_Exception::raise(
                         'FaZend_Application_Resource_fz_errors_Exception', 

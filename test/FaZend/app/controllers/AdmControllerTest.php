@@ -3,6 +3,9 @@
  * @version $Id$
  */
 
+/**
+ * @see AbstractTestCase
+ */
 require_once 'AbstractTestCase.php';
 
 class FaZend_app_controllers_AdmControllerTest extends AbstractTestCase
