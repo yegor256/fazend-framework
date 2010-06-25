@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -28,17 +31,23 @@ class FaZend_View_Helper_StripCSS extends FaZend_View_Helper
     /**
      * Strip CSS and include it into HEAD section of the layout
      *
-     * @param string CSS content
-     * @return void
+     * @param string Script name with CSS content
+     * @return string Stripped CSS content
      */
     public function stripCSS($script)
     {
+        // render the CSS file
         $content = $this->getView()->render($script);
 
+        // compress it
         $filter = new FaZend_View_Filter_CssCompressor();
         $content = $filter->filter($content);
 
+        // add it to header
         $this->getView()->headStyle($content);
+        
+        // and return it as compressed version
+        return $content;
     }
 
 }
