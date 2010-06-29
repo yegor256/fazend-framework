@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -26,7 +29,11 @@ require_once 'FaZend/View/Helper.php';
 class FaZend_View_Helper_IncludeJQuery extends FaZend_View_Helper
 {
 
-    const JQUERY_PATH = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js';
+    /**
+     * Absolute URL of the jQuery JS
+     * @link http://docs.jquery.com/Downloading_jQuery
+     */
+    const JQUERY_PATH = 'http://code.jquery.com/jquery-1.4.2.min.js';
 
     /**
      * Include a jQuery minified JS file as a link
