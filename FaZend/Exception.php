@@ -78,8 +78,13 @@ class FaZend_Exception
             return;
         }
                 
-        // declare the parent
-        self::_declareClass($parent, 'Zend_Exception');
+        // if it's an object - use its name
+        if (is_object($parent)) {
+            $parent = get_class($parent);
+        } else {
+            // declare the parent
+            self::_declareClass($parent, 'Zend_Exception');
+        }
 
         // sanity check, in case they are equal
         if ($class == $parent) {
@@ -87,11 +92,7 @@ class FaZend_Exception
         }
 
         // dynamically declare this class
-        if (is_object($parent)) {
-            eval("class {$class} extends " . get_class($parent) . " {};");    
-        } else {
-            eval("class {$class} extends {$parent} {};");    
-        }
+        eval("class {$class} extends {$parent} {};");    
     }
 
 }
