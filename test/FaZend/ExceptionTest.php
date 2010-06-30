@@ -44,5 +44,17 @@ class FaZend_ExceptionTest extends AbstractTestCase
         );
     }
 
+    /**
+     * @expectedException FaZend_Exception_InvalidParentException
+     */
+    public function testInvalidParentClass()
+    {
+        FaZend_Exception::raise(
+            'ForthTestException',
+            'Test works!',
+            new FaZend_StdObject()
+        );
+    }
+
 }
         

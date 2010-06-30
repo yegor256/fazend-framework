@@ -80,6 +80,12 @@ class FaZend_Exception
                 
         // if it's an object - use its name
         if (is_object($parent)) {
+            if (!($parent instanceof Exception)) {
+                FaZend_Exception::raise(
+                    'FaZend_Exception_InvalidParentException', 
+                    "Invalid parent class for dynamically created exception: " . get_class($parent)
+                );
+            }
             $parent = get_class($parent);
         } else {
             // declare the parent
