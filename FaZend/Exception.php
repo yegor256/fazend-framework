@@ -47,7 +47,15 @@ class FaZend_Exception
         self::_declareClass($class, $parent);
 
         // throw this class as exception
-        throw new $class($message);
+        $ex = new $class($message);
+    
+        // sanity check
+        if (!is_string($ex->getMessage()) || !is_string($ex->getFile()) || !is_integer($ex->getLine())) {
+            FaZend_Log::err("Invalid exception class: " . get_class($ex));
+            $ex = new Zend_Exception($message);
+        }
+
+        throw $ex;
     }
 
     /**
