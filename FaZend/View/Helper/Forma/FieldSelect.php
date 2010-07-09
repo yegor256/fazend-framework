@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper_Forma_Field
+ */
 require_once 'FaZend/View/Helper/Forma/Field.php';
 
 /**
@@ -57,25 +60,14 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
     protected $_options;
     
     /**
-     * Get value from the form element
+     * Private constructor
      *
-     * @param Zend_Form_Element The element to work with
-     * @return mixed
-     * @throws FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException
+     * @return void
      */
-    public function deriveValue(Zend_Form_Element $element)
+    protected function __construct(FaZend_View_Helper_Forma $helper)
     {
-        $value = parent::deriveValue($element);
-        if ($this->_useValues) {
-            if (!array_key_exists($value, $this->_options)) {
-                FaZend_Exception::raise(
-                    'FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException',
-                    "Option '{$value}' is out of range, it was not provided in the list of options"
-                );
-            }
-            return $this->_options[$value];
-        }
-        return $value;
+        parent::__construct($helper);
+        $this->_setConverter(array($this, 'valueConverter'));
     }
 
     /**
@@ -120,6 +112,26 @@ class FaZend_View_Helper_Forma_FieldSelect extends FaZend_View_Helper_Forma_Fiel
             }
         }
         $element->setMultiOptions($multiOptions);
+    }
+    
+    /**
+     * Convert value
+     *
+     * @param mixed Current value
+     * @return mixed New value
+     */
+    public function valueConverter($value) 
+    {
+        if ($this->_useValues) {
+            if (!array_key_exists($value, $this->_options)) {
+                FaZend_Exception::raise(
+                    'FaZend_View_Helper_Forma_FieldSelect_InvalidOptionException',
+                    "Option '{$value}' is out of range, it was not provided in the list of options"
+                );
+            }
+            return $this->_options[$value];
+        }
+        return $value;
     }
 
     /**
