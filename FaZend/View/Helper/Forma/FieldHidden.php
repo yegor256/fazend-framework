@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper_Forma_Field
+ */
 require_once 'FaZend/View/Helper/Forma/Field.php';
 
 /**
@@ -44,6 +47,7 @@ class FaZend_View_Helper_Forma_FieldHidden extends FaZend_View_Helper_Forma_Fiel
     protected function _configureFormElement(Zend_Form_Element $element)
     {
         $element->setDecorators(array())
+            ->addDecorator('ViewHelper')
             ->setValue($this->_value);
     }
 
