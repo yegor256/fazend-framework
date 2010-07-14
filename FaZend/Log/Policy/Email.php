@@ -138,7 +138,10 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $sender = FaZend_Email::create('fazendForwardLog.tmpl')
             ->set('toEmail', $this->_options['toEmail'])
             ->set('toName', $this->_options['toName'])
-            ->set('subject', 'forward of error_log from ' . FaZend_Revision::getName())
+            ->set(
+                'subject', 
+                _t('Latest error_log at %s', FaZend_Revision::getName())
+            )
             ->set('file', $file)
             ->set('reasons', $reasons);
 
@@ -148,7 +151,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          */
         $content = @file_get_contents($file);
         if (@filesize($file) > $this->_options['maxContentLength'] * self::UNIT_SIZE) {
-            $sender->set('log', _t('see attached file'));
+            $sender->set('log', _t('See the attached file'));
             $mime = new Zend_Mime_Part($content);
             $mime->filename = pathinfo($file, PATHINFO_BASENAME);
             $mime->encoding = Zend_Mime::ENCODING_BASE64;
@@ -167,7 +170,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         
         // protocol this operation
         logg(
-            'log file was truncated (%0.2fKb) and sent by email to %s',
+            'Log file was truncated (%0.2fKb) and sent by email to %s',
             strlen($content) / self::UNIT_SIZE,
             $this->_options['toEmail']
         );
