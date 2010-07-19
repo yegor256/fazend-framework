@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -35,12 +38,14 @@ class FaZend_View_Helper_GoogleAnalytics extends FaZend_View_Helper
     public function googleAnalytics($showForLoggedInUser = true)
     {
         // don't show if the user is not logged in
-        if (!$showForLoggedInUser && FaZend_User::isLoggedIn())
+        if (!$showForLoggedInUser && FaZend_User::isLoggedIn()) {
             return false;
+        }
 
         // skip it for the testing and development environments           
-        if (APPLICATION_ENV !== 'production')
-            return "<!-- google analytics skipped -->\n";
+        if (APPLICATION_ENV !== 'production') {
+            return "<!-- google analytics {$this->getView()->googleAnalytics} skipped -->\n";
+        }
 
         $this->getView()->addScriptPath(FAZEND_PATH . '/View/scripts/');
         return $this->getView()->render('google-analytics.phtml');
