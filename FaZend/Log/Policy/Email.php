@@ -170,9 +170,10 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         
         // protocol this operation
         logg(
-            'Log file was truncated (%0.2fKb) and sent by email to %s',
+            'Log file was truncated (%0.2fKb) and sent by email to %s [%s]',
             strlen($content) / self::UNIT_SIZE,
-            $this->_options['toEmail']
+            $this->_options['toEmail'],
+            implode(', ' , $reasons)
         );
     }
 
