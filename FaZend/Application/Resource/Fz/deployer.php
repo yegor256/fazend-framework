@@ -63,6 +63,14 @@ class FaZend_Application_Resource_fz_deployer extends Zend_Application_Resource_
             switch (strtolower($option)) {
                 case 'deploy':
                     $toDeploy = $value;
+                    
+                    // We need to do it like this in order to avoid
+                    // potential configuration exceptions inside
+                    // deployer, if, for example, some directories
+                    // are absent.
+                    if (!$toDeploy) {
+                        return self::$_deployer;
+                    }
                     break;
                 case 'folders':
                     self::$_deployer->setFolders($value);
