@@ -27,6 +27,11 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
      * Bytes in one unit
      */
     const UNIT_SIZE = 1024;
+    
+    /**
+     * Suffix of the unit
+     */
+    const UNIT_SUFFIX = 'Kb';
 
     /**
      * List of available options
@@ -94,10 +99,11 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $reasons = array();
         if (@filesize($file) > $this->_options['length'] * self::UNIT_SIZE) {
             $reasons[] = _t(
-                'Log file %s is long enough - %0.2fKb (over %dKb)',
-                $file,
+                'Log file is %0.2f%s in length (over allowed %d%s)',
                 filesize($file) / self::UNIT_SIZE,
-                intval($this->_options['length'])
+                self::UNIT_SUFFIX,
+                intval($this->_options['length']),
+                self::UNIT_SUFFIX
             );
         }
         /**
@@ -124,10 +130,12 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          */
         if (@filesize($file) > $this->_options['maxLengthToSend'] * self::UNIT_SIZE) {
             logg(
-                'File %s is too big (%d bytes) to be sent by email (max %dkb allowed)',
+                'File %s is too big (%d%s) to be sent by email (max %d%s allowed)',
                 $file,
-                @filesize($file),
-                $this->_options['maxLengthToSend']
+                @filesize($file) / self::UNIT_SIZE,
+                self::UNIT_SUFFIX,
+                $this->_options['maxLengthToSend'],
+                self::UNIT_SUFFIX
             );
             return;
         }
@@ -170,9 +178,10 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         
         // protocol this operation
         logg(
-            'Log file %s was truncated (%0.2fKb) and sent by email to %s [%s]',
+            'Log file %s was truncated (%0.2f%s) and sent by email to %s [%s]',
             $file,
             strlen($content) / self::UNIT_SIZE,
+            self::UNIT_SUFFIX,
             $this->_options['toEmail'],
             implode(', ' , $reasons)
         );
