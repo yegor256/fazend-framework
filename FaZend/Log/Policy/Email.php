@@ -94,9 +94,9 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
         $reasons = array();
         if (@filesize($file) > $this->_options['length'] * self::UNIT_SIZE) {
             $reasons[] = _t(
-                'Log file %s is long enough - %dKb (over %dKb)',
+                'Log file %s is long enough - %0.2fKb (over %dKb)',
                 $file,
-                filesize($file),
+                filesize($file) / self::UNIT_SIZE,
                 intval($this->_options['length'])
             );
         }
