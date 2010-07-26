@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: injector.php 1845 2010-04-09 14:01:44Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 
