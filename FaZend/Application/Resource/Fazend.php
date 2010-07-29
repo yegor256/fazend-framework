@@ -47,11 +47,15 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
         }
         FaZend_Revision::setName($name);
 
+        /** 
+         * We should start caches as soon as possible, since
+         * this resource will create a file for INCLUDE operations
+         * and it has to know the name of FaZend revision.
+         */
+        $this->_bootstrap->bootstrap('fz_caches');
+
         // translation is mandatory, if it exists in the project
         $this->_bootstrap->bootstrap('fz_translate');
-
-        // caches are mandatory
-        $this->_bootstrap->bootstrap('fz_caches');
     }
 
 }
