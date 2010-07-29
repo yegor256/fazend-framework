@@ -39,10 +39,12 @@ class FaZend_Application_Resource_Fazend extends Zend_Application_Resource_Resou
     {
         $options = $this->getOptions();
         $name = $options['name'];
-        validate()->true(
-            isset($name),
-            "[Fazend.name] should be defined in your app.ini file"
-        );
+        if (!$name) {
+            FaZend_Exception::raise(
+                'FaZend_Application_Resource_Fazend_Exception',
+                "[Fazend.name] should be defined in your app.ini file"
+            );
+        }
         FaZend_Revision::setName($name);
 
         // translation is mandatory, if it exists in the project
