@@ -158,6 +158,12 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
          * as email body
          */
         $content = @file_get_contents($file);
+        if ($content === false) {
+            FaZend_Exception::raise(
+                'FaZend_Log_Policy_Email_Exception',
+                "Failed to get content from '{$file}'"
+            );
+        }
         if (@filesize($file) > $this->_options['maxContentLength'] * self::UNIT_SIZE) {
             $sender->set('log', _t('See the attached file'));
             $mime = new Zend_Mime_Part($content);
