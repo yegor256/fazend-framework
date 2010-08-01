@@ -51,11 +51,11 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript
         foreach ($container as $id=>$script) {
             // so we meet new text script
             if (($script->type == 'text/javascript') && empty($script->attributes['src']) && !empty($script->source)) {
-                if (!isset($aggregator))
+                if (!isset($aggregator)) {
                     $aggregator = $script;
-                else    
+                } else {
                     $aggregator->source .= $container->getSeparator() . $script->source;    
-
+                }
                 continue;
                 // we had some texts before    
             }
@@ -69,8 +69,9 @@ class FaZend_View_Helper_HeadScript extends Zend_View_Helper_HeadScript
         }    
 
         // if we still have something in the aggregator
-        if (isset($aggregator)) 
+        if (isset($aggregator)) {
             $new[] = $aggregator;
+        }
 
         // save new container to the parent class
         $this->setContainer($new);

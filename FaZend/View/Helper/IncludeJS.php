@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -30,10 +33,20 @@ class FaZend_View_Helper_IncludeJS extends FaZend_View_Helper
      * Include a JS file as a link
      *
      * @return void
+     * @see routes.ini
      */
     public function includeJS($script)
     {
-        $this->getView()->headScript()->appendFile($this->getView()->url(array('script'=>$script), 'js', true));
+        $this->getView()->headScript()->appendFile(
+            $this->getView()->url(
+                array(
+                    'script' => $script
+                ), 
+                'fz__js', // route name, see routes.ini 
+                true,
+                true
+            )
+        );
     }
 
 }

@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -33,7 +36,14 @@ class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper
     public function includeCSS($script)
     {
         $this->getView()->headLink()->appendStylesheet(
-            $this->getView()->url(array('css'=>$script), 'css', true, false)
+            $this->getView()->url(
+                array(
+                    'css' => $script
+                ), 
+                'fz__css', // route name, see routes.ini
+                true, 
+                false
+            )
         );
     }
 

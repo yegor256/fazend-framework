@@ -45,7 +45,7 @@ class FaZend_View_Helper_ViewFile extends FaZend_View_Helper
                 'file' => $file,
                 'render' => $toRender ? 'r' : '',
             ), 
-            'file', // ROUTE name, see routes.ini
+            'fz__file', // ROUTE name, see routes.ini
             true, // ..
             false // DON'T encode the params in URL
         );
