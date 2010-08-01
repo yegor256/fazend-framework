@@ -26,9 +26,21 @@ require_once 'FaZend/View/Helper.php';
 class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
 {
 
+    /**
+     * Location of squeeze PNG files
+     */
     const SQUEEZE_FOLDER = '/views/squeeze/';
+    
+    /**
+     * What to show on failure?
+     */
     const FAILURE = 'border: 1px solid red;';
-    const ROUTE = 'squeeze';
+    
+    /**
+     * Name of the route
+     * @see routes.ini
+     */
+    const ROUTE = 'fz__squeeze';
 
     /**
      * Current file to render (relative name)
