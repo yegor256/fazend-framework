@@ -35,6 +35,12 @@ require_once 'FaZend/Controller/Action.php';
  */
 class Fazend_UserController extends FaZend_Controller_Action
 {
+    
+    /**
+     * Route name.
+     * @see app-routes.ini
+     */
+    const ROUTE = 'fz__user';
 
     /**
      * Register new account
@@ -44,7 +50,11 @@ class Fazend_UserController extends FaZend_Controller_Action
     public function registerAction()
     {
         if (FaZend_User::isLoggedIn()) {
-            return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
+            return $this->_redirectFlash(
+                _t('You are already logged in'), 
+                'notfound', 
+                'error'
+            );
         }
 
         // if the RegisterAccount.ini file is missed
@@ -104,7 +114,11 @@ class Fazend_UserController extends FaZend_Controller_Action
     public function remindAction()
     {
         if (FaZend_User::isLoggedIn()) {
-            return $this->_redirectFlash('You are already logged in', 'notfound', 'error');
+            return $this->_redirectFlash(
+                _t('You are already logged in'), 
+                'notfound', 
+                'error'
+            );
         }
 
         $form = FaZend_Form::create('RemindPassword', $this->view);
@@ -142,7 +156,11 @@ class Fazend_UserController extends FaZend_Controller_Action
     public function logoutAction()
     {
         if (!FaZend_User::isLoggedIn()) {
-            return $this->_redirectFlash(_t('You are not logged in yet'), 'notfound', 'error');
+            return $this->_redirectFlash(
+                _t('You are not logged in yet'), 
+                'notfound', 
+                'error'
+            );
         }
 
         FaZend_User::logOut();
@@ -161,7 +179,11 @@ class Fazend_UserController extends FaZend_Controller_Action
         $form = FaZend_Form::create('Login', $this->view);
 
         $pwdLabel = $form->pwd->getLabel();
-        $remindUrl = $this->view->url(array('action'=>'remind'), 'user', true);
+        $remindUrl = $this->view->url(
+            array('action' => 'remind'), 
+            self::ROUTE, 
+            true
+        );
 
         $form->pwd->setLabel($pwdLabel . "&#32;(<a href='{$remindUrl}' title='remind password'>?</a>)");
 
