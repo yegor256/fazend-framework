@@ -192,9 +192,14 @@ class Fazend_UserController extends FaZend_Controller_Action
             return;
         }
 
+        $user = null;
         try {
             $user = FaZend_User::findByEmail($form->email->getValue());
+        } catch (Exception $e) {
+            $form->email->addError(_t('The user is not found'));
+        }
 
+        if (!is_null($user)) {
             if (!$user->isGoodPassword($form->pwd->getValue())) {
                 $form->pwd->addError(_t('Incorrect password, try again'));
             } else {
@@ -204,8 +209,6 @@ class Fazend_UserController extends FaZend_Controller_Action
                     $this->_helper->redirector->gotoSimple('logged');
                 }
             }
-        } catch (FaZend_User_NotFoundException $e) {
-            $form->email->addError('The user is not found');
         }
 
         if ($form->pwd->hasErrors() || $form->email->hasErrors()) {
