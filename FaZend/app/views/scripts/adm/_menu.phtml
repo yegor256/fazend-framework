@@ -27,7 +27,7 @@
         <?php endif; ?>
 
         <?php echo ($matches[1] == $this->action ? '[' : false)
-            ?><a href="<?php echo $this->url(array('action'=>$matches[1]), 'adm', true)?>"
+            ?><a href="<?php echo $this->url(array('action'=>$matches[1]), 'fz__adm', true)?>"
                 ><?php echo $matches[1]?></a><?php echo ($matches[1] == $this->action ? ']' : false)?>
 
     <?php endforeach; ?>
