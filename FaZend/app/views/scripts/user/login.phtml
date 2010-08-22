@@ -19,7 +19,7 @@
             return false;"
         >login</a> |
 
-    <a href="<?php echo $this->url(array('action'=>'register'), 'user', true)?>">create account</a>
+    <a href="<?php echo $this->url(array('action'=>'register'), 'fz__user', true)?>">create account</a>
 
     <div id="lf" 
         <?php echo (($this->form->email->getValue() || $this->form->pwd->getValue()) ? 
@@ -34,7 +34,7 @@
 
     <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'settings'), 'default', true)?>"
         >settings</a> |
-    <a href="<?php echo $this->url(array('action'=>'logout'), 'user', true)?>"
+    <a href="<?php echo $this->url(array('action'=>'logout'), 'fz__user', true)?>"
         >logout</a>
 
 <?php endif;
