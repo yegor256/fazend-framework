@@ -28,6 +28,7 @@ class FaZend_Backup_Policy_Encrypt extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'algorithm' => 'blowfish',
     );
     
     /**

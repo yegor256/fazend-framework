@@ -15,11 +15,11 @@
  */
 
 /**
- * GZIP all files in a directory.
+ * Compress (GZIP) all files in a directory.
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Gzip extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Compress extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -28,7 +28,8 @@ class FaZend_Backup_Policy_Gzip extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'exec' => null, // shell executable mask, to be defined in application.ini
+        'tool' => 'gzip', // which tool to use
+        'exec' => 'gzip', // shell executable
     );
     
     /**

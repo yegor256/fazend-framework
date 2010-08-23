@@ -28,6 +28,8 @@ class FaZend_Backup_Policy_Dump_Files extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'prefix' => null,
+        'dirs' => array(),
     );
     
     /**

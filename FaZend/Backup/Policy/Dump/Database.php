@@ -28,6 +28,11 @@ class FaZend_Backup_Policy_Dump_Database extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'tool'     => 'mysqldump',
+        'dbname'   => null,
+        'username' => null,
+        'password' => null,
+        'prefix'   => null,
     );
     
     /**
