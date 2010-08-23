@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: Abstract.php 1747 2010-03-17 19:17:38Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 
@@ -19,7 +19,7 @@
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Compress extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -28,8 +28,7 @@ class FaZend_Backup_Policy_Compress extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'tool' => 'gzip', // which tool to use
-        'exec' => 'gzip', // shell executable
+        'gzip' => 'gzip', // shell executable
     );
     
     /**
@@ -37,7 +36,17 @@ class FaZend_Backup_Policy_Compress extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      */
-    public function compress() 
+    public function forward() 
+    {
+        
+    }
+    
+    /**
+     * Compress every file in the directory.
+     *
+     * @return void
+     */
+    public function backward() 
     {
         
     }

@@ -37,6 +37,20 @@ abstract class FaZend_Backup_Policy_Abstract
     protected $_dir = null;
     
     /**
+     * Forward execution of the policy.
+     *
+     * @return void
+     */
+    abstract public function forward();
+    
+    /**
+     * BACKWARD execution of the policy.
+     *
+     * @return void
+     */
+    abstract public function backward();
+    
+    /**
      * Set options before execution.
      *
      * @param array List of options, associative array
@@ -70,20 +84,6 @@ abstract class FaZend_Backup_Policy_Abstract
             );
         }
         $this->_dir = $dir;
-    }
-    
-    /**
-     * Show nice filename
-     *
-     * @param string Absolute file name
-     * @return string
-     */
-    protected function _nice($file)
-    {
-        if (!file_exists($file)) {
-            return basename($file) . ' (absent)';
-        }
-        return basename($file) . ' (' . filesize($file). 'bytes)';
     }
 
 }

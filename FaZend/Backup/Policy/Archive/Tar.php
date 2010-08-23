@@ -10,16 +10,16 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: Archive.php 2113 2010-08-23 13:18:48Z yegor256@gmail.com $
  * @category FaZend
  */
 
 /**
- * Dump files in FS.
+ * Archiver of multiple files into one, using TAR.
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Dump_Files extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Archive_Tar extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -28,23 +28,17 @@ class FaZend_Backup_Policy_Dump_Files extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'prefix' => null,
-        'dirs' => array(),
+        'tar' => 'tar', // shell executable
     );
     
     /**
-     * Backup files
+     * Archive files from the directory into a single file. Also we
+     * can add extra directories, which will be added to the TAR archive.
      *
      * @return void
      */
-    protected function _backupFiles()
+    public function forward() 
     {
-        // if files backup is NOT specified in backup.ini - we skip it
-        if (empty($this->_getConfig()->content->files)) {
-            $this->_log("Since [content.file] is empty, we won't backup files");
-            return;
-        }
-
         // all files into .TAR
         $file = tempnam(TEMP_PATH, 'fz');
         $cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
@@ -55,21 +49,6 @@ class FaZend_Backup_Policy_Dump_Files extends FaZend_Backup_Policy_Abstract
 
         $cmd .= " 2>&1";
         FaZend_Exec::exec($cmd);
-
-        // encrypt the .TAR
-        $this->_encrypt($file);
-
-        // archive it into .GZ
-        $this->_archive($file);
-
-        // unique name of the backup file
-        $object = $this->_getConfig()->archive->files->prefix . date('ymd-his') . '.data';
-
-        // send to FTP
-        $this->_sendToFTP($file, $object);
-
-        // send to amazon
-        $this->_sendToS3($file, $object);
     }
-
+    
 }

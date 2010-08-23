@@ -10,16 +10,16 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: Encrypt.php 2113 2010-08-23 13:18:48Z yegor256@gmail.com $
  * @category FaZend
  */
 
 /**
- * Encrypt content.
+ * Encrypt content, using OpenSSL algorithms.
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Encrypt extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -28,7 +28,7 @@ class FaZend_Backup_Policy_Encrypt extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'tool' => 'openssl/blowfish', // tool to use + algorithm
+        'algorithm' => 'blowfish', // tool to use + algorithm
         'password' => 'empty', 
     );
     
@@ -37,7 +37,17 @@ class FaZend_Backup_Policy_Encrypt extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      */
-    public function encrypt() 
+    public function forward() 
+    {
+        
+    }
+    
+    /**
+     * Decrypt the files in the directory.
+     *
+     * @return void
+     */
+    public function backward() 
     {
         
     }
