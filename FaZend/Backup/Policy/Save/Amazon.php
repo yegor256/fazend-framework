@@ -28,6 +28,9 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'key' => '?',
+        'secret' => '?',
+        'bucket' => '?',
     );
     
     /**

@@ -28,7 +28,8 @@ class FaZend_Backup_Policy_Archive extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'exec' => null, // shell executable mask, to be defined in application.ini
+        'tool' => 'tar', // tool to use
+        'exec' => 'tar', // shell executable
     );
     
 }

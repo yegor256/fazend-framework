@@ -100,11 +100,51 @@ class FaZend_Backup
             logg('No execution required, end of process');
             return;
         }
+        
+        // create temp directory
+        $dir = tempnam(TEMP_PATH, 'FaZend_Backup-' . FaZend_Revision::getName() . '-');
+        @unlink($dir);
+        @mkdir($dir);
+        logg("Temporary directory created: %s", $dir);
+        
+        // pre-configure all policies
+        $policies = array();
         foreach ($this->_options['policies'] as $opts) {
             $class = 'FaZend_Backup_Policy_' . ucfirst($opts['name']);
             $policy = new $class();
             $policy->setOptions($opts['options']);
+            $policy->setDir($dir);
+            $policies[$opts['name']] = $policy;
         }
+        
+        // execute them one by one
+        foreach ($this->_options['execs'] as $exec) {
+            if (!preg_match('/^(?<name>[\w\_]+)\/(?<forward>\w+):(?<backward>\w+)$/', $exec, $matches)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Exception',
+                    "Invalid exec format: '{$exec}'"
+                );
+            }
+            if (!array_key_exists($matches['name'], $policies)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Exception',
+                    "Un-configured policy mentioned in exec: '{$exec}'"
+                );
+            }
+            if (!method_exists($policies[$matches['name']], $matches['forward'])) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Exception',
+                    "Method '{$matches['forward']}' is absent in policy '{$matches['name']}'"
+                );
+            }
+            $policies[$matches['name']]->{$matches['forward']}();
+        }
+        
+        // delete the temp directory
+        @rmdir($dir);
+        logg("Temporary directory removed: %s", $dir);
+        
+        logg('FaZend_Backup finished');
     }
 
 }

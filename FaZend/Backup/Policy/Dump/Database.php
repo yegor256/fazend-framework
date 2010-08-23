@@ -36,6 +36,16 @@ class FaZend_Backup_Policy_Dump_Database extends FaZend_Backup_Policy_Abstract
     );
     
     /**
+     * Dump DB content to disc.
+     *
+     * @return void
+     */
+    public function dump() 
+    {
+        
+    }
+    
+    /**
      * Backup db
      *
      * @return void

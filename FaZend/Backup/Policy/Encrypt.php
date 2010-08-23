@@ -28,8 +28,19 @@ class FaZend_Backup_Policy_Encrypt extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'algorithm' => 'blowfish',
+        'tool' => 'openssl/blowfish', // tool to use + algorithm
+        'password' => 'empty', 
     );
+    
+    /**
+     * Encrypt the files in the directory.
+     *
+     * @return void
+     */
+    public function encrypt() 
+    {
+        
+    }
     
     /**
      * Encrypt one file and change its name

@@ -28,7 +28,22 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'host' => '127.0.0.1',
+        'port' => '21',
+        'username' => 'anonymous',
+        'password' => '',
+        'dir' => '.',
     );
+    
+    /**
+     * Upload files by FTP.
+     *
+     * @return void
+     */
+    public function upload() 
+    {
+        
+    }
     
     /**
      * Send this file by FTP

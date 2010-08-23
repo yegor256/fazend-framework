@@ -30,6 +30,13 @@ abstract class FaZend_Backup_Policy_Abstract
     protected $_options = array();
     
     /**
+     * Directory where we're working.
+     *
+     * @var string
+     */
+    protected $_dir = null;
+    
+    /**
      * Set options before execution.
      *
      * @param array List of options, associative array
@@ -46,6 +53,23 @@ abstract class FaZend_Backup_Policy_Abstract
             }
             $this->_options[$k] = $v;
         }
+    }
+    
+    /**
+     * Set directory to work in.
+     *
+     * @param string Absolute path of the directory
+     * @return void
+     */
+    public function setDir($dir) 
+    {
+        if (!@file_exists($dir) || !@is_dir($dir)) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Abstract_Exception',
+                "Directory is absent: '{$dir}'"
+            );
+        }
+        $this->_dir = $dir;
     }
     
     /**

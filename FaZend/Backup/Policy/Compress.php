@@ -33,6 +33,16 @@ class FaZend_Backup_Policy_Compress extends FaZend_Backup_Policy_Abstract
     );
     
     /**
+     * Compress every file in the directory.
+     *
+     * @return void
+     */
+    public function compress() 
+    {
+        
+    }
+    
+    /**
      * Archive one file and change its name to .GZ
      *
      * @param string File name
