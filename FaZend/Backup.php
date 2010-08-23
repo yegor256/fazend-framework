@@ -90,17 +90,25 @@ class FaZend_Backup
         $this->_log('FaZend backup started, revision: ' . FaZend_Revision::get());
 
         try {
-
             // if backup is not configured
-            if (!$this->_getConfig())
-                return $this->_log('No configuration found, process is stopped');
+            if (!$this->_getConfig()) {
+                $this->_log('No configuration found, process is stopped');
+                return;
+            }
 
             // if backup period is not defined
-            if (empty($this->_getConfig()->period))
-                return $this->_log('Period is not defined in backup config');
+            if (empty($this->_getConfig()->period)) {
+                $this->_log('Period is not defined in backup config');
+                return;
+            }
 
-            if ($this->_getSemaphoreTime() > time() - $this->_getConfig()->period * 60 * 60)
-                return $this->_log('Latest backup was done less than ' . $this->_getConfig()->period . ' hours ago');
+            if ($this->_getSemaphoreTime() > time() - $this->_getConfig()->period * 60 * 60) {
+                $this->_log(
+                    'Latest backup was done less than ' 
+                    . $this->_getConfig()->period . ' hours ago'
+                );
+                return;
+            }
             
             // turn ON the semaphore
             $this->_setSemaphoreTime();
@@ -115,7 +123,7 @@ class FaZend_Backup
             $this->_setSemaphoreTime($this->getLog());
         
         } catch (FaZend_Backup_Exception $e) {
-            $this->_log("Script terminated by exception");
+            $this->_log("Script terminated by exception: {$e->getMessage()}");
             unlink($this->_getSemaphoreFileName());
         }
     }
@@ -131,13 +139,15 @@ class FaZend_Backup
 
         $bucket = $this->_getConfig()->S3->bucket;
 
-        if (!$s3->isBucketAvailable($bucket))
+        if (!$s3->isBucketAvailable($bucket)) {
             return array();
+        }
 
         $objects = $s3->getObjectsByBucket($bucket);    
 
-        if (!is_array($objects))
+        if (!is_array($objects)) {
             return array();
+        }
 
         return $objects;    
     }
@@ -161,8 +171,10 @@ class FaZend_Backup
     protected function _backupDatabase()
     {
         // if we should not backup DB - we skip it
-        if (empty($this->_getConfig()->content->db))
-            return $this->_log("Since [content.db] is empty, we won't backup database");
+        if (empty($this->_getConfig()->content->db)) {
+            $this->_log("Since [content.db] is empty, we won't backup database");
+            return;
+        }
 
         // mysqldump
         $file = tempnam(TEMP_PATH, 'fz');
@@ -173,11 +185,11 @@ class FaZend_Backup
             " -v -u \"{$config['username']}\" --force ".
             "--password=\"{$config['password']}\" \"{$config['dbname']}\" --result-file=\"{$file}\" 2>&1";
         
-        $result = shell_exec($cmd);
+        $result = FaZend_Exec::exec($cmd);
 
-        if (file_exists($file) && (filesize($file) > 1024))
+        if (file_exists($file) && (filesize($file) > 1024)) {
             $this->_log($this->_nice($file) . " was created with SQL database dump: $cmd");
-        else {
+        } else {
             $this->_log("Command: {$cmd}");
             $this->_log($this->_nice($file) . " creation error: " . $result, true);
         }
@@ -209,18 +221,21 @@ class FaZend_Backup
     protected function _backupFiles()
     {
         // if files backup is NOT specified in backup.ini - we skip it
-        if (empty($this->_getConfig()->content->files))
-            return $this->_log("Since [content.file] is empty, we won't backup files");
+        if (empty($this->_getConfig()->content->files)) {
+            $this->_log("Since [content.file] is empty, we won't backup files");
+            return;
+        }
 
         // all files into .TAR
         $file = tempnam(TEMP_PATH, 'fz');
         $cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
 
-        foreach($this->_getConfig()->content->files->toArray() as $dir)
+        foreach($this->_getConfig()->content->files->toArray() as $dir) {
             $cmd .= "\"{$dir}/*\"";
+        }
 
         $cmd .= " 2>&1";
-        $result = shell_exec($cmd);
+        FaZend_Exec::exec($cmd);
 
         // encrypt the .TAR
         $this->_encrypt($file);
@@ -251,12 +266,12 @@ class FaZend_Backup
         $password = $this->_getConfig()->password;
 
         $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
-               $cmd = $this->_var('openssl') . " enc -blowfish -pass pass:\"{$password}\" < {$file} > {$fileEnc} 2>&1";
-        shell_exec($cmd);
+        $cmd = $this->_var('openssl') . " enc -blowfish -pass pass:\"{$password}\" < {$file} > {$fileEnc} 2>&1";
+        FaZend_Exec::exec($cmd);
 
-        if (file_exists($fileEnc) && (filesize($fileEnc) > 1024))
+        if (file_exists($fileEnc) && (filesize($fileEnc) > 1024)) {
             $this->_log($this->_nice($fileEnc) . " was created");
-        else {
+        } else {
             $this->_log("Command: {$cmd}");
             $this->_log($this->_nice($fileEnc) . " creation error: " . file_get_contents($fileEnc), true);
         }
@@ -279,12 +294,13 @@ class FaZend_Backup
         $cmd = $this->_var('gzip') . " {$file} 2>&1";
         $this->_log($this->_nice($file) . " is sent to gzip");
 
-        $result = shell_exec($cmd);
+        $result = FaZend_Exec::exec($cmd);
         $file = $file . '.gz';
-        if (file_exists($file) && filesize($file))
+        if (file_exists($file) && filesize($file)) {
             $this->_log($this->_nice($file) . " was created");
-        else
+        } else {
             $this->_log($this->_nice($file) . " creation error: " . $result, true);
+        }
     }
 
     /**
@@ -295,38 +311,52 @@ class FaZend_Backup
      */
     protected function _sendToFTP($file, $object)
     {
+        $host = $this->_getConfig()->ftp->host;
         // if FTP host is not specified in backup.ini - we skip this method
-        if (empty($this->_getConfig()->ftp->host))
-            return $this->_log("Since [ftp.host] is empty, we won't send files to FTP");
+        if (empty($host)) {
+            $this->_log("Since [ftp.host] is empty, we won't send files to FTP");
+            return;
+        }
 
         $ftp = @ftp_connect($this->_getConfig()->ftp->host);
-        if (!$ftp)
-            $this->_log("Failed to connect to ftp ({$this->_getConfig()->ftp->host})", true);    
+        if ($ftp === false) {
+            $this->_log("Failed to connect to ftp '{$host}'", true);    
+        }
 
-        $this->_log("Logged in successfully to {$this->_getConfig()->ftp->host}");    
+        $this->_log("Logged in successfully to '{$host}'");    
 
-        if (!@ftp_login($ftp, $this->_getConfig()->ftp->username, $this->_getConfig()->ftp->password))
-            $this->_log("Failed to login to ftp ({$this->_getConfig()->ftp->host})", true);    
+        $username = $this->_getConfig()->ftp->username;
+        $password = $this->_getConfig()->ftp->password;
+        if (@ftp_login($ftp, $username, $password) === false) {
+            $this->_log(
+                "Failed to login to '{$host}' as '{$username}'", 
+                true
+            );    
+        }
 
-        $this->_log("Connected successfully to FTP as {$this->_getConfig()->ftp->username}");    
+        $this->_log("Connected successfully to FTP as '{$username}'");    
 
-        if (!@ftp_pasv($ftp, true))
+        if (@ftp_pasv($ftp, true) === false) {
             $this->_log("Failed to turn PASV mode ON", true);    
+        }
 
-        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir))
-            $this->    _log("Failed to go to {$this->_getConfig()->ftp->dir}", true);    
+        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir)) {
+            $this->_log("Failed to go to '{$this->_getConfig()->ftp->dir}'", true);    
+        }
 
-        $this->_log("Current directory in FTP: " . ftp_pwd($ftp));    
+        $this->_log("Current directory in FTP: " . @ftp_pwd($ftp));    
 
-        if (!@ftp_put($ftp, $object, $file, FTP_BINARY))    
+        if (@ftp_put($ftp, $object, $file, FTP_BINARY) === false) {
             $this->_log("Failed to upload " . $this->_nice($file), true);    
-        else
+        } else {
             $this->_log("Uploaded by FTP: " . $this->_nice($file));    
+        }
 
-        if (!@ftp_close($ftp))
-            $this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");    
+        if (!@ftp_close($ftp)) {
+            $this->_log("Failed to close connection to '{$host}'");    
+        }
 
-        $this->_log("Disconnected from FTP");    
+        $this->_log("Disconnected from FTP");
 
         // remove expired data files
         $this->_cleanFTP();
@@ -340,34 +370,45 @@ class FaZend_Backup
     protected function _cleanFTP()
     {
         // if FTP file removal is NOT required - we skip this method execution
-        if (empty($this->_getConfig()->ftp->age))
-            return $this->_log("Since [ftp.age] is empty we won't remove old files from FTP");
+        if (empty($this->_getConfig()->ftp->age)) {
+            $this->_log("Since [ftp.age] is empty we won't remove old files from FTP");
+            return;
+        }
 
         // this is the minimum time we would accept
         $minTime = time() - $this->_getConfig()->ftp->age * 24 * 60 * 60;
 
         $ftp = @ftp_connect($this->_getConfig()->ftp->host);
-        if (!$ftp)
-            return $this->_log("Failed to connect to ftp ({$this->_getConfig()->ftp->host})");    
+        if (!$ftp) {
+            $this->_log("Failed to connect to ftp ({$this->_getConfig()->ftp->host})");    
+            return;
+        }
 
         $this->_log("Logged in successfully to {$this->_getConfig()->ftp->host}");    
 
-        if (!@ftp_login($ftp, $this->_getConfig()->ftp->username, $this->_getConfig()->ftp->password))
-            return $this->_log("Failed to login to ftp ({$this->_getConfig()->ftp->host})");    
+        if (!@ftp_login($ftp, $this->_getConfig()->ftp->username, $this->_getConfig()->ftp->password)) {
+            $this->_log("Failed to login to ftp ({$this->_getConfig()->ftp->host})");    
+            return;
+        }
 
         $this->_log("Connected successfully to FTP as {$this->_getConfig()->ftp->username}");    
 
-        if (!@ftp_pasv($ftp, true))
-            return $this->_log("Failed to turn PASV mode ON");    
+        if (!@ftp_pasv($ftp, true)) {
+            $this->_log("Failed to turn PASV mode ON");    
+            return;
+        }
 
-        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir))
-            return $this->_log("Failed to go to {$this->_getConfig()->ftp->dir}");    
+        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir)) {
+            $this->_log("Failed to go to {$this->_getConfig()->ftp->dir}");    
+            return;
+        }
 
         $this->_log("Current directory in FTP: " . ftp_pwd($ftp));    
 
         $files = @ftp_nlist($ftp, '.');    
-        if (!$files)
+        if (!$files) {
             $this->_log("Failed to get nlist from FTP", true);    
+        }
 
         foreach ($files as $file) {
             $lastModified = @ftp_mdtm($ftp, $file);
@@ -377,15 +418,17 @@ class FaZend_Backup
             }    
 
             if ($lastModified < $minTime) {
-                if (!@ftp_delete($ftp, $file))
+                if (!@ftp_delete($ftp, $file)) {
                     $this->_log("Failed to delete file $file");
-                else    
+                } else {
                     $this->_log("File $file removed, since it's expired (over {$this->_getConfig()->S3->age} days)");
+                }
             }    
         }
 
-        if (!@ftp_close($ftp))
+        if (!@ftp_close($ftp)) {
             $this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");    
+        }
 
         $this->_log("Disconnected from FTP");    
     }
@@ -398,8 +441,10 @@ class FaZend_Backup
      */
     protected function _sendToS3($file, $object)
     {
-        if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret))
-            return $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
+        if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret)) {
+            $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
+            return;
+        }
 
         $s3 = $this->_getS3();    
 
@@ -424,8 +469,10 @@ class FaZend_Backup
      */
     protected function _cleanS3()
     {
-        if (empty($this->_getConfig()->S3->age))
-            return $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
+        if (empty($this->_getConfig()->S3->age)) {
+            $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
+            return;
+        }
 
         $bucket = $this->_getConfig()->S3->bucket;
 
@@ -454,13 +501,15 @@ class FaZend_Backup
      */
     protected function _getConfig()
     {
-        if (isset($this->_config))
+        if (isset($this->_config)) {
             return $this->_config;
+        }
 
         $file = APPLICATION_PATH . '/config/backup.ini';
         
-        if (!file_exists($file))
+        if (!file_exists($file)) {
             return $this->_log("File $file is absent");
+        }
         
         // load config file
         return $this->_config = new Zend_Config_Ini($file, 'backup', true);
@@ -475,8 +524,12 @@ class FaZend_Backup
     protected function _log($message, $throw = false)
     {
         $this->_log[] = '[' . date('h:i:s') . '] ' . $message;
-        if ($throw)
-            FaZend_Exception::raise('FaZend_Backup_Exception');
+        if ($throw) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                $message
+            );
+        }
     }
 
     /**
@@ -548,10 +601,9 @@ class FaZend_Backup
     protected function _var($name, $default = false)
     {
         if (empty($this->_getConfig()->$name)) {
-
-            if (!$default)
+            if (!$default) {
                 $default = $name;
-
+            }
             $this->_log("Since [{$name}] is empty we use default value: $default");
             return $default;    
         } else {
@@ -566,8 +618,9 @@ class FaZend_Backup
      */
     protected function _getS3()
     {
-        if (isset($this->_s3))
+        if (isset($this->_s3)) {
             return $this->_s3;
+        }
         
         $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);    
         // workaround for this defect: ZF-7990
