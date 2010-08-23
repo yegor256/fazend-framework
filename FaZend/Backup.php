@@ -291,15 +291,19 @@ class FaZend_Backup
      */
     protected function _archive(&$file)
     {
-        $cmd = $this->_var('gzip') . " {$file} 2>&1";
-        $this->_log($this->_nice($file) . " is sent to gzip");
+        $cmd = $this->_var('gzip') . ' ' . escapeshellcmd($file) . ' 2>&1';
+        $this->_log($this->_nice($file) . ' is sent to gzip: ' . $cmd);
 
         $result = FaZend_Exec::exec($cmd);
         $file = $file . '.gz';
+        
         if (file_exists($file) && filesize($file)) {
-            $this->_log($this->_nice($file) . " was created");
+            $this->_log($this->_nice($file) . ' was created');
         } else {
-            $this->_log($this->_nice($file) . " creation error: " . $result, true);
+            $this->_log(
+                $this->_nice($file) . ' creation error: ' . $result, 
+                true
+            );
         }
     }
 
