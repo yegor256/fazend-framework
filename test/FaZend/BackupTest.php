@@ -10,12 +10,13 @@ class FaZend_BackupTest extends AbstractTestCase
     
     public function testBackupWorks ()
     {
-        $backup = new FaZend_Backup();
+        $backup = FaZend_Backup::getInstance();
+        $backup->setOptions(
+            array(
+                'execute' => true,
+            )
+        );
         $backup->execute();
-
-        $log = $backup->getLog();
-
-        $this->assertNotEquals(false, $log, "Empty log, why?");
     }
 
 }

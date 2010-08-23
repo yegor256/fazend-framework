@@ -90,15 +90,16 @@ abstract class FaZend_Log_Policy_Abstract implements Zend_Log_Filter_Interface
                 "Stream specification is not valid, string expected"
             );
         }
+        $isPhpStream = (substr($file, 0, 6) == 'php://');
         // if it's not a regular file - skip the process
-        if (!@is_file($file)) {
+        if (!@is_file($file) && !$isPhpStream) {
             FaZend_Exception::raise(
                 'FaZend_Log_Policy_Abstract_Exception',
                 "Stream provided ({$file}) is not a regular file"
             );
         }
         // if the file is not writable - skip the process
-        if (!@is_writable($file)) {
+        if (!@is_writable($file) && !$isPhpStream) {
             FaZend_Exception::raise(
                 'FaZend_Log_Policy_Abstract_Exception',
                 "Stream '{$file}' is not writable"
