@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Backup_Policy_Abstract
+ */
+require_once 'FaZend/Backup/Policy/Abstract.php';
+
+/**
  * Save files to Amazon S3.
  *
  * @package Backup
@@ -28,123 +33,97 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'key' => '?',
+        'key'    => '?',
         'secret' => '?',
         'bucket' => '?',
+        'age'    => 168, // in hours, 7 days by default
     );
     
     /**
-     * Get full list of amazon S3 files in the bucket
-     *
-     * @return array 
-     */
-    public function getS3Files()
-    {
-        $s3 = $this->_getS3();
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        if (!$s3->isBucketAvailable($bucket)) {
-            return array();
-        }
-
-        $objects = $s3->getObjectsByBucket($bucket);    
-
-        if (!is_array($objects)) {
-            return array();
-        }
-
-        return $objects;    
-    }
-
-    /**
-     * Get info about amazon file
-     *
-     * @param string Relative file name, in amazon bucket
-     * @return array 
-     */
-    public function getS3FileInfo($file)
-    {
-        return $this->_getS3()->getInfo($this->_getConfig()->S3->bucket . '/' . $file);    
-    }
-    
-    /**
-     * Send this file by FTP
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _sendToS3($file, $object)
-    {
-        if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret)) {
-            $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
-            return;
-        }
-
-        $s3 = $this->_getS3();    
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        if (!$s3->isBucketAvailable($bucket)) {
-            $this->_log("S3 bucket [{$bucket}] was created");
-            $s3->createBucket($bucket);
-        }
-
-        $s3->putFile($file, $bucket . '/' . $object);
-        $this->_log($this->_nice($file) . " was uploaded to Amazon S3");
-
-        // remove expired data files
-        $this->_cleanS3();
-    }
-
-    /**
-     * Clear expired files from amazon
+     * Save files into Amazon S3 bucket.
      *
      * @return void
      */
-    protected function _cleanS3()
+    public function forward() 
     {
-        if (empty($this->_getConfig()->S3->age)) {
-            $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
-            return;
-        }
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        // this is the minimum time we would accept
-        $minTime = time() - $this->_getConfig()->S3->age * 24 * 60 * 60;
-
-        $files = $this->getS3Files();
-
-        foreach ($files as $file) {
-            $info = $this->getS3FileInfo($file);
-
-            if ($info['mtime'] < $minTime) {
-                $this->_getS3()->removeObject($bucket . '/' . $file);
-                $this->_log(
-                    "File $file removed from S3, since it's " . 
-                    "expired (over {$this->_getConfig()->S3->age} days)"
-                );
-            }    
-        }
-    }
-    
-    /**
-     * Get instance of S3 class
-     *
-     * @return string
-     */
-    protected function _getS3()
-    {
-        if (isset($this->_s3)) {
-            return $this->_s3;
-        }
-        
-        $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);    
+        $s3 = new Zend_Service_Amazon_S3(
+            $this->_options['key'], 
+            $this->_options['secret']
+        );    
         // workaround for this defect: ZF-7990
         // http://framework.zend.com/issues/browse/ZF-7990
         Zend_Service_Amazon_S3::getHttpClient()->setUri('http://google.com');
-        return $this->_s3;
-    }
 
+        $bucket = $this->_config['bucket'];
+
+        if (!$s3->isBucketAvailable($bucket)) {
+            $s3->createBucket($bucket);
+        }
+
+        foreach (new DirectoryIterator($this->_dir) as $f) {
+            if ($f->isDot()) {
+                continue;
+            }
+            $file = $f->getPathname();
+            if (is_dir($file)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Save_Amazon_Exception',
+                    "We can't save directory '{$f}' to Amazon, use Archive first"
+                );
+            }
+
+            $dest = pathinfo($file, PATHINFO_BASENAME);
+            $s3->putFile($file, $bucket . '/' . $dest);
+            logg(
+                "File '%s' uploaded to AmazonS3 bucket '%s'",
+                $file,
+                $bucket
+            );
+        }
+    }
+    
+    /**
+     * Restore files from Amazon S3 bucket into directory.
+     *
+     * @return void
+     */
+    public function backward() 
+    {
+        
+    }
+    
+    /**
+     * Clear expired files from Amazon.
+     *
+     * @param Zend_Service_Amazon_S3 Connector to Amazon
+     * @return void
+     */
+    protected function _clean(Zend_Service_Amazon_S3 $s3)
+    {
+        $bucket = $this->_config['bucket'];
+        $files = $s3->getObjectsByBucket($bucket);    
+        if (!is_array($files)) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Save_Amazon_Exception',
+                "getObjectsByBucket('{$bucket}') failed"
+            );
+        }
+
+        foreach ($files as $file) {
+            $info = $s3->getInfo($bucket . '/' . $file);
+
+            $expired = Zend_Date::now()->sub($this->_options['age'], Zend_Date::HOUR)
+                ->isLater($info['mtime']);
+            if (!$expired) {
+                continue;
+            }
+            $s3->removeObject($bucket . '/' . $file);
+            logg(
+                "File '%s' removed from S3, since it's expired (over %d hours)",
+                $file,
+                $this->_options['age']
+            );
+        }
+    }
+    
 }

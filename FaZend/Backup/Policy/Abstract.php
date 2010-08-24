@@ -67,6 +67,12 @@ abstract class FaZend_Backup_Policy_Abstract
             }
             $this->_options[$k] = $v;
         }
+        foreach ($this->_options as &$v) {
+            if (is_string($v)) {
+                $v = str_replace('{name}', FaZend_Revision::getName(), $v);
+            }
+        }
+        return $this;
     }
     
     /**
@@ -83,7 +89,8 @@ abstract class FaZend_Backup_Policy_Abstract
                 "Directory is absent: '{$dir}'"
             );
         }
-        $this->_dir = $dir;
+        $this->_dir = realpath($dir);
+        return $this;
     }
 
 }

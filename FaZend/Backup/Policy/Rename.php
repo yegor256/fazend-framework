@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: Archive.php 2113 2010-08-23 13:18:48Z yegor256@gmail.com $
  * @category FaZend
  */
 
@@ -20,11 +20,11 @@
 require_once 'FaZend/Backup/Policy/Abstract.php';
 
 /**
- * Compress (GZIP) all files in a directory.
+ * Rename files in the directory, according to the pattern.
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Rename extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -33,15 +33,14 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'gzip' => 'gzip', // shell executable
-        'suffix' => 'gz', // suffix for compressed files
+        'suffix'  => '-y-M-dd-HH-mm', // suffix to append to every file, according to Zend_Date
     );
     
     /**
-     * Compress every file in the directory.
+     * Rename every file according to the suffix provided.
      *
      * @return void
-     * @todo FaZend_Backup_Policy_Compress_Gzip_Exception
+     * @throws FaZend_Backup_Policy_Rename_Exception
      */
     public function forward() 
     {
@@ -52,46 +51,42 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
             $file = $f->getPathname();
             if (is_dir($file)) {
                 FaZend_Exception::raise(
-                    'FaZend_Backup_Policy_Compress_Gzip_Exception',
-                    "GZIP can't compress a directory '{$f}', use Archive first"
+                    'FaZend_Backup_Policy_Rename_Exception',
+                    "We can't rename directory '{$f}', use Archive first"
                 );
             }
-            $cmd = escapeshellcmd($this->_options['gzip']) 
-                . ' --suffix=' . $this->_options['suffix']
-                . ' ' . escapeshellcmd($file) . ' 2>&1';
 
-            $result = FaZend_Exec::exec($cmd);
-            $zip = $file . '.' . $this->_options['suffix'];
-            if (!@file_exists($zip)) {
+            $dest = $file . Zend_Date::now()->get($this->_options['suffix']);
+            if (file_exists($dest)) {
                 FaZend_Exception::raise(
-                    'FaZend_Backup_Policy_Compress_Gzip_Exception',
-                    "GZIP of '{$f}' failed '{$cmd}': '{$result}'"
+                    'FaZend_Backup_Policy_Rename_Exception',
+                    "File '{$dest}' already exists, can't rename '{$file}'"
                 );
             }
-            if (!@filesize($zip)) {
+            if (@rename($file, $dest) === false) {
                 FaZend_Exception::raise(
-                    'FaZend_Backup_Policy_Compress_Gzip_Exception',
-                    "GZIP of '{$f}' created empty file '{$cmd}': '{$result}'"
+                    'FaZend_Backup_Policy_Rename_Exception',
+                    "Failed to rename('{$file}', '{$dest}')"
                 );
             }
             logg(
-                "File '%s' gzipped (into %d bytes, named as %s)",
+                "File '%s' renamed to '%s'",
                 pathinfo($file, PATHINFO_BASENAME),
-                filesize($zip),
-                pathinfo($zip, PATHINFO_BASENAME)
+                pathinfo($dest, PATHINFO_BASENAME)
             );
         }
+        
     }
     
     /**
-     * Compress every file in the directory.
+     * Restore file names.
      *
      * @return void
      */
     public function backward() 
     {
         /**
-         * @todo implement it and UNZIP the file
+         * @todo implement it and rename files back
          */
     }
     

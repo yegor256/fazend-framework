@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: deployer.php 2092 2010-07-25 15:20:47Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 

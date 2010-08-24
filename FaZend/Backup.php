@@ -36,7 +36,6 @@ class FaZend_Backup
         'execute'  => false, // shall we execute it at all?
         'period'   => 6, // hours
         'policies' => array(), // list of policies to configure
-        'execs'    => array(),
     );
     
     /**
@@ -67,6 +66,26 @@ class FaZend_Backup
     private function __construct()
     {
     }
+    
+    /**
+     * Get one or all options.
+     *
+     * @param string Name of the option or NULL if ALL opts are required
+     * @return mixed
+     */
+    public function getOption($name = null) 
+    {
+        if (is_null($name)) {
+            return $this->_options;
+        }
+        if (!array_key_exists($name, $this->_options)) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Option '{$name}' doesn't exist in " . get_class($this)
+            );
+        }
+        return $this->_options[$name];
+    }
 
     /**
      * Set options before execution.
@@ -95,7 +114,7 @@ class FaZend_Backup
      */
     public function execute()
     {
-        logg('FaZend_Backup started, Revision: ' . FaZend_Revision::get());
+        logg('FaZend_Backup started, revision: ' . FaZend_Revision::get());
         if (!$this->_options['execute']) {
             logg('No execution required, end of process');
             return;
@@ -103,48 +122,53 @@ class FaZend_Backup
         
         // create temp directory
         $dir = tempnam(TEMP_PATH, 'FaZend_Backup-' . FaZend_Revision::getName() . '-');
-        @unlink($dir);
-        @mkdir($dir);
-        logg("Temporary directory created: %s", $dir);
-        
-        // pre-configure all policies
+        if (@unlink($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to unlink('{$dir}')"
+            );
+        }
+        if (@mkdir($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to mkdir('{$dir}')"
+            );
+        }
+        logg("Temporary directory created: '%s'", $dir);
+
+        // configure them all
         $policies = array();
         foreach ($this->_options['policies'] as $opts) {
             $class = 'FaZend_Backup_Policy_' . ucfirst($opts['name']);
             $policy = new $class();
-            $policy->setOptions($opts['options']);
+            if (array_key_exists('options', $opts)) {
+                $policy->setOptions($opts['options']);
+            }
             $policy->setDir($dir);
-            $policies[$opts['name']] = $policy;
+            $policies[] = $policy;
         }
-        
+
         // execute them one by one
-        foreach ($this->_options['execs'] as $exec) {
-            if (!preg_match('/^(?<name>[\w\_]+)\/(?<forward>\w+):(?<backward>\w+)$/', $exec, $matches)) {
-                FaZend_Exception::raise(
-                    'FaZend_Backup_Exception',
-                    "Invalid exec format: '{$exec}'"
-                );
-            }
-            if (!array_key_exists($matches['name'], $policies)) {
-                FaZend_Exception::raise(
-                    'FaZend_Backup_Exception',
-                    "Un-configured policy mentioned in exec: '{$exec}'"
-                );
-            }
-            if (!method_exists($policies[$matches['name']], $matches['forward'])) {
-                FaZend_Exception::raise(
-                    'FaZend_Backup_Exception',
-                    "Method '{$matches['forward']}' is absent in policy '{$matches['name']}'"
-                );
-            }
-            $policies[$matches['name']]->{$matches['forward']}();
+        foreach ($policies as $p) {
+            $p->forward();
         }
         
         // delete the temp directory
-        @rmdir($dir);
-        logg("Temporary directory removed: %s", $dir);
-        
-        logg('FaZend_Backup finished');
+        if (@rmdir($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to remove temp directory '{$dir}'"
+            );
+        }
+        logg(
+            "Temporary directory removed: '%s'", 
+            pathinfo($dir, PATHINFO_BASENAME)
+        );
+
+        logg(
+            'FaZend_Backup finished, next run expected in %d hours', 
+            $this->_options['period']
+        );
     }
 
 }

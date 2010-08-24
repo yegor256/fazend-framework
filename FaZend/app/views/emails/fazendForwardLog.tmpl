@@ -1,11 +1,11 @@
-ATTN <?php echo $this->toName?>,
+ATTN <?php echo $this->escape($this->toName)?>,
 
-<?php echo implode('. ', $this->reasons)?>.
+<?php echo $this->escape(implode('. ', $this->reasons))?>.
 
-Log file: <?php echo $this->file?>.
+Log file: <?php echo $this->escape($this->file)?>.
 
 That's why you receive its content by email. The file itself
 was removed from the production server. Please, review the
 list of errors from the list below and try to fix them ASAP:
 
-<?php echo $this->log?>
+<?php echo $this->escape($this->log)?>

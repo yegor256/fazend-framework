@@ -20,9 +20,10 @@
 require_once 'FaZend/Cli/Abstract.php';
 
 /**
- * Backup starter
+ * Backup starter.
  *
  * @package Cli
+ * @see FaZend_Backup
  */
 class FzBackup extends FaZend_Cli_Abstract
 {
@@ -34,14 +35,14 @@ class FzBackup extends FaZend_Cli_Abstract
      */
     public function execute()
     {
-        $protocol = TEMP_PATH . '/' . FaZend_Revision::getName() . '-backup-protocol.txt';
+        $protocol = TEMP_PATH . '/' . FaZend_Revision::getName() . '-FzBackup.txt';
         
         $toRun = false;
         if (!file_exists($protocol)) {
             $toRun = true;
         } else {
             $expired = Zend_Date::now()
-                ->sub(FaZend_Backup::getInstance()->getPeriod(), Zend_Date::HOUR)
+                ->sub(FaZend_Backup::getInstance()->getOption('period'), Zend_Date::HOUR)
                 ->isLater(filemtime($protocol));
             if ($expired) {
                 $toRun = true;
@@ -50,7 +51,16 @@ class FzBackup extends FaZend_Cli_Abstract
         if ($toRun) {
             $this->_run($protocol);
         }
-        echo @file_get_contents($protocol);
+        $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
+        printf(
+            "Protocol %s (%d bytes) created %dh:%dm:%ds ago:\n%s",
+            $protocol,
+            filesize($protocol),
+            floor($age / 3600),
+            floor($age / 60) % 60,
+            $age % 60,
+            @file_get_contents($protocol)
+        );
         return self::RETURNCODE_OK;
     }
     
@@ -59,7 +69,7 @@ class FzBackup extends FaZend_Cli_Abstract
      * of the execution into the file.
      *
      * @param string Absolute name of the protocol file
-     * @return string
+     * @return void
      */
     protected function _run($protocol) 
     {
@@ -67,7 +77,17 @@ class FzBackup extends FaZend_Cli_Abstract
             new Zend_Log_Writer_Stream($protocol, 'w'), 
             'fz_backup_writer'
         );
-        FaZend_Backup::getInstance()->execute();
+        try {
+            FaZend_Backup::getInstance()->execute();
+        } catch (Exception $e) {
+            FaZend_Log::err(
+                sprintf(
+                    '%s: %s',
+                    get_class($e),
+                    $e->getMessage()
+                )
+            );
+        }
         FaZend_Log::getInstance()->removeWriter('fz_backup_writer');
     }
 

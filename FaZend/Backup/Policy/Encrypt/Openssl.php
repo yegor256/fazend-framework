@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Backup_Policy_Abstract
+ */
+require_once 'FaZend/Backup/Policy/Abstract.php';
+
+/**
  * Encrypt content, using OpenSSL algorithms.
  *
  * @package Backup
@@ -28,18 +33,77 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'algorithm' => 'blowfish', // tool to use + algorithm
-        'password' => 'empty', 
+        'openssl'   => 'openssl', // executable cmd
+        'algorithm' => 'blowfish', // algorithm to use
+        'password'  => 'pass:empty', // could be a file name or a password with 'pass:' prefix
+        'suffix'    => 'enc', // suffix to add to the file
     );
     
     /**
      * Encrypt the files in the directory.
      *
      * @return void
+     * @throws FaZend_Backup_Policy_Encrypt_Openssl_Exception
      */
     public function forward() 
     {
-        
+        foreach (new DirectoryIterator($this->_dir) as $f) {
+            if ($f->isDot()) {
+                continue;
+            }
+            $file = $f->getPathname();
+            if (is_dir($file)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                    "OpenSSL can't encrypt a directory '{$file}', use Archive first"
+                );
+            }
+            $temp = tempnam(TEMP_PATH, __CLASS__);
+            $cmd = escapeshellcmd($this->_options['openssl']) 
+                . ' enc -'
+                . $this->_options['algorithm']
+                . ' -pass '
+                . escapeshellarg($this->_options['password']) 
+                . ' < '
+                . escapeshellarg($file) 
+                . ' > '
+                . escapeshellarg($temp)
+                . ' 2>&1';
+
+            $result = FaZend_Exec::exec($cmd);
+            if (!@filesize($temp)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                    "Failed to encrypt file: '{$result}'"
+                );
+            }
+            if (@unlink($file) === false) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                    "Failed to unlink('{$file}')"
+                );
+            }
+            $enc = $file . '.' . $this->_options['suffix'];
+            if (file_exists($enc)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                    "File '{$enc}' already exists, can't rename '{$file}'"
+                );
+            }
+            if (@rename($temp, $enc) === false) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                    "Failed to rename('{$temp}', '{$enc}')"
+                );
+            }
+
+            logg(
+                "File '%s' encrypted (into %d bytes, named as %s)",
+                pathinfo($file, PATHINFO_BASENAME),
+                filesize($enc),
+                pathinfo($enc, PATHINFO_BASENAME)
+            );
+        }
     }
     
     /**
@@ -49,37 +113,9 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
      */
     public function backward() 
     {
-        
-    }
-    
-    /**
-     * Encrypt one file and change its name
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _encrypt(&$file)
-    {
-        $fileEnc = $file . '.enc';
-
-        $password = $this->_getConfig()->password;
-
-        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
-        $cmd = $this->_var('openssl') . " enc -blowfish -pass pass:\"{$password}\" < {$file} > {$fileEnc} 2>&1";
-        FaZend_Exec::exec($cmd);
-
-        if (file_exists($fileEnc) && (filesize($fileEnc) > 1024)) {
-            $this->_log($this->_nice($fileEnc) . " was created");
-        } else {
-            $this->_log("Command: {$cmd}");
-            $this->_log($this->_nice($fileEnc) . " creation error: " . file_get_contents($fileEnc), true);
-        }
-
-        $this->_log($this->_nice($file) . " deleted");
-        unlink($file);
-
-        $this->_log($this->_nice($fileEnc) . " renamed");
-        rename($fileEnc, $file);
+        /**
+         * @todo implement it and decrypt the file
+         */
     }
     
 }

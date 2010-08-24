@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: UserControllerTest.php 1797 2010-04-04 08:59:17Z yegor256@gmail.com $
+ * @version $Id$
  */
 
 /**
