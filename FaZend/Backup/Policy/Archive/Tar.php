@@ -60,7 +60,7 @@ class FaZend_Backup_Policy_Archive_Tar extends FaZend_Backup_Policy_Abstract
             . escapeshellarg($file)
             . ' ' . escapeshellarg($this->_dir);
 
-        foreach($this->_options['dirs'] as $dir) {
+        foreach ($this->_options['dirs'] as $dir) {
             if (!file_exists($dir)) {
                 FaZend_Exception::raise(
                     'FaZend_Backup_Policy_Archive_Tar_Exception',

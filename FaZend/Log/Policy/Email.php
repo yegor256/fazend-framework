@@ -194,7 +194,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
             strlen($content) / self::UNIT_SIZE,
             self::UNIT_SUFFIX,
             $this->_options['toEmail'],
-            implode(', ' , $reasons)
+            implode(', ', $reasons)
         );
     }
 

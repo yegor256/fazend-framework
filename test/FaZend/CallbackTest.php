@@ -70,7 +70,12 @@ class FaZend_CallbackTest extends AbstractTestCase
     {
         $this->assertEquals(
             't:1', 
-            FaZend_Callback::factory(function($a, $b) { return sprintf($a, $b); })
+            FaZend_Callback::factory(
+                function($a, $b) 
+                { 
+                return sprintf($a, $b); 
+                }
+            )
             ->call('t:%s', 1)
         );
     }
