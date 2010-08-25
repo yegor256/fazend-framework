@@ -57,7 +57,7 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
                 );
             }
             $cmd = escapeshellcmd($this->_options['gzip']) 
-                . ' --suffix=' . $this->_options['suffix']
+                . ' --suffix=.' . $this->_options['suffix']
                 . ' ' . escapeshellcmd($file) . ' 2>&1';
 
             $result = FaZend_Exec::exec($cmd);
