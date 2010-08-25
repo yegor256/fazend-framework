@@ -15,622 +15,160 @@
  */
 
 /**
- * Backup database and files and send them to amazon or to FTP server
+ * Backup database and files and send them to amazon or to FTP server.
  *
- * It is executed automatically from PING controller. You should configure
- * its behavior by means of application/backup.ini file. See an example
- * in test-application. 
+ * It is executed automatically from CLI script (FzBackup). You should configure
+ * its behavior by means of application/app.ini file. See an example
+ * in test-application.
  *
  * @package Backup
- * @todo Logging procedure refactor for FaZend_Log usage 
- * @todo Zend_Config should be used more effectively, especially for default values
+ * @see app/cli/FzBackup.php
  */
 class FaZend_Backup
 {
 
     /**
-     * Internal list of log messages
+     * Full list of all options.
      *
-     * @var Zend_Log
+     * @var array
      */
-    protected $_log = array();    
+    protected $_options = array(
+        'execute'  => false, // shall we execute it at all?
+        'period'   => 6, // hours
+        'policies' => array(), // list of policies to configure
+    );
+    
+    /**
+     * Instance of the class, in singleton pattern.
+     *
+     * @var FaZend_Backup
+     */
+    protected static $_instance = null;
 
     /**
-     * Get full log
+     * Get instnace of the class
      *
-     * @return string
+     * @return FaZend_Backup
      */
-    public function getLog()
+    public static function getInstance() 
     {
-        return implode("\n", $this->_log);
-    }
-
-    /**
-     * Get latest run time
-     *
-     * @return time
-     */
-    public function getLatestRunTime()
-    {
-        return $this->_getSemaphoreTime();
-    }
-
-    /**
-     * Remove sempathor
-     *
-     * @return time
-     */
-    public function clearSemaphore()
-    {
-        unlink($this->_getSemaphoreFileName());
-    }
-
-    /**
-     * Get latest run time
-     *
-     * @return time
-     */
-    public function getLatestLog()
-    {
-        $file = $this->_getSemaphoreFileName();
-        if (!file_exists($file)) {
-            return 'no log in ' . $file . ' ...';
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
         }
-        return file_get_contents($file);
+        return self::$_instance;
+    }
+    
+    /**
+     * Construct the class.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+    }
+    
+    /**
+     * Get one or all options.
+     *
+     * @param string Name of the option or NULL if ALL opts are required
+     * @return mixed
+     */
+    public function getOption($name = null) 
+    {
+        if (is_null($name)) {
+            return $this->_options;
+        }
+        if (!array_key_exists($name, $this->_options)) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Option '{$name}' doesn't exist in " . get_class($this)
+            );
+        }
+        return $this->_options[$name];
+    }
+
+    /**
+     * Set options before execution.
+     *
+     * @param array List of options, associative array
+     * @return void
+     */
+    public final function setOptions(array $options)
+    {
+        foreach ($options as $k=>$v) {
+            if (!array_key_exists($k, $this->_options)) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Exception',
+                    "Invalid option '{$k}' for " . get_class($this)
+                );
+            }
+            $this->_options[$k] = $v;
+        }
     }
 
     /**
      * Execute backup process
      *
-     * @var Zend_Config
-     * @throws FaZend_Backuper_Exception
-     */
-    public function execute()
-    {
-        $this->_log('FaZend backup started, revision: ' . FaZend_Revision::get());
-
-        try {
-            // if backup is not configured
-            if (!$this->_getConfig()) {
-                $this->_log('No configuration found, process is stopped');
-                return;
-            }
-
-            // if backup period is not defined
-            if (empty($this->_getConfig()->period)) {
-                $this->_log('Period is not defined in backup config');
-                return;
-            }
-
-            if ($this->_getSemaphoreTime() > time() - $this->_getConfig()->period * 60 * 60) {
-                $this->_log(
-                    'Latest backup was done less than ' 
-                    . $this->_getConfig()->period . ' hours ago'
-                );
-                return;
-            }
-            
-            // turn ON the semaphore
-            $this->_setSemaphoreTime();
-        
-            // dump mysql data and produce one ".sql" file
-            $this->_backupDatabase();
-
-            // archive all files into one ".tar.gz" file
-            $this->_backupFiles();
-
-            // turn ON the semaphore
-            $this->_setSemaphoreTime($this->getLog());
-        
-        } catch (FaZend_Backup_Exception $e) {
-            $this->_log("Script terminated by exception: {$e->getMessage()}");
-            unlink($this->_getSemaphoreFileName());
-        }
-    }
-
-    /**
-     * Get full list of amazon S3 files in the bucket
-     *
-     * @return array 
-     */
-    public function getS3Files()
-    {
-        $s3 = $this->_getS3();
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        if (!$s3->isBucketAvailable($bucket)) {
-            return array();
-        }
-
-        $objects = $s3->getObjectsByBucket($bucket);    
-
-        if (!is_array($objects)) {
-            return array();
-        }
-
-        return $objects;    
-    }
-
-    /**
-     * Get info about amazon file
-     *
-     * @param string Relative file name, in amazon bucket
-     * @return array 
-     */
-    public function getS3FileInfo($file)
-    {
-        return $this->_getS3()->getInfo($this->_getConfig()->S3->bucket . '/' . $file);    
-    }
-
-    /**
-     * Backup db
-     *
-     * @return void
-     */
-    protected function _backupDatabase()
-    {
-        // if we should not backup DB - we skip it
-        if (empty($this->_getConfig()->content->db)) {
-            $this->_log("Since [content.db] is empty, we won't backup database");
-            return;
-        }
-
-        // mysqldump
-        $file = tempnam(TEMP_PATH, 'fz');
-        $config = Zend_Db_Table::getDefaultAdapter()->getConfig();
-
-        // @see: http://dev.mysql.com/doc/refman/5.1/en/mysqldump.html
-        $cmd = $this->_var('mysqldump').
-            " -v -u \"{$config['username']}\" --force ".
-            "--password=\"{$config['password']}\" \"{$config['dbname']}\" --result-file=\"{$file}\" 2>&1";
-        
-        $result = FaZend_Exec::exec($cmd);
-
-        if (file_exists($file) && (filesize($file) > 1024)) {
-            $this->_log($this->_nice($file) . " was created with SQL database dump: $cmd");
-        } else {
-            $this->_log("Command: {$cmd}");
-            $this->_log($this->_nice($file) . " creation error: " . $result, true);
-        }
-
-        // encrypt the SQL
-        $this->_encrypt($file);
-
-        // archive it into .GZ
-        $this->_archive($file);
-
-        // unique name of the backup file
-        $object = $this->_getConfig()->archive->db->prefix . date('ymd-his') . '.data';
-
-        // send to FTP
-        $this->_sendToFTP($file, $object);
-
-        // send to amazon
-        $this->_sendToS3($file, $object);
-
-        // kill the file
-        unlink($file);
-    }
-
-    /**
-     * Backup files
-     *
-     * @return void
-     */
-    protected function _backupFiles()
-    {
-        // if files backup is NOT specified in backup.ini - we skip it
-        if (empty($this->_getConfig()->content->files)) {
-            $this->_log("Since [content.file] is empty, we won't backup files");
-            return;
-        }
-
-        // all files into .TAR
-        $file = tempnam(TEMP_PATH, 'fz');
-        $cmd = $this->_var('tar') . " -c --file=\"{$file}\" ";
-
-        foreach($this->_getConfig()->content->files->toArray() as $dir) {
-            $cmd .= "\"{$dir}/*\"";
-        }
-
-        $cmd .= " 2>&1";
-        FaZend_Exec::exec($cmd);
-
-        // encrypt the .TAR
-        $this->_encrypt($file);
-
-        // archive it into .GZ
-        $this->_archive($file);
-
-        // unique name of the backup file
-        $object = $this->_getConfig()->archive->files->prefix . date('ymd-his') . '.data';
-
-        // send to FTP
-        $this->_sendToFTP($file, $object);
-
-        // send to amazon
-        $this->_sendToS3($file, $object);
-    }
-
-    /**
-     * Encrypt one file and change its name
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _encrypt(&$file)
-    {
-        $fileEnc = $file . '.enc';
-
-        $password = $this->_getConfig()->password;
-
-        $this->_log($this->_nice($file) . " is sent to openssl/blowfish encryption");
-        $cmd = $this->_var('openssl') . " enc -blowfish -pass pass:\"{$password}\" < {$file} > {$fileEnc} 2>&1";
-        FaZend_Exec::exec($cmd);
-
-        if (file_exists($fileEnc) && (filesize($fileEnc) > 1024)) {
-            $this->_log($this->_nice($fileEnc) . " was created");
-        } else {
-            $this->_log("Command: {$cmd}");
-            $this->_log($this->_nice($fileEnc) . " creation error: " . file_get_contents($fileEnc), true);
-        }
-
-        $this->_log($this->_nice($file) . " deleted");
-        unlink($file);
-
-        $this->_log($this->_nice($fileEnc) . " renamed");
-        rename($fileEnc, $file);
-    }
-
-    /**
-     * Archive one file and change its name to .GZ
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _archive(&$file)
-    {
-        $cmd = $this->_var('gzip') . ' ' . escapeshellcmd($file) . ' 2>&1';
-        $this->_log($this->_nice($file) . ' is sent to gzip: ' . $cmd);
-
-        $result = FaZend_Exec::exec($cmd);
-        $file = $file . '.gz';
-        
-        if (file_exists($file) && filesize($file)) {
-            $this->_log($this->_nice($file) . ' was created');
-        } else {
-            $this->_log(
-                $this->_nice($file) . ' creation error: ' . $result, 
-                true
-            );
-        }
-    }
-
-    /**
-     * Send this file by FTP
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _sendToFTP($file, $object)
-    {
-        $host = $this->_getConfig()->ftp->host;
-        // if FTP host is not specified in backup.ini - we skip this method
-        if (empty($host)) {
-            $this->_log("Since [ftp.host] is empty, we won't send files to FTP");
-            return;
-        }
-
-        $ftp = @ftp_connect($this->_getConfig()->ftp->host);
-        if ($ftp === false) {
-            $this->_log("Failed to connect to ftp '{$host}'", true);    
-        }
-
-        $this->_log("Logged in successfully to '{$host}'");    
-
-        $username = $this->_getConfig()->ftp->username;
-        $password = $this->_getConfig()->ftp->password;
-        if (@ftp_login($ftp, $username, $password) === false) {
-            $this->_log(
-                "Failed to login to '{$host}' as '{$username}'", 
-                true
-            );    
-        }
-
-        $this->_log("Connected successfully to FTP as '{$username}'");    
-
-        if (@ftp_pasv($ftp, true) === false) {
-            $this->_log("Failed to turn PASV mode ON", true);    
-        }
-
-        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir)) {
-            $this->_log("Failed to go to '{$this->_getConfig()->ftp->dir}'", true);    
-        }
-
-        $this->_log("Current directory in FTP: " . @ftp_pwd($ftp));    
-
-        if (@ftp_put($ftp, $object, $file, FTP_BINARY) === false) {
-            $this->_log("Failed to upload " . $this->_nice($file), true);    
-        } else {
-            $this->_log("Uploaded by FTP: " . $this->_nice($file));    
-        }
-
-        if (!@ftp_close($ftp)) {
-            $this->_log("Failed to close connection to '{$host}'");    
-        }
-
-        $this->_log("Disconnected from FTP");
-
-        // remove expired data files
-        $this->_cleanFTP();
-    }
-
-    /**
-     * Clear expired files from FTP
-     *
-     * @return void
-     */
-    protected function _cleanFTP()
-    {
-        // if FTP file removal is NOT required - we skip this method execution
-        if (empty($this->_getConfig()->ftp->age)) {
-            $this->_log("Since [ftp.age] is empty we won't remove old files from FTP");
-            return;
-        }
-
-        // this is the minimum time we would accept
-        $minTime = time() - $this->_getConfig()->ftp->age * 24 * 60 * 60;
-
-        $ftp = @ftp_connect($this->_getConfig()->ftp->host);
-        if (!$ftp) {
-            $this->_log("Failed to connect to ftp ({$this->_getConfig()->ftp->host})");    
-            return;
-        }
-
-        $this->_log("Logged in successfully to {$this->_getConfig()->ftp->host}");    
-
-        if (!@ftp_login($ftp, $this->_getConfig()->ftp->username, $this->_getConfig()->ftp->password)) {
-            $this->_log("Failed to login to ftp ({$this->_getConfig()->ftp->host})");    
-            return;
-        }
-
-        $this->_log("Connected successfully to FTP as {$this->_getConfig()->ftp->username}");    
-
-        if (!@ftp_pasv($ftp, true)) {
-            $this->_log("Failed to turn PASV mode ON");    
-            return;
-        }
-
-        if (!@ftp_chdir($ftp, $this->_getConfig()->ftp->dir)) {
-            $this->_log("Failed to go to {$this->_getConfig()->ftp->dir}");    
-            return;
-        }
-
-        $this->_log("Current directory in FTP: " . ftp_pwd($ftp));    
-
-        $files = @ftp_nlist($ftp, '.');    
-        if (!$files) {
-            $this->_log("Failed to get nlist from FTP", true);    
-        }
-
-        foreach ($files as $file) {
-            $lastModified = @ftp_mdtm($ftp, $file);
-            if ($lastModified == -1) {
-                $this->_log("Failed to get mdtm from '$file'");    
-                continue;
-            }    
-
-            if ($lastModified < $minTime) {
-                if (!@ftp_delete($ftp, $file)) {
-                    $this->_log("Failed to delete file $file");
-                } else {
-                    $this->_log("File $file removed, since it's expired (over {$this->_getConfig()->S3->age} days)");
-                }
-            }    
-        }
-
-        if (!@ftp_close($ftp)) {
-            $this->_log("Failed to close connection to ftp ({$this->_getConfig()->ftp->host})");    
-        }
-
-        $this->_log("Disconnected from FTP");    
-    }
-
-    /**
-     * Send this file by FTP
-     *
-     * @param string File name
-     * @return void
-     */
-    protected function _sendToS3($file, $object)
-    {
-        if (empty($this->_getConfig()->S3->key) || empty($this->_getConfig()->S3->secret)) {
-            $this->_log("Since [S3.key] or [S3.secret] are empty, we won't send files to Amazon S3");
-            return;
-        }
-
-        $s3 = $this->_getS3();    
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        if (!$s3->isBucketAvailable($bucket)) {
-            $this->_log("S3 bucket [{$bucket}] was created");
-            $s3->createBucket($bucket);
-        }
-
-        $s3->putFile($file, $bucket . '/' . $object);
-        $this->_log($this->_nice($file) . " was uploaded to Amazon S3");
-
-        // remove expired data files
-        $this->_cleanS3();
-    }
-
-    /**
-     * Clear expired files from amazon
-     *
-     * @return void
-     */
-    protected function _cleanS3()
-    {
-        if (empty($this->_getConfig()->S3->age)) {
-            $this->_log("Since [S3.age] is empty we won't remove old files from S3 storage");
-            return;
-        }
-
-        $bucket = $this->_getConfig()->S3->bucket;
-
-        // this is the minimum time we would accept
-        $minTime = time() - $this->_getConfig()->S3->age * 24 * 60 * 60;
-
-        $files = $this->getS3Files();
-
-        foreach ($files as $file) {
-            $info = $this->getS3FileInfo($file);
-
-            if ($info['mtime'] < $minTime) {
-                $this->_getS3()->removeObject($bucket . '/' . $file);
-                $this->_log(
-                    "File $file removed from S3, since it's " . 
-                    "expired (over {$this->_getConfig()->S3->age} days)"
-                );
-            }    
-        }
-    }
-
-    /**
-     * Get config
-     *
-     * @return Zend_Config
-     */
-    protected function _getConfig()
-    {
-        if (isset($this->_config)) {
-            return $this->_config;
-        }
-
-        $file = APPLICATION_PATH . '/config/backup.ini';
-        
-        if (!file_exists($file)) {
-            return $this->_log("File $file is absent");
-        }
-        
-        // load config file
-        return $this->_config = new Zend_Config_Ini($file, 'backup', true);
-    }
-
-    /**
-     * Log one message
-     *
      * @return void
      * @throws FaZend_Backup_Exception
      */
-    protected function _log($message, $throw = false)
+    public function execute()
     {
-        $this->_log[] = '[' . date('h:i:s') . '] ' . $message;
-        if ($throw) {
-            FaZend_Exception::raise(
-                'FaZend_Backup_Exception',
-                $message
-            );
-        }
-    }
-
-    /**
-     * Semaphore file name
-     *
-     * @return string
-     */
-    protected function _getSemaphoreFileName()
-    {
-        $this->_log('Semaphore file unique name for ' . FaZend_Revision::getName());
-        return TEMP_PATH . '/fz-backup-semaphore-' . FaZend_Revision::getName() . '.dat';
-    }
-
-    /**
-     * When latest backup was done?
-     *
-     * @return time
-     */
-    protected function _getSemaphoreTime()
-    {
-        $file = $this->_getSemaphoreFileName();
-
-        if (!file_exists($file)) {
-            $this->_log("Semaphore file $file is absent, we assume that backup wasn't done yet");
-            return false;   
-        }    
-
-        $time = filemtime($file);
-        $this->_log(
-            "Semaphore file '{$file}' says that the latest backup was started on " 
-            . Zend_Date::now()
-        );
-        return $time;
-    }
-
-    /**
-     * Say that we just started the backup process
-     *
-     * @param string Log to put into the file
-     * @return void
-     */
-    protected function _setSemaphoreTime($log = 'started...')
-    {
-        $file = $this->_getSemaphoreFileName();
-        // save content into semaphore file
-        file_put_contents($file, $log);
-        $this->_log("Semaphore file '{$file}' saved (" . strlen($log) . " bytes), backup process is started/finished");
-    }
-
-    /**
-     * Show nice filename
-     *
-     * @param string Absolute file name
-     * @return string
-     */
-    protected function _nice($file)
-    {
-        if (!file_exists($file)) {
-            return basename($file) . ' (absent)';
-        }
-        return basename($file) . ' (' . filesize($file). 'bytes)';
-    }
-
-    /**
-     * Get config or default
-     *
-     * @return string
-     */
-    protected function _var($name, $default = false)
-    {
-        if (empty($this->_getConfig()->$name)) {
-            if (!$default) {
-                $default = $name;
-            }
-            $this->_log("Since [{$name}] is empty we use default value: $default");
-            return $default;    
-        } else {
-            return $this->_getConfig()->$name;
-        }    
-    }
-
-    /**
-     * Get instance of S3 class
-     *
-     * @return string
-     */
-    protected function _getS3()
-    {
-        if (isset($this->_s3)) {
-            return $this->_s3;
+        logg('FaZend_Backup started, revision: ' . FaZend_Revision::get());
+        if (!$this->_options['execute']) {
+            logg('No execution required, end of process');
+            return;
         }
         
-        $this->_s3 = new Zend_Service_Amazon_S3($this->_getConfig()->S3->key, $this->_getConfig()->S3->secret);    
-        // workaround for this defect: ZF-7990
-        // http://framework.zend.com/issues/browse/ZF-7990
-        Zend_Service_Amazon_S3::getHttpClient()->setUri('http://google.com');
-        return $this->_s3;
+        // create temp directory
+        $dir = tempnam(TEMP_PATH, 'FaZend_Backup-' . FaZend_Revision::getName() . '-');
+        if (@unlink($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to unlink('{$dir}')"
+            );
+        }
+        if (@mkdir($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to mkdir('{$dir}')"
+            );
+        }
+        logg("Temporary directory created: '%s'", $dir);
+
+        // configure them all
+        $policies = array();
+        foreach ($this->_options['policies'] as $opts) {
+            $class = 'FaZend_Backup_Policy_' . ucfirst($opts['name']);
+            $policy = new $class();
+            if (array_key_exists('options', $opts)) {
+                $policy->setOptions($opts['options']);
+            }
+            $policy->setDir($dir);
+            $policies[] = $policy;
+        }
+
+        // execute them one by one
+        foreach ($policies as $p) {
+            $p->forward();
+        }
+        
+        // delete the temp directory
+        if (@rmdir($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to remove temp directory '{$dir}'"
+            );
+        }
+        logg(
+            "Temporary directory removed: '%s'", 
+            pathinfo($dir, PATHINFO_BASENAME)
+        );
+
+        logg(
+            'FaZend_Backup finished, next run expected in %d hours', 
+            $this->_options['period']
+        );
     }
 
 }

@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Log_Policy_Abstract
+ */
+require_once 'FaZend/Log/Policy/Abstract.php';
+
+/**
  * Send long file by email
  *
  * @package Log
@@ -148,7 +153,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
             ->set('toName', $this->_options['toName'])
             ->set(
                 'subject', 
-                _t('Latest error_log at %s', FaZend_Revision::getName())
+                _t('Latest php.error_log from %s', FaZend_Revision::getName())
             )
             ->set('file', $file)
             ->set('reasons', $reasons);
@@ -189,7 +194,7 @@ class FaZend_Log_Policy_Email extends FaZend_Log_Policy_Abstract
             strlen($content) / self::UNIT_SIZE,
             self::UNIT_SUFFIX,
             $this->_options['toEmail'],
-            implode(', ' , $reasons)
+            implode(', ', $reasons)
         );
     }
 

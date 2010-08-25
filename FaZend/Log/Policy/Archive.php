@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see FaZend_Log_Policy_Abstract
+ */
+require_once 'FaZend/Log/Policy/Abstract.php';
+
+/**
  * Archive the file every day/week/month...
  *
  * @package Log

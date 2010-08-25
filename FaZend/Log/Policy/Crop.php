@@ -13,6 +13,11 @@
  * @version $Id$
  * @category FaZend
  */
+ 
+/**
+ * @see FaZend_Log_Policy_Abstract
+ */
+require_once 'FaZend/Log/Policy/Abstract.php';
 
 /**
  * Crop the file, keep its size lower than maximum
