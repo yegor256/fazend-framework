@@ -81,6 +81,12 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
                     "Both ftp_chdir() and ftp_mkdir() failed for '{$this->_options['dir']}'"
                 );
             }
+            if (@ftp_chdir($ftp, $this->_options['dir']) === false) {
+                FaZend_Exception::raise(
+                    'FaZend_Backup_Policy_Save_Ftp_Exception',
+                    "ftp_mkdir() succeeded but ftp_chdir() failed for '{$this->_options['dir']}'"
+                );
+            }
         }
 
         // remove expired files
