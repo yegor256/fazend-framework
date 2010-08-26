@@ -45,6 +45,8 @@ class FaZend_Backup_Policy_Dump_Mysql extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      * @throws FaZend_Backup_Policy_Dump_Mysql_Exception
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -98,6 +100,7 @@ class FaZend_Backup_Policy_Dump_Mysql extends FaZend_Backup_Policy_Abstract
      * Restore DB from dump image.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {

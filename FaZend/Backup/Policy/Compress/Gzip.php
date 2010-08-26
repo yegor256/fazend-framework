@@ -33,7 +33,7 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'gzip' => 'gzip', // shell executable
+        'gzip'   => 'gzip', // shell executable
         'suffix' => 'gz', // suffix for compressed files
     );
     
@@ -42,6 +42,8 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      * @todo FaZend_Backup_Policy_Compress_Gzip_Exception
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -58,7 +60,8 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
             }
             $cmd = escapeshellcmd($this->_options['gzip']) 
                 . ' --suffix=' . escapeshellarg($this->_options['suffix'])
-                . ' ' . escapeshellarg($file) . ' 2>&1';
+                . ' ' . escapeshellarg($file) 
+                . ' 2>&1';
 
             $result = FaZend_Exec::exec($cmd);
             $zip = $file . '.' . $this->_options['suffix'];
@@ -87,6 +90,7 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
      * Compress every file in the directory.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {

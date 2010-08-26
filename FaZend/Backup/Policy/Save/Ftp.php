@@ -46,6 +46,8 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      * @throws FaZend_Backup_Policy_Save_Ftp_Exception
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -122,6 +124,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      * Restore files from FTP into directory.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {

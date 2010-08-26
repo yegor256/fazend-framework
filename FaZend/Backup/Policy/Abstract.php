@@ -51,10 +51,22 @@ abstract class FaZend_Backup_Policy_Abstract
     abstract public function backward();
     
     /**
+     * Construct the class.
+     *
+     * @return void
+     */
+    public final function __construct()
+    {
+        // to refresh the list of options
+        $this->setOptions(array());
+    }
+    
+    /**
      * Set options before execution.
      *
      * @param array List of options, associative array
-     * @return void
+     * @return $this
+     * @see FaZend_Backup::execute()
      */
     public final function setOptions(array $options)
     {
@@ -79,7 +91,8 @@ abstract class FaZend_Backup_Policy_Abstract
      * Set directory to work in.
      *
      * @param string Absolute path of the directory
-     * @return void
+     * @return $this
+     * @see FaZend_Backup::execute()
      */
     public function setDir($dir) 
     {

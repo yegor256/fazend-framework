@@ -44,6 +44,8 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      * @throws FaZend_Backup_Policy_Encrypt_Openssl_Exception
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -110,6 +112,7 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
      * Decrypt the files in the directory.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {

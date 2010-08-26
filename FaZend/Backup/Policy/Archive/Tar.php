@@ -44,6 +44,8 @@ class FaZend_Backup_Policy_Archive_Tar extends FaZend_Backup_Policy_Abstract
      *
      * @return void
      * @throws FaZend_Backup_Policy_Archive_Tar_Exception
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -81,7 +83,7 @@ class FaZend_Backup_Policy_Archive_Tar extends FaZend_Backup_Policy_Abstract
             );
         }
         logg(
-            'TAR archive created at %s (%d bytes)',
+            "TAR archive created at '%s' (%d bytes)",
             pathinfo($file, PATHINFO_BASENAME),
             filesize($file)
         );
@@ -91,6 +93,7 @@ class FaZend_Backup_Policy_Archive_Tar extends FaZend_Backup_Policy_Abstract
      * Restore files from the file into a directory.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {

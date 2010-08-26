@@ -43,6 +43,8 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
      * Save files into Amazon S3 bucket.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::forward()
+     * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
@@ -86,6 +88,7 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
      * Restore files from Amazon S3 bucket into directory.
      *
      * @return void
+     * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {
