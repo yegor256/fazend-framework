@@ -33,7 +33,7 @@ class FaZend_Backup_Policy_Rename extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'suffix'  => '-y-M-dd-HH-mm', // suffix to append to every file, according to Zend_Date
+        'suffix'  => '-y-MMM-dd-HH-mm', // suffix to append to every file, according to Zend_Date
     );
     
     /**
