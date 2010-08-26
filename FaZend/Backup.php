@@ -154,12 +154,8 @@ class FaZend_Backup
         }
         
         // delete the temp directory
-        if (@rmdir($dir) === false) {
-            FaZend_Exception::raise(
-                'FaZend_Backup_Exception',
-                "Failed to remove temp directory '{$dir}'"
-            );
-        }
+        $this->_delDir($dir);
+        
         logg(
             "Temporary directory removed: '%s'", 
             pathinfo($dir, PATHINFO_BASENAME)
@@ -169,6 +165,38 @@ class FaZend_Backup
             'FaZend_Backup finished, next run expected in %d hours', 
             $this->_options['period']
         );
+    }
+    
+    /**
+     * Remove directory recursively.
+     *
+     * @param string Absolute path of the directory
+     * @return void
+     * @throws FaZend_Backup_Exception
+     */
+    protected function _delDir($dir) 
+    {
+        foreach (new DirectoryIteragor($dir) as $file) { 
+            if ($file->isDot()) {
+                continue;
+            }
+            if ($file->isDir()) {
+                $this->_delDir($file->getPathname());
+            } else {
+                if (@unlink($file->getPathname()) === false) {
+                    FaZend_Exception::raise(
+                        'FaZend_Backup_Exception',
+                        "Failed to unlink('{$file}')"
+                    );
+                }
+            }
+        } 
+        if (@rmdir($dir) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Exception',
+                "Failed to rmdir('{$dir}')"
+            );
+        }
     }
 
 }
