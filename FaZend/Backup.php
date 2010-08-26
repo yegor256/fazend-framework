@@ -176,7 +176,7 @@ class FaZend_Backup
      */
     protected function _delDir($dir) 
     {
-        foreach (new DirectoryIteragor($dir) as $file) { 
+        foreach (new DirectoryIterator($dir) as $file) { 
             if ($file->isDot()) {
                 continue;
             }
