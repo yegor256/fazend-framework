@@ -51,7 +51,7 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
         $s3 = new Zend_Service_Amazon_S3(
             $this->_options['key'], 
             $this->_options['secret']
-        );    
+        );
         // workaround for this defect: ZF-7990
         // http://framework.zend.com/issues/browse/ZF-7990
         Zend_Service_Amazon_S3::getHttpClient()->setUri('http://google.com');
@@ -61,7 +61,8 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
         if (!$s3->isBucketAvailable($bucket)) {
             $s3->createBucket($bucket);
         }
-
+        
+        $cnt = 0;
         foreach (new DirectoryIterator($this->_dir) as $f) {
             if ($f->isDot()) {
                 continue;
@@ -80,6 +81,13 @@ class FaZend_Backup_Policy_Save_Amazon extends FaZend_Backup_Policy_Abstract
                 "File '%s' uploaded to AmazonS3 bucket '%s'",
                 $file,
                 $bucket
+            );
+            $cnt++;
+        }
+        if (!$cnt) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Save_Amazon_Exception',
+                "No files to send to S3, the directory is empty"
             );
         }
     }

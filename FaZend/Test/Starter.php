@@ -111,7 +111,11 @@ abstract class FaZend_Test_Starter
                 }
             }
         }
-        logg('TABLEs/VIEWs dropped: %s', implode(', ', $dropped));
+        if ($dropped) {
+            logg('TABLEs/VIEWs dropped: %s', implode(', ', $dropped));
+        } else {
+            logg('No TABLEs/VIEWs to drop');
+        }
         unset($db);
     }
 

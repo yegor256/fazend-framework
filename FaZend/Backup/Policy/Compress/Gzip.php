@@ -47,6 +47,7 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
      */
     public function forward() 
     {
+        $cnt = 0;
         foreach (new DirectoryIterator($this->_dir) as $f) {
             if ($f->isDot()) {
                 continue;
@@ -82,6 +83,13 @@ class FaZend_Backup_Policy_Compress_Gzip extends FaZend_Backup_Policy_Abstract
                 pathinfo($file, PATHINFO_BASENAME),
                 filesize($zip),
                 pathinfo($zip, PATHINFO_BASENAME)
+            );
+            $cnt++;
+        }
+        if (!$cnt) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Compress_Gzip_Exception',
+                "No files to GZIP, the directory is empty"
             );
         }
     }

@@ -92,6 +92,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
         // remove expired files
         $this->_clean($ftp);
         
+        $cnt = 0;
         foreach (new DirectoryIterator($this->_dir) as $f) {
             if ($f->isDot()) {
                 continue;
@@ -115,6 +116,14 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
                 "ftp_put('%s') success, %d bytes",
                 $dest,
                 filesize($file)
+            );
+            $cnt++;
+        }
+
+        if (!$cnt) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Save_Ftp_Exception',
+                "No files to send by FTP, the directory is empty"
             );
         }
         

@@ -49,6 +49,7 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
      */
     public function forward() 
     {
+        $cnt = 0;
         foreach (new DirectoryIterator($this->_dir) as $f) {
             if ($f->isDot()) {
                 continue;
@@ -104,6 +105,13 @@ class FaZend_Backup_Policy_Encrypt_Openssl extends FaZend_Backup_Policy_Abstract
                 pathinfo($file, PATHINFO_BASENAME),
                 filesize($enc),
                 pathinfo($enc, PATHINFO_BASENAME)
+            );
+            $cnt++;
+        }
+        if (!$cnt) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Encrypt_Openssl_Exception',
+                "No files to encrypt, the directory is empty"
             );
         }
     }
