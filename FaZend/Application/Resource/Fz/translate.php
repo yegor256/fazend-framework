@@ -55,7 +55,8 @@ class FaZend_Application_Resource_fz_translate extends Zend_Application_Resource
             return $this->_translate = null;
         }
         
-        $locale = new Zend_Locale();
+        $defs = array_keys(Zend_Locale::getDefault(Zend_Locale::BROWSER, true));
+        $locale = new Zend_Locale(array_shift($defs));
         Zend_Registry::set('Zend_Locale', $locale);
 
         $this->_translate = new Zend_Translate(
