@@ -75,6 +75,16 @@ class FaZend_Email
     }
     
     /**
+     * Get default email.
+     *
+     * @return FaZend_Email
+     */
+    public static function getDefaultEmail() 
+    {
+        return self::$_defaultEmail;
+    }
+    
+    /**
      * Set view which will be used to render templates
      *
      * @param Zend_View View to use
