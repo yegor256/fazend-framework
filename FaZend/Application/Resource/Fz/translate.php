@@ -72,7 +72,7 @@ class FaZend_Application_Resource_fz_translate extends Zend_Application_Resource
 
         // not available languages are rerouted to another language
         $lang = $locale->getLanguage();
-        if (!$this->_translate->isAvailable()) {
+        if (!$this->_translate->isAvailable($lang)) {
             $lang = 'en';
         }
         $this->_translate->setLocale($lang);
