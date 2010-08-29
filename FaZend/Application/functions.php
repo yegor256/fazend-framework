@@ -17,6 +17,7 @@
 /**
  * Simple and easy method for testing
  *
+ * @param mixed Variable to dump
  * @package Application
  * @return void
  */
@@ -29,16 +30,24 @@ function bug($var = false)
 /**
  * Cut string to a shorter one, with a nice ending
  *
+ * @param string Text to cut
+ * @param integer Maximum length allowed
  * @return string
  * @package Application
  */
 function cutLongLine($line, $length = 100)
 {
+    if (function_exists('mb_strlen')) {
+        if (mb_strlen($line) <= $length) {
+            return $line;
+        }
+        return mb_substr($line, 0, $length-3) . '...';
+    }
     if (strlen($line) <= $length) {
         return $line;
     }
-
-    return substr($line, 0, $length-3) . '...';    
+    return substr($line, 0, $length-3) . '...';
+    
 }
 
 /**
