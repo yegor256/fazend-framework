@@ -70,10 +70,12 @@ class FaZend_Application_Resource_fz_translate extends Zend_Application_Resource
         );
         Zend_Registry::set('Zend_Translate', $this->_translate);
 
-        if (!$this->_translate->isAvailable($locale->getLanguage())) {
-            // not available languages are rerouted to another language
-            $this->_translate->setLocale('en');
+        // not available languages are rerouted to another language
+        $lang = $locale->getLanguage();
+        if (!$this->_translate->isAvailable()) {
+            $lang = 'en';
         }
+        $this->_translate->setLocale($lang);
 
         return $this->_translate;
     }
