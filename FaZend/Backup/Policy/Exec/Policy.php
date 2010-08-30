@@ -10,7 +10,7 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: Amazon.php 2127 2010-08-27 07:22:09Z yegor256@gmail.com $
  * @category FaZend
  */
 
@@ -20,11 +20,11 @@
 require_once 'FaZend/Backup/Policy/Abstract.php';
 
 /**
- * Execute some shell commands on Amazon EC2 instance.
+ * Execute another custom policy.
  *
  * @package Backup
  */
-class FaZend_Backup_Policy_Exec_Amazon extends FaZend_Backup_Policy_Abstract
+class FaZend_Backup_Policy_Exec_Policy extends FaZend_Backup_Policy_Abstract
 {
 
     /**
@@ -33,33 +33,40 @@ class FaZend_Backup_Policy_Exec_Amazon extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
+        'class' => '?', // PHP class name
+        'options' => array(), // options to send to the policy 
     );
     
     /**
-     * Execute commands in EC2 instance.
+     * Execute another policy.
      *
      * @return void
+     * @throws FaZend_Backup_Policy_Exec_Amazon_Exception
      * @see FaZend_Backup_Policy_Abstract::forward()
      * @see FaZend_Backup::execute()
      */
     public function forward() 
     {
-        // create a new EC2 instance
-        // start it
-        // execute commands remotely
-        // stop the instance
-        // delete the instance
+        $class = $this->_options['class'];
+        $policy = new $class();
+        $policy->setOptions($this->_options['options']);
+        $policy->setDir($this->_dir);
+        $policy->forward();
     }
     
     /**
-     * Restore files from Amazon S3 bucket into directory.
+     * Execute the policy, in backward direction.
      *
      * @return void
      * @see FaZend_Backup_Policy_Abstract::backward()
      */
     public function backward() 
     {
-        
+        $class = $this->_options['class'];
+        $policy = new $class();
+        $policy->setOptions($this->_options['options']);
+        $policy->setDir($this->_dir);
+        $policy->backward();
     }
     
 }
