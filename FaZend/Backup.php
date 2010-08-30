@@ -150,6 +150,10 @@ class FaZend_Backup
 
         // execute them one by one
         foreach ($policies as $p) {
+            logg(
+                '[%s]',
+                get_class($p)
+            );
             $p->forward();
         }
         
