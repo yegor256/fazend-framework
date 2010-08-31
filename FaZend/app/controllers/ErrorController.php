@@ -36,14 +36,6 @@ class Fazend_ErrorController extends FaZend_Controller_Action
     protected static $_adminEmail = null;
 
     /**
-     * Errors are visible on web?
-     *
-     * @var bool
-     * @see setVisible()
-     */
-    protected static $_visible = false;
-
-    /**
      * Set email to use as admin's address
      *
      * @param string Email to use for errors delivery
@@ -53,18 +45,6 @@ class Fazend_ErrorController extends FaZend_Controller_Action
     public static function setAdminEmail($email) 
     {
         self::$_adminEmail = $email;
-    }
-
-    /**
-     * Set visibility
-     *
-     * @param boolean Shall we render errors to end-users?
-     * @return void
-     * @see FaZend_Application_Resource_fz_errors::init()
-     */
-    public static function setVisible($visible) 
-    {
-        self::$_visible = $visible;
     }
 
     /**
@@ -138,7 +118,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
         $this->view->request = $errors->request; 
 
         // shall we show this error to the user?
-        $this->view->showError = self::$_visible;
+        $this->view->showError = ini_get('display_errors');
 
         // notify admin by email
         if (self::$_adminEmail) {

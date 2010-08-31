@@ -44,11 +44,6 @@ class FaZend_Application_Resource_fz_errors extends Zend_Application_Resource_Re
 
         foreach ($this->getOptions() as $option=>$value) {
             switch ($option) {
-                case 'isVisible':
-                case 'display':
-                    Fazend_ErrorController::setVisible($value);
-                    break;
-                    
                 case 'email':
                     Fazend_ErrorController::setAdminEmail($value);
                     break;
