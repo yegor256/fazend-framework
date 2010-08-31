@@ -42,9 +42,8 @@ class FaZend_Application_Resource_fz_front extends Zend_Application_Resource_Res
         $front = $this->_bootstrap->getResource('frontController');
 
         // throw exceptions if failed
-        // only in development/testing environment
         // or in CLI execution
-        if (defined('CLI_ENVIRONMENT') || ini_get('display_errors')) {
+        if (defined('CLI_ENVIRONMENT')) {
             $front->throwExceptions(true);
         }
 
