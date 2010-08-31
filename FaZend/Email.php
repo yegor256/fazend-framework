@@ -282,18 +282,20 @@ class FaZend_Email
         
             // parse body for extra variables
             $lines = explode("\n", $body);
-            foreach ($lines as $id=>$line) {
-                $matches = array();
-                // format is simple: "variable: value"    
-                if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
-                    $this->set($matches[1], $matches[2]);
+            if (in_array('--', $lines)) {
+                foreach ($lines as $id=>$line) {
+                    $matches = array();
+                    // format is simple: "variable: value"    
+                    if (preg_match('/^([\w\d]+)\:(.*)$/', $line, $matches)) {
+                        $this->set($matches[1], $matches[2]);
+                    }    
+                    // empty line stops parsing
+                    if ($line == '--') {
+                        break;
+                    }
                 }    
-                // empty line stops parsing
-                if ($line == '--') {
-                    break;
-                }
-            }    
-            $body = trim(implode("\n", array_slice($lines, $id+1)), " \n\r");
+                $body = trim(implode("\n", array_slice($lines, $id+1)), " \n\r");
+            }
         } else {
             $body = $this->_view->body;
         }
