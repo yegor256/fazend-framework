@@ -46,7 +46,7 @@ class FaZend_Application_Resource_fz_email extends Zend_Application_Resource_Res
         $email = new FaZend_Email();
 
         // make sure view is initialized
-        $this->_bootstrap->bootstrap('view');
+        $this->_bootstrap->bootstrap('fz_view');
         $email->setView($this->_bootstrap->getResource('view'));
         $charset = 'utf-8';
         foreach ($this->getOptions() as $option=>$value) {
