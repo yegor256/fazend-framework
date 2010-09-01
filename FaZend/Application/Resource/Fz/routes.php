@@ -42,6 +42,7 @@ class FaZend_Application_Resource_fz_routes extends Zend_Application_Resource_Re
 
         // configure global routes for all
         $router = new Zend_Controller_Router_Rewrite();
+        $router->addDefaultRoutes();
 
         // routes for custom application operations
         $appRoutes = new Zend_Config_Ini(
