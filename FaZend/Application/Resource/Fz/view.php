@@ -66,7 +66,7 @@ class FaZend_Application_Resource_fz_view extends Zend_Application_Resource_Reso
         $options = $this->getOptions();
 
         // save View into registry
-        Zend_Registry::getInstance()->view = $this->_view;
+        Zend_Registry::set('Zend_View', $this->_view);
 
         // set the type of docs
         $this->_view->doctype(Zend_View_Helper_Doctype::XHTML1_STRICT);
