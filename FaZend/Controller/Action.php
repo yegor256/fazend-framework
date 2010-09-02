@@ -37,8 +37,9 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     public function __call($method, $args)
     {
-        if (preg_match('/Action$/', $method))
+        if (preg_match('/Action$/', $method)) {
             return;
+        }
         return $this->__call($method, $args);
     }
     
@@ -69,11 +70,12 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _getParam($name, $default = null)
     {
-        if (!$this->_hasParam($name))
+        if (!$this->_hasParam($name) && is_null($default)) {
             FaZend_Exception::raise(
                 'FaZend_Controller_Action_ParamNotFoundException', 
                 "Parameter '{$name}' is not specified"
             );
+        }
 
         return parent::_getParam($name, $default);    
     }
