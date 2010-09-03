@@ -100,14 +100,14 @@ set_include_path(
         PATH_SEPARATOR, 
         array_unique(
             array_merge(
+                explode(
+                    PATH_SEPARATOR,
+                    get_include_path()
+                ),
                 array(
                     realpath(APPLICATION_PATH),
                     realpath(APPLICATION_PATH . '/../library'),
                     realpath(FAZEND_PATH . '/..'),
-                ),
-                explode(
-                    PATH_SEPARATOR,
-                    get_include_path()
                 )
             )
         )
