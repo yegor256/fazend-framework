@@ -10,18 +10,18 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id$
+ * @version $Id: Redirect.php 1747 2010-03-17 19:17:38Z yegor256@gmail.com $
  * @category FaZend
  */
 
 require_once 'FaZend/View/Helper/Forma/Field.php';
 
 /**
- * Redirect
+ * Redirect to the URL provided.
  *
  * @package helpers
  */
-class FaZend_View_Helper_Forma_Behavior_Redirect extends FaZend_View_Helper_Forma_Behavior_Abstract
+class FaZend_View_Helper_Forma_Behavior_RedirectUrl extends FaZend_View_Helper_Forma_Behavior_Abstract
 {
 
     /**
@@ -37,19 +37,12 @@ class FaZend_View_Helper_Forma_Behavior_Redirect extends FaZend_View_Helper_Form
         if (empty($this->_args)) {
             $request = Zend_Controller_Front::getInstance()->getRequest();
             $uri = substr($request->getRequestUri(), strlen($request->getBaseUrl()));
-            Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
-                ->gotoUrl($uri);
-            return;
+        } else {
+            $uri = $this->_args[0];
         }
         
-        // redirect to the given address
-        call_user_func_array(
-            array(
-                Zend_Controller_Action_HelperBroker::getStaticHelper('redirector'),
-                'gotoSimple'
-            ),
-            $this->_args
-        );
+        Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
+            ->gotoUrl($uri);
     }
 
 }
