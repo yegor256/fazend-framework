@@ -51,6 +51,7 @@ class FaZend_Backup_Policy_Exec_Policy extends FaZend_Backup_Policy_Abstract
         $policy = new $class();
         $policy->setOptions($this->_options['options']);
         $policy->setDir($this->_dir);
+        logg("Executing {$class}::forward()";
         $policy->forward();
     }
     
@@ -66,6 +67,7 @@ class FaZend_Backup_Policy_Exec_Policy extends FaZend_Backup_Policy_Abstract
         $policy = new $class();
         $policy->setOptions($this->_options['options']);
         $policy->setDir($this->_dir);
+        logg("Executing {$class}::backward()";
         $policy->backward();
     }
     
