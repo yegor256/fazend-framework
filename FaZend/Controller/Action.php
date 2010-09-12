@@ -25,6 +25,12 @@ class FaZend_Controller_Action extends Zend_Controller_Action
 {
 
     /**
+     * Format of Date for HTTP: "Tue, 15 Nov 1994 08:12:31 GMT"
+     * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+     */
+    const HTTP_DATE = 'WWW, dd MMM y HH:mm:ss Z';
+
+    /**
      * Add new paginator to the view
      *
      * @param ArrayIterator
@@ -57,7 +63,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action
                 "Parameter '{$name}' is not specified"
             );
         }
-
         return parent::_getParam($name, $default);    
     }
 
@@ -68,8 +73,9 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _getParamOrFalse($name)
     {
-        if (!$this->_hasParam($name))
+        if (!$this->_hasParam($name)) {
             return false;
+        }
         return parent::_getParam($name);    
     }
 
@@ -95,9 +101,38 @@ class FaZend_Controller_Action extends Zend_Controller_Action
     )
     {
         $this->_helper->flashMessenger->setNamespace('FaZend_Messages')->addMessage($message);        
-        if ($action !== false)
+        if ($action !== false) {
             $this->_helper->redirector->gotoSimple($action, $controller, $module, $params);
+        }
     }
+
+    /**
+     * Return content in any MIME-type.
+     *
+     * @param string Content
+     * @param boolean Age of content to specify (for cache), NULL means "no cache"
+     * @return void
+     */
+    protected function _return($type, $body, $age = null)
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        if (!is_null($age)) {
+            $now = Zend_Date::now();
+            $this->getResponse()
+                ->setHeader('Last-Modified', $now->get(self::HTTP_DATE))
+                ->setHeader('Date', $now->get(self::HTTP_DATE))
+                ->setHeader('Pragma', '')
+                ->setHeader('Expires', $now->add($age, Zend_Date::SECOND)->get(self::HTTP_DATE))
+                ->setHeader('Cache-Control', 'public, max-age=' . $age);
+        }
+        
+        $this->getResponse()
+            ->setHeader('Content-Type', $type)
+            ->setHeader('Content-Length', strlen($body))
+            ->setBody($body);
+    }    
 
     /**
      * Show PNG instead of page
@@ -111,17 +146,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _returnPNG($png, $dynamic = true)
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
-        // if the image is static - tell the browser about it
-        if (!$dynamic)
-            $this->_cacheContent();
-
-        $this->getResponse()
-            ->setHeader('Content-Type', 'image/png')
-            ->setHeader('Content-Length', strlen($png))
-            ->setBody($png);
+        return $this->_return('image/png', $png, $dynamic ? null : 3600);
     }    
 
     /**
@@ -132,13 +157,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _returnPDF($pdf)
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
-        $this->getResponse()
-            ->setHeader('Content-Type', 'application/pdf')
-            ->setHeader('Content-Length', strlen($pdf))
-            ->setBody($pdf);
+        return $this->_return('application/pdf', $pdf);
     }    
 
     /**
@@ -146,20 +165,9 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      *
      * @return void
      */
-    protected function _returnJSON ($var)
+    protected function _returnJSON($var)
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
-        try {
-            $responseJsonEncoded = Zend_Json::encode($var);
-            $this->getResponse()
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('Content-Length', strlen($responseJsonEncoded))
-                ->setBody($responseJsonEncoded);
-        } catch (Zend_Json_Exception $e) {
-            // what to do here?
-        }
+        return $this->_return('application/json', Zend_Json::encode($var));
     }    
 
     /**
@@ -169,53 +177,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _returnXML($xml)
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
-        $this->getResponse()
-            ->setHeader('Content-Type', 'text/xml')
-            ->setBody($xml);
+        return $this->_return('application/xml', Zend_Json::encode($xml));
     }
-
-    /**
-     * Format time for HTTP headers
-     *
-     * @param int
-     * @return string
-     */
-    protected function _formatHeaderTime($time)
-    {
-        return gmdate('D, d M Y H:i:s', $time) . ' GMT';
-    }
-    
-    /**
-     * Tell browser to cache content
-     *
-     * @param int Time when this content was modified last time
-     * @return void
-     */
-    protected function _cacheContent($modifiedTime = false)
-    {
-        if (!$modifiedTime)
-            $modifiedTime = time();
-    
-        $this->getResponse()
-            // when this images was last modified
-            ->setHeader('Last-Modified', $this->_formatHeaderTime($modifiedTime))
-    
-            ->setHeader('Date', $this->_formatHeaderTime(time()))
-
-            ->setHeader('Pragma', '')
-            
-            // in 30 days to reload!
-            ->setHeader('Expires', $this->_formatHeaderTime($modifiedTime + 60 * 60 * 24 * 30))
-            
-            // tell the browser NOT to reload the image
-            ->setHeader('Cache-Control', 'public, max-age=31536000');
-            
-            //->setHeader('Content-Encoding', 'gzip, deflate')
-            //->setHeader('X-Compression', 'gzip')
-            //->setHeader('Accept-Encoding', 'gzip');
-    }    
 
 }
