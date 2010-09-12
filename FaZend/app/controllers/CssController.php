@@ -49,12 +49,6 @@ class Fazend_CssController extends FaZend_Controller_Action
      */
     public function indexAction()
     {
-        $this->getResponse()
-            ->setHeader('Content-type', 'text/css');
-
-        // cache content delivered, inform browser about it
-        $this->_cacheContent();
-
         // change location of view scripts
         $this->_helper->viewRenderer
             ->setViewScriptPathSpec(':controller/' . $this->_getParam('css'));

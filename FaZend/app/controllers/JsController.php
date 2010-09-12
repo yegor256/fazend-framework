@@ -34,9 +34,6 @@ class Fazend_JsController extends FaZend_Controller_Action
     {
         $this->getResponse()->setHeader('Content-type', 'text/javascript');
 
-        // tell browser to cache this content    
-        $this->_cacheContent();    
-
         $this->_helper->viewRenderer
             ->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));
         
