@@ -25,25 +25,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action
 {
 
     /**
-     * Call to one of internal methods, that don't exist
-     *
-     * Here we should catch action calls and if they exist in PHTML,
-     * don't ruine the process.
-     *
-     * @param  string $methodName
-     * @param  array $args
-     * @return void
-     * @throws Zend_Controller_Action_Exception
-     */
-    public function __call($method, $args)
-    {
-        if (preg_match('/Action$/', $method)) {
-            return;
-        }
-        return $this->__call($method, $args);
-    }
-    
-    /**
      * Add new paginator to the view
      *
      * @param ArrayIterator
