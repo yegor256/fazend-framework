@@ -53,9 +53,10 @@ class FzBackup extends FaZend_Cli_Abstract
         }
         $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
         printf(
-            "Protocol %s (%d bytes) created %dh:%dm:%ds ago:\n%s",
+            "Protocol %s (%d bytes) created%s %dh:%dm:%ds ago:\n%s",
             $protocol,
             filesize($protocol),
+            $toRun ? ' just now' : false,
             floor($age / 3600),
             floor($age / 60) % 60,
             $age % 60,
