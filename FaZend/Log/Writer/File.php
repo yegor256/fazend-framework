@@ -19,7 +19,7 @@
  *
  * @package Log
  */
-class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
+class FaZend_Log_Writer_File extends Zend_Log_Writer_Mock
 {
     
     /**
