@@ -19,7 +19,7 @@
  *
  * @package Log
  */
-class FaZend_Log_Writer_File extends Zend_Log_Writer_Mock
+class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
 {
     
     /**
@@ -39,6 +39,17 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Mock
         $this->_file = $file;
     }
     
+    /**
+     * Create a new instance of Zend_Log_Writer_File.
+     * 
+     * @param array|Zend_Config $config
+     * @return Zend_Log_Writer_File
+     */
+    static public function factory($config) 
+    {
+        return new self();
+    }
+
     /**
      * Write a message to the log.
      *
