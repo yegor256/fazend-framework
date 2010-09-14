@@ -68,7 +68,7 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
     {
         $line = $this->_formatter->format($event);
         $f = fopen($this->_file, 'a+');
-        fprintf($f, $line . "\n");
+        fprintf($f, $line);
         fclose($f);
     }
     
