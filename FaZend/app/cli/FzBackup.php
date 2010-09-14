@@ -74,11 +74,12 @@ class FzBackup extends FaZend_Cli_Abstract
      */
     protected function _run($protocol) 
     {
+        // make it empty
+        file_put_contents($protocol, '');
         FaZend_Log::getInstance()->addWriter(
             new FaZend_Log_Writer_File($protocol), 
             'fz_backup_writer'
         );
-        logg('Backup started...');
         try {
             FaZend_Backup::getInstance()->execute();
         } catch (Exception $e) {
