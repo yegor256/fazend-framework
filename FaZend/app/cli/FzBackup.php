@@ -53,13 +53,13 @@ class FzBackup extends FaZend_Cli_Abstract
         }
         $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
         printf(
-            "Protocol %s (%d bytes) created %dh:%dm:%ds ago%s:\n%s",
+            "Protocol %s (%d bytes) created %dh:%dm:%ds ago (%s):\n%s",
             $protocol,
             filesize($protocol),
             floor($age / 3600),
             floor($age / 60) % 60,
             $age % 60,
-            $toRun ? ' (' . $toRun . ')' : false,
+            $toRun ? $toRun : 'no need to re-run',
             @file_get_contents($protocol)
         );
         return self::RETURNCODE_OK;
