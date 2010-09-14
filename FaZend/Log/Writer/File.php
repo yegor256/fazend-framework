@@ -30,12 +30,20 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
     protected $_file = null;
 
     /**
+     * Formatter
+     *
+     * @var Zend_Log_Formatter_Abstract
+     */
+    protected $_formatter;
+
+    /**
      * Class Constructor.
      *
      * @param string Absolute file name
      */
     public function __construct($file)
     {
+        $this->_formatter = new Zend_Log_Formatter_Simple();
         $this->_file = $file;
     }
     
