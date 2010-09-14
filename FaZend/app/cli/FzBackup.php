@@ -39,13 +39,13 @@ class FzBackup extends FaZend_Cli_Abstract
         
         $toRun = false;
         if (!file_exists($protocol)) {
-            $toRun = true;
+            $toRun = 'protocol is absent';
         } else {
             $expired = Zend_Date::now()
                 ->sub(FaZend_Backup::getInstance()->getOption('period'), Zend_Date::HOUR)
                 ->isLater(filemtime($protocol));
             if ($expired) {
-                $toRun = true;
+                $toRun = 'protocol expired';
             }
         }
         if ($toRun) {
@@ -53,13 +53,13 @@ class FzBackup extends FaZend_Cli_Abstract
         }
         $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
         printf(
-            "Protocol %s (%d bytes) created%s %dh:%dm:%ds ago:\n%s",
+            "Protocol %s (%d bytes) created %dh:%dm:%ds ago%s:\n%s",
             $protocol,
             filesize($protocol),
-            $toRun ? ' just now' : false,
             floor($age / 3600),
             floor($age / 60) % 60,
             $age % 60,
+            $toRun ? ' (' . $toRun . ')' : false,
             @file_get_contents($protocol)
         );
         return self::RETURNCODE_OK;
@@ -74,6 +74,9 @@ class FzBackup extends FaZend_Cli_Abstract
      */
     protected function _run($protocol) 
     {
+        // modify the file to disable other backups to run
+        file_put_contents($protocol, '');
+        
         FaZend_Log::getInstance()->addWriter(
             new Zend_Log_Writer_Stream($protocol, 'w'), 
             'fz_backup_writer'
