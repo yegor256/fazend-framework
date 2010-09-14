@@ -57,9 +57,9 @@ class FaZend_Log_Writer_Memory extends Zend_Log_Writer_Mock
     public function getLog()
     {
         $log = '';
-        foreach ($this->events as $event)
+        foreach ($this->events as $event) {
             $log .= $this->_formatter->format($event);
-
+        }
         return $log;
     }
 
