@@ -118,15 +118,10 @@ class FaZend_Controller_Action extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        // if (!is_null($age)) {
-        //     $now = Zend_Date::now();
-        //     $this->getResponse()
-        //         ->setHeader('Last-Modified', $now->get(self::HTTP_DATE))
-        //         ->setHeader('Date', $now->get(self::HTTP_DATE))
-        //         ->setHeader('Pragma', '')
-        //         ->setHeader('Expires', $now->add($age, Zend_Date::SECOND)->get(self::HTTP_DATE))
-        //         ->setHeader('Cache-Control', 'public, max-age=' . $age);
-        // }
+        if (!is_null($age)) {
+            $this->getResponse()
+                ->setHeader('Cache-Control', 'public, max-age=' . $age);
+        }
         
         $this->getResponse()
             ->setHeader('Content-Type', $type)
