@@ -65,9 +65,6 @@ class Fazend_FileController extends FaZend_Controller_Action
             return;
         }
 
-        // tell browser to cache this content    
-        $this->_cacheContent();    
-
         if ($toRender) {
             $this->view->setScriptPath(pathinfo($file, PATHINFO_DIRNAME));
             $this->_helper->viewRenderer
