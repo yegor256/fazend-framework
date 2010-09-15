@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_Controller_Action
+ */
 require_once 'FaZend/Controller/Action.php';
 
 /**
@@ -32,8 +35,9 @@ class Fazend_SqueezeController extends FaZend_Controller_Action
     public function indexAction()
     {
         $file = $this->view->squeezePNG()->getImagePath();
-            if (!file_exists($file))
+        if (!file_exists($file)) {
             return $this->_redirectFlash("file [{$file}] is not found");
+        }
 
         // return PNG as static (!) image    
         $this->_returnPNG(file_get_contents($file), false);

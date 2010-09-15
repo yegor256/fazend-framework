@@ -14,6 +14,9 @@
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper
+ */
 require_once 'FaZend/View/Helper.php';
 
 /**
@@ -50,13 +53,14 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     protected $_file;
 
     /**
-     * Get path of temp PNG holder
+     * Get path of temp PNG holder.
      *
      * @return string
      */
     public function getImagePath()
     {
-        return TEMP_PATH . '/fazend-' . md5(WEBSITE_URL) . '-' . FaZend_Revision::get() . '.png';
+        return TEMP_PATH . '/fazend-' . FaZend_Revision::getName() 
+            . '-' . FaZend_Revision::get() . '.png';
     }       
 
     /**
@@ -77,21 +81,19 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     public function loadMap()
     {
         $file = $this->getMapPath();
-
-        if (!file_exists($file))
+        if (!file_exists($file)) {
             return array();
-
+        }
         $map = @unserialize(file_get_contents($file));
-        if (!is_array($map))
+        if (!is_array($map)) {
             return array();
-
+        }
         // checksum of the image file    
-        if ($map['md5'] != md5_file($this->getImagePath()))    
+        if ($map['md5'] != md5_file($this->getImagePath())) {
             return array();
-
+        }
         // clean it out
         $this->_clean($map);
-
         return $map;    
     }       
 
@@ -121,8 +123,9 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     */
     public function squeezePNG($file = false)
     {
-        if ($file)
+        if ($file) {
             $this->_file = $file;
+        }
         return $this;
     }
 
@@ -143,10 +146,12 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     */
     public function startOver()
     {
-        if (file_exists($this->getMapPath()))
+        if (file_exists($this->getMapPath())) {
             unlink($this->getMapPath());
-        if (file_exists($this->getImagePath()))
+        }
+        if (file_exists($this->getImagePath())) {
             unlink($this->getImagePath());
+        }
         return $this;    
     }
 
@@ -171,16 +176,16 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
         $file = APPLICATION_PATH . self::SQUEEZE_FOLDER . $this->_file;
 
         // maybe it's a mistake?
-        if (!is_file($file))
+        if (!is_file($file)) {
             return self::FAILURE;
-
+        }
         // load full map with this new file inside    
         $map = $this->_loadUpdatedMap($file);
 
         // maybe something was wrong?
-        if (!isset($map['images'][$file]))
+        if (!isset($map['images'][$file])) {
             return self::FAILURE;
-
+        }
         return sprintf(
             "background:url(" . $this->url() . 
             ") no-repeat;width:%dpx;height:%dpx;background-position:%dpx %dpx;display:inline-block;",
@@ -203,9 +208,9 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
         $map = $this->loadMap();
 
         // if the file is there already and it's up to date
-        if (isset($map['images'][$file]) && file_exists($file) && (filemtime($file) == $map['images'][$file]['mtime']))
+        if (isset($map['images'][$file]) && file_exists($file) && (filemtime($file) == $map['images'][$file]['mtime'])) {
             return $map;
-
+        }
         // clean the map and remove all incorrect elements    
         $this->_clean($map);    
 
@@ -229,14 +234,14 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     protected function _clean(array &$map)
     {
         // if it's very fresh - prepare it
-        if (!isset($map['images']))
+        if (!isset($map['images'])) {
             $map['images'] = array();
-
+        }
         // delete obsolete elements from the map (lost images)
         foreach ($map['images'] as $id=>$img) {
-            if (file_exists($id))
+            if (file_exists($id)) {
                 continue;
-
+            }
             unset($map['images'][$id]);
         }
     }    
@@ -268,12 +273,10 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     protected function _compress(array &$map)
     {
         $metadata = $this->_loadMetadata($map);
-
         // start with top left
         $x = $y = $height = 0;
 
         foreach ($map['images'] as $id=>&$img) {
-
             $png = $metadata['images'][$id];
 
             $img['x'] = $x;
@@ -283,12 +286,10 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
 
             $x += $img['width'];
             $height = max($height, $img['height']);
-
         }    
 
         $metadata['width'] = $x;
         $metadata['height'] = $height;
-
         return $metadata;
     }    
 
@@ -304,12 +305,11 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
         $metadata['images'] = array();
 
         // if the data provided are corrupted (hm...)
-        if (!isset($map['images']))
+        if (!isset($map['images'])) {
             $map['images'] = array();
-
+        }
         // load them all!    
         foreach ($map['images'] as $id=>&$img) {
-
             $image = @imagecreatefrompng($id);
             if (!$image) {
                 $image = @imagecreatefromgif($id);
@@ -318,11 +318,8 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
                     continue;
                 }
             }    
-
             $metadata['images'][$id] = $image;
-
         }    
-
         return $metadata;
     }    
 
