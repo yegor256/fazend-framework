@@ -25,12 +25,6 @@ class FaZend_Controller_Action extends Zend_Controller_Action
 {
 
     /**
-     * Format of Date for HTTP: "Tue, 15 Nov 1994 08:12:31 GMT"
-     * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-     */
-    const HTTP_DATE = 'WWW, dd MMM y HH:mm:ss Z';
-
-    /**
      * Add new paginator to the view
      *
      * @param ArrayIterator
