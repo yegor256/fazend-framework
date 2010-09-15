@@ -34,7 +34,20 @@ class Fazend_FileController extends FaZend_Controller_Action
 {
 
     /**
-     * Show one file
+     * Simple collection of MIME types for static files.
+     *
+     * @var string
+     */
+    protected static $_mimeTypes = array(
+        'gif' => 'image/gif',
+        'png' => 'image/png',
+        'jpeg' => 'image/jpeg',
+        'jpg' => 'image/jpeg',
+        'txt' => 'plain/text',
+    );
+
+    /**
+     * Show one file.
      * 
      * @return void
      */
@@ -74,8 +87,16 @@ class Fazend_FileController extends FaZend_Controller_Action
             if (extension_loaded('fileinfo')) {
                 $finfo = new finfo(FILEINFO_MIME);
                 if ($finfo) {
-                    $this->getResponse()->setHeader('Content-Type', $finfo->file($file));
+                    $type = $finfo->file($file);
+                } else {
+                    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                    if (array_key_exists($ext, self::$_mimeTypes)) {
+                        $type = self::$_mimeTypes[$ext];
+                    } else {
+                        $type = 'text/html';
+                    }
                 }
+                $this->getResponse()->setHeader('Content-Type', $type);
             }
             $this->getResponse()
                 ->setHeader('Content-Length', filesize($file))
