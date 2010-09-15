@@ -141,7 +141,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _returnPNG($png, $dynamic = true)
     {
-        return $this->_return('image/png', $png, $dynamic ? null : 3600);
+        return $this->_return('image/png', $png, $dynamic ? null : 315360000);
     }    
 
     /**
