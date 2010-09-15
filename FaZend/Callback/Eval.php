@@ -35,13 +35,13 @@ class FaZend_Callback_Eval extends FaZend_Callback
     /**
      * Returns an array of inputs expected by this callback
      *
-     * @return string[]|0
+     * @return string[]
      */
     public function getInputs()
     {
         $matches = array();
         if (!preg_match_all('/\$\{(.*?)\}/', $this->_data, $matches)) {
-            return 0;
+            return array();
         }
         $inputs = array_unique($matches[1]);
         sort($inputs);
