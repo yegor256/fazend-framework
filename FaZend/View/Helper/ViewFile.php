@@ -42,8 +42,9 @@ class FaZend_View_Helper_ViewFile extends FaZend_View_Helper
 
         return $this->getView()->url(
             array(
-                'file' => $file,
                 'render' => $toRender ? 'r' : '',
+                'revision' => FaZend_Revision::get(),
+                'file' => $file,
             ), 
             'fz__file', // ROUTE name, see routes.ini
             true, // ..

@@ -40,6 +40,7 @@ class FaZend_View_Helper_IncludeJS extends FaZend_View_Helper
         $this->getView()->headScript()->appendFile(
             $this->getView()->url(
                 array(
+                    'revision' => FaZend_Revision::get(),
                     'script' => $script
                 ), 
                 'fz__js', // route name, see routes.ini 

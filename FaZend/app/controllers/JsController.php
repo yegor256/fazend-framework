@@ -32,7 +32,9 @@ class Fazend_JsController extends FaZend_Controller_Action
      */
     public function indexAction()
     {
-        $this->getResponse()->setHeader('Content-type', 'text/javascript');
+        $this->getResponse()
+            ->setHeader('Content-Type', 'text/javascript')
+            ->setHeader('Cache-Control', 'public, max-age=315360000');
 
         $this->_helper->viewRenderer
             ->setViewScriptPathSpec(':controller/'.$this->_getParam('script'));

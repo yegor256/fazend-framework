@@ -74,11 +74,13 @@ class Fazend_FileController extends FaZend_Controller_Action
             if (extension_loaded('fileinfo')) {
                 $finfo = new finfo(FILEINFO_MIME);
                 if ($finfo) {
-                    $this->getResponse()->setHeader('Content-type', $finfo->file($file));
+                    $this->getResponse()->setHeader('Content-Type', $finfo->file($file));
                 }
             }
-            $this->getResponse()->setHeader('Content-Length', filesize($file));
-            $this->getResponse()->setBody(file_get_contents($file));
+            $this->getResponse()
+                ->setHeader('Content-Length', filesize($file))
+                ->setHeader('Cache-Control', 'public, max-age=315360000')
+                ->setBody(file_get_contents($file));
         }
     }    
     

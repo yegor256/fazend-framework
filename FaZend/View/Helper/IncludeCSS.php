@@ -38,6 +38,7 @@ class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper
         $this->getView()->headLink()->appendStylesheet(
             $this->getView()->url(
                 array(
+                    'revision' => FaZend_Revision::get(),
                     'css' => $script
                 ), 
                 'fz__css', // route name, see routes.ini

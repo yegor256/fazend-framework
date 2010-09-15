@@ -17,8 +17,8 @@
 require_once 'FaZend/Controller/Action.php';
 
 /**
+ * Deliver one CSS stylesheet, located in "scripts/css".
  *
- * @see http://framework.zend.com/manual/en/zend.loader.html#zend.loader.load.autoload
  * @package controllers
  */
 class Fazend_CssController extends FaZend_Controller_Action
@@ -28,6 +28,7 @@ class Fazend_CssController extends FaZend_Controller_Action
      * Shall we compress CSS?
      *
      * @var boolean
+     * @see setCompression()
      */
     protected static $_compress = false;
 
@@ -43,14 +44,15 @@ class Fazend_CssController extends FaZend_Controller_Action
     }
 
     /**
-     * Show one Java Script
+     * Show one CSS stylesheet.
      * 
-     * @return string
+     * @return void
      */
     public function indexAction()
     {
         $this->getResponse()
-            ->setHeader('Content-type', 'text/css');
+            ->setHeader('Content-Type', 'text/css')
+            ->setHeader('Cache-Control', 'public, max-age=315360000');
 
         // change location of view scripts
         $this->_helper->viewRenderer
