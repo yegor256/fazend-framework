@@ -40,9 +40,16 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
      * Class Constructor.
      *
      * @param string Absolute file name
+     * @throws FaZend_Log_Writer_File_Exception
      */
     public function __construct($file)
     {
+        if (empty($file)) {
+            FaZend_Exception::raise(
+                'FaZend_Log_Writer_File_Exception',
+                "File name is mandatory for the writer"
+            );
+        }
         $this->_formatter = new Zend_Log_Formatter_Simple();
         $this->_file = $file;
     }
@@ -63,13 +70,30 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
      *
      * @param array Event data
      * @return void
+     * @throws FaZend_Log_Writer_File_Exception
      */
     protected function _write($event)
     {
         $line = $this->_formatter->format($event);
-        $f = fopen($this->_file, 'a+');
-        fprintf($f, $line);
-        fclose($f);
+        $f = @fopen($this->_file, 'a+');
+        if ($f === false) {
+            FaZend_Exception::raise(
+                'FaZend_Log_Writer_File_Exception',
+                "Failed to fopen('{$this->_file}', 'a+')"
+            );
+        }
+        if (@fprintf($f, $line) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Log_Writer_File_Exception',
+                "Failed to fprintf('{$this->_file}', '{$line}')"
+            );
+        }
+        if (@fclose($f) === false) {
+            FaZend_Exception::raise(
+                'FaZend_Log_Writer_File_Exception',
+                "Failed to fclose('{$this->_file}')"
+            );
+        }
     }
     
 }

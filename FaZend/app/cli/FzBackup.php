@@ -71,11 +71,18 @@ class FzBackup extends FaZend_Cli_Abstract
      *
      * @param string Absolute name of the protocol file
      * @return void
+     * @throws FzBackup_Exception
      */
     protected function _run($protocol) 
     {
         // make it empty
-        file_put_contents($protocol, '');
+        if (file_put_contents($protocol, '') === false) {
+            FaZend_Exception::raise(
+                'FzBackup_Exception',
+                "Failed to file_put_contents('{$protocol}')"
+            );
+        }
+        
         FaZend_Log::getInstance()->addWriter(
             new FaZend_Log_Writer_File($protocol), 
             'fz_backup_writer'
