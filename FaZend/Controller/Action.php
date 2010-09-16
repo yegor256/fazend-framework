@@ -169,7 +169,7 @@ class FaZend_Controller_Action extends Zend_Controller_Action
      */
     protected function _returnXML($xml)
     {
-        return $this->_return('application/xml', Zend_Json::encode($xml));
+        return $this->_return('application/xml', $xml);
     }
 
 }
