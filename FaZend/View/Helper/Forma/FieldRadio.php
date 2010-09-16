@@ -28,6 +28,14 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
 {
 
     /**
+     * List of options.
+     *
+     * @var array
+     * @see _setOptions()
+     */
+    protected $_options;
+    
+    /**
      * Create and return form element
      *
      * @param string Name of the element
@@ -36,6 +44,30 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
     protected function _getFormElement($name)
     {
         return new Zend_Form_Element_Radio($name);
+    }
+
+    /**
+     * Configure form element.
+     *
+     * @param Zend_Form_Element The element to configure
+     * @return void
+     */
+    protected function _configureFormElement(Zend_Form_Element $element)
+    {
+        parent::_configureFormElement($element);
+        
+        $element->setMultiOptions($this->_options);
+    }
+    
+    /**
+     * Set list of options.
+     *
+     * @param array Associative array of options
+     * @return void
+     */
+    protected function _setOptions($options)
+    {
+        $this->_options = $options;
     }
 
 }
