@@ -47,5 +47,15 @@ class IndexController extends FaZend_Controller_Action
     {
         FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
     }
-
+    
+    /**
+     * Test forma() helper.
+     *
+     * @return void
+     * @see IndexController
+     */
+    public function formaAction()
+    {
+    }
+    
 }

@@ -38,7 +38,6 @@ class Fazend_SqueezeController extends FaZend_Controller_Action
         if (!file_exists($file)) {
             return $this->_redirectFlash("file [{$file}] is not found");
         }
-
         // return PNG as static (!) image    
         $this->_returnPNG(file_get_contents($file), false);
     }

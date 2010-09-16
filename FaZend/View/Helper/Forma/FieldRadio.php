@@ -57,6 +57,7 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
         parent::_configureFormElement($element);
         
         $element->setMultiOptions($this->_options);
+        $element->setOptions(array('escape' => false));
     }
     
     /**

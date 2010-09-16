@@ -27,6 +27,14 @@
         ->fieldLabel('Why are you interested in our services?')
     ->addField('file', 'file')
         ->fieldLabel('Signed NDA in PDF')
+    ->addField('radio', 'Sex')
+        ->fieldLabel('Sex')
+        ->fieldOptions(
+            array(
+                'f' => '<b>Female</b>',
+                'm' => 'Male',
+            )
+        )
     ->addField('submit', 'submit')
         ->fieldValue('go')
         ->fieldAction(array('Model_Owner', 'register'))

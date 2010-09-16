@@ -21,7 +21,7 @@ class FaZend_View_Helper_FormaTest extends AbstractTestCase
             "Error in HTML: {$this->getResponse()->getBody()}"
         );
     }
-
+    
     public function testCompletelyFilledFormRedirects()
     {        
         $this->request->setPost(
