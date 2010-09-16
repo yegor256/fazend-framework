@@ -20,11 +20,11 @@
 require_once 'FaZend/View/Helper/Forma/Field.php';
 
 /**
- * Textarea field
+ * Checkbox
  *
  * @package Model_Form
  */
-class FaZend_View_Helper_Forma_FieldTextarea extends FaZend_View_Helper_Forma_Field
+class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
 {
 
     /**
@@ -35,7 +35,7 @@ class FaZend_View_Helper_Forma_FieldTextarea extends FaZend_View_Helper_Forma_Fi
      */
     protected function _getFormElement($name)
     {
-        return new Zend_Form_Element_Textarea($name);
+        return new Zend_Form_Element_Radio($name);
     }
 
 }

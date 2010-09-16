@@ -10,10 +10,13 @@
  * to license@fazend.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) FaZend.com
- * @version $Id: FieldHidden.php 1587 2010-02-07 07:49:26Z yegor256@gmail.com $
+ * @version $Id$
  * @category FaZend
  */
 
+/**
+ * @see FaZend_View_Helper_Forma_Field
+ */
 require_once 'FaZend/View/Helper/Forma/Field.php';
 
 /**
