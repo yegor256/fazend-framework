@@ -36,6 +36,14 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
     protected $_options;
     
     /**
+     * Separator.
+     *
+     * @var string
+     * @see _setSeparator()
+     */
+    protected $_separator = '<br/>';
+    
+    /**
      * Create and return form element
      *
      * @param string Name of the element
@@ -43,7 +51,7 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
      */
     protected function _getFormElement($name)
     {
-        return new Zend_Form_Element_Radio($name);
+        return new Zend_Form_Element_Radio($name, null, array(), array(), '<p/>');
     }
 
     /**
@@ -56,8 +64,14 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
     {
         parent::_configureFormElement($element);
         
-        $element->setMultiOptions($this->_options);
-        $element->setOptions(array('escape' => false));
+        $element
+            ->setMultiOptions($this->_options)
+            ->setOptions(
+                array(
+                    'escape' => false,
+                )
+            )
+            ->setSeparator($this->_separator);
     }
     
     /**
@@ -69,6 +83,17 @@ class FaZend_View_Helper_Forma_FieldRadio extends FaZend_View_Helper_Forma_Field
     protected function _setOptions($options)
     {
         $this->_options = $options;
+    }
+
+    /**
+     * Set separator.
+     *
+     * @param string Separator between options.
+     * @return void
+     */
+    protected function _setSeparator($separator)
+    {
+        $this->_separator = $separator;
     }
 
 }
