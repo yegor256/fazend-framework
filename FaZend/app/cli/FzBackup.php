@@ -88,7 +88,7 @@ class FzBackup extends FaZend_Cli_Abstract
             'fz_backup_writer'
         );
         try {
-            FaZend_Backup::getInstance()->execute();
+            FaZend_Backup::getInstance()->execute($protocol);
         } catch (Exception $e) {
             FaZend_Log::err(
                 sprintf(

@@ -109,10 +109,11 @@ class FaZend_Backup
     /**
      * Execute backup process
      *
+     * @param string Absolute file name of the log
      * @return void
      * @throws FaZend_Backup_Exception
      */
-    public function execute()
+    public function execute($log)
     {
         logg('FaZend_Backup started, revision: ' . FaZend_Revision::get());
         if (!$this->_options['execute']) {
@@ -140,7 +141,7 @@ class FaZend_Backup
         $policies = array();
         foreach ($this->_options['policies'] as $opts) {
             $class = 'FaZend_Backup_Policy_' . ucfirst($opts['name']);
-            $policy = new $class();
+            $policy = new $class($log);
             if (array_key_exists('options', $opts)) {
                 $policy->setOptions($opts['options']);
             }

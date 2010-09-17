@@ -37,6 +37,13 @@ abstract class FaZend_Backup_Policy_Abstract
     protected $_dir = null;
     
     /**
+     * Absolute file name of the log which is used now.
+     *
+     * @var string
+     */
+    protected $_log = null;
+    
+    /**
      * Forward execution of the policy.
      *
      * @return void
@@ -53,10 +60,18 @@ abstract class FaZend_Backup_Policy_Abstract
     /**
      * Construct the class.
      *
+     * @param string Absolute filename of the log
      * @return void
      */
-    public final function __construct()
+    public final function __construct($log)
     {
+        if (!file_exists($log) || !is_writable($log)) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Abstract_Exception',
+                "Log file is not writable: '{$log}'"
+            );
+        }
+        $this->_log = $log;
         // to refresh the list of options
         $this->setOptions(array());
     }
