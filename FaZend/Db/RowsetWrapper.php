@@ -77,7 +77,9 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     public function count()
     {
         $select = clone $this->select();
-        $select->reset(Zend_Db_Select::COLUMNS)
+        $select
+            ->reset(Zend_Db_Select::COLUMNS)
+            ->reset(Zend_Db_Select::ORDER)
             ->columns(new Zend_Db_Expr('COUNT(*)'));
         try{
             $cnt = $this->_table->getAdapter()->fetchOne(
