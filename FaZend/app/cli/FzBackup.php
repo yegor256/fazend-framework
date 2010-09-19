@@ -75,6 +75,27 @@ class FzBackup extends FaZend_Cli_Abstract
      */
     protected function _run($protocol) 
     {
+        if (file_exists($protocol)) {
+            $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
+            $lines = array_slice(file($protocol), -5);
+            $messages = array(
+                sprintf(
+                    'Previous protocol (%d bytes) created %dh:%dm:%ds ago',
+                    filesize($protocol),
+                    floor($age / 3600),
+                    floor($age / 60) % 60,
+                    $age % 60
+                ),
+                sprintf(
+                    "Latest lines in the previous protocol:\n%s",
+                    implode("\n", $lines)
+                )
+            );
+        } else {
+            $messages = array(
+                "Protocol file '{$protocol}' is absent",
+            );
+        }
         // make it empty
         if (file_put_contents($protocol, '') === false) {
             FaZend_Exception::raise(
@@ -87,6 +108,9 @@ class FzBackup extends FaZend_Cli_Abstract
             new FaZend_Log_Writer_File($protocol), 
             'fz_backup_writer'
         );
+        foreach ($messages as $m) {
+            logg($m);
+        }
         try {
             FaZend_Backup::getInstance()->execute($protocol);
         } catch (Exception $e) {
