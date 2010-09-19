@@ -91,7 +91,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
                     '%s: (%s) in "%s"',
                     get_class($e),
                     $e->getMessage(),
-                    $sql
+                    strval($select)
                 )
             );
         }
