@@ -45,7 +45,7 @@ class FaZend_View_Helper_IncludeJS extends FaZend_View_Helper
                 ), 
                 'fz__js', // route name, see routes.ini 
                 true,
-                true
+                false
             )
         );
     }
