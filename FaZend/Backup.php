@@ -115,7 +115,11 @@ class FaZend_Backup
      */
     public function execute($log)
     {
-        logg('FaZend_Backup started, revision: ' . FaZend_Revision::get());
+        logg(
+            'FaZend_Backup started, revision: %s, process ID: %d',
+            FaZend_Revision::get(),
+            getmypid()
+        );
         if (!$this->_options['execute']) {
             logg('No execution required, end of process');
             return;
