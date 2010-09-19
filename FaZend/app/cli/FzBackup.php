@@ -88,7 +88,7 @@ class FzBackup extends FaZend_Cli_Abstract
                 ),
                 sprintf(
                     "Latest lines in the previous protocol:\n%s",
-                    implode("\n", $lines)
+                    implode("\n", array_map(create_function('$l', 'return "\t" . $l;'), $lines))
                 )
             );
         } else {
