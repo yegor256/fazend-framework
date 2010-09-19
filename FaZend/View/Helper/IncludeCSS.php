@@ -20,6 +20,7 @@
 require_once 'FaZend/View/Helper.php';
 
 /**
+ * Include a link to CSS.
  *
  * @see http://naneau.nl/2007/07/08/use-the-url-view-helper-please/
  * @package View
@@ -29,23 +30,28 @@ class FaZend_View_Helper_IncludeCSS extends FaZend_View_Helper
 {
 
     /**
-     * Include a CSS file as a link
+     * Include a CSS file as a link.
      *
-     * @return void
+     * @param string File name inside 'views/scripts/css' directory
+     * @param boolean Shall we append it to headLink() or just return a HTTP URL?
+     * @return string The URL
      */
-    public function includeCSS($script)
+    public function includeCSS($script, $append = true)
     {
-        $this->getView()->headLink()->appendStylesheet(
-            $this->getView()->url(
-                array(
-                    'revision' => FaZend_Revision::get(),
-                    'css' => $script
-                ), 
-                'fz__css', // route name, see routes.ini
-                true, 
-                false
-            )
+        $url = $this->getView()->url(
+            array(
+                'revision' => FaZend_Revision::get(),
+                'css' => $script
+            ), 
+            'fz__css', // route name, see routes.ini
+            true, 
+            false
         );
+        
+        if ($append) {
+            $this->getView()->headLink()->appendStylesheet($url);
+        }
+        return $url;
     }
 
 }
