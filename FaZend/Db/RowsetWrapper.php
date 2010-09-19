@@ -70,22 +70,20 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     }
 
     /**
-     * Count objects in the rowset
+     * Count objects in the rowset.
      *
      * @return int Total number of rows in the query
      */
     public function count()
     {
-        $sql = sprintf(
-            'SELECT COUNT(*) FROM (%s) AS tbl', 
-            (string)$this->select()
-        );
+        $select = clone $this->select();
+        $select->reset(Zend_Db_Select::COLUMNS)
+            ->columns(new Zend_Db_Expr('COUNT(*)'));
         try{
-            // We build a new query, where the original query goes into
-            // a subquery. You don't need to calculate rows manually
-            // and you may be sure that no data goes to memory when
-            // you're counting rows. We optimize your request here.
-            $cnt = $this->_table->getAdapter()->fetchOne($sql, $this->select()->getBind());
+            $cnt = $this->_table->getAdapter()->fetchOne(
+                $select,
+                $this->select()->getBind()
+            );
         } catch (Zend_Db_Statement_Exception $e) {
             FaZend_Exception::raise(
                 'FaZend_Db_RowsetWrapper_Exception', 
