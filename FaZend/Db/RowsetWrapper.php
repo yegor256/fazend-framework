@@ -76,14 +76,17 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      */
     public function count()
     {
-        $select = clone $this->select();
-        $select
-            ->reset(Zend_Db_Select::COLUMNS)
-            ->reset(Zend_Db_Select::ORDER)
-            ->columns(new Zend_Db_Expr('COUNT(*)'));
-        try{
+        $sql = sprintf(
+            'SELECT COUNT(*) FROM (%s) AS tbl', 
+            (string)$this->select()
+        );
+         try{
+            // We build a new query, where the original query goes into
+            // a subquery. You don't need to calculate rows manually
+            // and you may be sure that no data goes to memory when
+            // you're counting rows. We optimize your request here.
             $cnt = $this->_table->getAdapter()->fetchOne(
-                $select,
+                $sql,
                 $this->select()->getBind()
             );
         } catch (Zend_Db_Statement_Exception $e) {
@@ -93,7 +96,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
                     '%s: (%s) in "%s"',
                     get_class($e),
                     $e->getMessage(),
-                    strval($select)
+                    $sql
                 )
             );
         }
