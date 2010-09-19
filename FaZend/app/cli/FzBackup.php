@@ -77,7 +77,7 @@ class FzBackup extends FaZend_Cli_Abstract
     {
         if (file_exists($protocol)) {
             $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
-            $lines = array_slice(file($protocol), -5);
+            $lines = array_slice(file($protocol), -10);
             $messages = array(
                 sprintf(
                     'Previous protocol (%d bytes) created %dh:%dm:%ds ago',
@@ -88,7 +88,7 @@ class FzBackup extends FaZend_Cli_Abstract
                 ),
                 sprintf(
                     "Latest lines in the previous protocol:\n%s",
-                    implode("\n", array_map(create_function('$l', 'return "\t" . $l;'), $lines))
+                    implode('', array_map(create_function('$l', 'return "\t" . $l;'), $lines))
                 )
             );
         } else {
