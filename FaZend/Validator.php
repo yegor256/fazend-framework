@@ -95,7 +95,7 @@ final class FaZend_Validator
         if (!count($args)) {
             FaZend_Exception::raise(
                 'FaZend_Validator_Exception', 
-                "At least one param required for {$method} validator",
+                "At least one param required for '{$method}' validator",
                 'Zend_Validate_Exception'
             );
         }
@@ -121,7 +121,8 @@ final class FaZend_Validator
         if (count($args) < $params) {
             FaZend_Exception::raise(
                 'FaZend_Validator_Exception', 
-                "Validator {$class} requires {$params} parameters, only " . count($args) . ' provided',
+                "Validator {$class} requires {$params} parameters, only " 
+                . count($args) . ' provided',
                 'Zend_Validate_Exception' 
             );
         }
@@ -130,7 +131,8 @@ final class FaZend_Validator
         if (count($args) > $params + 1) {
             FaZend_Exception::raise(
                 'FaZend_Validator_Exception', 
-                "Validator $class requires just $params parameters, while " . count($args) . ' provided, what for?',
+                "Validator '{$class}' requires just {$params} parameters, while " 
+                . count($args) . ' provided, what for?',
                 'Zend_Validate_Exception'
             );
         }
@@ -161,7 +163,7 @@ final class FaZend_Validator
             if (!$validator->isValid($subject)) {
                 FaZend_Exception::raise(
                     'FaZend_Validator_Exception',
-                    "Validator " . get_class($validator) . "->isValid() returned FALSE",
+                    implode('; ', $validator->getMessages()),
                     'Zend_Validate_Exception'
                 );
             }
