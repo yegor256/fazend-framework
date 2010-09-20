@@ -163,12 +163,10 @@ final class FaZend_Validator
             if (!$validator->isValid($subject)) {
                 FaZend_Exception::raise(
                     'FaZend_Validator_Exception',
-                    implode('; ', $validator->getMessages()),
+                    "Validator " . get_class($validator) . "->isValid() returned FALSE",
                     'Zend_Validate_Exception'
                 );
             }
-            // return for fluent interface
-            return $this;
         } catch (Zend_Validate_Exception $e) {
             if (!isset($message)) {
                 $message = implode(
@@ -185,7 +183,8 @@ final class FaZend_Validator
                 'Zend_Validate_Exception'
             );
         }
-        return false;
+        // return for fluent interface
+        return $this;
     }
 
 }
