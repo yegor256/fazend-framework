@@ -89,34 +89,44 @@ abstract class FaZend_Test_Starter
      * Drop entire database, including all TABLE-s and VIEW-s
      *
      * @return void
+     * @throws FaZend_Test_Starter_Exception
      */
     protected function _dropDatabase() 
     {
         $db = Zend_Db_Table::getDefaultAdapter();
         
         $dropped = array();
-        while (count($db->listTables())) {
-            foreach ($db->listTables() as $table) {
-                try {
-                    $db->query('DROP TABLE ' . $db->quoteIdentifier($table));
-                    $dropped[] = $table;
-                } catch (Exception $e) {
-                    // ignore it
+        $present = $db->listTables();
+        while (count($present)) {
+            $before = count($present);
+            foreach ($present as $id=>$table) {
+                foreach (array('DROP TABLE %s', 'DROP VIEW %s') as $q) {
+                    try {
+                        $db->query(sprintf($q, $db->quoteIdentifier($table)));
+                        $dropped[] = $table;
+                        unset($present[$id]);
+                    } catch (Exception $e) {
+                        assert($e instanceof Exception);
+                        // just swallow it
+                    }
                 }
-                try {
-                    $db->query('DROP VIEW ' . $db->quoteIdentifier($table));
-                    $dropped[] = $table;
-                } catch (Exception $e) {
-                    // ignore it
-                }
+            }
+            // maybe we failed to delete everything?
+            if (count($present) == $before) {
+                FaZend_Exception::raise(
+                    'FaZend_Test_Starter_Exception',
+                    $e->getMessage()
+                );
             }
         }
         if ($dropped) {
-            logg('TABLEs/VIEWs dropped: %s', implode(', ', $dropped));
+            logg(
+                'TABLEs/VIEWs dropped: %s', 
+                implode(', ', $dropped)
+            );
         } else {
             logg('No TABLEs/VIEWs to drop');
         }
-        unset($db);
     }
 
 }
