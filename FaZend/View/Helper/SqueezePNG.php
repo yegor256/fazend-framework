@@ -117,10 +117,10 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     }
         
     /**
-    * Show the image
-    *
-    * @return string
-    */
+     * Show the image
+     *
+     * @return string
+     */
     public function squeezePNG($file = false)
     {
         if ($file) {
@@ -130,20 +130,20 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
     }
 
     /**
-    * Render the class
-    *
-    * @return string HTML
-    */
+     * Render the class
+     *
+     * @return string HTML
+     */
     public function __toString()
     {
         return $this->_render();
     }
 
     /**
-    * Start building the image holder from scratch
-    *
-    * @return string HTML
-    */
+     * Start building the image holder from scratch
+     *
+     * @return string HTML
+     */
     public function startOver()
     {
         if (file_exists($this->getMapPath())) {
@@ -162,7 +162,13 @@ class FaZend_View_Helper_SqueezePNG extends FaZend_View_Helper
      */
     public function url()
     {
-        return $this->getView()->url(array('id'=> (int)FaZend_Revision::get()), self::ROUTE, true);
+        return $this->getView()->url(
+            array(
+                'id' => (int)FaZend_Revision::get()
+            ), 
+            self::ROUTE, 
+            true
+        );
     }
 
     /**
