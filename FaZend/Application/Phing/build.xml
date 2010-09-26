@@ -294,7 +294,7 @@
             <http-request 
                 url="${phprack.url}" 
                 responseRegex="/PHPRACK SUITE: OK/" 
-                observerEvents="connect, receivedBody, disconnect"
+                observerEvents="connect,receivedBody,disconnect"
                 verbose="true"
             />
         </then><else>
