@@ -65,7 +65,7 @@ abstract class FaZend_Backup_Policy_Abstract
      */
     public final function __construct($log)
     {
-        if (!file_exists($log) || !is_writable($log)) {
+        if (!is_writable($log)) {
             FaZend_Exception::raise(
                 'FaZend_Backup_Policy_Abstract_Exception',
                 "Log file is not writable: '{$log}'"
