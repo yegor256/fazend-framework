@@ -307,8 +307,9 @@ class FaZend_User extends FaZend_Db_Table_ActiveRow_user
         $user->email = strtolower($email);
         $user->password = $password;
 
-        foreach ($data as $key=>$value)
+        foreach ($data as $key=>$value) {
             $user->$key = $value;
+        }
 
         $user->save();
 
