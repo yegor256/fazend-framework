@@ -75,7 +75,7 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
     protected function _write($event)
     {
         $line = $this->_formatter->format($event);
-        $f = @fopen($this->_file, 'a+');
+        $f = @fopen($this->_file, 'a');
         if ($f === false) {
             FaZend_Exception::raise(
                 'FaZend_Log_Writer_File_Exception',
