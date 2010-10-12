@@ -82,7 +82,7 @@ class FaZend_Log_Writer_File extends Zend_Log_Writer_Abstract
                 "Failed to fopen('{$this->_file}', 'a+')"
             );
         }
-        if (@fprintf($f, $line) === false) {
+        if (@fwrite($f, $line) === false) {
             FaZend_Exception::raise(
                 'FaZend_Log_Writer_File_Exception',
                 "Failed to fprintf('{$this->_file}', '{$line}')"
