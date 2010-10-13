@@ -206,6 +206,17 @@ class FaZend_Log
      */
     public static function info($msg)
     {
+        // pass it to sprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            $msg = call_user_func_array(
+                'sprintf', 
+                array_merge(
+                    array($msg), 
+                    array_slice($args, 1)
+                )
+            );
+        }
         return self::getInstance()->_log('info', $msg);
     }
 
@@ -217,6 +228,17 @@ class FaZend_Log
      */
     public static function err($msg)
     {
+        // pass it to sprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            $msg = call_user_func_array(
+                'sprintf', 
+                array_merge(
+                    array($msg), 
+                    array_slice($args, 1)
+                )
+            );
+        }
         return self::getInstance()->_log('err', $msg);
     }
 
@@ -228,6 +250,17 @@ class FaZend_Log
      */
     public static function warn($msg)
     {
+        // pass it to sprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            $msg = call_user_func_array(
+                'sprintf', 
+                array_merge(
+                    array($msg), 
+                    array_slice($args, 1)
+                )
+            );
+        }
         return self::getInstance()->_log('warn', $msg);
     }
 
