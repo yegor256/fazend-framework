@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -36,7 +36,7 @@ class FzBackup extends FaZend_Cli_Abstract
     public function execute()
     {
         $protocol = TEMP_PATH . '/' . FaZend_Revision::getName() . '-FzBackup.txt';
-        
+
         $toRun = false;
         if (!file_exists($protocol)) {
             $toRun = 'protocol is absent';
@@ -64,7 +64,7 @@ class FzBackup extends FaZend_Cli_Abstract
         );
         return self::RETURNCODE_OK;
     }
-    
+
     /**
      * Run the backup process and return it's LOG. Put the log
      * of the execution into the file.
@@ -73,7 +73,7 @@ class FzBackup extends FaZend_Cli_Abstract
      * @return void
      * @throws FzBackup_Exception
      */
-    protected function _run($protocol) 
+    protected function _run($protocol)
     {
         if (file_exists($protocol)) {
             $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
@@ -88,7 +88,7 @@ class FzBackup extends FaZend_Cli_Abstract
                 ),
                 sprintf(
                     "Latest lines in the previous protocol:\n%s",
-                    implode('', array_map(create_function('$l', 'return "\t" . $l;'), $lines))
+                    implode('', array_map(create_function('$l', 'return "\t> " . $l;'), $lines))
                 )
             );
         } else {
@@ -103,9 +103,9 @@ class FzBackup extends FaZend_Cli_Abstract
                 "Failed to file_put_contents('{$protocol}')"
             );
         }
-        
+
         FaZend_Log::getInstance()->addWriter(
-            new FaZend_Log_Writer_File($protocol), 
+            new FaZend_Log_Writer_File($protocol),
             'fz_backup_writer'
         );
         foreach ($messages as $m) {
