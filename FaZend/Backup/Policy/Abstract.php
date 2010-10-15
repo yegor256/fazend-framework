@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -28,35 +28,35 @@ abstract class FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array();
-    
+
     /**
      * Directory where we're working.
      *
      * @var string
      */
     protected $_dir = null;
-    
+
     /**
      * Absolute file name of the log which is used now.
      *
      * @var string
      */
     protected $_log = null;
-    
+
     /**
      * Forward execution of the policy.
      *
      * @return void
      */
     abstract public function forward();
-    
+
     /**
      * BACKWARD execution of the policy.
      *
      * @return void
      */
     abstract public function backward();
-    
+
     /**
      * Construct the class.
      *
@@ -75,7 +75,7 @@ abstract class FaZend_Backup_Policy_Abstract
         // to refresh the list of options
         $this->setOptions(array());
     }
-    
+
     /**
      * Set options before execution.
      *
@@ -101,7 +101,17 @@ abstract class FaZend_Backup_Policy_Abstract
         }
         return $this;
     }
-    
+
+    /**
+     * Return full list of options set in the policy.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
+
     /**
      * Set directory to work in.
      *
@@ -109,7 +119,7 @@ abstract class FaZend_Backup_Policy_Abstract
      * @return $this
      * @see FaZend_Backup::execute()
      */
-    public function setDir($dir) 
+    public function setDir($dir)
     {
         if (!@file_exists($dir) || !@is_dir($dir)) {
             FaZend_Exception::raise(
