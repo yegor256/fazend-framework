@@ -42,8 +42,15 @@ class FzBackup extends FaZend_Cli_Abstract
         if (!file_exists($protocol)) {
             $toRun = 'protocol is absent';
         } else {
+            $hours = FaZend_Backup::getInstance()->getOption('period');
+            if (!$hours) {
+                FaZend_Exception::raise(
+                    'FzBackup_Exception',
+                    "Period should be greater than zero"
+                );
+            }
             $expired = Zend_Date::now()
-                ->sub(FaZend_Backup::getInstance()->getOption('period'), Zend_Date::HOUR)
+                ->sub($hours, Zend_Date::HOUR)
                 ->isLater(filemtime($protocol));
             if ($expired) {
                 $toRun = 'protocol expired';
