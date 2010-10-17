@@ -53,7 +53,7 @@ class FzBackup extends FaZend_Cli_Abstract
                 ->sub($hours, Zend_Date::HOUR)
                 ->isLater(filemtime($protocol));
             if ($expired) {
-                $toRun = 'protocol expired';
+                $toRun = "protocol expired (>{$hours}hrs)";
             }
         }
 
