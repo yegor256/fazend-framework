@@ -33,7 +33,7 @@ class FaZend_Backup_Policy_Exec_Policy extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'class' => '?', // PHP class name
+        'class' => false, // PHP class name
         'options' => array(), // options to send to the policy
     );
 
@@ -74,6 +74,12 @@ class FaZend_Backup_Policy_Exec_Policy extends FaZend_Backup_Policy_Abstract
     protected function _setupPolicy()
     {
         $class = $this->_options['class'];
+        if (!$class) {
+            FaZend_Exception::raise(
+                'FaZend_Backup_Policy_Exec_Policy_Exception',
+                "Policy class is not configured"
+            );
+        }
         if (!class_exists($class)) {
             FaZend_Exception::raise(
                 'FaZend_Backup_Policy_Exec_Policy_Exception',
