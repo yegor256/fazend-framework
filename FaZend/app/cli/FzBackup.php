@@ -36,6 +36,7 @@ class FzBackup extends FaZend_Cli_Abstract
     public function execute()
     {
         $protocol = TEMP_PATH . '/' . FaZend_Revision::getName() . '-FzBackup.txt';
+        $mutex = TEMP_PATH . '/' . FaZend_Revision::getName() . '-FzBackup-pid.txt';
 
         $toRun = false;
         if (!file_exists($protocol)) {
@@ -48,9 +49,56 @@ class FzBackup extends FaZend_Cli_Abstract
                 $toRun = 'protocol expired';
             }
         }
+
+        // run it now!
         if ($toRun) {
+            // maybe other process is working now?
+            if (file_exists($mutex)) {
+                $pid = @file_get_contents($mutex);
+                if ($pid === false) {
+                    FaZend_Exception::raise(
+                        'FzBackup_Exception',
+                        "Failed to file_get_contents('{$mutex}')"
+                    );
+                }
+                if (!is_numeric($pid)) {
+                    FaZend_Exception::raise(
+                        'FzBackup_Exception',
+                        "Invalid process number in '{$mutex}': '{$pid}'"
+                    );
+                }
+                $pid = intval($pid);
+
+                // we assume that it's UNIX
+                if (file_exists("/proc/{$pid}")) {
+                    logg("Still running in process: {$pid}");
+                    $toRun = false;
+                } else {
+                    logg("Zombie in process: {$pid}");
+                    if (@unlink($mutex) === false) {
+                        FaZend_Exception::raise(
+                            'FzBackup_Exception',
+                            "Failed to unlink('{$mutex}')"
+                        );
+                    }
+                }
+            }
+
+            if (@file_put_contents($mutex, getmypid()) === false) {
+                FaZend_Exception::raise(
+                    'FzBackup_Exception',
+                    "Failed to file_put_contents('{$mutex}')"
+                );
+            }
             $this->_run($protocol);
+            if (@unlink($mutex) === false) {
+                FaZend_Exception::raise(
+                    'FzBackup_Exception',
+                    "Failed to unlink('{$mutex}')"
+                );
+            }
         }
+
         $age = Zend_Date::now()->sub(filemtime($protocol))->get(Zend_Date::TIMESTAMP);
         printf(
             "Protocol %s (%d bytes) created %dh:%dm:%ds ago (%s):\n%s",
@@ -104,9 +152,10 @@ class FzBackup extends FaZend_Cli_Abstract
             );
         }
 
+        $writerName = 'fz_backup_writer';
         FaZend_Log::getInstance()->addWriter(
             new FaZend_Log_Writer_File($protocol),
-            'fz_backup_writer'
+            $writerName
         );
         foreach ($messages as $m) {
             logg($m);
@@ -122,7 +171,7 @@ class FzBackup extends FaZend_Cli_Abstract
                 )
             );
         }
-        FaZend_Log::getInstance()->removeWriter('fz_backup_writer');
+        FaZend_Log::getInstance()->removeWriter($writerName);
     }
 
 }
