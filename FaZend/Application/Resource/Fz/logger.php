@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -54,6 +54,9 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         // remove all writers
         FaZend_Log::getInstance()->clean();
 
+        // make it a default error handler
+        FaZend_Log::getInstance()->registerErrorHandler();
+
         // initialize the log
         $this->_initErrorLog();
 
@@ -69,7 +72,7 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
      *
      * @return void
      */
-    protected function _initErrorLog() 
+    protected function _initErrorLog()
     {
         // we try to get the file name from php.ini
         $stream = ini_get('error_log');
@@ -91,11 +94,11 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
             new Zend_Log_Writer_Stream($stream),
             self::LOG_WRITER // unique name of the writer
         );
-        
+
         if (empty($this->_options['policy'])) {
             return;
         }
-        
+
         $name = @$this->_options['policy']['name'];
         if (!is_string($name) || empty($name)) {
             FaZend_Exception::raise(
