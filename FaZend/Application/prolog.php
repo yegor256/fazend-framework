@@ -71,8 +71,8 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
         echo $message;
     }
 
-    // continue with the normal error handler
-    return false;
+    // DON'T continue with the normal error handler
+    return true;
 }
 assert(!is_null(set_error_handler('fz__ErrorHandler')));
 
