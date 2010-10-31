@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,7 +30,7 @@ if (!defined('TESTING_RUNNING')) {
 /**
  * We include this bootstrap script only ONCE, in order
  * to avoid multiple initialization of the application, in the
- * same PHP environment
+ * same PHP environment.
  */
 include_once 'FaZend/Application/prolog.php';
 
@@ -53,7 +53,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
      * @var integer
      */
     private $_memoryUsage;
-    
+
     /**
      * Initial memory usage, when first came to this class
      *
@@ -64,7 +64,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     /**
      * Setup test
      *
-     * It is very important to note that we DO NOT use default Zend 
+     * It is very important to note that we DO NOT use default Zend
      * {@link Zend_Test_PHPUnit_ControllerTestCase::setUp()} method. Mostly because
      * in Zend Framework front controller is completely reset every time
      * setUp() is called. We don't need this behavior, because we initialize
@@ -84,7 +84,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         // run this method before everything else
         require_once 'FaZend/Application/Bootstrap/Bootstrap.php';
         FaZend_Application_Bootstrap_Bootstrap::prepareApplication($this->bootstrap);
-        
+
         // run the normal setup of a test case, which will reset everything,
         // including front controoler, layout, loaders, etc. and THEN will bootstrap
         // the application provided.
@@ -93,20 +93,20 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         // create local view, since it's a controller
         // $this->view = $this->bootstrap->getBootstrap()->getResource('view');
         $this->view = $this->bootstrap->getBootstrap()->getResource('view');
-        
+
         // clean all instances of all formas
         FaZend_View_Helper_Forma::cleanInstances();
 
         // get total amount of memory used now, in order
         // to compare with it later, in tearDown()
         $this->_memoryUsage = memory_get_usage();
-        
+
         // save it for future
         if (is_null(self::$_memoryUsageInitial)) {
             self::$_memoryUsageInitial = $this->_memoryUsage;
         }
     }
-    
+
     /**
      * Close all connections
      *
@@ -115,7 +115,7 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
     public function tearDown()
     {
         parent::tearDown();
-    
+
         // close connection
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($db instanceof Zend_Db_Adapter_Abstract) {
@@ -130,10 +130,10 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         // clean cache, to save memory during testing
         FaZend_Db_ActiveTable::cleanCache();
-        
+
         // clean it, again to save memory
         FaZend_Flyweight::clean();
-        
+
         // remove log
         if (FaZend_Log::getInstance()->hasWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER)) {
             FaZend_Log::getInstance()->removeWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER);
@@ -142,11 +142,11 @@ class FaZend_Test_TestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $leak = memory_get_usage() - $this->_memoryUsage;
         if ($leak > 10 * 1024) {
             logg(
-                "Memory leak of %d bytes in this test, %d total in suite", 
+                "Memory leak of %d bytes in this test, %d total in suite",
                 $leak,
                 memory_get_usage() - self::$_memoryUsageInitial
             );
         }
     }
-    
+
 }
