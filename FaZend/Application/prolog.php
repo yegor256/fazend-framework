@@ -15,17 +15,28 @@
  */
 
 /**
- * Re-defining of PHP error handler
+ * Re-defining of default PHP error handler.
  *
+ * @param integer Contains the level of the error raised, as an integer.
+ * @param string The error message, as a string.
+ * @param string Contains the filename that the error was raised in, as a string.
+ * @param integer Contains the line number the error was raised at, as an integer.
+ * @param array An array that points to the active symbol table at the point
+ *              the error occurred. In other words, errcontext will contain
+ *              an array of every variable that existed in the scope the error
+ *              was triggered in. User error handler must not modify error context.
+ * @return boolean
+ * @link http://www.php.net/manual/en/function.set-error-handler.php
  */
 function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
 {
     /**
      * Ignore warnings if they are disabled with a special
-     * sign "@" before the PHP instruction.
+     * sign "@" before the PHP instruction. Don't use the
+     * default error handler in this case.
      */
     if (in_array($errno, array(E_WARNING)) && !error_reporting()) {
-        return;
+        return true;
     }
     switch ($errno) {
         case E_WARNING:
@@ -48,7 +59,7 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
             break;
     }
     $message = sprintf(
-        "[%s] %s, file: %s(%d)\n",
+        "[%s] %s, at %s (%d)\n",
         $err,
         $errstr,
         $errfile,
@@ -59,8 +70,11 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
     } else {
         echo $message;
     }
+
+    // continue with the normal error handler
+    return false;
 }
-set_error_handler('fz__ErrorHandler');
+assert(!is_null(set_error_handler('fz__ErrorHandler')));
 
 /**
  * Global variable in order to calculate total page building time
