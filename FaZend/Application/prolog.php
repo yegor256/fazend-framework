@@ -16,7 +16,7 @@
 
 /**
  * Re-defining of PHP error handler
- * 
+ *
  */
 function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
 {
@@ -47,13 +47,18 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
             $err = 'OTHER';
             break;
     }
-    echo sprintf(
+    $message = sprintf(
         "[%s] %s, file: %s(%d)\n",
         $err,
         $errstr,
         $errfile,
         $errline
     );
+    if (class_exists('FaZend_Log')) {
+        FaZend_Log::err($message);
+    } else {
+        echo $message;
+    }
 }
 set_error_handler('fz__ErrorHandler');
 
