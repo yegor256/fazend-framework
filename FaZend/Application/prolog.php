@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -16,10 +16,15 @@
 
 /**
  * Re-defining of PHP error handler
+ * 
  */
 function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
 {
-    if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
+    /**
+     * Ignore warnings if they are disabled with a special
+     * sign "@" before the PHP instruction.
+     */
+    if (in_array($errno, array(E_WARNING)) && !error_reporting()) {
         return;
     }
     switch ($errno) {
@@ -44,7 +49,7 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
     }
     echo sprintf(
         "[%s] %s, file: %s(%d)\n",
-        $err, 
+        $err,
         $errstr,
         $errfile,
         $errline
@@ -97,7 +102,7 @@ if (!defined('APPLICATION_ENV')) {
 
 set_include_path(
     implode(
-        PATH_SEPARATOR, 
+        PATH_SEPARATOR,
         array_unique(
             array_merge(
                 explode(
@@ -130,11 +135,11 @@ if (!defined('TEMP_PATH')) {
  */
 if (!defined('WEBSITE_URL')) {
     define(
-        'WEBSITE_URL', 
+        'WEBSITE_URL',
         'http://' . preg_replace(
-            '/^www\./i', 
-            '', 
+            '/^www\./i',
+            '',
             isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'
         )
     );
-}  
+}
