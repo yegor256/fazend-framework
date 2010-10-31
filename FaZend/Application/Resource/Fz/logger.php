@@ -54,9 +54,6 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         // remove all writers
         FaZend_Log::getInstance()->clean();
 
-        // make it a default error handler
-        FaZend_Log::getInstance()->registerErrorHandler();
-
         // initialize the log
         $this->_initErrorLog();
 
@@ -120,6 +117,10 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         FaZend_Log::getInstance()->getWriter(self::LOG_WRITER)->addFilter(
             FaZend_Log_Policy_Abstract::factory($name, $params, $stream)
         );
+
+        // make it a default error handler
+        FaZend_Log::getInstance()->getLogger(self::LOG_WRITER)
+            ->registerErrorHandler();
     }
 
 }

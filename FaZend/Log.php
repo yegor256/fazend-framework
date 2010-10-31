@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -144,7 +144,7 @@ class FaZend_Log
     {
         if (!isset($this->_loggers[$name])) {
             FaZend_Exception::raise(
-                'FaZend_Log_WriterNotFound', 
+                'FaZend_Log_WriterNotFound',
                 "Writer '{$name}' was not found in stack"
             );
         }
@@ -166,7 +166,7 @@ class FaZend_Log
     {
         if (!$this->hasWriter($name)) {
             FaZend_Exception::raise(
-                'FaZend_Log_WriterNotFound', 
+                'FaZend_Log_WriterNotFound',
                 "Writer '{$name}' was not found in stack"
             );
         }
@@ -197,7 +197,26 @@ class FaZend_Log
         $this->removeWriter($name);
         return $writer;
     }
-    
+
+    /**
+     * Get logger from the stack
+     *
+     * @param string Name of the logger (or the writter, it's the same)
+     * @return Zend_Log
+     * @throws FaZend_Log_LoggerNotFound
+     */
+    public function getLogger($name)
+    {
+        if (!$this->hasWriter($name)) {
+            FaZend_Exception::raise(
+                'FaZend_Log_LoggerNotFound',
+                "Logger '{$name}' was not found in stack"
+            );
+        }
+
+        return $this->_loggers[$name];
+    }
+
     /**
      * info() decorator
      *
@@ -210,9 +229,9 @@ class FaZend_Log
         if (func_num_args() > 1) {
             $args = func_get_args();
             $msg = call_user_func_array(
-                'sprintf', 
+                'sprintf',
                 array_merge(
-                    array($msg), 
+                    array($msg),
                     array_slice($args, 1)
                 )
             );
@@ -232,9 +251,9 @@ class FaZend_Log
         if (func_num_args() > 1) {
             $args = func_get_args();
             $msg = call_user_func_array(
-                'sprintf', 
+                'sprintf',
                 array_merge(
-                    array($msg), 
+                    array($msg),
                     array_slice($args, 1)
                 )
             );
@@ -254,9 +273,9 @@ class FaZend_Log
         if (func_num_args() > 1) {
             $args = func_get_args();
             $msg = call_user_func_array(
-                'sprintf', 
+                'sprintf',
                 array_merge(
-                    array($msg), 
+                    array($msg),
                     array_slice($args, 1)
                 )
             );
