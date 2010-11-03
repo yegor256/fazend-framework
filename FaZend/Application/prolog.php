@@ -77,7 +77,11 @@ function fz__ErrorHandler($errno, $errstr, $errfile, $errline)
     // DON'T continue with the normal error handler
     return true;
 }
-assert(!is_null(set_error_handler('fz__ErrorHandler')));
+
+/**
+ * We don't validate the returned value here. Maybe we should?
+ */
+set_error_handler('fz__ErrorHandler');
 
 /**
  * Global variable in order to calculate total page building time
