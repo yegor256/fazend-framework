@@ -119,8 +119,9 @@ class FaZend_Application_Resource_fz_logger extends Zend_Application_Resource_Re
         );
 
         // make it a default error handler
-        FaZend_Log::getInstance()->getLogger(self::LOG_WRITER)
-            ->registerErrorHandler();
+        // there is some problem with this procedure... build crashes
+        // FaZend_Log::getInstance()->getLogger(self::LOG_WRITER)
+        //     ->registerErrorHandler();
     }
 
 }
