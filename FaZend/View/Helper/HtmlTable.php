@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -40,7 +40,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @var Zend_Paginator
      */
     protected $_paginator = null;
-    
+
     /**
      * List of columns defined by set..()
      *
@@ -82,7 +82,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @var string[]
      */
     protected $_columnsToShow;
-    
+
     /**
      * List of injected variables
      *
@@ -128,8 +128,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             $html = $this->_render();
         } catch (Exception $e) {
             $html = sprintf(
-                'Exception %s: %s', 
-                get_class($e), 
+                'Exception %s: %s',
+                get_class($e),
                 $e->getMessage()
             );
         }
@@ -145,7 +145,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @return $this
      * @uses $this->_injections
      */
-    public function setInjection($name, $variable = false) 
+    public function setInjection($name, $variable = false)
     {
         $this->_injections[$name] = $variable;
         return $this;
@@ -159,11 +159,11 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @throws FaZend_View_Helper_HtmlTable_InjectionNotFoundException
      * @uses $this->_injections
      */
-    public function getInjection($name) 
+    public function getInjection($name)
     {
         if (!isset($this->_injections[$name])) {
             FaZend_Exception::raise(
-                'FaZend_View_Helper_HtmlTable_InjectionNotFoundException', 
+                'FaZend_View_Helper_HtmlTable_InjectionNotFoundException',
                 "Injection '{$name}' not found"
             );
         }
@@ -186,6 +186,23 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     }
 
     /**
+     * Get the paginator with the data
+     *
+     * @return Zend_Paginator Data holder to render
+     * @throws FaZend_View_Helper_HtmlTable_Exception If it's not set yet
+     */
+    public function getPaginator()
+    {
+        if (!isset($this->_paginator)) {
+            FaZend_Exception::raise(
+                'FaZend_View_Helper_HtmlTable_Exception',
+                "Paginator is not set yet"
+            );
+        }
+        return $this->_paginator;
+    }
+
+    /**
      * Set iterator with the data
      *
      * Saves data source into helper, to be rendered. Without this
@@ -202,10 +219,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         if (!($iterator instanceof Iterator)) {
             $iterator = new ArrayIterator($iterator);
         }
-        
+
         $paginator = FaZend_Paginator::addPaginator(
-            $iterator, 
-            $this->getView(), 
+            $iterator,
+            $this->getView(),
             $pageNo,
             'pg' . $this->_name
         );
@@ -273,7 +290,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     {
         if ($column == $predecessor) {
             FaZend_Exception::raise(
-                'FaZend_View_Helper_HtmlTable_IllegalParameter', 
+                'FaZend_View_Helper_HtmlTable_IllegalParameter',
                 "Column '{$column}' cannot precede itself"
             );
         }
@@ -320,12 +337,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @return FaZend_View_Helper_HtmlTable
      */
     public function addColumnLink(
-        $title, 
-        $httpVar, 
-        $column, 
-        array $urlParams, 
-        $route = 'default', 
-        $reset = false, 
+        $title,
+        $httpVar,
+        $column,
+        array $urlParams,
+        $route = 'default',
+        $reset = false,
         $encode = true
     )
     {
@@ -343,12 +360,12 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @return FaZend_View_Helper_HtmlTable
      */
     public function addOption(
-        $title, 
-        $httpVar, 
-        $column, 
-        array $urlParams, 
-        $route = 'default', 
-        $reset = false, 
+        $title,
+        $httpVar,
+        $column,
+        array $urlParams,
+        $route = 'default',
+        $reset = false,
         $encode = true
     )
     {
@@ -421,7 +438,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
         if (is_null($this->_paginator)) {
             FaZend_Exception::raise(
-                'FaZend_View_Helper_HtmlTable_MissedPaginatorParameter', 
+                'FaZend_View_Helper_HtmlTable_MissedPaginatorParameter',
                 "Paginator must be set first"
             );
         }
@@ -452,7 +469,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 if (!is_object($rowOriginal)) {
                     break;
                 }
-                
+
                 // if it's a method - call it
                 if ($injectedColumn == '__key') {
                     $injectedValue = $key;
@@ -477,7 +494,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $this->_formatColumnStyle(false, null, $rowOriginal)
             );
 
-            $tds = array();    
+            $tds = array();
             foreach ($row as $title=>$value) {
                 $column = $this->_column($title);
 
@@ -500,7 +517,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                     $this->_formatColumnStyle($title, $value, $rowOriginal),
                     $value
                 );
-            }    
+            }
 
             if (count($this->_options)) {
                 $optString = "\t\t<td>";
@@ -510,24 +527,24 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                         if ($option->skip->call($rowOriginal, $key)) {
                             continue;
                         }
-                    }    
+                    }
 
                     // build the <A HREF> link for this option
-                    $optLink = $this->_optionsSeparator . 
+                    $optLink = $this->_optionsSeparator .
                     $this->_resolveLink($option->link, $option->title, $rowOriginal, $key);
 
-                    // attach this option to the particular column    
+                    // attach this option to the particular column
                     if ($option->toColumn) {
                         $tds[$option->toColumn] .= ' ' . $optLink;
                     } else {
-                        $optString .= $optLink;    
+                        $optString .= $optLink;
                     }
                 }
-                $options[] = $optString;    
-            }    
+                $options[] = $optString;
+            }
             $resultTDs[] = $tds;
         }
-        
+
         // if no data in the paginator
         if (!count($resultTDs)) {
             return $this->_noDataMessage;
@@ -546,7 +563,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
             }
 
             $header .= "\t\t<th>{$title}</th>\n";
-        }    
+        }
 
         // add header column for OPTIONS
         if (count($this->_options)) {
@@ -556,23 +573,23 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
         $html = "\n<table>\n" . $header;
         foreach ($resultTRs as $tr=>$line) {
-            $html .= 
-            $line . 
+            $html .=
+            $line .
             implode(
-                "</td>\n", 
+                "</td>\n",
                 array_merge(
-                    $resultTDs[$tr], 
+                    $resultTDs[$tr],
                     isset($options[$tr]) ? array($options[$tr]) : array()
                 )
-            ) . 
+            ) .
             "</td>\n\t</tr>\n";
-        }    
+        }
 
-        return $html . "</table>\n";    
+        return $html . "</table>\n";
     }
 
     /**
-     * Get a column object 
+     * Get a column object
      *
      * @param string Column name
      * @return StdObj
@@ -588,7 +605,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     }
 
     /**
-     * Get a column object 
+     * Get a column object
      *
      * @param string Option name
      * @return StdObj
@@ -727,7 +744,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 $value = (string)$value;
             }
 
-            // strip HTML tags    
+            // strip HTML tags
             if (!$column->rawHtml) {
                 $value = htmlspecialchars($value);
             }
@@ -735,7 +752,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
 
         return $value;
     }
-    
+
     /**
      * Build and return style for the specified column or row
      *
@@ -745,7 +762,7 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @return string
      * @throws FaZend_View_Helper_HtmlTable_InvalidFormatter
      */
-    protected function _formatColumnStyle($name, $value, $row) 
+    protected function _formatColumnStyle($name, $value, $row)
     {
         $styles = array();
         foreach ($this->_column($name)->formatters as $formatter) {
