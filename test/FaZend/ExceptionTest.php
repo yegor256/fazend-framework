@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: EmailTest.php 1916 2010-04-29 11:44:33Z yegor256@gmail.com $
+ * @version $Id$
  */
 
 /**
