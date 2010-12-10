@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
 
 /**
  * ORM auto-mapping classes
- * 
+ *
  * @package application
  * @subpackage Model
  * @baseline team@fazend.com exists()
@@ -26,14 +26,14 @@
  */
 class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
 {
-    
+
     /**
      * Create new owner
      *
      * @return Model_Owner
      * @see Model_Owner
      */
-    public static function create($name) 
+    public static function create($name)
     {
         $owner = new self();
         $owner->name = $name;
@@ -42,7 +42,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
     }
 
     /**
-     * Retrieve all owners 
+     * Retrieve all owners
      *
      * @baseline team@fazend.com exists()
      * @return Model_Owner[]
@@ -84,7 +84,7 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
             ->set('id', intval(strval($this)))
             ->set('balance', rand(100, 999));
     }
-    
+
     /**
      * Register new person
      *
@@ -95,15 +95,16 @@ class Model_Owner extends FaZend_Db_Table_ActiveRow_owner
      * @see FaZend_View_Helper_FormaTest
      * @see Model_Owner
      */
-    public static function register($name, $reason, $client, $address, $file = null) 
+    public static function register($name, $reason, $client, $address, $file = null)
     {
         validate()
             ->type($client, 'boolean', "Invalid type of CLIENT")
             ->type($address, 'string', "Invalid type of ADDRESS")
             ->type($name, 'string', "Invalid type of NAME")
             ->type($name, 'string', "Invalid type of REASON");
-        
+
         logg('Successfull Registration of new Owner: ++success++');
+        return self::create($name);
     }
 
 }

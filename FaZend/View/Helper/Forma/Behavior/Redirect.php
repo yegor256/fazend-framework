@@ -43,10 +43,13 @@ class FaZend_View_Helper_Forma_Behavior_Redirect extends FaZend_View_Helper_Form
         }
 
         // if callback provided, use it as URL
-        if ($this->_args[0] instanceof FaZend_Callback) {
+        $callback = $this->_args[0];
+        if ($callback instanceof FaZend_Callback) {
+            $args = $this->_methodArgs;
+            $args[] = $this->_return;
             $path = call_user_func_array(
-                array($this->_args[0], 'call'),
-                $this->_methodArgs
+                array($callback, 'call'),
+                $args
             );
             Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
                 ->gotoUrl($path);
