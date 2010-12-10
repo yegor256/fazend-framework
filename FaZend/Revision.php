@@ -22,7 +22,7 @@
 class FaZend_Revision
 {
 
-    const VERSION = '0.2';
+    const VERSION = '0.3';
 
     /**
      * Name of the project

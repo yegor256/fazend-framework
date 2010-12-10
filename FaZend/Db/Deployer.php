@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -26,7 +26,7 @@
  */
 class FaZend_Db_Deployer
 {
-    
+
     /**
      * Database adapter to use
      *
@@ -42,7 +42,7 @@ class FaZend_Db_Deployer
      * @see deploy()
      */
     protected $_flag;
-    
+
     /**
      * List of absolute directory names with .SQL files
      *
@@ -50,7 +50,7 @@ class FaZend_Db_Deployer
      * @see deploy()
      */
     protected $_folders = array();
-    
+
     /**
      * Shall this class be LOG-verbose (add messages to log)
      *
@@ -67,7 +67,7 @@ class FaZend_Db_Deployer
      * @return $this
      * @see FaZend_Application_Resource_fz_deployer::init()
      */
-    public function setFlag($flag) 
+    public function setFlag($flag)
     {
         $this->_flag = $flag;
         return $this;
@@ -81,12 +81,12 @@ class FaZend_Db_Deployer
      * @throws FaZend_Db_Deployer_InvalidFolderException
      * @see FaZend_Application_Resource_fz_deployer::init()
      */
-    public function setFolders(array $folders) 
+    public function setFolders(array $folders)
     {
         foreach ($folders as $dir) {
             if (!file_exists($dir) || !is_dir($dir)) {
                 FaZend_Exception::raise(
-                    'FaZend_Db_Deployer_InvalidFolderException', 
+                    'FaZend_Db_Deployer_InvalidFolderException',
                     "Directory '{$dir}' is absent or is not a directory"
                 );
             }
@@ -102,19 +102,19 @@ class FaZend_Db_Deployer
      * @return $this
      * @see FaZend_Application_Resource_fz_deployer::init()
      */
-    public function setVerbose($verbose) 
+    public function setVerbose($verbose)
     {
         $this->_verbose = $verbose;
         return $this;
     }
-    
+
     /**
      * Set adapter to use
      *
      * @param Zend_Db_Adapter_Abstract Adapter to use
      * @return $this
      */
-    public function setAdapter(Zend_Db_Adapter_Abstract $adapter) 
+    public function setAdapter(Zend_Db_Adapter_Abstract $adapter)
     {
         $this->_adapter = $adapter;
         return $this;
@@ -126,22 +126,22 @@ class FaZend_Db_Deployer
      * @param bool Enforce deployment?
      * @return void
      */
-    public function deploy($enforce = false) 
+    public function deploy($enforce = false)
     {
         // shall we deploy?
         if (!$enforce && !$this->_isNecessary()) {
             return;
         }
-        
+
         // go through ALL deployment directories
         foreach ($this->_folders as $dir) {
             try {
                 // get full list of existing(!) tables in Db
                 $tables = array_map(
-                    'strtolower', 
+                    'strtolower',
                     $this->_adapter->listTables()
                 );
-            
+
                 // get full list of files
                 $files = preg_grep('/^\d+\s.*?\.sql$/', scandir($dir));
 
@@ -164,7 +164,7 @@ class FaZend_Db_Deployer
             } catch (FaZend_Db_Deployer_Exception $e) {
                 // swallow it and report in log
                 FaZend_Log::err("Deployment failure: '{$e->getMessage()}'");
-            } 
+            }
         }
     }
 
@@ -173,7 +173,7 @@ class FaZend_Db_Deployer
      *
      * @return string[]
      */
-    public function getTables() 
+    public function getTables()
     {
         $list = $matches = array();
         foreach ($this->_folders as $dir) {
@@ -202,7 +202,7 @@ class FaZend_Db_Deployer
      * @return array[]
      * @throws FaZend_Db_Deployer_SqlFileNotFound
      */
-    public function getTableInfo($table) 
+    public function getTableInfo($table)
     {
         foreach ($this->_folders as $dir) {
             foreach (scandir($dir) as $file) {
@@ -212,8 +212,8 @@ class FaZend_Db_Deployer
             }
         }
         return FaZend_Exception::raise(
-            'FaZend_Db_Deployer_SqlFileNotFound', 
-            "File '<num> {$table}.sql' not found in '{$dir}'",
+            'FaZend_Db_Deployer_SqlFileNotFound',
+            "File '<num> {$table}.sql' not found",
             'FaZend_Db_Deployer_Exception'
         );
     }
@@ -224,7 +224,7 @@ class FaZend_Db_Deployer
      * @param string SQL
      * @return array[]
      */
-    public function getSqlInfo($sql) 
+    public function getSqlInfo($sql)
     {
         return $this->_sqlInfo($sql);
     }
@@ -235,7 +235,7 @@ class FaZend_Db_Deployer
      * @see deploy()
      * @return boolean
      */
-    protected function _isNecessary() 
+    protected function _isNecessary()
     {
         // check the existence of the flag
         // it it's absent, we should do NOT anything
@@ -243,7 +243,7 @@ class FaZend_Db_Deployer
             return false;
         }
 
-        // remove the flag from the disc, and 
+        // remove the flag from the disc, and
         // we will never come back here again
         if ((APPLICATION_ENV === 'production') && (@unlink($this->_flag) === false)) {
             FaZend_Log::err("Failed to remove deployer flag file: '{$this->_flag}'");
@@ -265,23 +265,23 @@ class FaZend_Db_Deployer
      * @return void
      * @throws FaZend_Db_Deployer_Exception
      */
-    protected function _create($table, $sql) 
+    protected function _create($table, $sql)
     {
         if (empty($sql) && $this->_verbose) {
             logg("DB table '{$table}' was NOT created since SQL is empty");
             return;
         }
-        
+
         try {
             $this->_adapter->query($sql);
         } catch (Exception $e) {
             FaZend_Exception::raise(
-                'FaZend_Db_Deployer_CreateFailed', 
-                $e->getMessage() . ': ' . $sql, 
+                'FaZend_Db_Deployer_CreateFailed',
+                $e->getMessage() . ': ' . $sql,
                 'FaZend_Db_Deployer_Exception'
             );
         }
-        
+
         // log the operation
         if ($this->_verbose) {
             logg(
@@ -300,7 +300,7 @@ class FaZend_Db_Deployer
      * @return void
      * @todo this method is not implemented yet
      */
-    protected function _update($table, $sql) 
+    protected function _update($table, $sql)
     {
         assert(is_string($table)); // for ZCA only
         assert(is_string($sql)); // for ZCA only
@@ -331,7 +331,7 @@ class FaZend_Db_Deployer
      * @param string SQL spec of the table
      * @return array[]
      */
-    protected function _sqlInfo($sql) 
+    protected function _sqlInfo($sql)
     {
         $sql = preg_replace(
             array(
@@ -339,8 +339,8 @@ class FaZend_Db_Deployer
                 '/[\n\t\r]/', // no special chars
                 '/\s+/', // compress spaces
                 '/`/', // remove backticks
-            ), 
-            ' ', 
+            ),
+            ' ',
             $sql . "\n"
         );
 
@@ -350,7 +350,7 @@ class FaZend_Db_Deployer
         // sanity check
         if (!preg_match('/^create (?:table|view)?/i', $sql))
             FaZend_Exception::raise(
-                'FaZend_Db_Deployer_WrongFormat', 
+                'FaZend_Db_Deployer_WrongFormat',
                 "Every SQL file should start with 'create table' or 'create view', ".
                 "we get this: '" . cutLongLine($sql, 50) . "'",
                 'FaZend_Db_Deployer_Exception'
@@ -369,8 +369,8 @@ class FaZend_Db_Deployer
 
         $matches = array();
         preg_match_all(
-            '/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s[\"\'](.*?)[\'\"])?\,/i', 
-            $columnsText, 
+            '/([\w\d\_]+)\s+((?:[\w\_\s\d]|(?:\(.*?\)))+)(?:\scomment\s[\"\'](.*?)[\'\"])?\,/i',
+            $columnsText,
             $matches
         );
 
@@ -387,8 +387,8 @@ class FaZend_Db_Deployer
 
             // process foreign keys
             if (preg_match(
-                '/^(?:constraint\s.*?\s)?foreign\skey\s\(\s?(.*?)\s?\)\sreferences\s(.*?)\s\(\s?(.*?)\s?\)\s(.*)/i', 
-                $column, 
+                '/^(?:constraint\s.*?\s)?foreign\skey\s\(\s?(.*?)\s?\)\sreferences\s(.*?)\s\(\s?(.*?)\s?\)\s(.*)/i',
+                $column,
                 $key
             )) {
                 $info[$key[1]]['FK'] = 1;
@@ -418,7 +418,7 @@ class FaZend_Db_Deployer
                 'COMMENT' => $matches[3][$id],
                 'NULL' => !preg_match('/not\snull/i', $matches[2][$id]),
             );
-                
+
         }
         return $info;
     }
@@ -431,7 +431,7 @@ class FaZend_Db_Deployer
      * @return int
      * @see deploy()
      */
-    protected function _sorter($file1, $file2) 
+    protected function _sorter($file1, $file2)
     {
         return (int)$file1 > (int)$file2;
     }
@@ -443,14 +443,14 @@ class FaZend_Db_Deployer
      * @return string
      * @see deploy()
      */
-    protected function _clearSql($file) 
+    protected function _clearSql($file)
     {
         return trim(
             preg_replace(
                 array(
                     '/\-\-.*/',
                     '/[\n\r\t]/'
-                ), 
+                ),
                 ' ', // replace with spaces
                 "\n" . file_get_contents($file)
             )
