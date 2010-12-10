@@ -7,11 +7,16 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_LogTest extends AbstractTestCase
 {
-    
+
     public function testLogWorks()
     {
         logg('Logging mechanism works properly');
-        $this->assertNotEquals(true, FaZend_Log::getInstance()->getWriter('FaZendDebug')->isEmpty());
+        $this->assertNotEquals(
+            true,
+            FaZend_Log::getInstance()
+            ->getWriter(FaZend_Application_Resource_fz_logger::DEBUG_WRITER)
+            ->isEmpty()
+        );
     }
 
     public function testObserverWorks()
@@ -30,4 +35,3 @@ class FaZend_LogTest extends AbstractTestCase
     }
 
 }
-        

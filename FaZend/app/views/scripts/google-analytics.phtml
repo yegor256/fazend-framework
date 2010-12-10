@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -12,7 +12,19 @@
 -->
 
 <script type="text/javascript">
+//<![CDATA[
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-try { var pageTracker = _gat._getTracker("<?php echo $this->googleAnalytics?>"); pageTracker._trackPageview(); } catch(err) {}
+document.write(
+    unescape(
+        "%3Cscript src='" + gaJsHost
+        + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"
+    )
+);
+try {
+    var pageTracker = _gat._getTracker("<?php echo $this->googleAnalytics?>");
+    pageTracker._trackPageview();
+} catch(err) {
+    // swallow it
+}
+//]]>
 </script>

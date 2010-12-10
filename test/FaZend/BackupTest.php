@@ -7,13 +7,13 @@ require_once 'AbstractTestCase.php';
 
 class FaZend_BackupTest extends AbstractTestCase
 {
-    
+
     public function testItIsASingleton()
     {
         $backup = FaZend_Backup::getInstance();
         $this->assertTrue($backup === FaZend_Backup::getInstance());
     }
-    
+
     public function testBackupWorks()
     {
         $backup = FaZend_Backup::getInstance();
@@ -22,8 +22,7 @@ class FaZend_BackupTest extends AbstractTestCase
                 'execute' => true,
             )
         );
-        $backup->execute();
+        $backup->execute('php://stdout');
     }
 
 }
-        

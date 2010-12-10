@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,7 +30,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
      * @see __construct()
      */
     private $_select;
-    
+
     /**
      * Table
      *
@@ -77,10 +77,10 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
     public function count()
     {
         $sql = sprintf(
-            'SELECT COUNT(*) FROM (%s) AS tbl', 
+            'SELECT COUNT(*) FROM (%s) AS tbl',
             (string)$this->select()
         );
-         try{
+        try{
             // We build a new query, where the original query goes into
             // a subquery. You don't need to calculate rows manually
             // and you may be sure that no data goes to memory when
@@ -91,7 +91,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
             );
         } catch (Zend_Db_Statement_Exception $e) {
             FaZend_Exception::raise(
-                'FaZend_Db_RowsetWrapper_Exception', 
+                'FaZend_Db_RowsetWrapper_Exception',
                 sprintf(
                     '%s: (%s) in "%s"',
                     get_class($e),
@@ -121,12 +121,12 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
         if (!isset($this->_rowset)) {
             try {
                 $this->_rowset = $this->_table->fetchAll(
-                    $this->select(), 
+                    $this->select(),
                     $this->select()->getBind()
                 );
             } catch (Zend_Db_Statement_Exception $e) {
                 FaZend_Exception::raise(
-                    'FaZend_Db_RowsetWrapper_Exception', 
+                    'FaZend_Db_RowsetWrapper_Exception',
                     sprintf(
                         '%s: (%s) in "%s"',
                         get_class($e),
@@ -139,7 +139,7 @@ class FaZend_Db_RowsetWrapper implements SeekableIterator, Countable, ArrayAcces
 
         // execute what was asked
         return call_user_func_array(
-            array($this->_rowset, $name), 
+            array($this->_rowset, $name),
             $args
         );
     }
