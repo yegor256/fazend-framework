@@ -27,6 +27,16 @@ class IndexController extends FaZend_Controller_Action
 {
 
     /**
+     * Front page.
+     *
+     * @return void
+     * @see IndexController
+     */
+    public function indexAction()
+    {
+    }
+
+    /**
      * Test _redirectFlash() method
      *
      * @return void
