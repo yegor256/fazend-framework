@@ -92,7 +92,7 @@ class FaZend_app_controllers_UserControllerTest extends AbstractTestCase
         $user = FaZend_User::findByEmail('good@fazend.com');
         $user->logIn();
 
-        $this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
+        $this->dispatch($this->view->url(array('action'=>'logout'), 'fz__user', true));
         $this->assertEquals(false, FaZend_User::isLoggedIn());
     }
 
@@ -100,7 +100,7 @@ class FaZend_app_controllers_UserControllerTest extends AbstractTestCase
     {
         FaZend_User::logOut();
 
-        $this->dispatch($this->view->url(array('action'=>'logout'), 'user', true));
+        $this->dispatch($this->view->url(array('action'=>'logout'), 'fz__user', true));
         $this->assertEquals(false, FaZend_User::isLoggedIn());
     }
 

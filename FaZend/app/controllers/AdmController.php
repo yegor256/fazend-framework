@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -32,45 +32,29 @@ class Fazend_AdmController extends FaZend_Controller_Action
      *
      * @return void
      */
-    public function preDispatch() 
+    public function preDispatch()
     {
         // no login in testing/development environment
         if ((APPLICATION_ENV === 'production') && !self::_isLoggedIn()) {
             return $this->_forward('login');
         }
 
-        $this->view->action = $this->getRequest()->getActionName();    
+        $this->view->action = $this->getRequest()->getActionName();
         parent::preDispatch();
     }
-        
+
     /**
      * Show content of tables
      *
      * @return void
      */
-    public function squeezeAction() 
+    public function squeezeAction()
     {
         if ($this->_hasParam('reload')) {
             $this->view->squeezePNG()->startOver();
         }
     }
 
-    /**
-     * Show POS content
-     *
-     * @return void
-     */
-    public function posAction()
-    {
-        if (!FaZend_Pos_Root::exists()) {
-            return $this->_redirectFlash('POS does not exist', 'index');
-        }
-            
-        if ($this->_hasParam('object')) {
-            $this->view->node = FaZend_Pos_Properties::root()->ps()->findById($this->_getParam('object'));
-        }
-    }
-    
     /**
      * Login
      *
@@ -79,25 +63,25 @@ class Fazend_AdmController extends FaZend_Controller_Action
     public function loginAction()
     {
         $form = $this->view->form = new FaZend_Form();
-        
+
         $email = new Zend_Form_Element_Text('email');
-        $email->setLabel('Email:')        
+        $email->setLabel('Email:')
             ->setRequired();
         $form->addElement($email);
-        
+
         $pwd = new Zend_Form_Element_Password('password');
         $pwd->setLabel('Password:')
             ->setRequired();
         $form->addElement($pwd);
-        
+
         $form->addElement('submit', 'Login');
 
         if (!$form->isFilled())
             return;
-            
+
         try {
             $this->_logIn($email->getValue(), $pwd->getValue());
-        } catch (LoginException $e) {   
+        } catch (LoginException $e) {
             $email->addError($e->getMessage());
             return;
         }
@@ -138,11 +122,11 @@ class Fazend_AdmController extends FaZend_Controller_Action
         $accessFile = APPLICATION_PATH . '/deploy/access.txt';
         if (!@file_exists($accessFile)) {
             FaZend_Exception::raise(
-                'LoginException', 
+                'LoginException',
                 "Access control file is absent, refer to admin"
             );
         }
-     
+
         $count = 0;
         $lines = @file($accessFile);
         foreach ($lines as $line) {
@@ -150,19 +134,19 @@ class Fazend_AdmController extends FaZend_Controller_Action
             if (!preg_match('/^([@\.\-\w\d]+):([\w\d]+)$/', $line, $matches)) {
                 continue;
             }
-                
+
             // calculate the number of users in the file
             $count++;
-                
+
             // if this is not the required email (another user)
             if ($matches[1] != $email) {
                 continue;
             }
-                    
+
             // wrong password?
             if ($matches[2] != md5($password)) {
                 FaZend_Exception::raise(
-                    'LoginException', 
+                    'LoginException',
                     "Wrong password (" . str_repeat('*', strlen($password)) . "), try again"
                 );
             }
@@ -173,7 +157,7 @@ class Fazend_AdmController extends FaZend_Controller_Action
         }
 
         FaZend_Exception::raise(
-            'LoginException', 
+            'LoginException',
             "The email is not found in ACL ($count)"
         );
     }
@@ -192,4 +176,3 @@ class Fazend_AdmController extends FaZend_Controller_Action
     }
 
 }
-            

@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -41,7 +41,18 @@ class FaZend_View_Helper_Forma_Behavior_Redirect extends FaZend_View_Helper_Form
                 ->gotoUrl($uri);
             return;
         }
-        
+
+        // if callback provided, use it as URL
+        if ($this->_args[0] instanceof FaZend_Callback) {
+            $path = call_user_func_array(
+                array($this->_args[0], 'call'),
+                $this->_methodArgs
+            );
+            Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')
+                ->gotoUrl($path);
+            return;
+        }
+
         // redirect to the given address
         call_user_func_array(
             array(

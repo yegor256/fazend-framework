@@ -9,11 +9,11 @@ define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 
 // you should have Zend checked out from truck
 // in the directory ../../zend-trunk
-define('ZEND_PATH', realpath(dirname(__FILE__) . '/../../zend-trunk/Zend'));
+define('ZEND_PATH', realpath(dirname(__FILE__) . '/../Zend'));
 
 set_include_path(
     implode(
-        PATH_SEPARATOR, 
+        PATH_SEPARATOR,
         array_unique(
             array_merge(
                 array(
@@ -36,21 +36,21 @@ require_once 'FaZend/Test/TestCase.php';
 
 class AbstractTestCase extends FaZend_Test_TestCase
 {
-    
+
     /**
      * @var Zend_Db_Adapter
      */
     protected $_dbAdapter;
-    
+
     public function setUp()
     {
         parent::setUp();
         $this->_dbAdapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-    }    
+    }
 
     public function tearDown()
     {
         parent::tearDown();
-    }    
+    }
 
 }

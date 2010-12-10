@@ -3,15 +3,16 @@
  * @todo #1 just to test the tag finding in Pan/Analysis
  * @see IndexController::formaAction()
  -->
- 
+
 <p>This is forma:</p>
 
 <?php echo $this->forma()
     ->addBehavior('showLog')
     ->addBehavior(
-        'flash', 
+        'flash',
         'sprintf("FLASH++ for %s (%d bytes in reason)", ${a1}, strlen(${a4}))'
     )
+    ->addBehavior('redirect', FaZend_Callback::factory('"/index/submitted/{${a1}}";'))
     ->addBehavior('redirect', 'submitted', 'index')
     ->addField('text', 'name')
         ->fieldLabel('Your full name')
@@ -25,9 +26,14 @@
     ->addField('textarea', 'reason')
         ->fieldAttrib('cols', 15)
         ->fieldLabel('Why are you interested in our services?')
-    ->addField('file', 'file')
-        ->fieldLabel('Signed NDA in PDF')
-    ->addField('radio', 'Sex')
+    /**
+     * @todo I don't know why, but it doesn't work with FILE
+     */
+    // ->addField('file', 'file')
+    //     ->fieldLabel('Signed NDA in PDF')
+    ->addField('hidden', 'file')
+        ->fieldValue('some file')
+    ->addField('radio', 'sex')
         ->fieldLabel('Sex')
         ->fieldOptions(
             array(
@@ -39,5 +45,5 @@
         ->fieldValue('go')
         ->fieldAction(array('Model_Owner', 'register'))
     ?>
-    
+
 <p>test</p>

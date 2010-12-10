@@ -18,9 +18,9 @@
  *
 -->
 
-<project name="fazend tests" basedir="." default="main"> 
+<project name="fazend tests" basedir="." default="main">
 
-	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+	<!-- Sets the DSTAMP, TSTAMP and TODAY properties -->
 	<tstamp/>
 
 	<includepath classpath="${project.basedir}" />
@@ -31,7 +31,7 @@
 
 	<target name="lint" description="Run syntax check for all classes" >
 		<phplint haltonfailure="yes" level="verbose">
-			<fileset dir="${project.basedir}">
+			<fileset dir="${project.basedir}/FaZend">
 				<include name="**/*.php"/>
 				<include name="**/*.html"/>
 				<include name="**/*.phtml"/>
@@ -41,33 +41,33 @@
 	</target>
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <exec command="phpcs 
+        <exec command="phpcs
             -n
             --report=full
-            --standard=Zend 
-            --ignore='.svn/*' 
-            --extensions='php,phtml' 
-            ${project.basedir}" 
+            --standard=Zend
+            --ignore='.svn/*'
+            --extensions='php,phtml'
+            ${project.basedir}/FaZend"
             escape="false"
-            checkreturn="true" 
+            checkreturn="true"
             passthru="true" />
     </target>
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
-        <exec command="phpmd 
-            ${project.basedir} 
+        <exec command="phpmd
+            ${project.basedir}/FaZend
             text
             codesize,unusedcode
             --extensions='php,phtml'"
             escape="false"
-            checkreturn="false" 
+            checkreturn="false"
             passthru="true"
         />
     </target>
 
     <target name="zca" description="Zend Code Analyzer">
         <zendcodeanalyzer analyzerPath="zca" haltonwarning="false">
-            <fileset dir="${project.basedir}">
+            <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php" />
                 <include name="**/*.phtml" />
                 <exclude name=".svn/**" />
@@ -87,6 +87,6 @@
 				</fileset>
 			</batchtest>
 		</phpunit>
-	</target>	
+	</target>
 
 </project>

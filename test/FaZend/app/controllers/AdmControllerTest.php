@@ -13,13 +13,11 @@ class FaZend_app_controllers_AdmControllerTest extends AbstractTestCase
 
     public function testAllUrlsWork()
     {
-        $this->dispatch($this->view->url(array('action'=>'squeeze'), 'adm', true));
-    }
-
-    public function testCustomActionWorks()
-    {
-        $this->dispatch($this->view->url(array('action'=>'custom'), 'adm', true));
-        $this->assertQuery('p.ok', "Failed to run custom action");
+        $uri = $this->view->url(array('action' => 'squeeze'), 'fz__adm', true);
+        $this->assertNotRedirect();
+        $this->assertController('adm');
+        $this->assertController('squeeze');
+        $this->dispatch($uri);
     }
 
 }

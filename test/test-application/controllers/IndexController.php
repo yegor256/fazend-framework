@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -35,7 +35,7 @@ class IndexController extends FaZend_Controller_Action
     public function flashAction()
     {
         $this->_redirectFlash('That works');
-    }    
+    }
 
     /**
      * Test htmlTable helper
@@ -47,7 +47,7 @@ class IndexController extends FaZend_Controller_Action
     {
         FaZend_Paginator::addPaginator(Model_Owner::retrieveAll(), $this->view, 0);
     }
-    
+
     /**
      * Test forma() helper.
      *
@@ -57,5 +57,35 @@ class IndexController extends FaZend_Controller_Action
     public function formaAction()
     {
     }
-    
+
+    /**
+     * Test squeezePNG() helper.
+     *
+     * @return void
+     * @see IndexController
+     */
+    public function squeezeAction()
+    {
+    }
+
+    /**
+     * Test loremIpsum() helper.
+     *
+     * @return void
+     * @see IndexController
+     */
+    public function loremipsumAction()
+    {
+    }
+
+    /**
+     * Test headScript() helper.
+     *
+     * @return void
+     * @see IndexController
+     */
+    public function headscriptAction()
+    {
+    }
+
 }
