@@ -12,6 +12,9 @@ class FaZend_Db_DeployerTest extends AbstractTestCase
     {
         parent::setUp();
         $this->_deployer = new FaZend_Db_Deployer();
+        $this->_deployer->setFolders(
+            array(APPLICATION_PATH . '/deploy/database')
+        );
     }
 
     public static function providerSqlSamples()
@@ -19,7 +22,7 @@ class FaZend_Db_DeployerTest extends AbstractTestCase
         return array(
             array(
                 'test',
-                "--\n--\t\n\n--\ncreate table   test (id int unsigned, name5_8 varchar(255) not null 
+                "--\n--\t\n\n--\ncreate table   test (id int unsigned, name5_8 varchar(255) not null
                 comment \"this is what works\");\n\n"),
             array(
                 'ad',
@@ -64,15 +67,15 @@ class FaZend_Db_DeployerTest extends AbstractTestCase
     public function testGetTablesWorks()
     {
         $list = $this->_deployer->getTables();
-        $this->assertTrue(count($list) > 0);
+        $this->assertGreaterThan(0, count($list));
     }
 
     public function testGetTableInfoWorks()
     {
         $list = $this->_deployer->getTables();
+        $this->assertGreaterThan(0, count($list));
         $table = array_shift($list);
         $info = $this->_deployer->getTableInfo($table);
     }
 
 }
-        
