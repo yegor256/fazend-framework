@@ -71,7 +71,12 @@ class FaZend_View_Filter_HtmlCompressor implements Zend_Filter_Interface
         if (strlen($html) > ini_get('pcre.backtrack_limit')) {
             FaZend_Exception::raise(
                 'FaZend_View_Filter_HtmlCompressor_Exception',
-                "You should raise pcre.backtrack_limit for large HTML pages compression"
+                sprintf(
+                    "You should raise pcre.backtrack_limit for large HTML pages compression"
+                    . " (%d bytes now, while it is set to %d)",
+                    strlen($html),
+                    ini_get('pcre.backtrack_limit')
+                )
             );
         }
 

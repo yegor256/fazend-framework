@@ -52,7 +52,12 @@ class FaZend_View_Filter_CssCompressor implements Zend_Filter_Interface
         if (strlen($css) > ini_get('pcre.backtrack_limit')) {
             FaZend_Exception::raise(
                 'FaZend_View_Filter_CssCompressor_Exception',
-                "You should raise pcre.backtrack_limit for large CSS pages compression"
+                sprintf(
+                    "You should raise pcre.backtrack_limit for large CSS compression"
+                    . " (%d bytes now, while it is set to %d)",
+                    strlen($html),
+                    ini_get('pcre.backtrack_limit')
+                )
             );
         }
 
