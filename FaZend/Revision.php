@@ -86,12 +86,19 @@ class FaZend_Revision
     }
 
     /**
-     * Get name of the project
+     * Get name of the project.
      *
      * @return string Name of the project
+     * @throws FaZend_Revision_Exception If not configured yet
      */
     public static function getName()
     {
+        if (is_null(self::$_name)) {
+            FaZend_Exception::raise(
+                'FaZend_Revision_Exception',
+                'Project name is not configured yet'
+            );
+        }
         return self::$_name;
     }
 

@@ -61,7 +61,6 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
 
         // plugin cache
         // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
-        $this->_bootstrap->bootstrap('fazend');
         $classFileIncCache = TEMP_PATH . '/'.
         FaZend_Revision::getName() . '-r' .
         FaZend_Revision::get() . '-includeCache.php';
