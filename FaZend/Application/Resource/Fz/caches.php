@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -39,19 +39,19 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
     {
         //@todo when this ticket is resolved: http://framework.zend.com/issues/browse/ZF-8991
         $cache = Zend_Cache::factory(
-            'Core', 
+            'Core',
             new FaZend_Cache_Backend_Memory(),
             array(
                 'caching' => true,
-                'lifetime' => null, // forever 
+                'lifetime' => null, // forever
                 'cache_id_prefix' => FaZend_Revision::getName() . '_' . FaZend_Revision::get(),
                 'automatic_serialization' => true
             ),
             array()
         );
-             
+
         // metadata cacher
-        // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching    
+        // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching
         Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
         // only in production
@@ -61,7 +61,8 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
 
         // plugin cache
         // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
-        $classFileIncCache = TEMP_PATH . '/'. 
+        $this->_bootstrap->bootstrap('fazend');
+        $classFileIncCache = TEMP_PATH . '/'.
         FaZend_Revision::getName() . '-r' .
         FaZend_Revision::get() . '-includeCache.php';
 
@@ -77,5 +78,5 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
         // set cache for "included" files
         Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
     }
-    
+
 }
