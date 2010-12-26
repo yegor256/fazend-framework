@@ -295,7 +295,7 @@
 
     <target name="clean" description="Remove obsolete files just created" >
         <if><istrue value="${to.clean}" /><then>
-            <delete verbose="false" includeemptydirs="true">
+            <delete verbose="false" includeemptydirs="true" failonerror="false">
                 <fileset dir="${project.basedir}/reports">
                     <include name="*" />
                 </fileset>
