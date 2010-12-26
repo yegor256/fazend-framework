@@ -20,7 +20,7 @@
 
 <project basedir="." default="main">
 
-    <!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+    <!-- Sets the DSTAMP, TSTAMP and TODAY properties -->
     <tstamp/>
 
     <!-- all php scripts should be able to include files from these dirs -->
@@ -31,7 +31,7 @@
     <property name="cc.root" value="/home/cc" />
 
     <!-- main task, executed by the project -->
-    <target name="main" 
+    <target name="main"
         depends="svn, lint, phpcs, phpmd, test, deploy, phprack, clean"
         description="Validate, compile, deploy and clean">
     </target>
@@ -58,14 +58,14 @@
                 <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
 
                 <!-- get the number of SVN revision we're currently working with -->
-                <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))" 
-                    returnProperty="svn.revision" />    
+                <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))"
+                    returnProperty="svn.revision" />
                 <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-                <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->    
+                <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->
                 <echo msg="SVN revision: ${svn.revision}" />
             </then><else>
                 <property name="to.deploy" value="false" />
-                <echo msg="{to.deploy} set to FALSE since it's not a CruiseControl environment" />    
+                <echo msg="{to.deploy} set to FALSE since it's not a CruiseControl environment" />
             </else></if>
         </then></if>
 
@@ -79,7 +79,7 @@
         <then>
             <property name="to.lint" value="${to.deploy}" />
         </then></if>
-        
+
         <!--
             {to.clean} property asks the builder to clean everything
             created during building, all reports, temp files, documentation
@@ -127,7 +127,7 @@
         <then>
             <property name="to.phpmd" value="false" />
         </then></if>
-        
+
         <!--
             {to.unit} may define a mask for the test to run, all other validations
             and reports will be disabled.
@@ -160,7 +160,7 @@
                 </fileset>
             </phplint>
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since {to.lint} is FALSE" />    
+            <echo msg="Skipped in '${phing.project.name}', since {to.lint} is FALSE" />
         </else></if>
     </target>
 
@@ -168,10 +168,10 @@
         <!-- prepare code coverage db -->
         <if><istrue value="${to.coverage}" /><then>
             <property name="coverage.db" value="${coverage.dir}/coverage.xml" />
-            
+
             <!-- make sure it exists -->
             <mkdir dir="${coverage.dir}" />
-            
+
             <!-- create coverage database that will collect all reports -->
             <coverage-setup database="${coverage.db}">
                 <fileset dir="${project.basedir}/src/application">
@@ -220,59 +220,50 @@
                 </batchtest>
             </phpunit>
         </else></if>
-    </target>    
+    </target>
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
         <if><istrue value="${to.phpcs}" /><then>
             <!-- see: http://pear.php.net/package/PHP_CodeSniffer/download -->
-            <exec command="phpcs 
+            <exec command="phpcs
                 -n
                 --report=full
-                --standard=Zend 
-                --ignore='.svn/*' 
-                --extensions='php' 
-                ${project.basedir}/src/application" 
+                --standard=Zend
+                --ignore='.svn/*'
+                --extensions='php'
+                ${project.basedir}/src/application"
                 escape="false"
-                checkreturn="true" 
+                checkreturn="true"
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since {to.phpcs} is FALSE" />    
+            <echo msg="Skipped in '${phing.project.name}', since {to.phpcs} is FALSE" />
         </else></if>
     </target>
 
     <target name="phpmd" description="PHP Mess Detection">
         <if><istrue value="${to.phpmd}" /><then>
-            <exec command="phpmd 
+            <exec command="phpmd
                 ${project.basedir}/src/application
                 text
                 codesize,unusedcode
                 --extensions='php,phtml'
 				"
                 escape="false"
-                checkreturn="false" 
+                checkreturn="false"
                 passthru="true" />
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since {to.phpmd} is FALSE" />    
+            <echo msg="Skipped in '${phing.project.name}', since {to.phpmd} is FALSE" />
         </else></if>
     </target>
 
     <target name="deploy" description="Upload source files to the production FTP">
         <if><istrue value="${to.deploy}" /><then>
-            <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />    
+            <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/subversion/revision.txt" />
 
             <!-- set flag.txt for the application, to notify it that the DB should be resynchronized -->
             <echo msg="${svn.revision}" file="${project.basedir}/src/application/deploy/flag.txt" />
-            
-            <echo msg="Uploading revision: ${svn.revision}" />    
-        
-            <!-- build system access file -->
-            <property name="access.file" value="${project.basedir}/src/application/deploy/access.txt" />
-            <exec command="php index.php Access --project=${phing.project.name} > ${access.file}"
-                dir="${ccFacade}"
-                escape="false"
-                checkreturn="true" />
-            <echo msg="Access config for /__fz URL saved into ${access.file}" />    
 
+            <echo msg="Uploading revision: ${svn.revision}" />
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
             <uploadByFTP server="${ftp.server}"
                 username="${ftp.user}"
@@ -282,7 +273,7 @@
                 compression="${ftp.compression}">
             </uploadByFTP>
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since {to.deploy} is FALSE" />    
+            <echo msg="Skipped in '${phing.project.name}', since {to.deploy} is FALSE" />
         </else></if>
     </target>
 
@@ -291,14 +282,14 @@
             <istrue value="${to.deploy}" />
             <isset property="phprack.url" />
         </and><then>
-            <http-request 
-                url="${phprack.url}" 
-                responseRegex="/PHPRACK SUITE: OK/" 
+            <http-request
+                url="${phprack.url}"
+                responseRegex="/PHPRACK SUITE: OK/"
                 observerEvents="connect,receivedBody,disconnect"
                 verbose="true"
             />
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since it's not a continuous integration environment" />    
+            <echo msg="Skipped in '${phing.project.name}', since it's not a continuous integration environment" />
         </else></if>
     </target>
 
@@ -313,8 +304,8 @@
                 </fileset>
             </delete>
         </then><else>
-            <echo msg="Skipped in '${phing.project.name}', since {to.clean} is set to FALSE" />    
+            <echo msg="Skipped in '${phing.project.name}', since {to.clean} is set to FALSE" />
         </else></if>
-    </target>    
-    
+    </target>
+
 </project>
