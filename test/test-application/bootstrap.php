@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -35,11 +35,12 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
     protected function _initDbData()
     {
         $this->bootstrap('db');
+        $this->bootstrap('fazend');
         $this->bootstrap('fz_injector');
         $this->bootstrap('fz_deployer');
         $this->bootstrap('fz_orm');
         FaZend_Db_Table_ActiveRow::addMapping(
-            '/owner\.created/', 
+            '/owner\.created/',
             'new Zend_Date(${a1})'
         );
 
@@ -49,7 +50,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         $deployer->setVerbose(false);
         $deployer->setAdapter(Zend_Db_Table::getDefaultAdapter());
         $deployer->deploy(true);
-        
+
         $queries = array(
             'insert into owner values (132, "john smith", null)',
             'insert into product values (10, "car", 132)',
@@ -64,14 +65,14 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
         // register a default user
         Model_User::register('test@example.com', 'test');
     }
-    
+
     /**
      * Initialize forma() helper
      *
      * @return void
      * @see index/forma.phtml
      */
-    protected function _initForma() 
+    protected function _initForma()
     {
         FaZend_View_Helper_Forma_Field::addPluginDir(
             'Helper_Forma_FieldDate',
@@ -85,7 +86,7 @@ class Bootstrap extends FaZend_Application_Bootstrap_Bootstrap
      * @return void
      * @see Model_User
      */
-    public function _initUserClass() 
+    public function _initUserClass()
     {
         $this->bootstrap('fz_injector');
         $this->bootstrap('fz_orm');
