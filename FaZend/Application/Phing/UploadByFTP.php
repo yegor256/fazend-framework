@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -38,42 +38,42 @@ class UploadByFTP extends Task
 
     /**
      * Name of the destination server
-     * 
+     *
      * @var string
      */
     private $_server;
 
     /**
      * FTP user name
-     * 
+     *
      * @var string
      */
     private $_userName;
 
     /**
      * FTP password
-     * 
+     *
      * @var string
      */
     private $_password;
 
     /**
      * Destination director in FTP server
-     * 
+     *
      * @var string
      */
     private $_destDir;
 
     /**
      * Local directory with the sources to be uploaded
-     * 
+     *
      * @var string
      */
     private $_srcDir;
-    
+
     /**
      * Shall we use PHP compression before uploading?
-     * 
+     *
      * @var boolean
      */
     private $_compression = true;
@@ -84,7 +84,7 @@ class UploadByFTP extends Task
      * @var integer
      */
     private $_ftp;
-    
+
     /**
      * When we started?
      *
@@ -94,7 +94,7 @@ class UploadByFTP extends Task
 
     /**
      * Initiator (when the build.xml sees the task)
-     * 
+     *
      * @return void
      */
     public function init()
@@ -163,49 +163,49 @@ class UploadByFTP extends Task
 
     /**
      * Executes
-     * 
+     *
      * @return void
      */
     public function main()
     {
         $this->_start = microtime(true);
-        
+
         $this->_protocol(
             "FTP params received\n\tserver: {$this->_server}\n\tlogin: {$this->_userName}\n\tpassword: " .
-            preg_replace('/./', '*', $this->_password) . 
+            preg_replace('/./', '*', $this->_password) .
             "\n\tsrcDir: '{$this->_srcDir}'\n\tdestDir: '{$this->_destDir}'"
         );
 
         if (!$this->_server) {
-            $this->_protocol("Server is not specified, the deployment won't happen");    
+            $this->_protocol("Server is not specified, the deployment won't happen");
             return;
         }
 
         $this->_ftp = @ftp_connect($this->_server);
         if ($this->_ftp === false) {
-            $this->_failure("Failed to connect to FTP '{$this->_server}'");    
+            $this->_failure("Failed to connect to FTP '{$this->_server}'");
         }
-        $this->_protocol("Connected successfully to '{$this->_server}'");    
+        $this->_protocol("Connected successfully to '{$this->_server}'");
 
         if (@ftp_login($this->_ftp, $this->_userName, $this->_password) === false) {
-            $this->_failure("Failed to login to FTP '{$this->_server}'");    
+            $this->_failure("Failed to login to FTP '{$this->_server}'");
         }
-        $this->_protocol("Logged in successfully to FTP as '{$this->_userName}'");    
+        $this->_protocol("Logged in successfully to FTP as '{$this->_userName}'");
 
         // let's try to play with PASV
         $this->_setPassiveMode(true);
         if (@ftp_nlist($this->_ftp, '.') === false) {
-            $this->_protocol("NLIST returns FALSE, we should try to change PASV");    
+            $this->_protocol("NLIST returns FALSE, we should try to change PASV");
             $this->_setPassiveMode(false);
             if (@ftp_nlist($this->_ftp, '.') === false) {
-                $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");    
+                $this->_failure("NLIST doesn't work, neither in normal nor in passive mode");
             }
         }
 
         if (@ftp_chdir($this->_ftp, $this->_destDir) === false) {
-            $this->_failure("Failed to go to '{$this->_destDir}'");    
+            $this->_failure("Failed to go to '{$this->_destDir}'");
         }
-        $this->_protocol('Current directory in FTP: ' . ftp_pwd($this->_ftp));    
+        $this->_protocol('Current directory in FTP: ' . ftp_pwd($this->_ftp));
 
         $currentDir = getcwd();
         $uploaded = $this->_uploadFiles($this->_srcDir);
@@ -215,12 +215,12 @@ class UploadByFTP extends Task
                 'Uploaded %d files',
                 $uploaded
             )
-        );    
+        );
 
         if (@ftp_close($this->_ftp) === false) {
-            $this->_failure("Failed to close connection to FTP '{$this->_server}");    
+            $this->_failure("Failed to close connection to FTP '{$this->_server}");
         }
-        $this->_protocol('Disconnected from FTP');    
+        $this->_protocol('Disconnected from FTP');
 
         // kill temp file
         if (isset($this->_tempFileName)) {
@@ -236,14 +236,17 @@ class UploadByFTP extends Task
      */
     protected function _uploadFiles($path)
     {
-        $dir = scandir($path);
-        
-        $ftpList = @ftp_nlist($this->_ftp, '.');
-        if ($ftpList === false) {
-            $this->_failure('Failed to NLIST at ' . @ftp_pwd($this->_ftp));    
+        $dir = @scandir($path);
+        if ($dir === false) {
+            $this->_failure('Failed to open dir: ' . $path);
         }
 
-        // delete obsolete elements from FTP server    
+        $ftpList = @ftp_nlist($this->_ftp, '.');
+        if ($ftpList === false) {
+            $this->_failure('Failed to NLIST at ' . @ftp_pwd($this->_ftp));
+        }
+
+        // delete obsolete elements from FTP server
         foreach ($ftpList as $ftpEntry) {
             if (!in_array($ftpEntry, $dir)) {
                 if (@ftp_delete($this->_ftp, $ftpEntry)) {
@@ -251,9 +254,9 @@ class UploadByFTP extends Task
                 }
                 // maybe it's a directory?
                 // I can't delete directories recursively yet...
-                //$this->_failure ("Failed to delete FTP file '$ftpEntry' in ".ftp_pwd ($this->_ftp));    
-            }    
-        }    
+                //$this->_failure ("Failed to delete FTP file '$ftpEntry' in ".ftp_pwd ($this->_ftp));
+            }
+        }
 
         // calculate the amount of uploaded files
         $uploaded = 0;
@@ -268,18 +271,18 @@ class UploadByFTP extends Task
                 // this directory doesn't exist yet on the server, we should create it
                 if (@ftp_chdir($this->_ftp, $entry) === false) {
                     if (@ftp_mkdir($this->_ftp, $entry) === false) {
-                        $this->_failure("Failed to MKDIR '{$entry}' in " . ftp_pwd($this->_ftp));    
+                        $this->_failure("Failed to MKDIR '{$entry}' in " . ftp_pwd($this->_ftp));
                     }
                     if (@ftp_chdir($this->_ftp, $entry) === false) {
-                        $this->_failure("Failed to CHDIR to '{$entry}' in " . ftp_pwd($this->_ftp));    
+                        $this->_failure("Failed to CHDIR to '{$entry}' in " . ftp_pwd($this->_ftp));
                     }
-                    $this->_protocol("Created directory '{$entry}'");    
+                    $this->_protocol("Created directory '{$entry}'");
                 }
 
                 $uploaded += $this->_uploadFiles($fileName);
 
                 if (@ftp_cdup($this->_ftp) === false) {
-                    $this->_failure("Failed to CDUP from '{$entry}' in " . ftp_pwd($this->_ftp));    
+                    $this->_failure("Failed to CDUP from '{$entry}' in " . ftp_pwd($this->_ftp));
                 }
             } else {
                 // compress the file
@@ -288,24 +291,24 @@ class UploadByFTP extends Task
                 if (in_array($entry, $ftpList)) {
                     $lastModified = @ftp_mdtm($this->_ftp, $entry);
                     if ($lastModified === -1) {
-                        $this->_failure("Failed to get file modification time from ftp_mdtm('{$entry}')");    
+                        $this->_failure("Failed to get file modification time from ftp_mdtm('{$entry}')");
                     }
 
-                    // if the server version is younger than the local - we skip this file    
+                    // if the server version is younger than the local - we skip this file
                     // only if the sizes are similar
                     if ($lastModified > filemtime($fileName)) {
                         $currentSize = @ftp_size($this->_ftp, $entry);
                         if ($currentSize === -1) {
-                            $this->_failure("Failed to get size from ftp_size('{$entry}')");    
+                            $this->_failure("Failed to get size from ftp_size('{$entry}')");
                         }
 
                         // if the files are of the same size, don't upload again
                         if ($currentSize == filesize($compressedFile)) {
-                            continue;    
+                            continue;
                         }
                     }
 
-                }    
+                }
 
                 if (@ftp_put($this->_ftp, $entry, $compressedFile, FTP_BINARY) === false) {
                     $this->_failure(
@@ -314,7 +317,7 @@ class UploadByFTP extends Task
                             $fileName,
                             filesize($fileName)
                         )
-                    );    
+                    );
                 }
                 $uploaded++;
                 $this->_protocol(
@@ -323,8 +326,8 @@ class UploadByFTP extends Task
                         substr($fileName, strlen($this->_srcDir) + 1),
                         filesize($fileName)
                     )
-                );    
-            }    
+                );
+            }
         }
         return $uploaded;
     }
@@ -340,7 +343,7 @@ class UploadByFTP extends Task
         if (!$this->_compression) {
             return $fileName;
         }
-        
+
         // compress only PHP files
         if (!preg_match('/\.(php|phtml|php5)$/', $fileName)) {
             return $fileName;
@@ -352,12 +355,12 @@ class UploadByFTP extends Task
         }
 
         // compress it with 'PHP -W' option
-        file_put_contents($this->_tempFileName, shell_exec("php -w {$fileName}"));    
+        file_put_contents($this->_tempFileName, shell_exec("php -w {$fileName}"));
 
         // return a NEW file name, which will be uploaded
         return $this->_tempFileName;
     }
-    
+
     /**
      * Raise an exception and protocol the failure
      *
@@ -365,19 +368,19 @@ class UploadByFTP extends Task
      * @return void
      * @throws BuildException
      */
-    protected function _failure($text) 
+    protected function _failure($text)
     {
         $this->_protocol($text);
         throw new BuildException($text);
     }
-    
+
     /**
      * Protocol an action
      *
      * @param string The message to show in log
      * @return void
      */
-    protected function _protocol($text) 
+    protected function _protocol($text)
     {
         $delta = microtime(true) - $this->_start;
         $this->Log(
@@ -389,20 +392,20 @@ class UploadByFTP extends Task
             )
         );
     }
-    
+
     /**
      * Set passive mode
      *
      * @param boolean
      * @return void
      */
-    protected function _setPassiveMode($on = true) 
+    protected function _setPassiveMode($on = true)
     {
         $mnemo = ($on ? 'ON' : 'OFF');
         if (@ftp_pasv($this->_ftp, $on) === false) {
-            $this->_failure("Failed to change PASV mode to '{$mnemo}'");    
+            $this->_failure("Failed to change PASV mode to '{$mnemo}'");
         }
-        $this->_protocol("PASV mode turned '{$mnemo}'");    
+        $this->_protocol("PASV mode turned '{$mnemo}'");
     }
 
 }
