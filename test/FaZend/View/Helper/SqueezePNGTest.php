@@ -43,7 +43,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase
     {
         eval (
             '
-            class Foo extends FaZend_View_Helper_SqueezePNG
+            class SqueezeFoo extends FaZend_View_Helper_SqueezePNG
             {
                 function testCompress(array $images)
                 {
@@ -53,7 +53,7 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase
             '
         );
 
-        $foo = new Foo();
+        $foo = new SqueezeFoo();
         $images = array();
         $images = $foo->testCompress($images);
     }
