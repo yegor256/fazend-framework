@@ -266,7 +266,6 @@
                 </filterchain>
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
     				<include name="**/*.ini" />
-    				<exclude name=".svn/**" />
     			</fileset>
             </copy>
             <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
@@ -275,12 +274,10 @@
                 </filterchain>
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
     				<include name="**/*.php" />
-    				<exclude name=".svn/**" />
     			</fileset>
             </copy>
             <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
-    				<include name="**" />
     				<exclude name=".svn/**" />
     				<exclude name="**/*.php" />
     				<exclude name="**/*.ini" />
