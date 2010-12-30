@@ -264,7 +264,16 @@
                     <stripwhitespace />
                 </filterchain>
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
+    				<include name="**" />
     				<exclude name=".svn/**" />
+    			</fileset>
+            </copy>
+            <copy todir="${project.basedir}/build/ftp-upload">
+    		    <filterchain>
+                    <expandproperties />
+                </filterchain>
+    			<fileset dir="${project.basedir}/${ftp.srcdir}">
+    				<include name="**/*.ini" />
     			</fileset>
             </copy>
             <uploadByFTP server="${ftp.server}"
