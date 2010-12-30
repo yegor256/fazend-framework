@@ -259,9 +259,8 @@
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
 
             <php expression="set_error_handler(create_function('', 'return true;'));"/>
-            <delete dir="${project.basedir}/build/ftp-upload"/>
             <mkdir dir="${project.basedir}/build/ftp-upload"/>
-            <copy todir="${project.basedir}/build/ftp-upload">
+            <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
     		    <filterchain>
                     <expandproperties />
                 </filterchain>
@@ -270,7 +269,7 @@
     				<exclude name=".svn/**" />
     			</fileset>
             </copy>
-            <copy todir="${project.basedir}/build/ftp-upload">
+            <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
     		    <filterchain>
                     <stripwhitespace />
                 </filterchain>
@@ -279,7 +278,7 @@
     				<exclude name=".svn/**" />
     			</fileset>
             </copy>
-            <copy todir="${project.basedir}/build/ftp-upload">
+            <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
     				<include name="**" />
     				<exclude name=".svn/**" />
