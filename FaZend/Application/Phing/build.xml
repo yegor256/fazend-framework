@@ -258,6 +258,7 @@
             <echo msg="Uploading revision: ${svn.revision}" />
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
 
+            <php expression="set_error_handler(create_function('', 'return true;'));"/>
             <delete dir="${project.basedir}/build/ftp-upload"/>
             <mkdir dir="${project.basedir}/build/ftp-upload"/>
             <copy todir="${project.basedir}/build/ftp-upload">
