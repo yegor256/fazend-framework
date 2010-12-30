@@ -278,6 +278,7 @@
             </copy>
             <copy todir="${project.basedir}/build/ftp-upload" preservelastmodified="true">
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
+    				<include name="**" />
     				<exclude name=".svn/**" />
     				<exclude name="**/*.php" />
     				<exclude name="**/*.ini" />
