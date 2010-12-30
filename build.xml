@@ -26,8 +26,20 @@
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
-	<target name="main" depends="lint, phpcs, phpmd, zca, test" >
+    <!-- To make sure that we have enough memory limit for running all tests -->
+    <php expression="ini_set('memory_limit', '128M');" />
+
+	<target name="main" depends="lint, phpcs, phpmd, zca, test, doc" >
 	</target>
+
+    <!-- get revision number -->
+    <svnlastrevision
+        workingcopy="${project.basedir}"
+        propertyname="svn.lastrevision"/>
+
+    <target name="clean" description="Remove all build-related files" >
+        <delete dir="${project.basedir}/build"/>
+    </target>
 
 	<target name="lint" description="Run syntax check for all classes" >
 		<phplint haltonfailure="yes" level="verbose">
@@ -76,6 +88,17 @@
     </target>
 
 	<target name="test" description="Run all existing unit-tests">
+        <mkdir dir="${project.basedir}/build"/>
+        <property name="coverage.database" value="${project.basedir}/build/coverage.data" />
+
+        <!-- create coverage database that will collect all reports -->
+        <coverage-setup database="${coverage.database}">
+            <fileset dir="${project.basedir}/FaZend">
+                <include name="**/*.php"/>
+                <exclude name=".svn/**"/>
+            </fileset>
+        </coverage-setup>
+
    		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="no" />
 			<batchtest>
@@ -87,6 +110,62 @@
 				</fileset>
 			</batchtest>
 		</phpunit>
+
+        <!-- build coverage report -->
+        <mkdir dir="${project.basedir}/build/coverage"/>
+        <coverage-report outfile="${project.basedir}/build/coverage.xml">
+            <report todir="${project.basedir}/build/coverage" />
+        </coverage-report>
+
+        <!-- make sure that the code is covered -->
+        <coverage-threshold database="${coverage.database}"
+            perProject="0"
+            perClass="0"
+            perMethod="0"
+        />
+
+        <!-- delete coverage database, since it's not necessary any more -->
+        <delete file="${coverage.database}" />
+	</target>
+
+    <target name="doc" description="Generate phpDocumentor files">
+        <php expression="set_error_handler(create_function('', 'return true;'));"/>
+        <mkdir dir="${project.basedir}/build/apidocs"/>
+        <phpdoc title="API Documentation, rev.${svn.lastrevision}"
+            destdir="${project.basedir}/build/apidocs"
+            sourcecode="false" quiet="true"
+            output="HTML:frames:default">
+            <fileset dir="${project.basedir}/FaZend">
+                <include name="**/*.php" />
+            </fileset>
+            <projdocfileset dir=".">
+                <include name="README.txt" />
+                <include name="LICENSE.txt" />
+            </projdocfileset>
+        </phpdoc>
+    </target>
+
+    <target name="deploy" description="Deploy project files to web" depends="doc, test">
+        <!-- get FTP properties from file -->
+        <property file="${project.basedir}/../../closures/external.properties" />
+
+        <mkdir dir="${project.basedir}/build/ftp-upload"/>
+        <copy todir="${project.basedir}/build/ftp-upload/public/api">
+    		<fileset dir="${project.basedir}/build/apidocs">
+    			<include name="**/*"/>
+    		</fileset>
+		</copy>
+        <copy todir="${project.basedir}/build/ftp-upload/public/coverage">
+    		<fileset dir="${project.basedir}/build/coverage">
+    			<include name="**/*"/>
+    		</fileset>
+		</copy>
+
+		<echo message="uploading PHP code to the server..." />
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+		    clearfirst="true">
+			<fileset dir="${project.basedir}/build/ftp-upload" />
+		</ftpdeploy>
 	</target>
 
 </project>
