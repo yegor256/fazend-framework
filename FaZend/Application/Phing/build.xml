@@ -36,6 +36,12 @@
         description="Validate, compile, deploy and clean">
     </target>
 
+    <!-- get revision number -->
+    <svnlastrevision
+        workingcopy="${project.basedir}"
+        propertyname="svn.revision"/>
+    <echo msg="SVN revision: ${svn.revision}" />
+
     <target name="svn" description="Get all necessary information about current build" >
         <!--
             {to.deploy} asks the builder to deploy everything created to the
@@ -47,22 +53,8 @@
             <if><available file="${cc.root}" type="dir" /><then>
                 <!-- this property is used later in order to turn deployment ON -->
                 <property name="to.deploy" value="true" />
-
-                <!-- ccFacade is hosted there and is used for integration with fazend.com -->
-                <property name="ccFacade" value="${cc.root}/ccFacade/public" />
-
-                <!-- locations of reports, on CC server -->
-                <property name="cc.coverage" value="${cc.root}/coverage/${phing.project.name}" />
-
                 <!-- ftp uploader -->
                 <taskdef name="uploadByFTP" classname="src.library.FaZend.Application.Phing.UploadByFTP" />
-
-                <!-- get the number of SVN revision we're currently working with -->
-                <php expression="intval(shell_exec('svn info ${project.basedir} | grep Revision | sed \'s/Revision: //g\''))"
-                    returnProperty="svn.revision" />
-                <!-- this is disabled because of: http://phing.info/trac/ticket/407 -->
-                <!-- svnlastrevision workingcopy="${project.basedir}" propertyname="svn.revision" / -->
-                <echo msg="SVN revision: ${svn.revision}" />
             </then><else>
                 <property name="to.deploy" value="false" />
                 <echo msg="{to.deploy} set to FALSE since it's not a CruiseControl environment" />
@@ -265,12 +257,21 @@
 
             <echo msg="Uploading revision: ${svn.revision}" />
             <!-- the Task is defined as PHP class, see phings/UploadByFTP.php -->
+
+            <mkdir dir="${project.basedir}/build/ftp-upload"/>
+            <copy todir="${project.basedir}/build/ftp-upload">
+    		    <filterchain>
+                    <stripwhitespace />
+                </filterchain>
+    			<fileset dir="${project.basedir}/${ftp.srcdir}">
+    				<exclude name=".svn/**" />
+    			</fileset>
+            </copy>
             <uploadByFTP server="${ftp.server}"
                 username="${ftp.user}"
                 password="${ftp.password}"
-                srcdir="${project.basedir}/${ftp.srcdir}"
-                destdir="${ftp.destdir}"
-                compression="${ftp.compression}">
+                srcdir="${project.basedir}/build/ftp-upload"
+                destdir="${ftp.destdir}">
             </uploadByFTP>
         </then><else>
             <echo msg="Skipped in '${phing.project.name}', since {to.deploy} is FALSE" />

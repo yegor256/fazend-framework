@@ -72,13 +72,6 @@ class UploadByFTP extends Task
     private $_srcDir;
 
     /**
-     * Shall we use PHP compression before uploading?
-     *
-     * @var boolean
-     */
-    private $_compression = true;
-
-    /**
      * FTP handler
      *
      * @var integer
@@ -149,16 +142,6 @@ class UploadByFTP extends Task
     public function setsrcdir($srcDir)
     {
         $this->_srcDir = $srcDir;
-    }
-
-    /**
-     * Initalizer
-     *
-     * @param boolean
-     */
-    public function setcompression($compression)
-    {
-        $this->_compression = $compression;
     }
 
     /**
@@ -285,8 +268,6 @@ class UploadByFTP extends Task
                     $this->_failure("Failed to CDUP from '{$entry}' in " . ftp_pwd($this->_ftp));
                 }
             } else {
-                // compress the file
-                $compressedFile = $this->_compressed($fileName);
                 // this file already exists?
                 if (in_array($entry, $ftpList)) {
                     $lastModified = @ftp_mdtm($this->_ftp, $entry);
@@ -303,14 +284,14 @@ class UploadByFTP extends Task
                         }
 
                         // if the files are of the same size, don't upload again
-                        if ($currentSize == filesize($compressedFile)) {
+                        if ($currentSize == filesize($fileName)) {
                             continue;
                         }
                     }
 
                 }
 
-                if (@ftp_put($this->_ftp, $entry, $compressedFile, FTP_BINARY) === false) {
+                if (@ftp_put($this->_ftp, $entry, $fileName, FTP_BINARY) === false) {
                     $this->_failure(
                         sprintf(
                             "Failed to upload '%s' (%d bytes)",
@@ -330,35 +311,6 @@ class UploadByFTP extends Task
             }
         }
         return $uploaded;
-    }
-
-    /**
-     * Compress the file and returns the name of compressed file
-     *
-     * @param $fileName string
-     * @return string file name
-     */
-    protected function _compressed($fileName)
-    {
-        if (!$this->_compression) {
-            return $fileName;
-        }
-
-        // compress only PHP files
-        if (!preg_match('/\.(php|phtml|php5)$/', $fileName)) {
-            return $fileName;
-        }
-
-        // create ONE temp file for all compressions
-        if (!isset($this->_tempFileName)) {
-            $this->_tempFileName = tempnam(TEMP_PATH, 'zendUploader');
-        }
-
-        // compress it with 'PHP -W' option
-        file_put_contents($this->_tempFileName, shell_exec("php -w {$fileName}"));
-
-        // return a NEW file name, which will be uploaded
-        return $this->_tempFileName;
     }
 
     /**
