@@ -41,17 +41,19 @@ class FaZend_View_Helper_SqueezePNGTest extends AbstractTestCase
 
     public function testSqueezeIsCompressedAtItsMaximum()
     {
-        eval (
-            '
-            class SqueezeFoo extends FaZend_View_Helper_SqueezePNG
-            {
-                function testCompress(array $images)
+        if (!class_exists('SqueezeFoo')) {
+            eval (
+                '
+                class SqueezeFoo extends FaZend_View_Helper_SqueezePNG
                 {
-                    return $this->_compress($images);
-                }
-            };
-            '
-        );
+                    function testCompress(array $images)
+                    {
+                        return $this->_compress($images);
+                    }
+                };
+                '
+            );
+        }
 
         $foo = new SqueezeFoo();
         $images = array();
