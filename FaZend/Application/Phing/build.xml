@@ -261,19 +261,28 @@
             <mkdir dir="${project.basedir}/build/ftp-upload"/>
             <copy todir="${project.basedir}/build/ftp-upload">
     		    <filterchain>
-                    <stripwhitespace />
+                    <expandproperties />
                 </filterchain>
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
-    				<include name="**" />
+    				<include name="**/*.ini" />
     				<exclude name=".svn/**" />
     			</fileset>
             </copy>
             <copy todir="${project.basedir}/build/ftp-upload">
     		    <filterchain>
-                    <expandproperties />
+                    <stripwhitespace />
                 </filterchain>
     			<fileset dir="${project.basedir}/${ftp.srcdir}">
-    				<include name="**/*.ini" />
+    				<include name="**/*.php" />
+    				<exclude name=".svn/**" />
+    			</fileset>
+            </copy>
+            <copy todir="${project.basedir}/build/ftp-upload">
+    			<fileset dir="${project.basedir}/${ftp.srcdir}">
+    				<include name="**" />
+    				<exclude name=".svn/**" />
+    				<exclude name="**/*.php" />
+    				<exclude name="**/*.ini" />
     			</fileset>
             </copy>
             <uploadByFTP server="${ftp.server}"
