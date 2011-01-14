@@ -145,7 +145,7 @@
         </phpdoc>
     </target>
 
-    <target name="deploy" description="Deploy project files to web" depends="doc, test">
+    <target name="deploy" description="Deploy project files to web">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../../closures/external.properties" />
 
