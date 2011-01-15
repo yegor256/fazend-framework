@@ -151,6 +151,11 @@
 
         <mkdir dir="${project.basedir}/build/ftp-upload"/>
         <copy todir="${project.basedir}/build/ftp-upload/public/api">
+    		<fileset dir="${project.basedir}/site">
+    			<include name="**/*"/>
+    		</fileset>
+		</copy>
+        <copy todir="${project.basedir}/build/ftp-upload/public/api">
     		<fileset dir="${project.basedir}/build/apidocs">
     			<include name="**/*"/>
     		</fileset>
