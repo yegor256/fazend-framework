@@ -99,7 +99,7 @@
             </fileset>
         </coverage-setup>
 
-   		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+   		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
 			<formatter type="plain" usefile="no" />
 			<batchtest>
 				<fileset dir="${project.basedir}/test">
