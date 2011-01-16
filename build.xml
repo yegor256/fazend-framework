@@ -150,7 +150,7 @@
         <property file="${project.basedir}/../../closures/external.properties" />
 
         <mkdir dir="${project.basedir}/build/ftp-upload"/>
-        <copy todir="${project.basedir}/build/ftp-upload/public/api">
+        <copy todir="${project.basedir}/build/ftp-upload/public">
     		<fileset dir="${project.basedir}/site">
     			<include name="**/*"/>
     		</fileset>
