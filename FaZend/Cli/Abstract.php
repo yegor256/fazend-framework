@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -28,22 +28,19 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface
     const RETURNCODE_OK = 0;
 
     /**
-     * The router
-     *
+     * The router.
      * @var FaZend_Cli_Router
      */
     protected $_router;
 
     /**
-     * Options
-     *
+     * Options.
      * @var array
      */
     protected $_options = array();
 
     /**
-     * Save the instance of the router
-     *
+     * Save the instance of the router.
      * @param FaZend_Cli_Router instance of the router
      * @return this
      */
@@ -53,8 +50,7 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface
     }
 
     /**
-     * Save options
-     *
+     * Save options.
      * @param array List of options to set
      * @return void
      */
@@ -64,8 +60,7 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface
     }
 
     /**
-     * Get option value
-     *
+     * Get option value.
      * @param string Name of the parameter
      * @param boolean Shall we throw exception if it's not found?
      * @return string
@@ -73,20 +68,20 @@ abstract class FaZend_Cli_Abstract implements FaZend_Cli_Interface
     protected function _get($name, $throwException = true)
     {
         $name = strtolower($name);
-
         if (!isset($this->_options[$name])) {
-            if ($throwException)
-                FaZend_Exception::raise('FaZend_Cli_OptionMissedException', "Parameter '$name' is missed");
-            else
-                return false;    
-        }    
-
+            if ($throwException) {
+                FaZend_Exception::raise(
+                    'FaZend_Cli_OptionMissedException',
+                    "Parameter '{$name}' is missed"
+                );
+            }
+            return false;
+        }
         return $this->_options[$name];
     }
 
     /**
-     * Call another CLI class, by name
-     *
+     * Call another CLI class, by name.
      * @param string Name of the CLI class
      * @return string
      */
