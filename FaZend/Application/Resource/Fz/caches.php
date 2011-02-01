@@ -30,8 +30,7 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
 {
 
     /**
-     * Initializes the resource
-     *
+     * Initializes the resource.
      * @return void
      * @see Zend_Application_Resource_Resource::init()
      */
@@ -61,21 +60,16 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
 
         // plugin cache
         // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
-        $classFileIncCache = TEMP_PATH . '/'.
-        FaZend_Revision::getName() . '-r' .
-        FaZend_Revision::get() . '-includeCache.php';
+        $phpFile = TEMP_PATH . '/'
+            . FaZend_Revision::getName() . '-r'
+            . FaZend_Revision::get() . '-includeCache.php';
 
-        // this may happen if we start from a different process
-        if (file_exists($classFileIncCache) && !is_writable($classFileIncCache)) {
-            return;
-        }
-
-        if (file_exists($classFileIncCache)) {
-            include_once $classFileIncCache;
+        if (file_exists($phpFile)) {
+            include_once $phpFile;
         }
 
         // set cache for "included" files
-        Zend_Loader_PluginLoader::setIncludeFileCache($classFileIncCache);
+        Zend_Loader_PluginLoader::setIncludeFileCache($phpFile);
     }
 
 }
