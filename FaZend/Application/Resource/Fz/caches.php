@@ -36,6 +36,8 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
      */
     public function init()
     {
+        $options = $this->getOptions();
+
         //@todo when this ticket is resolved: http://framework.zend.com/issues/browse/ZF-8991
         $cache = Zend_Cache::factory(
             'Core',
@@ -53,23 +55,20 @@ class FaZend_Application_Resource_fz_caches extends Zend_Application_Resource_Re
         // see: http://framework.zend.com/manual/en/zend.db.table.html#zend.db.table.metadata.caching
         Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
-        // only in production
-        if (APPLICATION_ENV !== 'production') {
-            return;
+        if (!empty($options['includes'])) {
+            // plugin cache
+            // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
+            $phpFile = TEMP_PATH . '/'
+                . FaZend_Revision::getName() . '-r'
+                . FaZend_Revision::get() . '-includeCache.php';
+
+            if (file_exists($phpFile)) {
+                include_once $phpFile;
+            }
+
+            // set cache for "included" files
+            Zend_Loader_PluginLoader::setIncludeFileCache($phpFile);
         }
-
-        // plugin cache
-        // see: http://framework.zend.com/manual/en/zend.loader.pluginloader.html
-        $phpFile = TEMP_PATH . '/'
-            . FaZend_Revision::getName() . '-r'
-            . FaZend_Revision::get() . '-includeCache.php';
-
-        if (file_exists($phpFile)) {
-            include_once $phpFile;
-        }
-
-        // set cache for "included" files
-        Zend_Loader_PluginLoader::setIncludeFileCache($phpFile);
     }
 
 }
