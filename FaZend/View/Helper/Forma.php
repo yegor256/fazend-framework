@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -34,7 +34,7 @@
  */
 class FaZend_View_Helper_Forma extends FaZend_View_Helper
 {
-    
+
     /**
      * Instances of the helper
      *
@@ -63,7 +63,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @var Zend_Form
      */
     protected $_form;
-    
+
     /**
      * Form was completed?
      *
@@ -78,7 +78,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @var FaZend_View_Helper_Forma_Field[]
      */
     protected $_fields = array();
-    
+
     /**
      * What to do when the form is completed?
      *
@@ -102,7 +102,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *   )
      * );
      * </code>
-     * 
+     *
      * Then, in your view script you add a label to the field, providing
      * the index of the suffix (FALSE is used by default), e.g.:
      *
@@ -116,27 +116,27 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param array List of suffixes
      * @return void
      */
-    public static function setLabelSuffixes(array $labelSuffixes) 
+    public static function setLabelSuffixes(array $labelSuffixes)
     {
         self::$_labelSuffixes = $labelSuffixes;
     }
-    
+
     /**
      * Get label suffixes
      *
      * @return array
      */
-    public static function getLabelSuffixes() 
+    public static function getLabelSuffixes()
     {
         return self::$_labelSuffixes;
     }
-    
+
     /**
      * Remove all instances of all forma's
      *
      * @return void
      */
-    public static function cleanInstances() 
+    public static function cleanInstances()
     {
         self::$_instances = array();
     }
@@ -147,7 +147,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param mixed|null Name of the form instance
      * @return FaZend_View_Helper_Forma
      */
-    public function forma($id = null) 
+    public function forma($id = null)
     {
         if (is_null($id)) {
             $id = 1;
@@ -162,13 +162,13 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         }
         return self::$_instances[$id];
     }
-    
+
     /**
      * Form was completed?
      *
      * @return boolean
      */
-    public function isCompleted() 
+    public function isCompleted()
     {
         return $this->_completed;
     }
@@ -178,7 +178,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *
      * @return string HTML
      */
-    public function __toString() 
+    public function __toString()
     {
         try {
             $html = (string)$this->_render();
@@ -195,14 +195,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string|null Name of the field to create
      * @return Helper_Forma
      */
-    public function addField($type, $name = null) 
+    public function addField($type, $name = null)
     {
         require_once 'FaZend/View/Helper/Forma/Field.php';
         $field = FaZend_View_Helper_Forma_Field::factory($type, $this);
         $this->_fields[$this->_uniqueName($name)] = $field;
         return $field;
     }
-    
+
     /**
      * Add attribute to the forma
      *
@@ -210,7 +210,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string Attribute value
      * @return $this
      */
-    public function addAttrib($attrib, $value) 
+    public function addAttrib($attrib, $value)
     {
         $this->_form->setAttrib($attrib, $value);
         return $this;
@@ -222,7 +222,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string Name of the behavior
      * @return Helper_Forma
      */
-    public function addBehavior($type /*, ... */) 
+    public function addBehavior($type /*, ... */)
     {
         if (ctype_alpha($type)) {
             $className = 'FaZend_View_Helper_Forma_Behavior_' . ucfirst($type);
@@ -234,14 +234,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $this->_behaviors[] = new $className($args);
         return $this;
     }
-    
+
     /**
      * Set form ACTION URL
      *
      * @param string URL to set
      * @return $this
      */
-    public function setFormAction($url) 
+    public function setFormAction($url)
     {
         $this->_form->setAction($url);
         return $this;
@@ -256,11 +256,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @return mixed|null
      * @throws FaZend_View_Helper_Forma_ParamNotFound
      */
-    public function getParam($name) 
+    public function getParam($name)
     {
         // encode it first
         $formName = $this->_makeFieldName($name);
-        
+
         // maybe this element is absent in the form?
         if (!isset($this->_form->$formName)) {
             FaZend_Exception::raise(
@@ -278,10 +278,11 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      *
      * @return string HTML
      */
-    protected function _render() 
+    protected function _render()
     {
         // configure the form
         $this->_form->setView($this->getView())
+            ->setAttrib('id', $this->_id)
             ->setMethod('post')
             ->setDecorators(array())
             ->addDecorator('FormElements')
@@ -299,7 +300,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         $return = null;
         $this->_completed = ($this->_form->isFilled() && $this->_process($log, $args, $return));
         $html = strval($this->_form->__toString());
-        
+
         // if the form was NOT completed yet - just show it
         if (!$this->_completed) {
             return $html;
@@ -309,14 +310,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         if (!count($this->_behaviors)) {
             $this->addBehavior('showLog');
         }
-        
+
         // run them all one by one
         foreach ($this->_behaviors as $behavior) {
             $behavior->setMethodArgs($args);
             $behavior->setReturn($return);
             $behavior->run($html, $log);
         }
-            
+
         // return the resulted HTML, after all behavior(s)
         return $html;
     }
@@ -327,12 +328,12 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string Name
      * @return string Name which is unique
      */
-    protected function _uniqueName($name) 
+    protected function _uniqueName($name)
     {
         if (!is_null($name)) {
             if (isset($this->_fields[$name])) {
                 FaZend_Exception::raise(
-                    'FaZend_View_Helper_Forma_FieldAlreadyExists', 
+                    'FaZend_View_Helper_Forma_FieldAlreadyExists',
                     "Field '{$name}' already exists in the form"
                 );
             }
@@ -358,7 +359,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param mixed Return of the action
      * @return boolean Processed without errors?
      */
-    protected function _process(&$log, array &$args, &$return) 
+    protected function _process(&$log, array &$args, &$return)
     {
         // start logging everything into a new logger
         FaZend_Log::getInstance()->addWriter('Memory', spl_object_hash($this));
@@ -378,12 +379,12 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
                 break;
             }
         }
-        
+
         // double check
         if (!isset($submit)) {
             return false;
         }
- 
+
         // if ACTION is specified in the submit button
         $field = $this->_fields[$this->_revertFieldName($submit->getName())];
         if ($field->action) {
@@ -419,14 +420,14 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // return boolean result
         return $result;
     }
-    
+
     /**
      * Make unique field name
      *
      * @param string Name of the field
      * @return string
      */
-    protected function _makeFieldName($name) 
+    protected function _makeFieldName($name)
     {
         if ($this->_id === 1) {
             return $name;
@@ -440,7 +441,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
      * @param string Name of the field
      * @return string
      */
-    protected function _revertFieldName($id) 
+    protected function _revertFieldName($id)
     {
         if ($this->_id === 1) {
             return $id;
