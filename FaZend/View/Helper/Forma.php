@@ -283,7 +283,7 @@ class FaZend_View_Helper_Forma extends FaZend_View_Helper
         // configure the form
         $this->_form->setView($this->getView())
             ->setAttrib('id', 'fz__Forma_' . $this->_id)
-            ->setMethod('post')
+            ->setMethod(Zend_Form::METHOD_POST)
             ->setDecorators(array())
             ->addDecorator('FormElements')
             ->addDecorator('Form');
