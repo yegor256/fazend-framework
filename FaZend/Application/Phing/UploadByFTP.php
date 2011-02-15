@@ -192,8 +192,9 @@ class UploadByFTP extends Task
         chdir($currentDir);
         $this->_protocol(
             sprintf(
-                'Uploaded %d files',
-                $uploaded
+                'Uploaded %d files out of %d total',
+                $uploaded,
+                $this->_filesProcessed
             )
         );
 
