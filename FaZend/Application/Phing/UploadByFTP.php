@@ -363,7 +363,7 @@ class UploadByFTP extends Task
     {
         $this->_filesProcessed += 1;
         if (($this->_filesProcessed % 100) == 0) {
-            $this->_protocol("{$this->_filesProcessed} files/dirs processeed");
+            $this->_protocol("{$this->_filesProcessed} files/dirs processed");
         }
     }
 
