@@ -37,57 +37,55 @@ class UploadByFTP extends Task
     );
 
     /**
-     * Name of the destination server
-     *
+     * Name of the destination server.
      * @var string
      */
     private $_server;
 
     /**
-     * FTP user name
-     *
+     * FTP user name.
      * @var string
      */
     private $_userName;
 
     /**
-     * FTP password
-     *
+     * FTP password.
      * @var string
      */
     private $_password;
 
     /**
-     * Destination director in FTP server
-     *
+     * Destination director in FTP server.
      * @var string
      */
     private $_destDir;
 
     /**
-     * Local directory with the sources to be uploaded
-     *
+     * Local directory with the sources to be uploaded.
      * @var string
      */
     private $_srcDir;
 
     /**
-     * FTP handler
-     *
+     * FTP handler.
      * @var integer
      */
     private $_ftp;
 
     /**
      * When we started?
-     *
      * @var float
      */
     private $_start;
 
     /**
-     * Initiator (when the build.xml sees the task)
-     *
+     * Internal counter of files processed.
+     * @var integer
+     */
+    private $_filesProcessed = 0;
+
+    /**
+     * Initiator (when the build.xml sees the task).
      * @return void
      */
     public function init()
@@ -95,9 +93,9 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Initalizer
-     *
+     * Initalizer.
      * @param $fileName string
+     * @return void
      */
     public function setserver($server)
     {
@@ -105,9 +103,9 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Initalizer
-     *
+     * Initalizer.
      * @param $fileName string
+     * @return void
      */
     public function setusername($userName)
     {
@@ -115,9 +113,9 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Initalizer
-     *
+     * Initalizer.
      * @param $fileName string
+     * @return void
      */
     public function setpassword($password)
     {
@@ -125,9 +123,9 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Initalizer
-     *
+     * Initalizer.
      * @param $fileName string
+     * @return void
      */
     public function setdestdir($destDir)
     {
@@ -135,9 +133,9 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Initalizer
-     *
+     * Initalizer.
      * @param $fileName string
+     * @return void
      */
     public function setsrcdir($srcDir)
     {
@@ -145,8 +143,7 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Executes
-     *
+     * Executes.
      * @return void
      */
     public function main()
@@ -212,8 +209,7 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Upload files, recursively
-     *
+     * Upload files, recursively.
      * @param string Path to upload (local path)
      * @return void
      */
@@ -232,7 +228,8 @@ class UploadByFTP extends Task
         // delete obsolete elements from FTP server
         foreach ($ftpList as $ftpEntry) {
             if (!in_array($ftpEntry, $dir)) {
-                if (@ftp_delete($this->_ftp, $ftpEntry)) {
+                $this->_notify();
+                if (@ftp_delete($this->_ftp, $ftpEntry) !== false) {
                     continue;
                 }
                 // maybe it's a directory?
@@ -249,6 +246,7 @@ class UploadByFTP extends Task
                 continue;
             }
             $fileName = $path . '/' . $entry;
+            $this->_notify();
 
             if (is_dir($fileName)) {
                 // this directory doesn't exist yet on the server, we should create it
@@ -314,8 +312,7 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Raise an exception and protocol the failure
-     *
+     * Raise an exception and protocol the failure.
      * @param string The message to show in log
      * @return void
      * @throws BuildException
@@ -327,8 +324,7 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Protocol an action
-     *
+     * Protocol an action.
      * @param string The message to show in log
      * @return void
      */
@@ -346,8 +342,7 @@ class UploadByFTP extends Task
     }
 
     /**
-     * Set passive mode
-     *
+     * Set passive mode.
      * @param boolean
      * @return void
      */
@@ -358,6 +353,18 @@ class UploadByFTP extends Task
             $this->_failure("Failed to change PASV mode to '{$mnemo}'");
         }
         $this->_protocol("PASV mode turned '{$mnemo}'");
+    }
+
+    /**
+     * Notify a log protocol about the next file processed.
+     * @return void
+     */
+    protected function _notify()
+    {
+        $this->_filesProcessed += 1;
+        if (($this->_filesProcessed % 100) == 0) {
+            $this->_protocol("{$this->_filesProcessed} files/dirs processeed");
+        }
     }
 
 }
