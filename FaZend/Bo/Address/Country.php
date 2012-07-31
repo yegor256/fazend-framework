@@ -87,6 +87,7 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
             switch ($name) {
                 case 'code':
                     $code = $this->_code;
+                    break;
                 default:
                     FaZend_Exception::raise(
                         'FaZend_Bo_Address_Country_UnknownProperty',
@@ -122,6 +123,7 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
         switch ($part) {
             case self::ISO_3166:
                 $code = $this->_code;
+                break;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Address_Country_InvalidPartException',
