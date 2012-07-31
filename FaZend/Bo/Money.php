@@ -228,13 +228,20 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function get($part = null)
     {
         switch ($part) {
-            case 'usd': return $this->_getPoints() / pow(10, self::PRECISION);
-            case 'cents': return $this->_getPoints() / pow(10, self::PRECISION - 2);
-            case 'points': return $this->_getPoints();
-            case 'original': return $this->_points / pow(10, self::PRECISION);
-            case 'origCents': return $this->_points / pow(10, self::PRECISION - 2);
-            case 'origPoints': return $this->_points;
-            case 'currency': return $this->_currency;
+            case 'usd':
+            return $this->_getPoints() / pow(10, self::PRECISION);
+            case 'cents':
+            return $this->_getPoints() / pow(10, self::PRECISION - 2);
+            case 'points':
+            return $this->_getPoints();
+            case 'original':
+            return $this->_points / pow(10, self::PRECISION);
+            case 'origCents':
+            return $this->_points / pow(10, self::PRECISION - 2);
+            case 'origPoints':
+            return $this->_points;
+            case 'currency':
+            return $this->_currency;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownProperty',
@@ -429,9 +436,12 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
         $symbol = $currency->getShortName();
 
         switch ($symbol) {
-            case 'USD': return 1;
-            case 'EUR': return 1.48;
-            case 'GBP': return 1.9;
+            case 'USD':
+            return 1;
+            case 'EUR':
+            return 1.48;
+            case 'GBP':
+            return 1.9;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownCurrency',
