@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,7 +13,7 @@
  * @version $Id$
  * @category FaZend
  */
- 
+
 /**
  * @see FaZend_Bo_Abstract
  */
@@ -34,12 +34,12 @@ require_once 'FaZend/Bo/Abstract.php';
  */
 class FaZend_Bo_Money extends FaZend_Bo_Abstract
 {
-    
+
     /**
      * How many digits after DOT we store?
      */
     const PRECISION = 4;
-    
+
     /**
      * How many digits after DOT have any meaning for us?
      */
@@ -70,7 +70,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @var float
      */
     protected $_points;
-    
+
     /**
      * Currency
      *
@@ -84,21 +84,21 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @param string|Zend_Currency The currency to use as default
      * @return void
      */
-    public static function setDefaultCurrency($currency) 
+    public static function setDefaultCurrency($currency)
     {
         if ($currency instanceof Zend_Currency) {
             $currency = $currency->getShortName();
         }
         self::$_defaultCurrency = strval($currency);
     }
-    
+
     /**
      * Set currency to be used in rendering
      *
      * @param Zend_Currency
      * @return void
      */
-    public static function setCurrencyToRender(Zend_Currency $currency) 
+    public static function setCurrencyToRender(Zend_Currency $currency)
     {
         self::$_currencyToRender = $currency;
     }
@@ -132,7 +132,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @param float Total amount of cents
      * @return FaZend_Bo_Money
      */
-    public static function convertFromCents($cents) 
+    public static function convertFromCents($cents)
     {
         return self::factory($cents / 100);
     }
@@ -143,7 +143,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
      * @param float Total amount of points
      * @return FaZend_Bo_Money
      */
-    public static function convertFromPoints($points) 
+    public static function convertFromPoints($points)
     {
         return self::factory($points / pow(10, self::PRECISION));
     }
@@ -159,30 +159,30 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     {
         $currency = self::$_defaultCurrency;
         $value = strval($value);
-        
+
         if ($value && !is_numeric($value)) {
             // remove spaces and replace comas with nothing
             $value = preg_replace(
-                array('/\s+/', '/\,/'), 
-                array('', ''), 
+                array('/\s+/', '/\,/'),
+                array('', ''),
                 $value
             );
 
             // @todo this is UGLY, and we need to do it with regexp
             $slices = explode('.', $value);
             $value = implode('', array_slice($slices, 0, -1)) . '.' . $slices[count($slices)-1];
-            
-            // @todo Zend_Locale should be properly used 
+
+            // @todo Zend_Locale should be properly used
             // bug(Zend_Locale::getTranslationList('currency'));
             $matches = array();
             if (preg_match('/[a-zA-Z]{3}/', $value, $matches)) {
                 $currency = strtoupper($matches[0]);
             }
-            
+
             // validate format
             if (!preg_match('/\d+(?:\.\d+)?/', $value, $matches)) {
                 FaZend_Exception::raise(
-                    'FaZend_Bo_Money_InvalidFormat', 
+                    'FaZend_Bo_Money_InvalidFormat',
                     "Invalid cost format '{$value}', numeric literal not found"
                 );
             }
@@ -191,9 +191,9 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
             }
             $value = $matches[0];
         }
-        
+
         // we should implement it properly
-        $this->_currency = 
+        $this->_currency =
         FaZend_Flyweight::factory('Zend_Currency', 'en_US', $currency)
         ->setFormat(
             array(
@@ -228,20 +228,13 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     public function get($part = null)
     {
         switch ($part) {
-            case 'usd':
-                return $this->_getPoints() / pow(10, self::PRECISION);
-            case 'cents':
-                return $this->_getPoints() / pow(10, self::PRECISION - 2);
-            case 'points':
-                return $this->_getPoints();
-            case 'original':
-                return $this->_points / pow(10, self::PRECISION);
-            case 'origCents':
-                return $this->_points / pow(10, self::PRECISION - 2);
-            case 'origPoints':
-                return $this->_points;
-            case 'currency':
-                return $this->_currency;
+            case 'usd': return $this->_getPoints() / pow(10, self::PRECISION);
+            case 'cents': return $this->_getPoints() / pow(10, self::PRECISION - 2);
+            case 'points': return $this->_getPoints();
+            case 'original': return $this->_points / pow(10, self::PRECISION);
+            case 'origCents': return $this->_points / pow(10, self::PRECISION - 2);
+            case 'origPoints': return $this->_points;
+            case 'currency': return $this->_currency;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownProperty',
@@ -273,18 +266,18 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     {
         return $this->_points * $this->_getRate($this->_currency);
     }
-    
+
     /**
      * Round value to the closest scale
      *
      * @return void
      */
-    public function round($scale = 0) 
+    public function round($scale = 0)
     {
         $this->_points = round($this->_points, $scale - self::PRECISION);
         return $this;
     }
-    
+
     /**
      * Add new value to current one
      *
@@ -349,7 +342,7 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                 "You can't divide by zero"
             );
         }
-        
+
         if ($money instanceof FaZend_Bo_Money) {
             return $this->_points / $div;
         }
@@ -357,25 +350,25 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
         $this->_points /= $money;
         return $this;
     }
-    
+
     /**
      * Inverse the sign of the amount, from PLUS to MINUS, and vice versa
      *
      * @return $this
      */
-    public function inverse() 
+    public function inverse()
     {
         $this->_points = -$this->_points;
         return $this;
     }
-    
+
     /**
      * This value equals to the given one?
      *
      * @param FaZend_Bo_Money|mixed Another value
      * @return boolean
      */
-    public function equalsTo($money) 
+    public function equalsTo($money)
     {
         $this->_normalize($money);
         $digits = self::PRECISION - self::SENSIVITY;
@@ -411,18 +404,18 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
         }
         return $this->_points < $money;
     }
-    
+
     /**
      * Is it zero?
      *
      * @return boolean
      */
-    public function isZero() 
+    public function isZero()
     {
         $digits = self::PRECISION - self::SENSIVITY;
         return round($this->_points, -$digits) == 0;
     }
-    
+
     /**
      * Get conversion rate for the given currency
      *
@@ -434,14 +427,11 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     protected function _getRate(Zend_Currency $currency)
     {
         $symbol = $currency->getShortName();
-        
+
         switch ($symbol) {
-            case 'USD':
-                return 1;
-            case 'EUR':
-                return 1.48;
-            case 'GBP':
-                return 1.9;
+            case 'USD': return 1;
+            case 'EUR': return 1.48;
+            case 'GBP': return 1.9;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownCurrency',
@@ -449,28 +439,28 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
                 );
         }
     }
-    
+
     /**
      * Normalize value to cents
      *
      * @param mixed
      * @return void
      */
-    protected function _normalize(&$money) 
+    protected function _normalize(&$money)
     {
         switch (true) {
             case is_null($money):
                 $money = 0;
                 break;
-            
+
             case $money instanceof FaZend_Bo_Money:
                 $money = $money->points;
                 break;
-        
+
             case is_string($money):
                 $money = self::factory($money)->points;
                 break;
-        
+
             default:
                 $money *= pow(10, self::PRECISION);
                 break;

@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -43,20 +43,26 @@ class FaZend_View_Helper_ShowBytes
     {
         switch (true) {
             case($size < 1024*5):
-                return $size.'bytes';
-        
+                $txt = $size.'bytes';
+                break;
+
             case($size < 1024*1024*4):
-                return round($size/1024, 2).'Kb';    
-        
+                $txt = round($size/1024, 2).'Kb';
+                break;
+
             case($size < 1024*1024*1024*3):
-                return round($size/(1024*1024), 2).'Mb';    
+                $txt = round($size/(1024*1024), 2).'Mb';
+                break;
 
             case($size < 1024*1024*1024*1024*2):
-                return round($size/(1024*1024*1024), 2).'Gb';    
-        
-            default:    
-                return round($size/(1024*1024*1024*1024), 2).'Tb';    
+                $txt = round($size/(1024*1024*1024), 2).'Gb';
+                break;
+
+            default:
+                $txt = round($size/(1024*1024*1024*1024), 2).'Tb';
+                break;
         }
+        return $txt;
     }
 
 }
