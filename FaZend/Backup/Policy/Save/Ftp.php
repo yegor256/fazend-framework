@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -33,14 +33,14 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      * @var array
      */
     protected $_options = array(
-        'host'     => 'backup.fazend.com', // FTP host name
+        'host'     => 'fw-backups.fazend.com', // FTP host name
         'port'     => '21', // FTP port, 21 by default
-        'username' => 'backup', // FTP user name
+        'username' => 'fwbackup', // FTP user name
         'password' => 'open', // FTP password
         'dir'      => './{name}', // directory in the FTP server
         'age'      => 168, // in hours, 7 days by default
     );
-    
+
     /**
      * Save files into FTP.
      *
@@ -49,7 +49,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      * @see FaZend_Backup_Policy_Abstract::forward()
      * @see FaZend_Backup::execute()
      */
-    public function forward() 
+    public function forward()
     {
         $ftp = @ftp_connect($this->_options['host']);
         if ($ftp === false) {
@@ -91,7 +91,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
 
         // remove expired files
         $this->_clean($ftp);
-        
+
         $cnt = 0;
         foreach (new DirectoryIterator($this->_dir) as $f) {
             if ($f->isDot()) {
@@ -126,7 +126,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
                 "No files to send by FTP, the directory is empty"
             );
         }
-        
+
         if (@ftp_close($ftp) === false) {
             FaZend_Exception::raise(
                 'FaZend_Backup_Policy_Save_Ftp_Exception',
@@ -134,18 +134,18 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
             );
         }
     }
-    
+
     /**
      * Restore files from FTP into directory.
      *
      * @return void
      * @see FaZend_Backup_Policy_Abstract::backward()
      */
-    public function backward() 
+    public function backward()
     {
-        
+
     }
-    
+
     /**
      * Clear expired files from FTP.
      *
@@ -155,7 +155,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
      */
     protected function _clean($ftp)
     {
-        $files = @ftp_nlist($ftp, '.');    
+        $files = @ftp_nlist($ftp, '.');
         if ($files === false) {
             FaZend_Exception::raise(
                 'FaZend_Backup_Policy_Save_Ftp_Exception',
@@ -170,7 +170,7 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
                     'FaZend_Backup_Policy_Save_Ftp_Exception',
                     "ftp_mdtm('{$file}') failed"
                 );
-            }    
+            }
             $expired = Zend_Date::now()->sub($this->_options['age'], Zend_Date::HOUR)
                 ->isLater($lastModified);
             if (!$expired) {
@@ -189,5 +189,5 @@ class FaZend_Backup_Policy_Save_Ftp extends FaZend_Backup_Policy_Abstract
             );
         }
     }
-    
+
 }
