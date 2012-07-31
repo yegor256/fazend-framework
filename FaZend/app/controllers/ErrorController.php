@@ -99,7 +99,7 @@ class Fazend_ErrorController extends FaZend_Controller_Action
                     _t('Error 404: page not found'),
                     'notfound'
                 );
-                return;
+            return;
             default:
                 // generate error code
                 $errorCode = rand(100, 999);
