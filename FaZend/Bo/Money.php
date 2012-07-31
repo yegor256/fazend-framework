@@ -229,25 +229,33 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
     {
         switch ($part) {
             case 'usd':
-            return $this->_getPoints() / pow(10, self::PRECISION);
+                $val = $this->_getPoints() / pow(10, self::PRECISION);
+                break;
             case 'cents':
-            return $this->_getPoints() / pow(10, self::PRECISION - 2);
+                $val = $this->_getPoints() / pow(10, self::PRECISION - 2);
+                break;
             case 'points':
-            return $this->_getPoints();
+                $val = $this->_getPoints();
+                break;
             case 'original':
-            return $this->_points / pow(10, self::PRECISION);
+                $val = $this->_points / pow(10, self::PRECISION);
+                break;
             case 'origCents':
-            return $this->_points / pow(10, self::PRECISION - 2);
+                $val = $this->_points / pow(10, self::PRECISION - 2);
+                break;
             case 'origPoints':
-            return $this->_points;
+                $val = $this->_points;
+                break;
             case 'currency':
-            return $this->_currency;
+                $val = $this->_currency;
+                break;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownProperty',
                     "Property {$part} is not found in " . get_class($this)
                 );
         }
+        return $val;
     }
 
     /**

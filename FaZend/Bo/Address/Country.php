@@ -80,19 +80,21 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
     public function __get($name)
     {
         $method = '_get' . ucfirst($name);
+        $code = false;
         if (method_exists($this, $method)) {
-            return $this->$method();
+            $code = $this->$method();
+        } else {
+            switch ($name) {
+                case 'code':
+                    $code = $this->_code;
+                default:
+                    FaZend_Exception::raise(
+                        'FaZend_Bo_Address_Country_UnknownProperty',
+                        "Unknown property: '{$name}'"
+                    );
+            }
         }
-        switch ($name) {
-            case 'code':
-            return $this->_code;
-            default:
-                FaZend_Exception::raise(
-                    'FaZend_Bo_Address_Country_UnknownProperty',
-                    "Unknown property: '{$name}'"
-                );
-        }
-        return false;
+        return $code;
     }
 
     /**
@@ -119,13 +121,14 @@ class FaZend_Bo_Address_Country extends FaZend_Bo_Abstract
     {
         switch ($part) {
             case self::ISO_3166:
-            return $this->_code;
+                $code = $this->_code;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Address_Country_InvalidPartException',
                     "Invalid part '{$part}' requested"
                 );
         }
+        return $code;
     }
 
 }
