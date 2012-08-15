@@ -133,7 +133,7 @@
         <mkdir dir="${project.basedir}/build/apidocs"/>
         <phpdocext title="API Documentation, rev.${svn.lastrevision}"
             destdir="${project.basedir}/build/apidocs"
-            quiet="true">
+            quiet="true" output="HTML:frames:default">
             <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php" />
             </fileset>
