@@ -131,17 +131,12 @@
     <target name="doc" description="Generate phpDocumentor files">
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <mkdir dir="${project.basedir}/build/apidocs"/>
-        <phpdoc title="API Documentation, rev.${svn.lastrevision}"
+        <phpdoc2 title="API Documentation, rev.${svn.lastrevision}"
             destdir="${project.basedir}/build/apidocs"
-            sourcecode="false" quiet="true"
-            output="HTML:frames:default">
+            quiet="true">
             <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php" />
             </fileset>
-            <projdocfileset dir=".">
-                <include name="README.txt" />
-                <include name="LICENSE.txt" />
-            </projdocfileset>
         </phpdoc>
     </target>
 
