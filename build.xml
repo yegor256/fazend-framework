@@ -137,7 +137,7 @@
             <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php" />
             </fileset>
-        </phpdoc>
+        </phpdoc2>
     </target>
 
     <target name="deploy" description="Deploy project files to web">
