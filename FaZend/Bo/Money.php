@@ -445,11 +445,11 @@ class FaZend_Bo_Money extends FaZend_Bo_Abstract
 
         switch ($symbol) {
             case 'USD':
-            return 1;
+                return 1;
             case 'EUR':
-            return 1.48;
+                return 1.48;
             case 'GBP':
-            return 1.9;
+                return 1.9;
             default:
                 FaZend_Exception::raise(
                     'FaZend_Bo_Money_UnknownCurrency',

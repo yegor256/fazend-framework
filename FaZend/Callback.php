@@ -130,7 +130,7 @@ abstract class FaZend_Callback
 
             // maybe it's a boolean constant already?
             case is_bool($data):
-            return new FaZend_Callback_Constant($data);
+                return new FaZend_Callback_Constant($data);
         }
 
         if (!isset($class)) {
