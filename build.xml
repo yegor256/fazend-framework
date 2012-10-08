@@ -132,7 +132,7 @@
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <mkdir dir="${project.basedir}/build/apidocs"/>
         <phpdocext title="API Documentation, rev.${svn.lastrevision}"
-            destdir="${project.basedir}/build/apidocs"
+            destdir="${project.basedir}/build/apidocs" programPath="/usr/bin/phpdoc"
             quiet="true" output="HTML:frames:default">
             <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php" />
