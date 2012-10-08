@@ -26,9 +26,6 @@
     <includepath classpath="${project.basedir}" />
     <includepath classpath="${project.basedir}/test/" />
 
-    <!-- To make sure that we have enough memory limit for running all tests -->
-    <php expression="ini_set('memory_limit', '1024M');" />
-
     <target name="main" depends="lint, phpcs, phpmd, zca, test, doc" >
     </target>
 
