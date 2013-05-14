@@ -93,6 +93,14 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     protected $_injections = array();
 
     /**
+     * Ordered column list.
+     *
+     * @var array
+     * @see columnOrder()
+     */
+    protected $_columnOrder = array();
+
+    /**
      * Show the table
      *
      * @return string HTML
@@ -314,6 +322,17 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
     }
 
     /**
+     * Sets column order.
+     *
+     * @param array $columnOrder
+     * @return \FaZend_View_Helper_HtmlTable
+     */
+    public function columnOrder(array $columnOrder) {
+        $this->_columnOrder = $columnOrder;
+        return $this;
+    }
+
+    /**
      * Append option to column, instead of 'options' column
      *
      * @param string Option name, case sensitive
@@ -493,6 +512,10 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
                 (fmod(count($resultTRs), 2) ? 'even' : 'odd'),
                 $this->_formatColumnStyle(false, null, $rowOriginal)
             );
+
+            if (!empty($this->_columnOrder)) {
+                $row = $this->_orderColumns($row);
+            }
 
             $tds = array();
             foreach ($row as $title=>$value) {
@@ -778,4 +801,19 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
         return count($styles) ? ' style="' . implode(';', $styles) . '"' : '';
     }
 
+    /**
+     * Orders coloumns according to _columnOrder.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function _orderColumns(array $row) {
+        $sortedColumns = array();
+        foreach ($this->_columnOrder as $title) {
+            $sortedColumns[$title] = $row[$title];
+        }
+        $row = array_merge($sortedColumns, $row);
+
+        return $row;
+    }
 }
