@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -16,12 +16,12 @@
 <h1>SqueezePNG files</h1>
 
 <p>
-    Holder: <tt><?php echo ($path = $this->squeezePNG()->getImagePath())?></tt> 
+    Holder: <tt><?php echo ($path = $this->squeezePNG()->getImagePath())?></tt>
         (<?php echo file_exists($path) ? filesize($path) . ' bytes' : 'no file'?>)<br/>
-    Map file: <tt><?php echo ($mapfile = $this->squeezePNG()->getMapPath())?></tt> 
+    Map file: <tt><?php echo ($mapfile = $this->squeezePNG()->getMapPath())?></tt>
         (<?php echo file_exists($path) ? filesize($mapfile) . ' bytes' : 'no file'?>)<br/>
     Url: <tt><?php echo $this->squeezePNG()->url()?></tt>
-</p>    
+</p>
 
 <img src="<?php echo $this->squeezePNG()->url()?>" style="padding: 5px; border: 1px solid gray;"/>
 
@@ -37,16 +37,18 @@
         <?php $totalSize += ($size = filesize($id));?>
 
         <li>
-            <?php echo basename($id)?>: 
+            <?php echo basename($id)?>:
                 <?php echo $img['width']?>x<?php echo $img['height']?>, <?php echo $size?>bytes
-        </li>    
+        </li>
 
-    <?php endforeach; ?>
+    <?php
+endforeach; ?>
     </ul>
 
     <p>Total size: <?php echo $totalSize?>bytes</p>
 
-<?php endif; ?>    
+<?php
+endif; ?>
 
 <p><a href="#" onclick="document.getElementById('pre').style.display = 'block';">show content of the map file</a></p>
 

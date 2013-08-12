@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,13 +13,14 @@
 
 <?php if ($this->pageCount > 1): ?>
     <div class="paginationControl">
-    
+
     <!-- Previous page link -->
     <?php if (isset($this->previous)): ?>
-        <a href="<?php echo  $this->url(array('page'=>$this->previous));?>">prev</a> 
+        <a href="<?php echo  $this->url(array('page'=>$this->previous));?>">prev</a>
     <?php else: ?>
         <span style="color: grey;">prev</span>
-    <?php endif; ?>
+    <?php
+endif; ?>
 
     &#32;
 
@@ -29,9 +30,11 @@
             <a href="<?php echo $this->url(array('page'=>$page));?>"><?php echo $page;?></a>
         <?php else: ?>
             [<?php echo  $page; ?>]
-        <?php endif; ?>
+        <?php
+endif; ?>
         &#32;
-    <?php endforeach; ?>
+    <?php
+endforeach; ?>
 
     &#32;
 
@@ -40,6 +43,8 @@
         <a href="<?php echo  $this->url(array('page'=>$this->next));?>">next</a>
     <?php else: ?>
         <span style="color: grey;">next</span>
-    <?php endif; ?>
+    <?php
+endif; ?>
     </div>
-<?php endif;
+<?php
+endif;

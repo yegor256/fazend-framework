@@ -3,7 +3,7 @@
  * FaZend Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.fazend.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -12,16 +12,16 @@
 -->
 
 <li>
-<b><?php echo $this->label?></b> 
-    <a href="<?php 
+<b><?php echo $this->label?></b>
+    <a href="<?php
     echo $this->url(
         array(
-            'action'=>'pos', 
+            'action'=>'pos',
             'object'=>$this->node->ps()->id
-        ), 
-        'adm', 
+        ),
+        'adm',
         true
-    )?>">v<?php echo $this->node->ps()->version?></a>: 
+    )?>">v<?php echo $this->node->ps()->version?></a>:
     <?php echo $this->node->ps()->type?>
 
 <ul>
@@ -30,22 +30,25 @@
         <?php $label = '[' . substr($name, strlen(FaZend_Pos_Properties::ARRAY_PREFIX)) . ']' ?>
     <?php else: ?>
         <?php $label = $name ?>
-    <?php endif; ?>
+    <?php
+endif; ?>
     <?php if ($this->node->$name instanceof FaZend_Pos_Abstract): ?>
-        <?php 
+        <?php
         echo $this->partial(
-            'adm/pos/node.phtml', 
+            'adm/pos/node.phtml',
             array(
                 'node' => $this->node->$name,
                 'label' => $label
             )
-        )?>    
+        )?>
     <?php elseif (is_scalar($this->node->$name)): ?>
         <li><?php echo $label?>: <?php echo $this->node->$name?></li>
     <?php else: ?>
         <li><?php echo $label?>: <?php echo get_class($this->node->$name)?></li>
-    <?php endif; ?>
-<?php endforeach; ?>
+    <?php
+endif; ?>
+<?php
+endforeach; ?>
 </ul>
 
 </li>
