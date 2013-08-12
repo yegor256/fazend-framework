@@ -327,7 +327,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @param array $columnOrder
      * @return \FaZend_View_Helper_HtmlTable
      */
-    public function columnOrder(array $columnOrder) {
+    public function columnOrder(array $columnOrder)
+    {
         $this->_columnOrder = $columnOrder;
         return $this;
     }
@@ -807,7 +808,8 @@ class FaZend_View_Helper_HtmlTable extends FaZend_View_Helper
      * @param array $row
      * @return array
      */
-    protected function _orderColumns(array $row) {
+    protected function _orderColumns(array $row)
+    {
         $sortedColumns = array();
         foreach ($this->_columnOrder as $title) {
             $sortedColumns[$title] = $row[$title];
