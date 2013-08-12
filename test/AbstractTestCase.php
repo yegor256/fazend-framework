@@ -8,8 +8,8 @@ define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/test-application'));
 define('FAZEND_PATH', realpath(dirname(__FILE__) . '/../FaZend'));
 
 // you should have Zend checked out from truck
-// in the directory ../../zend-trunk
-define('ZEND_PATH', realpath(dirname(__FILE__) . '/../Zend'));
+// in the directory build/Zend
+define('ZEND_PATH', realpath(dirname(__FILE__) . '/../build/ZendFramework-1.12.3/library/Zend'));
 
 set_include_path(
     implode(

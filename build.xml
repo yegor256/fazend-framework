@@ -64,8 +64,10 @@
     </target>
     <target name="test" description="Run all existing unit-tests">
         <mkdir dir="${project.basedir}/build"/>
+        <httpget url="https://packages.zendframework.com/releases/ZendFramework-1.12.3/ZendFramework-1.12.3.zip" dir="${project.basedir}/build"/>
+        <delete dir="${project.basedir}/build/ZendFramework-1.12.3"/>
+        <unzip file="${project.basedir}/build/ZendFramework-1.12.3.zip" todir="${project.basedir}/build" />
         <property name="coverage.database" value="${project.basedir}/build/coverage.data"/>
-        <!-- create coverage database that will collect all reports -->
         <coverage-setup database="${coverage.database}">
             <fileset dir="${project.basedir}/FaZend">
                 <include name="**/*.php"/>
@@ -83,14 +85,11 @@
                 </fileset>
             </batchtest>
         </phpunit>
-        <!-- build coverage report -->
         <mkdir dir="${project.basedir}/build/coverage"/>
         <coverage-report outfile="${project.basedir}/build/coverage.xml">
             <report todir="${project.basedir}/build/coverage"/>
         </coverage-report>
-        <!-- make sure that the code is covered -->
         <coverage-threshold database="${coverage.database}" perProject="0" perClass="0" perMethod="0"/>
-        <!-- delete coverage database, since it's not necessary any more -->
         <delete file="${coverage.database}"/>
     </target>
     <target name="doc" description="Generate phpDocumentor files">
@@ -103,7 +102,6 @@
         </phpdoc>
     </target>
     <target name="deploy" description="Deploy project files to web">
-        <!-- get FTP properties from file -->
         <property file="${project.basedir}/../external.properties"/>
         <mkdir dir="${project.basedir}/build/ftp-upload"/>
         <copy todir="${project.basedir}/build/ftp-upload/public">
