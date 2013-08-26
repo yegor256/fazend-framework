@@ -64,7 +64,7 @@
     </target>
     <target name="test" description="Run all existing unit-tests">
         <mkdir dir="${project.basedir}/build"/>
-        <httpget url="http://packages.zendframework.com/releases/ZendFramework-1.12.3/ZendFramework-1.12.3.zip" dir="${project.basedir}/build"/>
+        <httpget url="https://packages.zendframework.com/releases/ZendFramework-1.12.3/ZendFramework-1.12.3.zip" dir="${project.basedir}/build"/>
         <delete dir="${project.basedir}/build/ZendFramework-1.12.3"/>
         <unzip file="${project.basedir}/build/ZendFramework-1.12.3.zip" todir="${project.basedir}/build" />
         <property name="coverage.database" value="${project.basedir}/build/coverage.data"/>

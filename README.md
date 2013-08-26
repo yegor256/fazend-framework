@@ -1,19 +1,14 @@
 # Useful PHP components for Zend Framework
 
- * [`FaZend_Db_Table_ActiveRow`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Db_Table_ActiveRow)
-   - ORM on top of `Zend_Db`
+ * [`FaZend_Db_Table_ActiveRow`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Db_Table_ActiveRow) - ORM on top of `Zend_Db`
 
- * [`FaZend_Exception`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Exception)
-   - runtime factory of `Exception`-inheriting classes
+ * [`FaZend_Exception`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Exception) - runtime factory of `Exception`-inheriting classes
 
- * [`FaZend_View_Helper_Forma`](https://github.com/tpc2/fazend-framework/wiki/FaZend_View_Helper_Forma)
-   - convenient wrapper around `Zend_View_Helper_Form`
+ * [`FaZend_View_Helper_Forma`](https://github.com/tpc2/fazend-framework/wiki/FaZend_View_Helper_Forma) - convenient wrapper around `Zend_View_Helper_Form`
 
- * [`FaZend_View_Helper_HtmlTable`](https://github.com/tpc2/fazend-framework/wiki/FaZend_View_Helper_HtmlTable)
-   - convenient builder of HTML tables in `Zend_View`
+ * [`FaZend_View_Helper_HtmlTable`](https://github.com/tpc2/fazend-framework/wiki/FaZend_View_Helper_HtmlTable) - convenient builder of HTML tables in `Zend_View`
 
- * [`FaZend_Validator`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Validator)
-   - validator of input values, a convenient static wrapper of `Zend_Validator`
+ * [`FaZend_Validator`](https://github.com/tpc2/fazend-framework/wiki/FaZend_Validator) - validator of input values, a convenient static wrapper of `Zend_Validator`
 
 Read [this article](http://img.fazend.com/phparchitect-Feb10.pdf) from php|Architect.
 
