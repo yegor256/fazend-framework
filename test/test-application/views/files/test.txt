@@ -1,4 +1,0 @@
-test
-
-@see FaZend_app_controllers_FileControllerTest
-<? Zend_Controller_Front::getInstance()->getResponse()->setHeader('Content-type', 'plain/text')?>
