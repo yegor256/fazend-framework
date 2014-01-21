@@ -53,10 +53,10 @@ final class FaZend_Validator
      *  
      * @return FaZend_Validator
      */
-    public static function factory()
+    public static function factory(Zend_Loader_PluginLoader $pluginLoader = null)
     {
         if (is_null(self::$_instance)) {
-            self::$_instance = new FaZend_Validator();
+            self::$_instance = new FaZend_Validator($pluginLoader);
         }
         return self::$_instance;
     }
@@ -66,19 +66,9 @@ final class FaZend_Validator
      *
      * @return void
      */
-    public final function __construct()
+    public final function __construct(Zend_Loader_PluginLoader $pluginLoader = null)
     {
-        /**
-         * @see Zend_Loader_PluginLoader
-         */
-        require_once 'Zend/Loader/PluginLoader.php';
-        $this->_loader = new Zend_Loader_PluginLoader(
-            array(
-                'Zend_Validate' => ZEND_PATH . '/Validate',
-                'FaZend_Validate' => FAZEND_PATH . '/Validate',
-                'Validator' => APPLICATION_PATH . '/validators',
-            )
-        );
+        $this->_loader = is_null($pluginLoader) ? $this->_createPluginLoader() : $pluginLoader;
     }
 
     /**
@@ -112,7 +102,7 @@ final class FaZend_Validator
         
         // this class requires params in construct?
         if ($rm) {
-            $params = $rm->getNumberOfParameters();
+            $params = $rm->getNumberOfRequiredParameters();
         } else {
             $params = 0;
         }
@@ -187,4 +177,23 @@ final class FaZend_Validator
         return $this;
     }
 
+    /**
+     * Factory Method for PluginLoader
+     *
+     * @return Zend_Loader_PluginLoader
+     */
+    protected function _createPluginLoader()
+    {
+        /**
+         * @see Zend_Loader_PluginLoader
+         */
+        require_once 'Zend/Loader/PluginLoader.php';
+        return new Zend_Loader_PluginLoader(
+            array(
+                'Zend_Validate' => ZEND_PATH . '/Validate',
+                'FaZend_Validate' => FAZEND_PATH . '/Validate',
+                'Validator' => APPLICATION_PATH . '/validators',
+            )
+        );
+    }
 }
