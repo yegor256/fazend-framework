@@ -33,3 +33,7 @@ $ phing
 
 If you have questions or general suggestions, don't hesitate to submit
 a new [Github issue](https://github.com/tpc2/fazend-framework/issues/new).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tpc2/fazend-framework/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
