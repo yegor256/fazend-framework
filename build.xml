@@ -39,7 +39,7 @@
     </target>
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
         <phpcodesniffer standard="Zend" allowedFileExtensions="php,phtml" showWarnings="false">
-            <fileset dir="${project.basedir}/src"/>
+            <fileset dir="${project.basedir}/FaZend"/>
         </phpcodesniffer>
     </target>
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
